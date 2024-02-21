@@ -7,6 +7,13 @@
 
 # Saropa Dart Utils
 
+<div align="left">
+<a href="https://pub.dev/packages/saropa_dart_utils"><img src="https://img.shields.io/pub/v/saropa_dart_utils.svg" alt="Pub"></a>
+<!-- <a href="https://github.com/petercinibulk/envied/actions/workflows/test.yaml"><img src="https://github.com/petercinibulk/envied/actions/workflows/test.yml/badge.svg" alt="CI"></a> -->
+<!-- <a href=https://codecov.io/gh/petercinibulk/envied><img src="https://codecov.io/gh/petercinibulk/envied/branch/main/graph/badge.svg?token=uIX88zsd9c" alt="codecov"></a> -->
+<a href="https://opensource.org/licenses/GPL"><img src="https://img.shields.io/badge/license-GPL-purple.svg" alt="License: GPL"></a>
+</div>
+
 ## About
 
 Useful primitive utilities and extension methods from the clever people at Saropa
