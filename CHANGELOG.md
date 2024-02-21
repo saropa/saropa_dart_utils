@@ -1,3 +1,7 @@
+## 0.0.2
+
+* String to bool conversion methods.
+
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial release with bool list methods.
