@@ -25,8 +25,8 @@ void main() {
     });
 
     test(
-        'returns false for list with alternating false and true elements starting with false',
-        () {
+        'returns false for list with alternating false and true elements '
+        'starting with false', () {
       expect([false, true, false, true, false].anyTrue, true);
     });
 
@@ -104,17 +104,21 @@ void main() {
     });
 
     test(
-        'returns [false, true, false, true, false] for list with alternating true and false elements',
-        () {
-      expect([true, false, true, false, true].reverse,
-          [false, true, false, true, false]);
+        'returns [false, true, false, true, false] for list with alternating '
+        'true and false elements', () {
+      expect(
+        [true, false, true, false, true].reverse,
+        [false, true, false, true, false],
+      );
     });
 
     test(
-        'returns [true, false, false, false, false] for list with all elements true except the first one',
-        () {
-      expect([false, true, true, true, true].reverse,
-          [true, false, false, false, false]);
+        'returns [true, false, false, false, false] for list with all '
+        'elements true except the first one', () {
+      expect(
+        [false, true, true, true, true].reverse,
+        [true, false, false, false, false],
+      );
     });
   });
 }
