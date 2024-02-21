@@ -7,9 +7,11 @@
 
 # Saropa Dart Utils
 
+## About
+
 Useful primitive utilities and extension methods from the clever people at Saropa
 
-* Copyright (2024) *
+Copyright (2024)
 
 ## Contact
 
@@ -22,3 +24,5 @@ Saropa is a private, cloud-connected address book that links real people, compan
 In an emergency, get real-time access to all the important people, companies, and services you need - even if you don't know them personally, or if they're not where you expect them to be.
 
 Visit the Saropa Contacts project here: [app.saropa](https://app.saropa.com)
+
+🌐 📖 👥 🏢 🚨 🔒 🤝 🎯 🛡️ 🚀 📉 🆘 ⏱️ 🚑 📞 🌍 🔄 📲 💼 🎈
