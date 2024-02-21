@@ -15,13 +15,25 @@ Copyright (2024)
 
 ## Contact
 
+PRs, ideas and issues are always welcome!
+
 Email for any questions [app.dev.utils@saropa.com](mailto:app.dev.utils@saropa.com)
 
-## Deployment Guide
+## Deployment Guide For Developers
 
 1. Update CHANGELOG.md
-2. Execute ```dart doc```
-3. Deploy ```dart pub publish```
+
+2. Test ```flutter test```
+
+3. Execute ```dart doc```
+
+4. Deploy ```dart pub publish```
+
+## TODO
+
+1. GitHub actions
+
+2. Examples in this readme
 
 ## About Saropa Contacts
 
