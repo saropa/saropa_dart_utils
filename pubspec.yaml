@@ -1,6 +1,6 @@
 name: saropa_dart_utils
 description: "Useful primitive utilities and extension methods from the clever people at Saropa"
-version: 0.0.2
+version: 0.0.3
 
 # TODO
 homepage: https://app.saropa.com
@@ -19,7 +19,12 @@ dev_dependencies:
 
   # This package contains a recommended set of lints for Flutter apps, packages, and plugins to encourage good coding practices.
   # https://pub.dev/packages/flutter_lints/changelog
-  flutter_lints: ^3.0.1
+  # flutter_lints: ^3.0.1
+
+  # This package provides lint rules for Dart and Flutter which are used at Very Good Ventures. For more information, see the complete list of options.
+  # https://pub.dev/packages/very_good_analysis
+  # https://pub.dev/packages/very_good_analysis/changelog
+  very_good_analysis: ^5.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

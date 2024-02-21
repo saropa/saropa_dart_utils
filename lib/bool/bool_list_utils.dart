@@ -1,3 +1,5 @@
+/// Saropa extensions for [List]s of [bool]s
+///
 extension BoolListExtensions on Iterable<bool> {
   /// Checks if any element in the iterable is `true`.
   ///
@@ -11,7 +13,7 @@ extension BoolListExtensions on Iterable<bool> {
   /// - `false` if no elements in the iterable are `true` or the iterable
   ///  is empty.
   bool get anyTrue {
-    return where((final bool e) => e).isNotEmpty;
+    return where((bool e) => e).isNotEmpty;
   }
 
   /// Checks if any element in the iterable is `false`.
@@ -26,7 +28,7 @@ extension BoolListExtensions on Iterable<bool> {
   /// - `false` if no elements in the iterable are `false` or the iterable is
   ///  empty.
   bool get anyFalse {
-    return where((final bool e) => !e).isNotEmpty;
+    return where((bool e) => !e).isNotEmpty;
   }
 
   /// Counts the number of `true` values in the iterable.
@@ -38,7 +40,7 @@ extension BoolListExtensions on Iterable<bool> {
   /// Returns:
   /// - The number of `true` values in the iterable.
   int get countTrue {
-    return where((final bool e) => e).length;
+    return where((bool e) => e).length;
   }
 
   /// Counts the number of `false` values in the iterable.
@@ -50,7 +52,7 @@ extension BoolListExtensions on Iterable<bool> {
   /// Returns:
   /// - The number of `false` values in the iterable.
   int get countFalse {
-    return where((final bool e) => !e).length;
+    return where((bool e) => !e).length;
   }
 
   /// Reverses the boolean values in the list.

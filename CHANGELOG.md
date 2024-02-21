@@ -1,3 +1,9 @@
+# Change History for Saropa Dart Utils
+
+## 0.0.3
+
+* Random enum method
+
 ## 0.0.2
 
 * String to bool conversion methods.
