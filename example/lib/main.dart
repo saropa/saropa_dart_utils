@@ -4,7 +4,9 @@ void main() {
   runApp(const SaropaDartUtilsDemo());
 }
 
+/// Example demo for Saropa Dart Utils
 class SaropaDartUtilsDemo extends StatelessWidget {
+  /// Example demo for Saropa Dart Utils
   const SaropaDartUtilsDemo({super.key});
 
   // This widget is the root of your application.
@@ -36,8 +38,10 @@ class SaropaDartUtilsDemo extends StatelessWidget {
   }
 }
 
+/// Example demo page for Saropa Dart Utils
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  /// Example demo page for Saropa Dart Utils
+  const MyHomePage({required this.title, super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -48,6 +52,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
+  /// The title
   final String title;
 
   @override
