@@ -12,20 +12,20 @@ Useful primitive tools 🚀 and extension methods 🤖 by [Saropa][saropa_link] 
 
 ## Deployment Guide For Developers
 
-1. Update [CHANGELOG.md](CHANGELOG.md)
+1.⁠ ⁠Update [CHANGELOG.md](CHANGELOG.md)
 
-2. Test ```flutter test```
+2.⁠ ⁠Test ⁠ flutter test ⁠
 
-3. Execute ```dart doc```
+3.⁠ ⁠Execute ⁠ dart doc ⁠
 
-4. Deploy ```dart pub publish```
+4.⁠ ⁠Deploy ⁠ dart pub publish ⁠
 
 <br>
 <p align="center">🌐 📖 👥 🏢 🚨 🔒 🤝 🎯 🛡️  📉 🆘 ⏱️ 🚑 📞 🌍 🔄 📲 💼</p>
 
 ## About Saropa
 
-Saropa® is a technology company established in 2010. We have a strong background in financial services, online security and secure web communications.
+Saropa®️ is a technology company established in 2010. We have a strong background in financial services, online security and secure web communications.
 
 Our team has extensive experience in top-tier financial technology and we are passionate believers in personal risk management. We are engaged and excited about our vision for family security and this encourages our culture of innovation.
 
