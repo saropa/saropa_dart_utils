@@ -17,6 +17,12 @@ Copyright (2024)
 
 Email for any questions [app.dev.utils@saropa.com](mailto:app.dev.utils@saropa.com)
 
+## Deployment Guide
+
+1. Update CHANGELOG.md
+2. Execute ```dart doc```
+3. Deploy ```dart pub publish```
+
 ## About Saropa Contacts
 
 Saropa is a private, cloud-connected address book that links real people, companies, and emergency groups. It is primarily focused on your trusted emergency groups. Our mission is to reduce the impact of crises everywhere.
