@@ -1,5 +1,13 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.4
+
+* Added Example App
+* Setup Github Actions
+* Create Pull request template
+* Create Issue template
+* Create Contributing guide
+
 ## 0.0.3
 
 * Random enum method
