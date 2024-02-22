@@ -1,5 +1,12 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.5
+
+* Added Documentation for all methods
+* Added Code Usage in Example App
+* Added Code Usage in README.md
+* Added String Extension Methods
+
 ## 0.0.4
 
 * Added Example App
