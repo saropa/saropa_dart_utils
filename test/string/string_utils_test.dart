@@ -37,16 +37,22 @@ void main() {
     });
 
     test('removeConsecutiveSpaces', () {
-      expect('  Saropa   has   multiple   spaces  '.removeConsecutiveSpaces(),
-          equals('Saropa has multiple spaces'));
-      expect('  Saropa   '.removeConsecutiveSpaces(trim: false),
-          equals(' Saropa '));
+      expect(
+        '  Saropa   has   multiple   spaces  '.removeConsecutiveSpaces(),
+        equals('Saropa has multiple spaces'),
+      );
+      expect(
+        '  Saropa   '.removeConsecutiveSpaces(trim: false),
+        equals(' Saropa '),
+      );
       expect(null.removeConsecutiveSpaces(), isEmpty);
     });
 
     test('compressSpaces', () {
-      expect('  Saropa   has   multiple   spaces  '.compressSpaces(),
-          equals('Saropa has multiple spaces'));
+      expect(
+        '  Saropa   has   multiple   spaces  '.compressSpaces(),
+        equals('Saropa has multiple spaces'),
+      );
       expect('  Saropa   '.compressSpaces(trim: false), equals(' Saropa '));
       expect(null.compressSpaces(), isEmpty);
     });

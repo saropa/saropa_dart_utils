@@ -1,28 +1,31 @@
 # Saropa Dart Utils
 
 <!-- markdownlint-disable MD033 - Disable No HTML -->
-<!-- <div style="background-color: #5266A8; padding: 1em; width: 35%; border-radius: 0.1em 0.1em 1.5em 0.1em;  box-shadow: 0.1em 0.1em 0.13em rgba(68, 68, 68, 0.35);">
-  <img src="https://cdn.app.saropa.com/scripts/_default/image/logo/SaropaLogo2019_white2_minified.svg" alt="saropa company logo"  />
-</div> -->
-[![Saropa Logo](SaropaLogo2019_contrast-1200.png)](https://saropa.com)
+<div style="width: 45%;">
+  <img src="SaropaLogo2019_contrast-1200.png" alt="saropa company logo"  style="filter: drop-shadow(0.2em 0.2em 0.13em rgba(68, 68, 68, 0.35));" />
+</div>
+<!-- [![Saropa Logo](SaropaLogo2019_contrast-1200.png)](https://saropa.com) -->
 <br>
 
-Useful primitive tools 🚀 and extension methods 🤖 by [Saropa][saropa_link] 🎈
+Useful tools 🚀 and human readable extension methods 🤖 by [Saropa][saropa_link] 🎈
 
 [![pub package](https://img.shields.io/pub/v/saropa_dart_utils.svg)](https://pub.dev/packages/saropa_dart_utils) [![license: very good analysis](https://img.shields.io/badge/license-GPL-purple.svg)](https://opensource.org/licenses/GPL) [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 
 ## Contents
 
-- [Useful Methods](#useful-methods-or-extensions-you-will-ever-need)
+- [Useful Methods](#useful-methods-and-extensions)
 - [Extensions](#extensions)
   - [String Extensions](#string-extensions)
 
+## Useful methods and extensions
 
-## Useful methods or extensions you will ever need
 ```dart
 
 String text = 'www.saropa.com';
 print(text.removeStart('www.')); // Output: saropa.com
+
+String text = 'https://www.saropa.com';
+print(text.removeStart('www.')); // Output: https://www.saropa.com
 
 String? text;
 print(text.isNullOrEmpty); // Output: true
@@ -69,7 +72,9 @@ print(text.compressSpaces(trim: false)); // Output: " Saropa has multiple spaces
 ```
 
 # Extensions
+
 ## String Extensions
+
 ```dart
 
 String text = 'www.saropa.com';
@@ -120,16 +125,15 @@ print(text.compressSpaces(trim: false)); // Output: " Saropa has multiple spaces
 
 ```
 
-
 ## Deployment Guide For Developers
 
 1.⁠ ⁠Update [CHANGELOG.md](CHANGELOG.md)
 
-2.⁠ ⁠Test ⁠ flutter test ⁠
+2.⁠ ⁠Test ```flutter test```⁠
 
-3.⁠ ⁠Execute ⁠ dart doc ⁠
+3.⁠ ⁠Execute ⁠```dart doc```
 
-4.⁠ ⁠Deploy ⁠ dart pub publish ⁠
+4.⁠ ⁠Deploy ⁠```dart pub publish```
 
 <br>
 <p align="center">🌐 📖 👥 🏢 🚨 🔒 🤝 🎯 🛡️  📉 🆘 ⏱️ 🚑 📞 🌍 🔄 📲 💼</p>
@@ -153,4 +157,3 @@ PRs, ideas and issues are always welcome! Email for any questions [app.dev.utils
 [saropa_link]: https://saropa.com
 
 <!-- Github Repo Link -->
-[github_repo_link]: https://github.com/saropa/saropa_dart_utils
