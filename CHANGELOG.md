@@ -1,8 +1,9 @@
 # Change History for Saropa Dart Utils
 
-## 0.0.x
+## 0.0.7 - Jamaica
 
 * Renamed strings folder to singular
+* Deprecated nullable string extensions
 
 ## 0.0.6
 

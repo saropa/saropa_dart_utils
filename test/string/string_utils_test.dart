@@ -1,60 +1,137 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/string/string_utils.dart';
-// import 'package:test/test.dart';
 
 void main() {
-  group('StringExtensions', () {
-    test('removeStart', () {
-      expect('www.saropa.com'.removeStart('www.'), equals('saropa.com'));
-      expect('saropa.com'.removeStart('www.'), equals('saropa.com'));
-      expect(null.removeStart('www.'), isNull);
-      expect(''.removeStart('www.'), isEmpty);
+  group('nullIfEmpty', () {
+    test('returns null when string is empty', () {
+      final result = ''.nullIfEmpty();
+      expect(result, isNull);
     });
 
-    test('isNullOrEmpty', () {
-      expect(null.isNullOrEmpty, isTrue);
-      expect(''.isNullOrEmpty, isTrue);
-      expect('Saropa'.isNullOrEmpty, isFalse);
+    test('returns original string when string is not empty', () {
+      final result = 'Hello, World!'.nullIfEmpty();
+      expect(result, equals('Hello, World!'));
+    });
+  });
+
+  group('removeStart', () {
+    test('returns null when start string is empty', () {
+      final result = 'Hello, World!'.removeStart('');
+      expect(result, isNull);
     });
 
-    test('notNullOrEmpty', () {
-      expect(null.notNullOrEmpty, isFalse);
-      expect(''.notNullOrEmpty, isFalse);
-      expect('Saropa'.notNullOrEmpty, isTrue);
+    test(
+        'returns original string when start string is not a prefix '
+        '(case sensitive)', () {
+      final result = 'Hello, World!'.removeStart('hello');
+      expect(result, equals('Hello, World!'));
     });
 
-    test('encloseInParentheses', () {
-      expect('Saropa'.encloseInParentheses(), equals('(Saropa)'));
-      expect(''.encloseInParentheses(wrapEmpty: true), equals('()'));
-      expect(null.encloseInParentheses(), isNull);
+    test(
+        'returns string without start string when start string is a prefix '
+        '(case sensitive)', () {
+      final result = 'Hello, World!'.removeStart('Hello');
+      expect(result, equals(', World!'));
     });
 
-    test('wrapWith', () {
-      expect('Saropa'.wrapWith(before: '(', after: ')'), equals('(Saropa)'));
-      expect('Saropa'.wrapWith(before: 'Prefix-'), equals('Prefix-Saropa'));
-      expect('Saropa'.wrapWith(after: '-Suffix'), equals('Saropa-Suffix'));
-      expect(null.wrapWith(before: '(', after: ')'), isNull);
+    test(
+        'returns original string when start string is not a prefix '
+        '(case insensitive)', () {
+      final result =
+          'Hello, World!'.removeStart('WORLD', isCaseSensitive: false);
+      expect(result, equals('Hello, World!'));
     });
 
-    test('removeConsecutiveSpaces', () {
-      expect(
-        '  Saropa   has   multiple   spaces  '.removeConsecutiveSpaces(),
-        equals('Saropa has multiple spaces'),
-      );
-      expect(
-        '  Saropa   '.removeConsecutiveSpaces(trim: false),
-        equals(' Saropa '),
-      );
-      expect(null.removeConsecutiveSpaces(), isEmpty);
+    test(
+        'returns string without start string when start string is a prefix '
+        '(case insensitive)', () {
+      final result =
+          'Hello, World!'.removeStart('HELLO', isCaseSensitive: false);
+      expect(result, equals(', World!'));
+    });
+  });
+
+  group('removeConsecutiveSpaces', () {
+    test('returns empty string when input string is null or empty', () {
+      final result = ''.removeConsecutiveSpaces();
+      expect(result, equals(null));
     });
 
-    test('compressSpaces', () {
-      expect(
-        '  Saropa   has   multiple   spaces  '.compressSpaces(),
-        equals('Saropa has multiple spaces'),
-      );
-      expect('  Saropa   '.compressSpaces(trim: false), equals(' Saropa '));
-      expect(null.compressSpaces(), isEmpty);
+    test('returns string with consecutive spaces removed and trimmed', () {
+      final result = '  Hello,   World!  '.removeConsecutiveSpaces();
+      expect(result, equals('Hello, World!'));
+    });
+
+    test('returns string with consecutive spaces removed and not trimmed', () {
+      final result = '  Hello,   World!  '.removeConsecutiveSpaces(trim: false);
+      expect(result, equals(' Hello, World! '));
+    });
+  });
+
+  group('compressSpaces', () {
+    test('returns empty string when input string is null or empty', () {
+      final result = ''.compressSpaces();
+      expect(result, equals(null));
+    });
+
+    test('returns string with consecutive spaces removed and trimmed', () {
+      final result = '  Hello,   World!  '.compressSpaces();
+      expect(result, equals('Hello, World!'));
+    });
+
+    test('returns string with consecutive spaces removed and not trimmed', () {
+      final result = '  Hello,   World!  '.compressSpaces(trim: false);
+      expect(result, equals(' Hello, World! '));
+    });
+  });
+
+  group('wrapWith', () {
+    test('returns null when input string is empty', () {
+      final result = ''.wrapWith(before: 'Hello', after: 'World');
+      expect(result, isNull);
+    });
+
+    test('returns original string when before and after are null', () {
+      final result = 'Hello, World!'.wrapWith();
+      expect(result, equals('Hello, World!'));
+    });
+
+    test('returns string wrapped with before and after when they are not null',
+        () {
+      final result =
+          'Hello, World!'.wrapWith(before: 'Start: ', after: ' :End');
+      expect(result, equals('Start: Hello, World! :End'));
+    });
+
+    test('returns string wrapped with before when after is null', () {
+      final result = 'Hello, World!'.wrapWith(before: 'Start: ');
+      expect(result, equals('Start: Hello, World!'));
+    });
+
+    test('returns string wrapped with after when before is null', () {
+      final result = 'Hello, World!'.wrapWith(after: ' :End');
+      expect(result, equals('Hello, World! :End'));
+    });
+  });
+
+  group('encloseInParentheses', () {
+    test('returns null when input string is empty and wrapEmpty is false', () {
+      final result = ''.encloseInParentheses();
+      expect(result, isNull);
+    });
+
+    test(
+        'returns empty parentheses when input string is empty and '
+        'wrapEmpty is true', () {
+      final result = ''.encloseInParentheses(wrapEmpty: true);
+      expect(result, equals('()'));
+    });
+
+    test(
+        'returns string enclosed in parentheses when input string is not empty',
+        () {
+      final result = 'Hello, World!'.encloseInParentheses();
+      expect(result, equals('(Hello, World!)'));
     });
   });
 }

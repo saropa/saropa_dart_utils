@@ -8,20 +8,6 @@ extension EnumListExtension<T extends Enum> on Iterable<T> {
   /// Dart’s generics are invariant, which means you can’t use a subtype
   /// (like ZodiacSigns) where a base type (like Enum) is expected.
   ///
-  /* HACK: SB: for you to migrate to the examples folder
-
-    void main() {
-    // Assuming you have a list of Enums
-    List<Enum> list = [Enum.value1, Enum.value2, Enum.value1, Enum.value3];
-
-    // Call the mostOccurrences method
-    MapEntry<Enum, int> result = list.mostOccurrences();
-
-    // Print the most common Enum and its frequency
-    print('Most common item: ${result.key}');
-    print('Frequency: ${result.value}');
-  }
-*/
   MapEntry<Enum, int> mostOccurrences() {
     // If the list is empty, the method will now throw an exception with
     // a descriptive error message.
