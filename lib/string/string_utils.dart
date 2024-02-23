@@ -32,10 +32,18 @@ extension StringExtensions on String {
   /// Checks if a string is empty.
   ///
   /// Returns null if the string is empty, otherwise returns the string itself.
-  String? nullIfEmpty() {
+  String? nullIfEmpty({
+    bool trimFirst = true,
+  }) {
     /// If the string is empty, return null.
     if (isEmpty) {
       return null;
+    }
+
+    if (trimFirst) {
+      final trimmed = trim();
+
+      return trimmed.isEmpty ? null : trimmed;
     }
 
     /// If the string is not empty, return the string itself.
@@ -116,7 +124,7 @@ extension StringExtensions on String {
 
     String replaced;
     replaced = replaceAll(RegExp(r'\s+'), ' ');
-    return trim ? replaced.trim().nullIfEmpty() : replaced.nullIfEmpty();
+    return replaced.nullIfEmpty(trimFirst: trim);
   }
 
   /// Extension method to remove consecutive spaces in a [String]
