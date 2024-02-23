@@ -1,5 +1,9 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.x
+
+* Renamed strings folder to singular
+
 ## 0.0.6
 
 * Added Swipe gesture properties

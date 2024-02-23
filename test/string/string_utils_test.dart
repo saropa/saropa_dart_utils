@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saropa_dart_utils/strings/strings_utils.dart';
+import 'package:saropa_dart_utils/string/string_utils.dart';
 // import 'package:test/test.dart';
 
 void main() {

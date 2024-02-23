@@ -16,6 +16,7 @@ Useful tools 🚀 and human readable extension methods 🤖 by [Saropa][saropa_l
 - [Useful Methods](#useful-methods-and-extensions)
 - [Extensions](#extensions)
   - [String Extensions](#string-extensions)
+- [Deployment Guide For Developers](#deployment-guide-for-developers)
 
 ## Useful methods and extensions
 
@@ -71,9 +72,9 @@ print(text.compressSpaces(trim: false)); // Output: " Saropa has multiple spaces
 
 ```
 
-# Extensions
+## Extensions
 
-## String Extensions
+### String Extensions
 
 ```dart
 
@@ -129,11 +130,14 @@ print(text.compressSpaces(trim: false)); // Output: " Saropa has multiple spaces
 
 1.⁠ ⁠Update [CHANGELOG.md](CHANGELOG.md)
 
-2.⁠ ⁠Test ```flutter test```⁠
+2.⁠ Format ⁠```dart format .```
+&nbsp;&nbsp;&nbsp;&nbsp;_(note the trailing period ".")_
 
-3.⁠ ⁠Execute ⁠```dart doc```
+3.⁠ ⁠Test ```flutter test```⁠
 
-4.⁠ ⁠Deploy ⁠```dart pub publish```
+4.⁠ ⁠Execute ⁠```dart doc```
+
+5.⁠ ⁠Deploy ⁠```dart pub publish```
 
 <br>
 <p align="center">🌐 📖 👥 🏢 🚨 🔒 🤝 🎯 🛡️  📉 🆘 ⏱️ 🚑 📞 🌍 🔄 📲 💼</p>
