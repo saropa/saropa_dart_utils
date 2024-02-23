@@ -9,7 +9,8 @@
 
 Useful tools 🚀 and human readable extension methods 🤖 by [Saropa][saropa_link] 🎈
 
-[![pub package](https://img.shields.io/pub/v/saropa_dart_utils.svg)](https://pub.dev/packages/saropa_dart_utils) [![license: very good analysis](https://img.shields.io/badge/license-GPL-purple.svg)](https://opensource.org/licenses/GPL) [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
+<!-- More badges here: https://badgesgenerator.com/ -->
+[![pub package](https://img.shields.io/pub/v/saropa_dart_utils.svg)](https://pub.dev/packages/saropa_dart_utils) [![license: very good analysis](https://img.shields.io/badge/license-GPL-purple.svg)](https://opensource.org/licenses/GPL) [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis) [![slack: saropa](https://img.shields.io/badge/slack-saropa-6174B2?labelColor=4A154B)](https://saropa.slack.com) [![Google Play: saropa](https://img.shields.io/badge/Google%20Play-Saropa%20Android-6174B2?labelColor=green&style=flat)](https://play.google.com/store/apps/details?id=com.saropamobile.app&pli=1) [![AppStore: saropa](https://img.shields.io/badge/AppStore-Saropa%20iOS-6174B2?labelColor=555555&style=flat&link=https://apps.apple.com/us/app/saropa-contacts/id6447379943?platform=iphone)](https://apps.apple.com/us/app/saropa-contacts/id6447379943?platform=iphone)
 
 ## Contents
 
@@ -154,7 +155,7 @@ In an emergency, get real-time access to all the important people, companies, an
 
 Visit the Saropa Contacts project here: [app.saropa.com](https://app.saropa.com)
 
-PRs, ideas and issues are always welcome! Email for any questions [app.dev.utils@saropa.com](mailto:app.dev.utils@saropa.com)
+PRs, ideas and issues are always welcome! Email for any questions [app.dev.utils@saropa.com](mailto:app.dev.utils@saropa.com) or find us on [Slack Saropa](https://saropa.slack.com)
 
 💙 Saropa
 
