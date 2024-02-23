@@ -1,5 +1,9 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.10 - Paris
+
+* Change start to be nullable ```String? removeStart(String? start)```
+
 ## 0.0.9 - Geneva
 
 * Review of meta data
