@@ -13,7 +13,7 @@ extension StringExtensions on String {
   /// print(text.removeStart('www.')); // Output: saropa.com
   /// ```
   String? removeStart(
-    String start, {
+    String? start, {
     bool isCaseSensitive = true,
     bool trimFirst = false,
   }) {
@@ -25,15 +25,15 @@ extension StringExtensions on String {
       );
     }
 
-    if (start.isEmpty) {
+    if (start.isNullOrEmpty) {
       return this;
     }
 
     if (isCaseSensitive) {
-      return startsWith(start) ? substring(start.length).nullIfEmpty() : this;
+      return startsWith(start!) ? substring(start.length).nullIfEmpty() : this;
     }
 
-    return toLowerCase().startsWith(start.toLowerCase())
+    return toLowerCase().startsWith(start!.toLowerCase())
         ? substring(start.length).nullIfEmpty()
         : nullIfEmpty();
   }
