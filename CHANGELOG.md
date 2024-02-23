@@ -1,5 +1,10 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.9 - Geneva
+
+* Review of meta data
+* Add trimFirst param to ```StringExtensions.removeStart({bool trimFirst = false,}){...}```
+
 ## 0.0.8 - Nepal
 
 * Review of meta data

@@ -64,6 +64,30 @@ void main() {
           'Hello, World!'.removeStart('HELLO', isCaseSensitive: false);
       expect(result, equals(', World!'));
     });
+
+    test('When string is empty', () {
+      expect(''.removeStart('Hello'), equals(''));
+    });
+
+    test('When find is empty', () {
+      expect('Hello'.removeStart(''), equals('Hello'));
+    });
+
+    test('When string starts with find', () {
+      expect('Hello'.removeStart('He'), equals('llo'));
+    });
+
+    test('When string does not start with find', () {
+      expect('Hello'.removeStart('lo'), equals('Hello'));
+    });
+
+    test('When trimFirst is true and string starts with find', () {
+      expect(' Hello'.removeStart('Hello', trimFirst: true), equals(null));
+    });
+
+    test('When trimFirst is true and string does not start with find', () {
+      expect(' Hello'.removeStart('lo', trimFirst: true), equals('Hello'));
+    });
   });
 
   group('removeConsecutiveSpaces', () {
