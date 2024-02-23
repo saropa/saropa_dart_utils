@@ -15,13 +15,22 @@ extension StringExtensions on String {
   String? removeStart(
     String start, {
     bool isCaseSensitive = true,
+    bool trimFirst = false,
   }) {
+    if (trimFirst) {
+      // recurse on trimmed
+      return trim().removeStart(
+        start,
+        isCaseSensitive: isCaseSensitive,
+      );
+    }
+
     if (start.isEmpty) {
-      return null;
+      return this;
     }
 
     if (isCaseSensitive) {
-      return startsWith(start) ? substring(start.length) : this;
+      return startsWith(start) ? substring(start.length).nullIfEmpty() : this;
     }
 
     return toLowerCase().startsWith(start.toLowerCase())
