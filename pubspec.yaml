@@ -1,9 +1,10 @@
 name: saropa_dart_utils
-description: "Useful primitive utilities and extension methods from the clever people at Saropa"
-version: 0.0.7
+description: "Boilerplate reduction tools and human readable extension methods by Saropa"
+version: 0.0.8
 
-# TODO
 homepage: https://app.saropa.com
+repository: https://github.com/saropa/saropa_dart_utils
+issue_tracker: https://github.com/saropa/saropa_dart_utils/issues
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -43,22 +44,5 @@ flutter:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
-  # To add custom fonts to your package, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Roboto
-  #     fonts:
-  #       - asset: fonts/Roboto-Regular.ttf
-  #       - asset: fonts/Roboto-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages

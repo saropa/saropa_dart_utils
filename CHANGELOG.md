@@ -1,5 +1,10 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.8 - Nepal
+
+* Review of meta data
+* Add trimFirst param to ```StringExtensions.nullIfEmpty({bool trimFirst = true,}){...}```
+
 ## 0.0.7 - Jamaica
 
 * Renamed strings folder to singular

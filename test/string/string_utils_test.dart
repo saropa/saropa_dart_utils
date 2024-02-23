@@ -4,13 +4,28 @@ import 'package:saropa_dart_utils/string/string_utils.dart';
 void main() {
   group('nullIfEmpty', () {
     test('returns null when string is empty', () {
-      final result = ''.nullIfEmpty();
-      expect(result, isNull);
+      expect(''.nullIfEmpty(), isNull);
     });
 
-    test('returns original string when string is not empty', () {
-      final result = 'Hello, World!'.nullIfEmpty();
-      expect(result, equals('Hello, World!'));
+    test('returns null when string contains only spaces and trimFirst is true',
+        () {
+      expect('   '.nullIfEmpty(), isNull);
+    });
+
+    test(
+        'returns string itself when string contains only spaces and trimFirst '
+        'is false', () {
+      expect('   '.nullIfEmpty(trimFirst: false), equals('   '));
+    });
+
+    test('returns string itself when string is not empty', () {
+      expect('Hello'.nullIfEmpty(), equals('Hello'));
+    });
+
+    test(
+        'returns trimmed string when string has leading/trailing spaces and trimFirst is true',
+        () {
+      expect('  Hello  '.nullIfEmpty(), equals('Hello'));
     });
   });
 
