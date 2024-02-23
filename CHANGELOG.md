@@ -1,5 +1,9 @@
 # Change History for Saropa Dart Utils
 
+## 0.0.6
+
+* Added Swipe gesture properties
+
 ## 0.0.5
 
 * Added Documentation for all methods
