@@ -1,62 +1,63 @@
+import 'package:saropa_dart_utils/string/string_nullable_extensions.dart';
+
 /// A set of utility methods for working with strings.
-extension NullableStringExtensions on String? {
+extension StringExtensions on String {
   /// Returns a new string with the specified [start] removed from the beginning
   /// of the original string, if it exists.
+  ///
+  /// NOTE: returns null if empty so it can be used in ?? coalescing
   ///
   /// Example:
   /// ```dart
   /// String text = 'www.saropa.com';
   /// print(text.removeStart('www.')); // Output: saropa.com
   /// ```
-  @Deprecated('use StringExtensions.removeStart()')
-  String? removeStart(String start) {
-    if (start.isEmpty) {
+  String? removeStart(
+    String? start, {
+    bool isCaseSensitive = true,
+    bool trimFirst = false,
+  }) {
+    if (trimFirst) {
+      // recurse on trimmed
+      return trim().removeStart(
+        start,
+        isCaseSensitive: isCaseSensitive,
+      );
+    }
+
+    if (start.isNullOrEmpty) {
       return this;
     }
 
-    if (this == null) {
+    if (isCaseSensitive) {
+      return startsWith(start!) ? substring(start.length).nullIfEmpty() : this;
+    }
+
+    return toLowerCase().startsWith(start!.toLowerCase())
+        ? substring(start.length).nullIfEmpty()
+        : nullIfEmpty();
+  }
+
+  /// Checks if a string is empty.
+  ///
+  /// Returns null if the string is empty, otherwise returns the string itself.
+  String? nullIfEmpty({
+    bool trimFirst = true,
+  }) {
+    /// If the string is empty, return null.
+    if (isEmpty) {
       return null;
     }
 
-    return this!.startsWith(start) ? this?.substring(start.length) : this;
+    if (trimFirst) {
+      final trimmed = trim();
+
+      return trimmed.isEmpty ? null : trimmed;
+    }
+
+    /// If the string is not empty, return the string itself.
+    return this;
   }
-
-  /// Extension method to check if a [String] is null or empty.
-  ///
-  /// Returns `true` if the string is either `null` or an empty string (`""`).
-  /// Otherwise, returns `false`.
-  ///
-  /// Example:
-  /// ```dart
-  /// String? text;
-  /// print(text.isNullOrEmpty); // Output: true
-  ///
-  /// text = "";
-  /// print(text.isNullOrEmpty); // Output: true
-  ///
-  /// text = "Hello";
-  /// print(text.isNullOrEmpty); // Output: false
-  /// ```
-  bool get isNullOrEmpty => this == null || this!.isEmpty;
-
-  /// Extension method to check if a [String] is not null or empty.
-  ///
-  /// Returns `true` if the string is neither `null` nor an empty string (`""`).
-  /// Otherwise, returns `false`.
-  ///
-  /// Example:
-  /// ```dart
-  /// String? text;
-  /// print(text.notNullOrEmpty); // Output: false
-  ///
-  /// text = "";
-  /// print(text.notNullOrEmpty); // Output: false
-  ///
-  /// text = "Hello";
-  /// print(text.notNullOrEmpty); // Output: true
-  /// ```
-  @Deprecated('use !isNullOrEmpty')
-  bool get notNullOrEmpty => !isNullOrEmpty;
 
   /// Extension method to enclose a [String] in parentheses.
   ///
@@ -77,13 +78,14 @@ extension NullableStringExtensions on String? {
   /// print(text.encloseInParentheses()); // Output: null
   ///
   /// ```
-  @Deprecated('use StringExtensions.encloseInParentheses()')
   String? encloseInParentheses({bool wrapEmpty = false}) {
     if (isNullOrEmpty) {
       return wrapEmpty ? '()' : null;
     }
 
-    return '(${this!})';
+    // Alternative code:
+    // return wrapWith(before: '(', after: ')');
+    return '($this)';
   }
 
   /// Extension method to wrap a [String] with a prefix [before]
@@ -102,22 +104,12 @@ extension NullableStringExtensions on String? {
   /// print(text.wrapWith(after: "-Suffix")); // Output: Saropa-Suffix
   /// ```
   ///
-  @Deprecated('use StringExtensions.wrapWith()')
   String? wrapWith({String? before, String? after}) {
-    if (isNullOrEmpty) {
+    if (isEmpty) {
       return null;
     }
 
-    String result;
-    result = this!;
-    if (!before.isNullOrEmpty) {
-      result = '$before$result';
-    }
-    if (!after.isNullOrEmpty) {
-      result = '$result$after';
-    }
-
-    return result;
+    return '${before ?? ""}$this${after ?? ""}';
   }
 
   /// Extension method to remove consecutive spaces in a [String]
@@ -126,21 +118,22 @@ extension NullableStringExtensions on String? {
   /// If [trim] is true (default), the resulting string will also have leading
   /// and trailing spaces removed.
   ///
+  /// NOTE: returns null if empty so it can be used in ?? coalescing
+  ///
   /// Example:
   /// ```dart
   /// String text = "  Saropa   has   multiple   spaces  ";
   /// print(text.removeConsecutiveSpaces()); // Output: "Saropa has multiple spaces"
   /// print(text.removeConsecutiveSpaces(trim: false)); // Output: " Saropa has multiple spaces "
   /// ```
-  @Deprecated('use StringExtensions.removeConsecutiveSpaces()')
-  String removeConsecutiveSpaces({bool trim = true}) {
-    if (isNullOrEmpty) {
-      return '';
+  String? removeConsecutiveSpaces({bool trim = true}) {
+    if (isEmpty) {
+      return null;
     }
 
     String replaced;
-    replaced = this!.replaceAll(RegExp(r'\s+'), ' ');
-    return trim ? replaced.trim() : replaced;
+    replaced = replaceAll(RegExp(r'\s+'), ' ');
+    return replaced.nullIfEmpty(trimFirst: trim);
   }
 
   /// Extension method to remove consecutive spaces in a [String]
@@ -148,14 +141,15 @@ extension NullableStringExtensions on String? {
   ///
   /// This is an alias for [removeConsecutiveSpaces].
   ///
+  /// NOTE: returns null if empty so it can be used in ?? coalescing
+  ///
   /// Example:
   /// ```dart
   /// String text = "  Saropa   has   multiple   spaces  ";
   /// print(text.compressSpaces()); // Output: "Saropa has multiple spaces"
   /// print(text.compressSpaces(trim: false)); // Output: " Saropa has multiple spaces "
   /// ```
-  @Deprecated('use StringExtensions.removeConsecutiveSpaces()')
-  String compressSpaces({bool trim = true}) {
+  String? compressSpaces({bool trim = true}) {
     return removeConsecutiveSpaces(trim: trim);
   }
 }
