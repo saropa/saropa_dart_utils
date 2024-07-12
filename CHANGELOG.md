@@ -1,6 +1,10 @@
 # Change History for Saropa Dart Utils
 
-## 0.0.11 - Rome (Latest)
+## 0.1.0 - Tuscany (Latest)
+
+* 🧹 Bumped medium version due to deprecations and rename of "string_nullable_utils.dart" to "string_nullable_extensions.dart"
+
+## 0.0.11 - Rome
 
 * 🗑️ Removed deprecated functions in ```StringNullableExtensions```
 
