@@ -1,16 +1,16 @@
 # Change History for Saropa Dart Utils
 
-## 0.2.0 - Melbourne (Latest)
+## 0.2.0+Melbourne (Latest)
 
 * 🚀 New Enum Methods: Introduced byNameTry and sortedEnumValues methods for enums to enhance searching and sorting capabilities.
 * 📈 Added of list extensions for common operations such as finding the smallest, biggest, most, and least occurrences in a list.
 * 🧹 Bumped medium version due to addition of collections package and sdk bumps (sdk: ">=3.4.3 <4.0.0", flutter: ">=3.24.0")
 
-## 0.1.0 - Tuscany
+## 0.1.0+Tuscany
 
 * 🧹 Bumped medium version due to deprecations and rename of "string_nullable_utils.dart" to "string_nullable_extensions.dart"
 
-## 0.0.11 - Rome
+## 0.0.11+Rome
 
 * 🗑️ Removed deprecated functions in ```StringNullableExtensions```
 
@@ -41,24 +41,24 @@
 * ✨ Added function ```IntExtensions.countDigits```
  ```(-12345).countDigits() // 5```
 
-## 0.0.10 - Paris
+## 0.0.10+Paris
 
 * Change start to be nullable
 ```String? removeStart(String? start)```
 
-## 0.0.9 - Geneva
+## 0.0.9+Geneva
 
 * Review of meta data
 * Add trimFirst param to
 ```StringExtensions.removeStart({bool trimFirst = false,}){...}```
 
-## 0.0.8 - Nepal
+## 0.0.8+Nepal
 
 * Review of meta data
 * Add trimFirst param to
 ```StringExtensions.nullIfEmpty({bool trimFirst = true,}){...}```
 
-## 0.0.7 - Jamaica
+## 0.0.7+Jamaica
 
 * Renamed strings folder to singular
 * Deprecated nullable string extensions
