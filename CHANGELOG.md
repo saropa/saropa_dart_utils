@@ -1,8 +1,10 @@
 # Change History for Saropa Dart Utils
 
-## 0.1.1 - Melbourne (Latest)
+## 0.2.0 - Melbourne (Latest)
 
+* 🚀 New Enum Methods: Introduced byNameTry and sortedEnumValues methods for enums to enhance searching and sorting capabilities.
 * 📈 Added of list extensions for common operations such as finding the smallest, biggest, most, and least occurrences in a list.
+* 🧹 Bumped medium version due to addition of collections package
 
 ## 0.1.0 - Tuscany
 

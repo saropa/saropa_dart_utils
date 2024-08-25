@@ -12,6 +12,11 @@ environment:
   flutter: ">=3.24.0"
 
 dependencies:
+  # Contains utility functions and classes in the style of dart:collection to make working with collections easier.
+  # https://pub.dev/packages/collection/changelog
+  # NOTE: Because every version of flutter_test from sdk depends on collection 1.18.0 and saropa depends on collection ^1.19.0, flutter_test from sdk is forbidden.
+  collection: ^1.18.0
+
   flutter:
     sdk: flutter
 
