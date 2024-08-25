@@ -1,6 +1,10 @@
 # Change History for Saropa Dart Utils
 
-## 0.1.0 - Tuscany (Latest)
+## 0.1.1 - Melbourne (Latest)
+
+* 📈 Added of list extensions for common operations such as finding the smallest, biggest, most, and least occurrences in a list.
+
+## 0.1.0 - Tuscany
 
 * 🧹 Bumped medium version due to deprecations and rename of "string_nullable_utils.dart" to "string_nullable_extensions.dart"
 

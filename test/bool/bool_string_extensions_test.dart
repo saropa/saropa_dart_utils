@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saropa_dart_utils/bool/bool_string_utils.dart';
+import 'package:saropa_dart_utils/bool/bool_string_extensions.dart';
 
 void main() {
   group('BoolStringExtensions', () {

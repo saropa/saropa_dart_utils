@@ -1,7 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saropa_dart_utils/bool/bool_list_utils.dart';
+import 'package:saropa_dart_utils/bool/bool_iterable_extensions.dart';
 
 void main() {
+  group('ListExtensions', () {
+    test('mostOccurrences', () {
+      expect([true, false, true].mostOccurrences(), equals((true, 2)));
+    });
+
+    test('leastOccurrences', () {
+      expect([true, false, true].leastOccurrences(), equals((false, 1)));
+    });
+  });
+
   group('anyTrue', () {
     // Additional test cases
     test('returns true for list with single true element', () {
