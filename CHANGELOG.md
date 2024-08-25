@@ -4,7 +4,7 @@
 
 * 🚀 New Enum Methods: Introduced byNameTry and sortedEnumValues methods for enums to enhance searching and sorting capabilities.
 * 📈 Added of list extensions for common operations such as finding the smallest, biggest, most, and least occurrences in a list.
-* 🧹 Bumped medium version due to addition of collections package
+* 🧹 Bumped medium version due to addition of collections package and sdk bumps (sdk: ">=3.4.3 <4.0.0", flutter: ">=3.24.0")
 
 ## 0.1.0 - Tuscany
 
