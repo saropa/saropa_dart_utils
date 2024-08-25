@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saropa_dart_utils/list/list_int_extensions.dart';
+import 'package:saropa_dart_utils/int/int_iterable_extensions.dart';
 
 void main() {
   group('ListIntExtensions', () {

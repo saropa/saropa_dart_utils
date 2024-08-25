@@ -1,8 +1,8 @@
 import 'dart:collection';
 
-/// Extension on List to provide additional properties and methods for lists
+/// Extension on Iterable to provide additional properties and methods for lists
 /// containing elements that implement Comparable.
-extension ListExtensions<T extends Comparable<T>> on List<T> {
+extension IterableExtensions<T extends Comparable<T>> on Iterable<T> {
   /// Finds the smallest occurrence in the list.
   ///
   /// Returns the smallest element in the list based on the Comparable

@@ -3,7 +3,7 @@ import 'dart:collection';
 /// NOTE: Dart’s type system doesn’t consider int to be a subtype of
 ///       Comparable<int>, even though int does implement Comparable<num>
 ///
-extension ListIntExtensions on List<int> {
+extension IntIterableExtensions on Iterable<int> {
   /// find the most common value in the list.
   (int, int)? mostOccurrences() {
     // check if the list is empty before calling reduce
