@@ -1,6 +1,12 @@
 # Change History for Saropa Dart Utils
 
-## 0.2.1+Adelaide (Latest)
+## 0.2.2+Pittsburgh (Latest)
+
+* 🧹 Migrated `List` extensions to `Iterable`
+* 🧹 Migrated `List` extensions to `Iterable`
+* 🧹 Migrated `List` extensions to `Iterable`
+
+## 0.2.1+Adelaide
 
 * 🧹 Migrated `List` extensions to `Iterable`
 

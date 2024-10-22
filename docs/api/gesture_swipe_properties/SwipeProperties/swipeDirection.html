@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the swipeDirection property from the SwipeProperties extension, for the Dart programming language.">
+  <title>swipeDirection property - SwipeProperties extension - swipe_properties library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">saropa_dart_utils</a></li>
+    <li><a href="../../gesture_swipe_properties/gesture_swipe_properties-library.html">gesture\swipe_properties.dart</a></li>
+    <li><a href="../../gesture_swipe_properties/SwipeProperties.html">SwipeProperties</a></li>
+    <li class="self-crumb">swipeDirection property</li>
+  </ol>
+  <div class="self-name">swipeDirection</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="gesture_swipe_properties&#47;SwipeProperties-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-property">swipeDirection</span> property 
+</h1></div>
+
+    
+
+    
+        
+  <section id="getter">
+    <section class="multi-line-signature">
+      
+      <span class="returntype"><a href="../../gesture_swipe_properties/SwipeDirection.html">SwipeDirection</a></span>
+      get
+      <span class="name ">swipeDirection</span>
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Method to get the swipe direction.</p>
+<p>This method returns the direction of the swipe based on the velocity.</p>
+</section>
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">SwipeDirection get swipeDirection {
+  &#47;&#47; Ref: https:&#47;&#47;stackoverflow.com&#47;questions&#47;61901468&#47;how-to-detect-left-and-right-swipes-in-flutter
+  if (velocity.pixelsPerSecond.dx.abs() &gt;=
+      velocity.pixelsPerSecond.dy.abs()) {
+    &#47;&#47; Horizontal swipe
+    return velocity.pixelsPerSecond.dx &gt; 0
+        ? SwipeDirection.right
+        : SwipeDirection.left;
+  }
+
+  &#47;&#47; Vertical swipe
+  return velocity.pixelsPerSecond.dy &gt; 0
+      ? SwipeDirection.down
+      : SwipeDirection.up;
+}</code></pre>
+</section>
+
+  </section>
+
+
+</div> <!-- /.main-content -->
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">saropa_dart_utils</a></li>
+    <li><a href="../../gesture_swipe_properties/gesture_swipe_properties-library.html">swipe_properties</a></li>
+    <li><a href="../../gesture_swipe_properties/SwipeProperties.html">SwipeProperties</a></li>
+    <li class="self-crumb">swipeDirection property</li>
+</ol>
+
+  <h5>SwipeProperties extension on <a href="https://api.flutter.dev/flutter/gestures/DragEndDetails-class.html">DragEndDetails</a></h5>
+  <div id="dartdoc-sidebar-left-content"></div>
+</div><!--/.sidebar-offcanvas-->
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    saropa_dart_utils
+      0.2.2+Pittsburgh
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
