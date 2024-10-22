@@ -16,6 +16,8 @@ Boilerplate reduction tools 🚀 and human readable extension methods 🤖 by [S
 
 [![github home](https://img.shields.io/badge/GitHub-Saropa-333?labelColor=555555)](https://github.com/saropa/saropa_dart_utils)  [![stars](https://badgen.net/github/stars/saropa/saropa_dart_utils?label=stars&color=green&icon=github)](https://github.com/saropa/saropa_dart_utils/stargazers) [![likes](https://img.shields.io/pub/likes/saropa_dart_utils?logo=flutter)](https://pub.dev/packages/saropa_dart_utils/score) [![Open Issues](https://badgen.net/github/open-issues/saropa/saropa_dart_utils?label=Open+Issues&color=green)](https://GitHub.com/saropa/saropa_dart_utils/issues) [![Open PRs](https://badgen.net/github/open-prs/saropa/saropa_dart_utils?label=Open+PRs&color=green)](https://GitHub.com/saropa/saropa_dart_utils/pulls)
 
+We encourage your to review our public [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md).
+
 ## Contents
 
 - [Useful Methods](#useful-methods-and-extensions)

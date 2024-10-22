@@ -1,19 +1,17 @@
 # Change History for Saropa Dart Utils
 
-## 0.3.1 Jakarta (Latest)
+## 0.3.4 Jakarta (Latest)
 
-* 🤝 Updated code.of.conduct.md with saropa logo
-* 🤝 Updated code.of.conduct.md with examples, a survey and an exercise
+* 🤝 Restore section numbers in the [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md)
+* 🤝 Updated [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md) with the [Saropa logo](https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png), examples, a survey and an exercise
+* 🤝 Include a link to the [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md) into [README.md](https://github.com/saropa/saropa_dart_utils/blob/main/README.md)
 * 🧹 Rename `doc` output folder to `docs`
 
 ## 0.2.3+Pittsburgh
 
-* 🧹 Update this change log
-
-## 0.2.2+Pittsburgh
-
+* 🧹 Update this change log [CHANGELOG.md](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
 * 🔢 Add CommonRandom class as a drop-in replacement for math.Random() with a reliable random seed
-* 🤝 Added code.of.conduct.md for the Saropa contributors
+* 🤝 Added [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md) for the Saropa contributors
 * 📜 Added development helper scripts - including doc generation and publishing
 
 ## 0.2.1+Adelaide
