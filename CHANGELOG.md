@@ -4,6 +4,7 @@
 
 * 🤝 Updated code.of.conduct.md with saropa logo
 * 🤝 Updated code.of.conduct.md with examples, a survey and an exercise
+* 🧹 Rename `doc` output folder to `docs`
 
 ## 0.2.3+Pittsburgh
 
