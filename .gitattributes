@@ -1,0 +1,8 @@
+# Set line endings to LF for all text files
+* text=auto
+
+# Specific files with LF line endings
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.md text eol=lf

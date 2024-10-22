@@ -7,7 +7,7 @@ import 'dart:math';
 ///
 /// NOTE: if you call CommonRandom() multiple times in quick succession, they
 ///  might generate the same value due to the seed being based on
-///  [DateTime.now().millisecondsSinceEpoch]
+///  [DateTime.millisecondsSinceEpoch]
 ///
 /// To get distinct values, you should initialize CommonRandom once and reuse
 ///  it.
