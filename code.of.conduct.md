@@ -513,53 +513,53 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 ## The Survey
 
 Choose 1 only...
-
-1. 🛠️ When you aim to maintain clean, maintainable code, how do you approach it?
+<!-- double space needed for force newline -->
+1. 🛠️ When you aim to maintain clean, maintainable code, how do you approach it?  
   ☐ Refactor regularly to improve code quality and maintainability  
   ☐ Utilize automated tools to highlight and fix code issues  
   ☐ Collaborate with peers to ensure high standards are maintained  
 
-2. 📊 How do you ensure your progress reports are comprehensive and effective?
+2. 📊 How do you ensure your progress reports are comprehensive and effective?  
   ☐ Use project management tools and write comprehensive email updates  
   ☐ Hold regular check-ins with the team and provide context with proposed solutions  
   ☐ Ensure timely communication and factual transparency to avoid surprises  
 
-3. 📚 How do you contribute to the quality and accuracy of documentation?
+3. 📚 How do you contribute to the quality and accuracy of documentation?  
   ☐ Update documentation promptly after changes are made  
   ☐ Regularly review and provide feedback on existing documentation  
   ☐ Actively participate in documentation review sessions  
 
-4. 🌱 How do you stay updated with new technologies and integrate them into your work?
+4. 🌱 How do you stay updated with new technologies and integrate them into your work?  
   ☐ Attend industry workshops and conferences to learn  
   ☐ Follow relevant blogs and publications for the latest trends  
   ☐ Experiment with new technologies in side projects  
 
-5. 🔋 What steps do you take to optimize code performance in your projects?
+5. 🔋 What steps do you take to optimize code performance in your projects?  
   ☐ Regularly profile and refactor code to enhance performance  
   ☐ Implement performance best practices from the start  
   ☐ Use feedback from performance testing to make improvements  
 
-6. 🧘‍♂️ How do you manage stress during high-pressure situations at work?
+6. 🧘‍♂️ How do you manage stress during high-pressure situations at work?  
   ☐ Practice mindfulness and take regular breaks to stay balanced  
   ☐ Prioritize tasks and break them down into manageable steps  
   ☐ Seek support from colleagues and mentors when needed  
 
-7. 🔥 A critical bug in the software is unresolved causing significant financial loss. What approach do you take?
+7. 🔥 A critical bug in the software is unresolved causing significant financial loss. What approach do you take?  
   ☐ Claim it was a misunderstanding of the requirements if questioned  
   ☐ Hide the problem with hard coding and plan to fix it later  
   ☐ Request a reassignment to another project before the issue is noticed  
 
-8. 🌈 What actions do you take to promote a positive and inclusive workplace?
+8. 🌈 What actions do you take to promote a positive and inclusive workplace?  
   ☐ Encourage inclusive behavior and language among colleagues  
   ☐ Promptly report any incidents of harassment or discrimination  
   ☐ Actively support peers who may need assistance or encouragement  
 
-9. ⚖️ How do you handle risks and unexpected challenges in projects?
+9. ⚖️ How do you handle risks and unexpected challenges in projects?  
   ☐ Create contingency plans to prepare for potential issues  
   ☐ Regularly reassess and adjust project plans as needed  
   ☐ Discuss potential risks and challenges with the team  
 
-10. 🌟 In a team setting, how do you ensure effective progress and contribution?
+10. 🌟 In a team setting, how do you ensure effective progress and contribution?  
   ☐ Regular team meetings for updates and problem-solving  
   ☐ Challenge team members while ensuring accountability  
   ☐ Assign tasks based on each member's strengths and expertise  
@@ -577,3 +577,5 @@ We’re looking for people who can think outside the box, deliver high-quality w
 1. ⚙️ What techniques can we use to optimize the system’s performance?
 1. 🤖 How can AI be used to improve its capabilities?
 1. 💬 How should the system utilize feedback from its users?
+
+`END`
