@@ -33,13 +33,13 @@ Saropa is committed to diversity and equal opportunity. We do not discriminate b
 
 *Unacceptable behavior includes:*
 
-- Use of sexualized language or imagery and other harassment, including trolling, insults, and derogatory comments
+- Use of sexualized language or imagery, trolling, or derogatory comments
 - Publishing others' private information without permission
 - Any inappropriate conduct in a professional setting
 
 This Code of Conduct applies within project spaces and public spaces when representing the project or community. This includes using official emails, social media accounts, or acting as an official representative.
 
-Report unacceptable behavior to the project team at [code_of_conduct@saropa.com](code_of_conduct@saropa.com). All complaints will be reviewed and investigated confidentially. Maintainers who fail to enforce the Code of Conduct may face repercussions as determined by the project's leadership.
+Report unacceptable behavior to the project team at [code_of_conduct@saropa.com](code_of_conduct@saropa.com). All complaints will be reviewed and investigated confidentially. Failure to enforce the Code of Conduct may result in repercussions as determined by the project's leadership.
 
 ### We Start Now
 
@@ -122,9 +122,9 @@ Bad coding is easy. The following rules make code simpler to read, review, maint
 
 1.1.b 📐 Maintain a separation of concerns. Small files and functions streamline code reviews, migrations and merges.
 
-- Separate UI, models, services, and utilities into distinct folders, with patterns like MVVM or Clean Architecture.
+- Separate UI, models, services, and utilities into distinct folders, with patterns like `MVVM` or `Clean Architecture`.
 - Keep state management logic separate from UI code, to ensure state changes are predictable and testable.
-- Organize files by feature or module, named based on their functionality (e.g., `user_profile.code`)
+- Organize files by feature or module, named based on their functionality
 
 1.1.c 🎯 Exit early to avoid nested ifs and separate logic into methods
 
@@ -478,7 +478,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 7.3.e ❓ Experienced people ask questions. "I got this" is good, but "I don't know" is crucial for growth.
 
-7.3.f 🔨 Slow progress is only bad if not communicated. Refusing to feedback bad news is not a successful strategy, instead ask for creative solutions.
+7.3.f 🔨 Slow progress is only bad when not communicated. Refusing to feedback bad news is neither a successful or rewarded strategy, instead ask stakeholders for creative solutions.
 
 ### Respect Flow State
 
@@ -566,7 +566,9 @@ Choose 1 only...
 
 ## The Exercise
 
-Imagine you are part of a development team tasked with improving an existing task management system. Your goal is to propose new features that enhance the system's usability, performance, and overall effectiveness. We’re looking for people who can think outside the box, deliver high-quality work quickly, and inspire innovation in our task management system.
+Imagine you are part of a development team tasked with improving an existing task management system. Your goal is to propose new features that enhance the system's usability, performance, and overall effectiveness.
+
+We’re looking for people who can think outside the box, deliver high-quality work quickly, and inspire innovation in our task management system.
 
 1. 🛠️ How would we identify a high-quality feature that is missing?
 1. 📊 What is an interesting idea to report task progress to users?

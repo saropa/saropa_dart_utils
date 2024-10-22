@@ -9,7 +9,7 @@ $workingDir = Split-Path -Path $scriptDir -Parent
 Set-Location -Path $workingDir
 
 # Define the documentation output directory
-$docOutputDir = Join-Path $workingDir "doc"
+$docOutputDir = Join-Path $workingDir "docs"
 
 # Clean the documentation directory
 if (Test-Path $docOutputDir) {
