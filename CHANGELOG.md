@@ -1,6 +1,10 @@
 # Change History for Saropa Dart Utils
 
-## 0.2.2+Pittsburgh (Latest)
+## 0.2.3+Pittsburgh (Latest)
+
+* 🧹 Update this change log
+
+## 0.2.2+Pittsburgh
 
 * 🔢 Add CommonRandom class as a drop-in replacement for math.Random() with a reliable random seed
 * 🤝 Added code.of.conduct.md for the Saropa contributors
