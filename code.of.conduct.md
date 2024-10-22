@@ -2,6 +2,9 @@
 
 > The Ultimate Developer’s Handbook: Code Quality, Ethics, and Performance at Saropa
 
+<!-- markdownlint-disable MD033 - Disable No HTML -->
+<img src="https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png" alt="saropa company logo" style="filter: drop-shadow(0.2em 0.2em 0.13em rgba(68, 68, 68, 0.35));" width="340" />
+
 As an organization, Saropa promotes behavior that reflects our values. This Code of Conduct outlines the minimum standards expected of our staff, contributors, and business partners. Compliance with the most restrictive applicable laws and regulations is required.
 
 ## Introduction
