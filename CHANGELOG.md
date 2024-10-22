@@ -2,9 +2,9 @@
 
 ## 0.2.2+Pittsburgh (Latest)
 
-* 🧹 Migrated `List` extensions to `Iterable`
-* 🧹 Migrated `List` extensions to `Iterable`
-* 🧹 Migrated `List` extensions to `Iterable`
+* 🧹 Add CommonRandom class as a drop-in replacement for math.Random() with a reliable randomizer
+* 🧹 Added code.of.conduct.md for the Saropa contributors
+* 🧹 Added development helper scripts - including doc generation and publishing
 
 ## 0.2.1+Adelaide
 
