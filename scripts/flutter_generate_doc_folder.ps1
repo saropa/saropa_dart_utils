@@ -9,7 +9,7 @@ $workingDir = Split-Path -Path $scriptDir -Parent
 Set-Location -Path $workingDir
 
 # Define the documentation output directory
-$docOutputDir = Join-Path $workingDir "docs"
+$docOutputDir = Join-Path $workingDir "doc"
 
 # Clean the documentation directory
 if (Test-Path $docOutputDir) {
@@ -52,9 +52,9 @@ $upload = Read-Host "Do you want to upload the documentation to the gh-pages bra
 if ($upload -eq 'y') {
     # Uploading to gh-pages branch
     git checkout --orphan gh-pages
-    mkdir -p docs/api
-    cp -r $apiDocPath/* docs/api/
-    git add docs
+    mkdir -p doc/api
+    cp -r $apiDocPath/* doc/api/
+    git add doc
     git commit -m "Update generated documentation"
     git push origin gh-pages --force
     Write-Output "Documentation uploaded to gh-pages branch successfully."
