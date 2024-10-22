@@ -1,6 +1,10 @@
 # Change History for Saropa Dart Utils
 
-## 0.2.3+Pittsburgh (Latest)
+## 0.3.0 Jakarta (Latest)
+
+* 🧹 Updated code.of.conduct.md with examples, a survey and an exercise
+
+## 0.2.3+Pittsburgh
 
 * 🧹 Update this change log
 
