@@ -73,3 +73,4 @@ app.*.map.json
 /android/app/release
 .fvm/flutter_sdk
 .fvm/fvm_config.json
+dartdoc-log.txt
