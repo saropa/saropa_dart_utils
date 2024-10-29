@@ -84,14 +84,26 @@ Report unacceptable behavior to the project team at [code_of_conduct@saropa.com]
   - [6.2. AI for Documentation](#62-ai-for-documentation)
   - [6.3. AI Limitations](#63-ai-limitations)
   - [6.4. Language](#64-language)
-- [7. Integrity](#7-integrity)
-  - [7.1. Recognize and Manage Stress](#71-recognize-and-manage-stress)
-  - [7.2. Identifying and Managing Risks](#72-identifying-and-managing-risks)
-  - [7.3. Managing Panic](#73-managing-panic)
-  - [7.4. Respect Flow State](#74-respect-flow-state)
-  - [7.5. Celebrate Diversity and Stamp Out Bullying](#75-celebrate-diversity-and-stamp-out-bullying)
-  - [7.6. Honesty with Stakeholders](#76-honesty-with-stakeholders)
-  - [7.7. Joy in Programming](#77-joy-in-programming)
+- [7. Work from Home](#7-work-from-home)
+  - [7.1. Maintain Productivity](#71-maintain-productivity)
+  - [7.2. Communication and Coordination](#72-communication-and-coordination)
+  - [7.3. Work-Life Balance and Managing Irregular Hours](#73-work-life-balance-and-managing-irregular-hours)
+  - [7.4. Addressing Challenges and Leveraging Opportunities](#74-addressing-challenges-and-leveraging-opportunities)
+  - [7.5. Report Challenges and Progress](#75-report-challenges-and-progress)
+  - [7.6. Cultural Sensitivity and Team Unity](#76-cultural-sensitivity-and-team-unity)
+- [8. Overcoming Seemingly Impossible Challenges](#8-overcoming-seemingly-impossible-challenges)
+  - [8.1. Identify and Understand the Challenge](#81-identify-and-understand-the-challenge)
+  - [8.2. Seek Assistance and Perspectives](#82-seek-assistance-and-perspectives)
+  - [8.3. Maintain Persistence and Adaptability](#83-maintain-persistence-and-adaptability)
+  - [8.4. Reevaluate and Incremental Progress](#84-reevaluate-and-incremental-progress)
+- [9. Integrity](#9-integrity)
+  - [9.1. Recognize and Manage Stress](#91-recognize-and-manage-stress)
+  - [9.2. Identifying and Managing Risks](#92-identifying-and-managing-risks)
+  - [9.3. Managing Panic](#93-managing-panic)
+  - [9.4. Respect Flow State](#94-respect-flow-state)
+  - [9.5. Celebrate Diversity and Stamp Out Bullying](#95-celebrate-diversity-and-stamp-out-bullying)
+  - [9.6. Honesty with Stakeholders](#96-honesty-with-stakeholders)
+  - [9.7. Joy in Programming](#97-joy-in-programming)
 - [The Survey](#the-survey)
 - [The Exercise](#the-exercise)
 
@@ -296,7 +308,7 @@ Work well with your team, communicate clearly, encourage questions, and put your
 *(a)* 🕺 Consider the practicality and usability of features from the user's perspective. Think about how users will interact with your product and prioritize their needs.
 
 - Similar elements should behave in similar ways and be located in familiar places to ensure predictability and intuitiveness.
-- Group information hierarchically, hide complexity under "more" options, and use filters and search functionalities to make it manageable.
+- Group information hierarchically, hide complexity under “more” options, and use filters and search functionalities to make it manageable.
 - Utilize labels, color, buttons, and diagrams, and incorporate accessibility features to enhance usability.
 - Always provide a warning before performing any irreversible actions.
 - Regularly ask users for their input to ensure the product meets their needs and expectations.
@@ -446,11 +458,115 @@ AI is used most effectively as an accelerator for experienced developers, and a 
 
 *(a)* 🖱️ You must actively use spelling and grammar checkers for all code and documentation. Language assistants are a vital quality control when working at speed.
 
-## 7. Integrity
+## 7. Work from Home
+
+Focus on maintaining productivity, clear communication, and a healthy work-life balance while addressing challenges, leveraging opportunities, and managing time zone differences and irregular hours.
+
+### 7.1. Maintain Productivity
+
+*(a)* 🏠 Create a dedicated workspace to maintain focus and separate work from personal life.
+
+*(b)* ⏲️ Set regular working hours and take scheduled breaks to prevent burnout.
+
+*(c)* 📅 Use productivity applications to stay organized and manage tasks efficiently.
+
+*(d)* 🛠️ Fully use of the provided project and communication tools to collaborate and keep track of your work.
+
+*(e)* 📝 Break tasks into smaller work items, complete them, and report progress promptly.
+
+### 7.2. Communication and Coordination
+
+*(a)* 📡 Check in with your team regularly through communication tools to ensure effective collaboration.
+
+*(b)* ✉️ Respond to messages and emails promptly to maintain workflow.
+
+*(c)* 📆 Communicate your availability and any potential interruptions clearly to manage expectations.
+
+*(d)* 🌍 Schedule regular check-ins at mutually convenient times for all team members, considering different time zones.
+
+*(e)* 📅 Use shared calendars to manage availability and schedule meetings efficiently across different time zones.
+
+### 7.3. Work-Life Balance and Managing Irregular Hours
+
+*(a)* 🕒 Define clear working hours to avoid overworking and maintain a healthy balance.
+
+*(b)* ☕ Schedule breaks throughout the day to recharge and stay productive.
+
+*(c)* 🏋️ Engage in activities that promote mental and physical well-being.
+
+*(d)* ⏰ Be mindful of the impact of irregular hours on your work-life balance and health.
+
+*(e)* 💤 Ensure adequate rest and maintain a consistent sleep schedule.
+
+### 7.4. Addressing Challenges and Leveraging Opportunities
+
+*(a)* 🚫 Minimize home environment distractions by setting boundaries and creating a dedicated workspace.
+
+*(b)* 🤝 Stay connected with colleagues through virtual interactions to combat isolation.
+
+*(c)* 📊 Balance work tasks with personal responsibilities effectively by planning and scheduling.
+
+*(d)* 💡 Take the opportunity to learn new skills or improve existing ones by utilizing online resources and training.
+
+*(e)* 🌟 Develop self-management skills and take ownership of projects.
+
+### 7.5. Report Challenges and Progress
+
+*(a)* 📈 Regularly share what you are working on, providing updates on progress and milestones.
+
+*(b)* 🆘 Communicate challenges or obstacles openly and seek assistance when needed.
+
+*(c)* ✏️ Provide detailed accounts of steps taken to address challenges, ensuring visibility and understanding of your efforts.
+
+*(d)* 🌐 Use asynchronous communication tools to stay connected without needing to be online simultaneously.
+
+*(e)* 📝 Provide clear and detailed updates to avoid misunderstandings and ensure continuity.
+
+### 7.6. Cultural Sensitivity and Team Unity
+
+*(a)* 🌏 Be aware of cultural differences and public holidays in different regions.
+
+*(b)* 🤝 Show respect and understanding for cultural variations in working styles and communication.
+
+*(c)* 🎉 Acknowledge and celebrate cultural events and holidays to foster team unity.
+
+## 8. Overcoming Seemingly Impossible Challenges
+
+Focus on identifying and understanding the problem, seeking assistance, maintaining persistence, and achieving incremental progress.
+
+### 8.1. Identify and Understand the Challenge
+
+(a) 🕵️ Clearly define and understand the problem you are facing.
+
+(b) 🧩 Break the challenge into smaller, manageable parts.
+
+### 8.2. Seek Assistance and Perspectives
+
+(a) 🌐 Involve team members and seek diverse perspectives to gain new insights and potential solutions.
+
+(b) 📖 Use all available resources, including tools, documentation, and expertise from colleagues or external sources.
+
+### 8.3. Maintain Persistence and Adaptability
+
+(a) 💪 Stay persistent and adaptable, adjusting your approach as needed to overcome obstacles.
+
+(b) 🏃‍♂️ Avoid procrastination and find ways to unlock the problem.
+
+(c) 🔄 Complete minor, unrelated safe tasks to unblock your progress and maintain momentum.
+
+### 8.4. Reevaluate and Incremental Progress
+
+(a) 🔍 Regularly reevaluate the requirements and get stakeholder approval to ensure alignment.
+
+(b) 📊 Focus on making incremental, small progress to achieve manageable milestones.
+
+(c) 🎉 Recognize and celebrate small victories along the way to maintain motivation and build momentum.
+
+## 9. Integrity
 
 Focus on ethical practices, managing stress, identifying and handling risks, fostering joy in programming, and promoting diversity and inclusion.
 
-### 7.1. Recognize and Manage Stress
+### 9.1. Recognize and Manage Stress
 
 *(a)* 🌸 Acknowledge when you're overwhelmed and talk to your team or manager. Use techniques like mindfulness, exercise, or regular breaks to maintain well-being.
 
@@ -458,7 +574,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 🧘 Identify signs of burnout, such as chronic fatigue or lack of motivation. Encourage a culture of mental health openness and support taking time off to recharge.
 
-### 7.2. Identifying and Managing Risks
+### 9.2. Identifying and Managing Risks
 
 *(a)* 🧩 Identify potential challenges early in the development process. Regularly assess your project for risks and discuss them with your team.
 
@@ -466,7 +582,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 📢 Keep stakeholders updated about risks and their potential impact. Use regular status updates and meetings to keep them informed and engaged.
 
-### 7.3. Managing Panic
+### 9.3. Managing Panic
 
 *(a)* 🛑 Identify common panic triggers like tight deadlines, unexpected issues, or high-stakes presentations.
 
@@ -476,11 +592,11 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(d)* 🏡 Acknowledge that WFH presents specific challenges for training and communication, making it harder to manage and support.
 
-*(e)* ❓ Experienced people ask questions. "I got this" is good, but "I don't know" is crucial for growth.
+*(e)* ❓ Experienced people ask questions. *“I got this”* is good, but *“I don't know”* is crucial for growth.
 
 *(f)* 🔨 Slow progress is only bad when not communicated. Refusing to feedback bad news is neither a successful or rewarded strategy, instead ask stakeholders for creative solutions.
 
-### 7.4. Respect Flow State
+### 9.4. Respect Flow State
 
 *(a)* ⚡ Flow state is a mental state of deep focus and immersion where productivity peaks and complex problems are solved more effectively.
 
@@ -488,19 +604,19 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 🧘 Respect your colleagues' flow state by avoiding unnecessary interruptions and using signals or tools to indicate when someone is in deep work mode.
 
-### 7.5. Celebrate Diversity and Stamp Out Bullying
+### 9.5. Celebrate Diversity and Stamp Out Bullying
 
 *(a)* 🌍 Recognize and address different types of bullying, including verbal, physical, social, cyberbullying, and constructive dismissal. Embrace and celebrate diversity in all its forms, including religion, sexual orientation, age, disabilities, medical needs, and family responsibilities.
 
 *(b)* 🔍 Ensure a supportive environment where everyone feels safe and respected. Promote an inclusive culture where diversity is viewed as a strength, fostering innovation and creativity, while promptly addressing and taking action against any form of bullying.
 
-### 7.6. Honesty with Stakeholders
+### 9.6. Honesty with Stakeholders
 
 *(a)* 💬 Be transparent and honest with stakeholders, users, and clients. Avoid engaging in harmful business practices such as planned obsolescence or binding practices that trap individuals in an organization.
 
 *(b)* 🤝 Promote open communication and trust with all parties involved, ensuring that ethical standards are maintained in all business dealings.
 
-### 7.7. Joy in Programming
+### 9.7. Joy in Programming
 
 *(a)* 🎉 Focus on the enjoyable aspects of your work and celebrate small victories. Cultivate a positive work environment by supporting colleagues and promoting appreciation.
 
@@ -571,11 +687,24 @@ Imagine you are part of a development team tasked with improving an existing tas
 We’re looking for people who can think outside the box, deliver quality work quickly, and inspire innovation.
 
 1. 🛠️ How would we identify a high-quality feature that is missing?
+
 1. 📊 What is an interesting idea to report task progress to users?
+
 1. 📚 How can the system detect if its information is accurate and up to date?
+
 1. 🌱 What new technologies can we integrate?
+
+1. ⏲️ How can we better support users who are spread out geographically?
+
 1. ⚙️ What techniques can we use to optimize the system’s performance?
+
+1. 🌍 Part of a screen is appearing blank in production and we can't reproduce it, how to proceed?
+
 1. 🤖 How can AI be used to improve its capabilities?
+
 1. 💬 How should the system utilize feedback from its users?
 
 `END`
+
+> `When a person can't find a deep sense of meaning, they distract themselves with pleasure.`
+> -`Vicktor Frankl`
