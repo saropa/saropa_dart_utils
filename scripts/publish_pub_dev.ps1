@@ -24,16 +24,16 @@ $publish = Read-Host "Do you want to publish the package to pub.dev? (y/n)"
 if ($publish -eq 'y') {
     # Clean the build directory
     flutter clean
-    
+
     # Get the version from pubspec.yaml
     $pubspec = Get-Content pubspec.yaml
     $version = ($pubspec | Select-String -Pattern '^version:').Line.Split(':')[1].Trim()
-    
+
     Write-Output "Publishing version $version..."
-    
+
     # Publish the package to pub.dev
     flutter pub publish --force
-    
+
     Write-Output "Package published to pub.dev successfully."
 } else {
     Write-Output "Package not published."
