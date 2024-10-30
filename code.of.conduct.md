@@ -1,11 +1,14 @@
+<!-- markdownlint-disable MD033 - Disable No HTML -->
+<!-- markdownlint-disable MD041 - first-line-heading/first-line-h1: First line in a file should be a top-level heading -->
+<img src="https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png" alt="saropa company logo" style="filter: drop-shadow(0.2em 0.2em 0.13em rgba(68, 68, 68, 0.35));" width="200" />
+
 # HONESTI: Saropa’s Code of Conduct
 
 > The Ultimate Developer’s Handbook: Code Quality, Ethics, and Performance at Saropa
 
-<!-- markdownlint-disable MD033 - Disable No HTML -->
-<img src="https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png" alt="saropa company logo" style="filter: drop-shadow(0.2em 0.2em 0.13em rgba(68, 68, 68, 0.35));" width="340" />
-
 As an organization, Saropa promotes behavior that reflects our values. This Code of Conduct outlines the minimum standards expected of our staff, contributors, and business partners. Compliance with the most restrictive applicable laws and regulations is required.
+
+The H.O.N.E.S.T.I. acronym in Saropa’s Code of Conduct emphasizes the importance of being honest with oneself and others, serving as a guiding principle for ethical and efficient development practices.
 
 ## Introduction
 
@@ -26,7 +29,7 @@ We pledge to create a harassment-free experience for everyone in our project and
 *Positive behavior includes:*
 
 - Using inclusive language and respecting differing viewpoints and experiences
-- Accepting constructive criticism gracefully and focusing on the community's best interests
+- Accepting constructive criticism gracefully and focusing on the community’s best interests
 - Showing empathy towards others
 
 Saropa is committed to diversity and equal opportunity. We do not discriminate based on race, creed, color, ethnicity, national origin, religion, sex, sexual orientation, gender identity, age, height, weight, disability (including HIV status), veteran status, military obligations, or marital status. This policy applies to all employees, volunteers, clients, and contractors.
@@ -34,12 +37,12 @@ Saropa is committed to diversity and equal opportunity. We do not discriminate b
 *Unacceptable behavior includes:*
 
 - Use of sexualized language or imagery, trolling, or derogatory comments
-- Publishing others' private information without permission
+- Publishing others’ private information without permission
 - Any inappropriate conduct in a professional setting
 
 This Code of Conduct applies within project spaces and public spaces when representing the project or community. This includes using official emails, social media accounts, or acting as an official representative.
 
-Report unacceptable behavior to the project team at [code_of_conduct@saropa.com](code_of_conduct@saropa.com). All complaints will be reviewed and investigated confidentially. Failure to enforce the Code of Conduct may result in repercussions as determined by the project's leadership.
+Report unacceptable behavior to the project team at [code_of_conduct@saropa.com](code_of_conduct@saropa.com). All complaints will be reviewed and investigated confidentially Failure to enforce the Code of Conduct may result in repercussions as determined by the project’s leadership.
 
 ### We Start Now
 
@@ -51,59 +54,54 @@ Report unacceptable behavior to the project team at [code_of_conduct@saropa.com]
 - [Our Pledge](#our-pledge)
   - [We Start Now](#we-start-now)
   - [Table Of Contents](#table-of-contents)
-- [1. Harmony](#1-harmony)
-  - [1.2. Write Clean, Maintainable, and Well-documented code](#11-write-clean-maintainable-and-well-documented-code)
-  - [1.3. Respect Our Users](#12-respect-our-users)
-  - [1.4. Future-Proof](#13-future-proof)
-  - [1.5. Defensive Programming No Fragile Code](#14-defensive-programming-no-fragile-code)
-- [2. Openness](#2-openness)
-  - [2.1. Honest Prototyping](#21-honest-prototyping)
-  - [2.2. Completion Transparency](#22-completion-transparency)
-  - [2.3. Reliable Estimates](#23-reliable-estimates)
-  - [2.4. Avoid False Claims](#24-avoid-false-claims)
-  - [2.5. Understand “Production-Ready”](#25-understand-production-ready)
+- [1 Harmony](#1-harmony)
+  - [1.1 Maintainable Code](#11-maintainable-code)
+  - [1.2 Respect Our Users and Their Data](#12-respect-our-users-and-their-data)
+  - [1.3 Future-Proof](#13-future-proof)
+  - [1.4 Defensive Programming](#14-defensive-programming)
+  - [1.5 Version Control](#15-version-control)
+- [2 Openness](#2-openness)
+  - [2.1 Honest Prototyping](#21-honest-prototyping)
+  - [2.2 Completion Transparency](#22-completion-transparency)
+  - [2.3 Reliable Estimates](#23-reliable-estimates)
+  - [2.4 Avoid False Claims](#24-avoid-false-claims)
+  - [2.5 Production-Ready](#25-production-ready)
+  - [2.6 Maintain Productivity](#26-maintain-productivity)
+  - [2.7 Communication and Coordination](#27-communication-and-coordination)
+  - [2.8 Work-Life Balance and Managing Irregular Hours](#28-work-life-balance-and-managing-irregular-hours)
+  - [2.9 Addressing Challenges and Leveraging Opportunities](#29-addressing-challenges-and-leveraging-opportunities)
+  - [2.10 Report Challenges and Progress](#210-report-challenges-and-progress)
 - [3. Networking](#3-networking)
-  - [3.1. Collaboration](#31-collaboration)
-  - [3.2. Encouraging Questions](#32-encouraging-questions)
-  - [3.3. Put Yourself in Users’ Shoes](#33-put-yourself-in-users-shoes)
-  - [3.4. Effective Documentation](#34-effective-documentation)
+  - [3.1 Collaboration](#31-collaboration)
+  - [3.2 Encouraging Questions](#32-encouraging-questions)
+  - [3.3 User Perspective](#33-user-perspective)
+  - [3.4 Effective Documentation](#34-effective-documentation)
 - [4. Education](#4-education)
-  - [4.1. Continuous Learning and Improvement](#41-continuous-learning-and-improvement)
-  - [4.2. Code Reviews](#42-code-reviews)
-  - [4.3. Testing](#43-testing)
-  - [4.4. Documentation Updates](#44-documentation-updates)
+  - [4.1 Continuous Learning and Improvement](#41-continuous-learning-and-improvement)
+  - [4.2 Code Reviews](#42-code-reviews)
+  - [4.3 Testing](#43-testing)
+  - [4.4 Documentation Updates](#44-documentation-updates)
 - [5. Streamlining](#5-streamlining)
-  - [5.1. Measure](#51-measure)
-  - [5.2. Unnecessary Calculations](#52-unnecessary-calculations)
-  - [5.3. Efficient Structures and Algorithms](#53-efficient-structures-and-algorithms)
-  - [5.4. Asynchronous Operations](#54-asynchronous-operations)
-  - [5.5. Minimize Memory](#55-minimize-memory)
-  - [5.6. Cache](#56-cache)
-- [6. Technology](#6-technology)
-  - [6.1. AI as an Accelerator](#61-ai-as-an-accelerator)
-  - [6.2. AI for Documentation](#62-ai-for-documentation)
-  - [6.3. AI Limitations](#63-ai-limitations)
-  - [6.4. Language](#64-language)
-- [7. Work from Home](#7-work-from-home)
-  - [7.1. Maintain Productivity](#71-maintain-productivity)
-  - [7.2. Communication and Coordination](#72-communication-and-coordination)
-  - [7.3. Work-Life Balance and Managing Irregular Hours](#73-work-life-balance-and-managing-irregular-hours)
-  - [7.4. Addressing Challenges and Leveraging Opportunities](#74-addressing-challenges-and-leveraging-opportunities)
-  - [7.5. Report Challenges and Progress](#75-report-challenges-and-progress)
-  - [7.6. Cultural Sensitivity and Team Unity](#76-cultural-sensitivity-and-team-unity)
-- [8. Overcoming Seemingly Impossible Challenges](#8-overcoming-seemingly-impossible-challenges)
-  - [8.1. Identify and Understand the Challenge](#81-identify-and-understand-the-challenge)
-  - [8.2. Seek Assistance and Perspectives](#82-seek-assistance-and-perspectives)
-  - [8.3. Maintain Persistence and Adaptability](#83-maintain-persistence-and-adaptability)
-  - [8.4. Reevaluate and Incremental Progress](#84-reevaluate-and-incremental-progress)
+  - [5.1 Measure and Optimize](#51-measure-and-optimize)
+  - [5.2 Efficient Structures and Algorithms](#52-efficient-structures-and-algorithms)
+  - [5.3 Asynchronous Operations and Memory Management](#53-asynchronous-operations-and-memory-management)
+  - [5.4 Caching Strategies](#54-caching-strategies)
+  - [5.5 Leveraging AI for Development](#55-leveraging-ai-for-development)
+  - [5.6 AI for Documentation and Comments](#56-ai-for-documentation-and-comments)
+  - [5.7 Understanding AI Limitations](#57-understanding-ai-limitations)
+- [8. Impossible Problems](#8-impossible-problems)
+  - [8.1 Identify and Understand the Challenge](#81-identify-and-understand-the-challenge)
+  - [8.2 Seek Assistance and Perspectives](#82-seek-assistance-and-perspectives)
+  - [8.3 Maintain Persistence and Adaptability](#83-maintain-persistence-and-adaptability)
+  - [8.4 Reevaluate and Incremental Progress](#84-reevaluate-and-incremental-progress)
 - [9. Integrity](#9-integrity)
-  - [9.1. Recognize and Manage Stress](#91-recognize-and-manage-stress)
-  - [9.2. Identifying and Managing Risks](#92-identifying-and-managing-risks)
-  - [9.3. Managing Panic](#93-managing-panic)
-  - [9.4. Respect Flow State](#94-respect-flow-state)
-  - [9.5. Celebrate Diversity and Stamp Out Bullying](#95-celebrate-diversity-and-stamp-out-bullying)
-  - [9.6. Honesty with Stakeholders](#96-honesty-with-stakeholders)
-  - [9.7. Joy in Programming](#97-joy-in-programming)
+  - [9.1 Recognize and Manage Stress](#91-recognize-and-manage-stress)
+  - [9.2 Identifying and Managing Risks](#92-identifying-and-managing-risks)
+  - [9.3 Managing Panic](#93-managing-panic)
+  - [9.4 Respect Flow State](#94-respect-flow-state)
+  - [9.5 Celebrate Diversity and Stamp Out Bullying](#95-celebrate-diversity-and-stamp-out-bullying)
+  - [9.6 Honesty with Stakeholders](#96-honesty-with-stakeholders)
+  - [9.7 Joy in Building](#97-joy-in-building)
 - [The Survey](#the-survey)
 - [The Exercise](#the-exercise)
 
@@ -111,7 +109,7 @@ Report unacceptable behavior to the project team at [code_of_conduct@saropa.com]
 
 Bad coding is easy. The following rules make code simpler to read, review, maintain, and test. Maintain clean, maintainable, and well-documented code. Follow naming conventions, prevent fragile code, be future-proof, and practice defensive programming.
 
-### 1.1. Write Clean, Maintainable, and Well-documented code
+### 1.1 Maintainable Code
 
 *(a)* 🌈 Use consistent and meaningful names for variables, functions, and classes. Avoid abbreviations and ensure names are descriptive of their purpose.
 
@@ -195,28 +193,34 @@ String? getAgeDisplayValue(int age) {
 }
 ```
 
-### 1.2. Respect Our Users
+### 1.2 Respect Our Users and Their Data
 
 > Companies that mishandle sensitive user data face severe legal and reputation consequences. Never risk unauthorized access or data breaches.
 
-*(a)* 🚨 Never log sensitive user information - even to the user's device. Implement hashing strategies or encrypted in all outputs.
-*(b)* 🥇 Prevent accidents by applying consistent theming and respect accessibility across all UI components.
-*(c)* 🏆 Always obtain explicit permission before collecting or sharing user data, regardless of its perceived importance or financial value. Clearly communicate your data practices and ensure users understand the implications of their choices.
+*(a)* 🚨 Never log sensitive user information - even to the user’s device. This includes avoiding client-side logging of personal data, authentication tokens, or any information that could compromise user privacy or security. Implement secure hashing or encryption for all outputs that may contain sensitive data.
 
-### 1.3. Future-Proof
+*(b)* 🔒 When logging is necessary for debugging or analytics, ensure that all logs are anonymized and do not contain any personally identifiable information (PII) or sensitive data. Use unique identifiers instead of user-specific information.
+
+*(c)* 🥇 Apply consistent theming and respect accessibility across all UI components to enhance user experience and prevent confusion.
+
+*(d)* 🏆 Always obtain explicit permission before collecting or sharing user data. Clearly communicate data practices to build trust and comply with privacy regulations. Ensure users understand what data is being collected, how it’s being used, and how they can control or delete their information.
+
+*(e)* 📊 Practice data minimization by only collecting and storing information that is absolutely necessary for the application’s functionality. Regularly review and purge unnecessary data.
+
+### 1.3 Future-Proof
 
 *(a)* 💣 Do not write code that will cause issues in the future, such as hard-coded dates or temporary fixes.
 *(b)* 🏗️ Plan for the long-term maintainability and scalability of your code.
 *(c)* ⚙️ Use configuration files or environment variables instead of hard-coding values.
 *(d)* 💎 *Zero* warnings, hacks, or lints. And to-dos need to go in project management tools, never source.
 
-### 1.4. Defensive Programming (No Fragile Code)
+### 1.4 Defensive Programming
 
-*(a)* 🐛 Implement thorough error handling to *gracefully* manage edge cases and unexpected situations.
-*(b)* ⚠️ Ensure that all inputs are validated and sanitized
+*(a)* 🐛 Implement thorough error handling to gracefully manage edge cases, ensuring robust application behavior.
+*(b)* ⚠️ Validate and sanitize all inputs to prevent security vulnerabilities and ensure data integrity:
 
 - Empty and null string checks simplify operations and clarify debugging
-- Ensure indices don't exceed minimum / maximum allowed value (bound errors)
+- Ensure indices don’t exceed minimum / maximum allowed value (bound errors)
 - Validate inputs to prevent malicious characters or invalid data.
 
 > SQL injection, XSS, CSRF, buffer overflow, command injection, DoS, man-in-the-middle attacks, session hijacking are common examples of malicious inputs that can compromise application security.
@@ -236,58 +240,122 @@ String? getAgeDisplayValue(int age) {
   }
 ```
 
-*(d)* 🧯 Avoid shortcuts that may lead to code breaking under unusual conditions.
+*(d)* 🧯 Avoid shortcuts that may lead to code breaking under unusual conditions, prioritizing long-term stability.
 
 - Handle exceptions within the method without throwing errors - unless the needed for parental logging.
 - Log errors somewhere they can be review, but be mindful or leaking sensitive data
 
+### 1.5 Version Control
+
+*(a)* 🌿 Use feature branches for new development, merging within 1-2 days and incorporating the main branch daily to minimize divergence and reduce merge conflicts.
+
+*(b)* 📝 Use tags and write clear, descriptive commit messages that explain the purpose of the changes made. Include relevant issue or ticket numbers for easy tracking.
+
+*(c)* 🧪 Ensure all tests pass before creating a pull request; if builds are lengthy, break them into smaller components.
+
+*(d)* 👀 Conduct code reviews within a few hours of submission to maintain development momentum.
+
+*(e)* 🔍 Keep pull requests small and focused on one feature or bug fix; merge approved requests immediately to avoid conflicts with ongoing work.
+
+*(f)* 🚫 *Never* force push to shared branches, especially the main branch; it is only allowed by designated tech leads when absolutely necessary.
+
+*(g)* 📊 Regularly clean up old merged branches by retaining them for at least one release cycle, keeping commented-out sections for context, and documenting significant removals in commit messages or changelogs.
+
+*(h)* 📚 Maintain a changelog that includes major changes, new features, significant bug fixes, deprecated features, and breaking changes while excluding trivial updates unless they affect user-facing functionality.
+
 ## 2 Openness
 
-Be transparent about your progress, skills, and contributions. Provide realistic estimates, update them regularly, and avoid false claims.
+Be transparent about your progress, skills, and contributions. Provide realistic estimates, update them regularly, and avoid false claims. Focus on maintaining productivity, clear communication, and a healthy work-life balance.
 
-### 2.1. Honest Prototyping
+### 2.1 Honest Prototyping
 
-*(a)* 📝 Don’t present prototypes as final, production-ready code. Set the right expectations with stakeholders to prevent misunderstandings and false hopes about the readiness of a feature.
+*(a)* 📝 Don’t present prototypes as final, production-ready code. Clearly communicate the prototype’s limitations and development stage to stakeholders to prevent misunderstandings about feature readiness.
 
-*(b)* 💡 Use prototypes for innovation — to explore ideas and test solutions, without investing too much time or resources.
+*(b)* 💡 Use prototypes for innovation — to explore ideas and test solutions, while minimizing time and resource investment.
 
 *(c)* 🗣️ Seek feedback on prototypes to refine and improve.Involve team members and stakeholders early to gather diverse perspectives and iterate on the design based on constructive feedback.
 
-### 2.2. Completion Transparency
+### 2.2 Completion Transparency
 
-*(a)* 📅 Do not claim to have completed a task if you do not fully understand it. This avoids potential errors and ensures quality.If you encounter difficulties, be upfront about them and seek assistance.
+*(a)* 📅 Do not claim task completion without full understanding. If you encounter difficulties, seek assistance, ask questions, and request guidance from experienced colleagues to ensure quality and enhance learning.
 
-*(b)* 🆘 Seek help or clarification when needed to ensure the task is done correctly.Don't be afraid to ask questions or request guidance from more experienced colleagues; it's a vital part of learning.
+*(b)* 🎨 Report your progress and any issues encountered. Keep detailed records to track progress, identify recurring problems, and facilitate smoother handoffs.
 
-*(c)* 🎨 Report your progress and any issues encountered. Keep detailed records to track progress, identify recurring problems, and facilitate smoother handoffs.
-
-### 2.3. Reliable Estimates
+### 2.3 Reliable Estimates
 
 *(a)* ⏰ Provide realistic estimates for your tasks and projects.Break down tasks into small, manageable components and note potential obstacles when estimating.
 
-*(b)* 🔄 Regularly update estimates as work progresses and new information becomes available. This helps manage expectations and allows for better planning and resource allocation.
+*(b)* 🔄 Regularly update estimates as work progresses and new information becomes available. This helps manage expectations and enables more accurate planning and resource allocation.
 
 *(c)* 📢 Promptly communicate any changes in timelines to keeping stakeholders informed. This builds trust and allows for adjustments in project planning.
 
-### 2.4. Avoid False Claims
+### 2.4 Avoid False Claims
 
 *(a)* ❌ Do not falsely claim credit for work you did not do or abilities you do not possess. Integrity is crucial for trust within your team and with stakeholders. Be clear about your contributions.
 
-*(b)* 🔦 Recognize and celebrate your achievements, but also acknowledge the contributions of others. Transparency fosters a healthy and collaborative work environment.
+*(b)* 🔦 Recognize and celebrate your achievements, but also acknowledge the contributions of others. Transparency promotes trust and encourages collaboration within the team.
 
 *(c)* 🌱 Seek opportunities to learn and grow. Regularly assess your skills and identify areas for improvement. Pursue training, attend workshops, and seek mentorship to develop expertise.
 
-### 2.5. Understand “Production-Ready”
+### 2.5 Production-Ready
 
-*(a)* ⚙️ Production-ready code is stable, well-tested, and optimized. Ensure your code has passed all necessary tests and can handle expected load.
+*(a)* ⚙️ Production-ready code is stable, well-tested, and optimized. Ensure your code has passed all necessary tests and can handle the anticipated user traffic and data processing requirements.
 
 *(b)* 🐞 Conduct thorough testing to identify and fix bugs before deployment. Provide comprehensive documentation for smooth deployment and maintenance.
 
+### 2.6 Maintain Productivity
+
+*(a)* 🏠 Create a dedicated workspace with clear boundaries to maintain focus, minimize distractions, and separate work from personal life.
+
+*(b)* ⏲️  Define clear working hours with scheduled breaks to prevent burnout, maintain work-life balance, and stay productive.
+
+*(c)* 📅 Use productivity applications to stay organized and manage tasks efficiently.
+
+*(d)* 🛠️ Fully use of the provided project and communication tools to collaborate and keep track of your work.
+
+*(e)* 📝 Break tasks into smaller work items, complete them, and report progress promptly.
+
+### 2.7 Communication and Coordination
+
+*(a)* 📡 Regularly communicate with your team using designated tools to maintain clear information flow and coordination.
+
+*(b)* ✉️ Respond to messages and emails promptly to maintain workflow.
+
+*(c)* 📆 Communicate your availability and any potential interruptions clearly to manage expectations.
+
+*(d)* 🌍 Use shared calendars to schedule regular check-ins and meetings that accommodate all team members’ working hours across different time zones.
+
+### 2.8 Work-Life Balance and Managing Irregular Hours
+
+*(c)* 🏋️ Engage in activities that promote mental and physical well-being.
+
+*(d)* ⏰ Be mindful of the impact of irregular hours on your work-life balance and health.
+
+*(e)* 💤 Ensure adequate rest and maintain a consistent sleep schedule.
+
+### 2.9 Addressing Challenges and Leveraging Opportunities
+
+*(b)* 🤝 Stay connected with colleagues through virtual interactions to combat isolation.
+
+*(c)* 📊 Use planning and scheduling techniques to manage both work tasks and personal responsibilities.
+
+*(d)* 💡 Continuously improve your skills through online resources and training, focusing on both technical abilities and self-management to enhance project ownership.
+
+### 2.10 Report Challenges and Progress
+
+*(a)* 📈 Regularly share clear and detailed updates on your work progress, milestones, and achievements to avoid misunderstandings and ensure continuity.
+
+*(b)* 🆘 Communicate challenges or obstacles openly and seek assistance when needed.
+
+*(c)* ✏️ Clearly explain the specific steps taken to address challenges, providing sufficient information for others to understand your approach and progress.
+
+*(d)* 🌐 Use asynchronous communication tools to stay connected without needing to be online simultaneously.
+
 ## 3. Networking
 
-Work well with your team, communicate clearly, encourage questions, and put yourself in users' shoes. Maintain effective documentation.
+Work well with your team, communicate clearly, encourage questions, and put yourself in users’ shoes. Maintain effective documentation.
 
-### 3.1. Collaboration
+### 3.1 Collaboration
 
 *(a)* 🤝 Share knowledge and supporting everyone in your team. Foster an environment of mutual respect and cooperation where everyone feels valued and heard.
 
@@ -295,7 +363,7 @@ Work well with your team, communicate clearly, encourage questions, and put your
 
 *(c)* 🗨️ Provide constructive feedback and be open to receiving feedback. Embrace feedback as a tool for growth, ensuring it is given respectfully and constructively.
 
-### 3.2. Encouraging Questions
+### 3.2 Encouraging Questions
 
 *(a)* 📱 Foster an environment where asking questions is encouraged and valued. Make it clear that there are no “stupid” questions and that curiosity drives improvement.
 
@@ -303,9 +371,9 @@ Work well with your team, communicate clearly, encourage questions, and put your
 
 *(c)* 🤗 Provide mentorship and support to junior developers. Share your knowledge generously to help others grow, fostering a culture of continuous learning.
 
-### 3.3. Put Yourself in Users’ Shoes
+### 3.3 User Perspective
 
-*(a)* 🕺 Consider the practicality and usability of features from the user's perspective. Think about how users will interact with your product and prioritize their needs.
+*(a)* 🕺 Consider the practicality and usability of features from the user’s perspective. Think about how users will interact with your product and prioritize their needs.
 
 - Similar elements should behave in similar ways and be located in familiar places to ensure predictability and intuitiveness.
 - Group information hierarchically, hide complexity under “more” options, and use filters and search functionalities to make it manageable.
@@ -313,11 +381,11 @@ Work well with your team, communicate clearly, encourage questions, and put your
 - Always provide a warning before performing any irreversible actions.
 - Regularly ask users for their input to ensure the product meets their needs and expectations.
 
-*(b)* 👂 Ask questions and seek clarification to ensure the final product meets the user's needs. Engage with users through surveys and feedback sessions to gather insights.
+*(b)* 👂 Ask questions and seek clarification to ensure the final product meets the user’s needs. Engage with users through surveys and feedback sessions to gather insights.
 
 *(c)* 📋 Gather feedback from users to understand their needs and preferences. Use this feedback to refine and enhance your product, ensuring it aligns with user expectations.
 
-### 3.4. Effective Documentation
+### 3.4 Effective Documentation
 
 > If you have to explain something about the system to another person (in a review, to client, or in any other way) then it needs better documentation. No exceptions.
 
@@ -333,7 +401,7 @@ Work well with your team, communicate clearly, encourage questions, and put your
 
 *(f)* 🖨️ If the explanation of non-trivial logic or algorithms becomes too detailed, consider splitting the logic into separate methods or fields for better organization and reusability.
 
-- Explain the purpose in doc headers. If a doc header is too detailed, it's a sign the method is too complex.
+- Explain the purpose in doc headers. If a doc header is too detailed, it’s a sign the method is too complex.
 - Important parameters need explaining in the header.
 - Use comments for complex logic (e.g., loops, nested functions)
 - If the explanation becomes too detailed, the logic should be split into separate methods or fields.
@@ -344,7 +412,7 @@ Work well with your team, communicate clearly, encourage questions, and put your
 
 Stay updated with the latest technologies and best practices. Participate in code reviews, write comprehensive tests, and keep documentation up to date.
 
-### 4.1. Continuous Learning and Improvement
+### 4.1 Continuous Learning and Improvement
 
 *(a)* 📚 Stay updated with the latest technologies, tools, and best practices. Regularly read industry blogs, attend webinars, and participate in professional forums.
 
@@ -352,15 +420,15 @@ Stay updated with the latest technologies and best practices. Participate in cod
 
 *(c)* 🧪 Experiment with new techniques and approaches. Be open to trying new methods and tools that could enhance your work, and share successful experiments with your team.
 
-### 4.2. Code Reviews
+### 4.2 Code Reviews
 
 *(a)* 🔄 Participate actively in code reviews, both giving and receiving feedback. Code reviews are collaborative learning opportunities that improve code quality.
 
 *(b)* 👏 Be respectful and constructive in your feedback. Focus on the code, not the coder, and aim to help improve the overall project.
 
-*(c)* ⏰ Use code reviews as a learning opportunity. Learn from others' code, understand different approaches, and incorporate best practices into your own work.
+*(c)* ⏰ Use code reviews as a learning opportunity. Learn from others’ code, understand different approaches, and incorporate best practices into your own work.
 
-### 4.3. Testing
+### 4.3 Testing
 
 *(a)* ✅ Write comprehensive tests for your code, including unit tests, integration tests, and end-to-end tests. A thorough test suite helps catch issues early and ensures the robustness of your code.
 
@@ -368,7 +436,7 @@ Stay updated with the latest technologies and best practices. Participate in cod
 
 *(c)* ♻️ Regularly run tests to catch issues early and maintain code quality. Integrate automated testing into your development workflow to ensure continuous quality checks.
 
-### 4.4. Documentation Updates
+### 4.4 Documentation Updates
 
 *(a)* 🛸 Regularly review and improve documentation to keep it relevant and useful. Schedule periodic documentation reviews to ensure accuracy and completeness.
 
@@ -376,177 +444,99 @@ Stay updated with the latest technologies and best practices. Participate in cod
 
 ## 5. Streamlining
 
-Utilize tools to measure and identify areas for improvement. Avoid premature optimization: Focus on writing clear and correct code before optimizing. Strive for a zero-problem project: no warnings, no hacks, and no linting issues.
+Utilize tools to measure and identify areas for improvement. Avoid premature optimization: Focus on writing clear and correct code before optimizing. Strive for a zero-problem project: no warnings, no hacks, and no linting issues. Use AI with caution, and always review AI-generated content thoroughly.
 
-### 5.1. Measure
+> Ai can help significantly with doing plumbing, but it has no problems with connecting the pipes wrong - [thih9](https://news.ycombinator.com/item?id=41988665)
 
-*(a)* 🏆 Base your optimization efforts on actual profiler data rather than assumptions. Data-driven decisions ensure that your optimization efforts are focused where they will have the most impact.
+### 5.1 Measure and Optimize
 
-*(b)* 🎯 Focus on optimizing areas that have a significant impact on performance. Not all slow parts of your code are worth optimizing. Focus on the parts that will make a noticeable difference.
+*(a)* 🏆 Base optimization efforts on actual profiler data rather than assumptions.
 
-*(c)* 📏 Avoid premature optimization by writing clear and correct code first. Code must work correctly before you can make it faster, but poorly performing code is a sign of incorrectness.
+*(b)* 🎯 Focus on optimizing areas with significant performance impact.
 
-### 5.2. Unnecessary Calculations
+*(c)* 📏 Avoid premature optimization; write clear and correct code first.
 
-*(a)* 🧮 Minimize expensive operations and optimize data storage and retrieval.
+*(d)* 🧮 Minimize expensive operations and optimize data storage and retrieval.
 
-*(b)* 📏 Delay or avoid performing calculations that aren't directly necessary for the task at hand.
+*(e)* 📊 Cache results of expensive or frequent computations.
 
-*(c)* 📊 Cache results of expensive or frequent computations.
+### 5.2 Efficient Structures and Algorithms
 
-### 5.3. Efficient Structures and Algorithms
+*(a)* 🛵 Choose data structures and algorithms best suited to your needs.
 
-*(a)* 🛵 Different data structures and algorithms have different performance characteristics, so choose the ones that are best suited to your needs.
+*(b)* ⚖️ Prefer simplicity and clarity over complexity unless performance requires otherwise.
 
-- Use lists for better performance and easier manipulation.
-- Prefer methods for caching complex logic instead of get/set fields: This provides a clearer separation of concerns and signals the parent component to implement caching.
+*(c)* ⚙️ Optimize data access patterns to reduce latency and improve throughput.
 
-*(b)* ⚖️ Prefer simplicity and clarity over complexity unless performance requires otherwise. Simple code is easier to maintain and less likely to contain bugs.
+*(d)* 📏 Delay or avoid performing calculations that aren’t directly necessary.
 
-*(c)* ⚙️ Optimize data access patterns to reduce latency and improve throughput. Be mindful of how often and how you access data.
+### 5.3 Asynchronous Operations and Memory Management
 
-### 5.4. Asynchronous Operations
-
-*(a)* 💻 Use asynchronous techniques to your application responsive, even for long-running tasks.
-
-- Avoid heavy computations in run-first method (e.g. build)
-- Always offload complex calculations and changeable data to streaming, listening and future objects
+*(a)* 💻 Use asynchronous techniques to keep your application responsive.
 
 *(b)* 🔄 Ensure proper handling of async/await to maintain responsiveness.
 
-*(c)* 🚫 Make sure errors in async code are caught and dealt with, so they don’t cause silent failures.
+*(c)* 🚫 Catch and handle errors in async code to prevent silent failures.
 
-### 5.5. Minimize Memory
+*(d)* 🎭 Store data late and dispose early, being mindful of explicit disposal needs.
 
-*(a)* 🎭 Store data late and dispose early. Be mindful of explicit disposal needs (such as controllers and listeners) versus garbage disposal.
+*(e)* 🧹 Properly manage memory to avoid leaks and use memory-efficient data structures.
 
-*(b)* 🧹 Properly manage memory to avoid leaks and use memory-efficient data structures to reduce your application's memory footprint.
+*(f)* 💤 Use lazy loading and pagination to handle large datasets efficiently.
 
-*(c)* 💤 Use techniques like lazy loading and pagination to handle large datasets efficiently.
+### 5.4 Caching Strategies
 
-### 5.6. Cache
+*(a)* 🦄 Implement caching mechanisms to reduce frequent data retrieval and calculations.
 
-*(a)* 🦄 Implement caching mechanisms to reduce the need for frequent data retrieval and calculations. Minimize the size and frequency of data transfers, with efficient data formats and compression.
-
-*(b)* 🧠 Avoid keeping large amounts of data in memory. Balance cache size and invalidation strategies to maintain speed without excessive memory usage.
+*(b)* 🧠 Balance cache size and invalidation strategies for optimal performance.
 
 *(c)* ♻️ Ensure cached data is correctly invalidated or updated to avoid stale data issues.
 
-## 6. Technology
+### 5.5 Leveraging AI for Development
 
-AI is used most effectively as an accelerator for experienced developers, and a drafting assistant for novices. Use AI with caution, and always review AI-generated content thoroughly.
+*(a)* 📌 Use AI tools to speed up coding tasks and generate boilerplate code.
 
-### 6.1. AI as an Accelerator
+*(b)* 📚 Always review and test AI-generated code thoroughly for fitness, reliability, and security.
 
-*(a)* 📌 Experienced developers use code completion tools and LLMs to speed up coding tasks and generate boilerplate code. Use AI to explore new solutions and ideas efficiently.
+*(c)* ⚠️ Work in small increments when using AI for code generation.
 
-*(b)* ⚠️ AI-generated code is never production-ready and should be used with caution. Always review and test AI-generated code thoroughly for fitness, reliability, and security.
+*(d)* ✅ Use AI to generate comprehensive test cases, especially for edge scenarios.
 
-### 6.2. AI for Documentation
+*(e)* ☕ Begin with unit tests when using AI for boilerplate coding.
 
-*(a)* 🍄 Do not use AI-generated comments that merely describe how code works or to describe complex logic. Focus instead on simplifying the code to make it more readable and self-explanatory.
+### 5.6 AI for Documentation and Comments
 
-*(b)* 📋 AI can help articulate why code is written a certain way, providing context and rationale. Generate comments that explain design, trade-offs, and purpose, to help maintainers understand it better.
+*(a)* 🍄 Avoid AI-generated comments that merely describe code functionality.
 
-### 6.3. AI Limitations
+*(b)* 📋 Use AI to articulate design rationale, trade-offs, and purpose in comments.
 
-*(a)* 🕵️ AI tools overlook critical details and make incorrect assumptions. Always perform a thorough review to ensure compliance with project requirements and standards.
+*(c)* 🖱️ Actively use spelling and grammar checkers for all code and documentation.
 
-*(b)* ✅ Leverage AI to generate comprehensive test cases, especially for edge scenarios that might be easily overlooked, to enhance your testing strategy and code quality.
+### 5.7 Understanding AI Limitations
 
-### 6.4. Language
+*(a)* 🕵️ Always perform thorough reviews of AI-generated content to ensure compliance with project requirements and standards.
 
-*(a)* 🖱️ You must actively use spelling and grammar checkers for all code and documentation. Language assistants are a vital quality control when working at speed.
+*(b)* 📚 Recognize that AI tools may overlook critical details or make incorrect assumptions.
 
-## 7. Work from Home
+*(c)* 🔍 Double and triple-check AI-updated code to catch and fix potential errors.
 
-Focus on maintaining productivity, clear communication, and a healthy work-life balance while addressing challenges, leveraging opportunities, and managing time zone differences and irregular hours.
-
-### 7.1. Maintain Productivity
-
-*(a)* 🏠 Create a dedicated workspace to maintain focus and separate work from personal life.
-
-*(b)* ⏲️ Set regular working hours and take scheduled breaks to prevent burnout.
-
-*(c)* 📅 Use productivity applications to stay organized and manage tasks efficiently.
-
-*(d)* 🛠️ Fully use of the provided project and communication tools to collaborate and keep track of your work.
-
-*(e)* 📝 Break tasks into smaller work items, complete them, and report progress promptly.
-
-### 7.2. Communication and Coordination
-
-*(a)* 📡 Check in with your team regularly through communication tools to ensure effective collaboration.
-
-*(b)* ✉️ Respond to messages and emails promptly to maintain workflow.
-
-*(c)* 📆 Communicate your availability and any potential interruptions clearly to manage expectations.
-
-*(d)* 🌍 Schedule regular check-ins at mutually convenient times for all team members, considering different time zones.
-
-*(e)* 📅 Use shared calendars to manage availability and schedule meetings efficiently across different time zones.
-
-### 7.3. Work-Life Balance and Managing Irregular Hours
-
-*(a)* 🕒 Define clear working hours to avoid overworking and maintain a healthy balance.
-
-*(b)* ☕ Schedule breaks throughout the day to recharge and stay productive.
-
-*(c)* 🏋️ Engage in activities that promote mental and physical well-being.
-
-*(d)* ⏰ Be mindful of the impact of irregular hours on your work-life balance and health.
-
-*(e)* 💤 Ensure adequate rest and maintain a consistent sleep schedule.
-
-### 7.4. Addressing Challenges and Leveraging Opportunities
-
-*(a)* 🚫 Minimize home environment distractions by setting boundaries and creating a dedicated workspace.
-
-*(b)* 🤝 Stay connected with colleagues through virtual interactions to combat isolation.
-
-*(c)* 📊 Balance work tasks with personal responsibilities effectively by planning and scheduling.
-
-*(d)* 💡 Take the opportunity to learn new skills or improve existing ones by utilizing online resources and training.
-
-*(e)* 🌟 Develop self-management skills and take ownership of projects.
-
-### 7.5. Report Challenges and Progress
-
-*(a)* 📈 Regularly share what you are working on, providing updates on progress and milestones.
-
-*(b)* 🆘 Communicate challenges or obstacles openly and seek assistance when needed.
-
-*(c)* ✏️ Provide detailed accounts of steps taken to address challenges, ensuring visibility and understanding of your efforts.
-
-*(d)* 🌐 Use asynchronous communication tools to stay connected without needing to be online simultaneously.
-
-*(e)* 📝 Provide clear and detailed updates to avoid misunderstandings and ensure continuity.
-
-### 7.6. Cultural Sensitivity and Team Unity
-
-*(a)* 🌏 Be aware of cultural differences and public holidays in different regions.
-
-*(b)* 🤝 Show respect and understanding for cultural variations in working styles and communication.
-
-*(c)* 🎉 Acknowledge and celebrate cultural events and holidays to foster team unity.
-
-## 8. Overcoming Seemingly Impossible Challenges
+## 8. Impossible Problems
 
 Focus on identifying and understanding the problem, seeking assistance, maintaining persistence, and achieving incremental progress.
 
-### 8.1. Identify and Understand the Challenge
+### 8.1 Identify and Understand the Challenge
 
 (a) 🕵️ Clearly define and understand the problem you are facing.
 
 (b) 🧩 Break the challenge into smaller, manageable parts.
 
-### 8.2. Seek Assistance and Perspectives
+### 8.2 Seek Assistance and Perspectives
 
 (a) 🌐 Involve team members and seek diverse perspectives to gain new insights and potential solutions.
 
 (b) 📖 Use all available resources, including tools, documentation, and expertise from colleagues or external sources.
 
-### 8.3. Maintain Persistence and Adaptability
+### 8.3 Maintain Persistence and Adaptability
 
 (a) 💪 Stay persistent and adaptable, adjusting your approach as needed to overcome obstacles.
 
@@ -554,7 +544,7 @@ Focus on identifying and understanding the problem, seeking assistance, maintain
 
 (c) 🔄 Complete minor, unrelated safe tasks to unblock your progress and maintain momentum.
 
-### 8.4. Reevaluate and Incremental Progress
+### 8.4 Reevaluate and Incremental Progress
 
 (a) 🔍 Regularly reevaluate the requirements and get stakeholder approval to ensure alignment.
 
@@ -566,15 +556,15 @@ Focus on identifying and understanding the problem, seeking assistance, maintain
 
 Focus on ethical practices, managing stress, identifying and handling risks, fostering joy in programming, and promoting diversity and inclusion.
 
-### 9.1. Recognize and Manage Stress
+### 9.1 Recognize and Manage Stress
 
-*(a)* 🌸 Acknowledge when you're overwhelmed and talk to your team or manager. Use techniques like mindfulness, exercise, or regular breaks to maintain well-being.
+*(a)* 🌸 Acknowledge when you’re overwhelmed and talk to your team or manager. Use techniques like mindfulness, exercise, or regular breaks to maintain well-being.
 
 *(b)* 🪜 Break large tasks into smaller, manageable pieces. Use tools like task lists or project management software to track progress.
 
 *(c)* 🧘 Identify signs of burnout, such as chronic fatigue or lack of motivation. Encourage a culture of mental health openness and support taking time off to recharge.
 
-### 9.2. Identifying and Managing Risks
+### 9.2 Identifying and Managing Risks
 
 *(a)* 🧩 Identify potential challenges early in the development process. Regularly assess your project for risks and discuss them with your team.
 
@@ -582,7 +572,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 📢 Keep stakeholders updated about risks and their potential impact. Use regular status updates and meetings to keep them informed and engaged.
 
-### 9.3. Managing Panic
+### 9.3 Managing Panic
 
 *(a)* 🛑 Identify common panic triggers like tight deadlines, unexpected issues, or high-stakes presentations.
 
@@ -592,31 +582,35 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(d)* 🏡 Acknowledge that WFH presents specific challenges for training and communication, making it harder to manage and support.
 
-*(e)* ❓ Experienced people ask questions. *“I got this”* is good, but *“I don't know”* is crucial for growth.
+*(e)* ❓ Experienced people ask questions. *“I got this”* is good, but *“I don’t know”* is crucial for growth.
 
 *(f)* 🔨 Slow progress is only bad when not communicated. Refusing to feedback bad news is neither a successful or rewarded strategy, instead ask stakeholders for creative solutions.
 
-### 9.4. Respect Flow State
+### 9.4 Respect Flow State
 
 *(a)* ⚡ Flow state is a mental state of deep focus and immersion where productivity peaks and complex problems are solved more effectively.
 
 *(b)* 🌊 Achieve flow state by choosing challenging yet manageable tasks, eliminating distractions, and focusing on one task at a time.
 
-*(c)* 🧘 Respect your colleagues' flow state by avoiding unnecessary interruptions and using signals or tools to indicate when someone is in deep work mode.
+*(c)* 🧘 Respect your colleagues’ flow state by avoiding unnecessary interruptions and using signals or tools to indicate when someone is in deep work mode.
 
-### 9.5. Celebrate Diversity and Stamp Out Bullying
+### 9.5 Celebrate Diversity and Stamp Out Bullying
 
-*(a)* 🌍 Recognize and address different types of bullying, including verbal, physical, social, cyberbullying, and constructive dismissal. Embrace and celebrate diversity in all its forms, including religion, sexual orientation, age, disabilities, medical needs, and family responsibilities.
+*(a)* 🌍 Ensure a supportive environment where everyone feels safe and respected. Recognize and address different types of bullying, including verbal, physical, social, cyberbullying, and constructive dismissal.
 
-*(b)* 🔍 Ensure a supportive environment where everyone feels safe and respected. Promote an inclusive culture where diversity is viewed as a strength, fostering innovation and creativity, while promptly addressing and taking action against any form of bullying.
+*(a)* 🤝 Embrace and celebrate diversity in all its forms, including religion, sexual orientation, age, disabilities, medical needs, and family responsibilities. Acknowledge and celebrate cultural events and holidays to foster team unity.
 
-### 9.6. Honesty with Stakeholders
+*(b)* 🎉 Be aware of cultural differences and public holidays in different regions. Acknowledge and celebrate cultural events and holidays to foster team unity.
+
+*(b)* 🔍 Promote an inclusive culture where diversity is viewed as a strength, fostering innovation and creativity, while promptly addressing and taking action against any form of bullying. Show respect and understanding for cultural variations in working styles and communication.
+
+### 9.6 Honesty with Stakeholders
 
 *(a)* 💬 Be transparent and honest with stakeholders, users, and clients. Avoid engaging in harmful business practices such as planned obsolescence or binding practices that trap individuals in an organization.
 
 *(b)* 🤝 Promote open communication and trust with all parties involved, ensuring that ethical standards are maintained in all business dealings.
 
-### 9.7. Joy in Programming
+### 9.7 Joy in Building
 
 *(a)* 🎉 Focus on the enjoyable aspects of your work and celebrate small victories. Cultivate a positive work environment by supporting colleagues and promoting appreciation.
 
@@ -678,11 +672,11 @@ Choose 1 only...
 10. 🌟 In a team setting, how do you ensure effective progress and contribution?  
   ☐ Regular team meetings for updates and problem-solving  
   ☐ Challenge team members while ensuring accountability  
-  ☐ Assign tasks based on each member's strengths and expertise  
+  ☐ Assign tasks based on each member’s strengths and expertise  
 
 ## The Exercise
 
-Imagine you are part of a development team tasked with improving an existing task management system. Your goal is to propose new features that enhance the system's usability, performance, and overall effectiveness.
+Imagine you are part of a development team tasked with improving an existing task management system. Your goal is to propose new features that enhance the system’s usability, performance, and overall effectiveness.
 
 We’re looking for people who can think outside the box, deliver quality work quickly, and inspire innovation.
 
@@ -698,7 +692,7 @@ We’re looking for people who can think outside the box, deliver quality work q
 
 1. ⚙️ What techniques can we use to optimize the system’s performance?
 
-1. 🌍 Part of a screen is appearing blank in production and we can't reproduce it, how to proceed?
+1. 🌍 Part of a screen is appearing blank in production and we can’t reproduce it, how to proceed?
 
 1. 🤖 How can AI be used to improve its capabilities?
 
@@ -706,5 +700,5 @@ We’re looking for people who can think outside the box, deliver quality work q
 
 `END`
 
-> `When a person can't find a deep sense of meaning, they distract themselves with pleasure.`
+> `When a person can’t find a deep sense of meaning, they distract themselves with pleasure.`
 > -`Vicktor Frankl`
