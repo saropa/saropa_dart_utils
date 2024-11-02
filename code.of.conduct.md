@@ -1,3 +1,10 @@
+<!-- Change Log
+   2024.10.31 - CH - Fix the numbering (bring back sections 6 and 7)
+   2024.10.30 - CH - Keep H.O.N.E.S.T.I. the acronym with new wording on Work from Home and Impossible Problems
+   2024.10.28 - CH - Added Logo, Examples, a Survey and an Exercise
+   2024.03.01 - CH - Created
+-->
+
 <!-- markdownlint-disable MD033 - Disable No HTML -->
 <!-- markdownlint-disable MD041 - first-line-heading/first-line-h1: First line in a file should be a top-level heading -->
 <img src="https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png" alt="saropa company logo" style="filter: drop-shadow(0.2em 0.2em 0.13em rgba(68, 68, 68, 0.35));" width="200" />
@@ -89,19 +96,19 @@ Report unacceptable behavior to the project team at [code_of_conduct@saropa.com]
   - [5.5 Leveraging AI for Development](#55-leveraging-ai-for-development)
   - [5.6 AI for Documentation and Comments](#56-ai-for-documentation-and-comments)
   - [5.7 Understanding AI Limitations](#57-understanding-ai-limitations)
-- [8. Impossible Problems](#8-impossible-problems)
-  - [8.1 Identify and Understand the Challenge](#81-identify-and-understand-the-challenge)
-  - [8.2 Seek Assistance and Perspectives](#82-seek-assistance-and-perspectives)
-  - [8.3 Maintain Persistence and Adaptability](#83-maintain-persistence-and-adaptability)
-  - [8.4 Reevaluate and Incremental Progress](#84-reevaluate-and-incremental-progress)
-- [9. Integrity](#9-integrity)
-  - [9.1 Recognize and Manage Stress](#91-recognize-and-manage-stress)
-  - [9.2 Identifying and Managing Risks](#92-identifying-and-managing-risks)
-  - [9.3 Managing Panic](#93-managing-panic)
-  - [9.4 Respect Flow State](#94-respect-flow-state)
-  - [9.5 Celebrate Diversity and Stamp Out Bullying](#95-celebrate-diversity-and-stamp-out-bullying)
-  - [9.6 Honesty with Stakeholders](#96-honesty-with-stakeholders)
-  - [9.7 Joy in Building](#97-joy-in-building)
+- [6. Impossible Problems](#6-impossible-problems)
+  - [6.1 Identify and Understand the Challenge](#61-identify-and-understand-the-challenge)
+  - [6.2 Seek Assistance and Perspectives](#62-seek-assistance-and-perspectives)
+  - [6.3 Maintain Persistence and Adaptability](#63-maintain-persistence-and-adaptability)
+  - [6.4 Reevaluate and Incremental Progress](#64-reevaluate-and-incremental-progress)
+- [7. Integrity](#7-integrity)
+  - [7.1 Recognize and Manage Stress](#71-recognize-and-manage-stress)
+  - [7.2 Identifying and Managing Risks](#72-identifying-and-managing-risks)
+  - [7.3 Managing Panic](#73-managing-panic)
+  - [7.4 Respect Flow State](#74-respect-flow-state)
+  - [7.5 Celebrate Diversity and Stamp Out Bullying](#75-celebrate-diversity-and-stamp-out-bullying)
+  - [7.6 Honesty with Stakeholders](#76-honesty-with-stakeholders)
+  - [7.7 Joy in Building](#77-joy-in-building)
 - [The Survey](#the-survey)
 - [The Exercise](#the-exercise)
 
@@ -520,23 +527,23 @@ Utilize tools to measure and identify areas for improvement. Avoid premature opt
 
 *(c)* 🔍 Double and triple-check AI-updated code to catch and fix potential errors.
 
-## 8. Impossible Problems
+## 6. Impossible Problems
 
 Focus on identifying and understanding the problem, seeking assistance, maintaining persistence, and achieving incremental progress.
 
-### 8.1 Identify and Understand the Challenge
+### 6.1 Identify and Understand the Challenge
 
 (a) 🕵️ Clearly define and understand the problem you are facing.
 
 (b) 🧩 Break the challenge into smaller, manageable parts.
 
-### 8.2 Seek Assistance and Perspectives
+### 6.2 Seek Assistance and Perspectives
 
 (a) 🌐 Involve team members and seek diverse perspectives to gain new insights and potential solutions.
 
 (b) 📖 Use all available resources, including tools, documentation, and expertise from colleagues or external sources.
 
-### 8.3 Maintain Persistence and Adaptability
+### 6.3 Maintain Persistence and Adaptability
 
 (a) 💪 Stay persistent and adaptable, adjusting your approach as needed to overcome obstacles.
 
@@ -544,7 +551,7 @@ Focus on identifying and understanding the problem, seeking assistance, maintain
 
 (c) 🔄 Complete minor, unrelated safe tasks to unblock your progress and maintain momentum.
 
-### 8.4 Reevaluate and Incremental Progress
+### 6.4 Reevaluate and Incremental Progress
 
 (a) 🔍 Regularly reevaluate the requirements and get stakeholder approval to ensure alignment.
 
@@ -552,11 +559,11 @@ Focus on identifying and understanding the problem, seeking assistance, maintain
 
 (c) 🎉 Recognize and celebrate small victories along the way to maintain motivation and build momentum.
 
-## 9. Integrity
+## 7. Integrity
 
 Focus on ethical practices, managing stress, identifying and handling risks, fostering joy in programming, and promoting diversity and inclusion.
 
-### 9.1 Recognize and Manage Stress
+### 7.1 Recognize and Manage Stress
 
 *(a)* 🌸 Acknowledge when you’re overwhelmed and talk to your team or manager. Use techniques like mindfulness, exercise, or regular breaks to maintain well-being.
 
@@ -564,7 +571,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 🧘 Identify signs of burnout, such as chronic fatigue or lack of motivation. Encourage a culture of mental health openness and support taking time off to recharge.
 
-### 9.2 Identifying and Managing Risks
+### 7.2 Identifying and Managing Risks
 
 *(a)* 🧩 Identify potential challenges early in the development process. Regularly assess your project for risks and discuss them with your team.
 
@@ -572,7 +579,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 📢 Keep stakeholders updated about risks and their potential impact. Use regular status updates and meetings to keep them informed and engaged.
 
-### 9.3 Managing Panic
+### 7.3 Managing Panic
 
 *(a)* 🛑 Identify common panic triggers like tight deadlines, unexpected issues, or high-stakes presentations.
 
@@ -586,7 +593,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(f)* 🔨 Slow progress is only bad when not communicated. Refusing to feedback bad news is neither a successful or rewarded strategy, instead ask stakeholders for creative solutions.
 
-### 9.4 Respect Flow State
+### 7.4 Respect Flow State
 
 *(a)* ⚡ Flow state is a mental state of deep focus and immersion where productivity peaks and complex problems are solved more effectively.
 
@@ -594,7 +601,7 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(c)* 🧘 Respect your colleagues’ flow state by avoiding unnecessary interruptions and using signals or tools to indicate when someone is in deep work mode.
 
-### 9.5 Celebrate Diversity and Stamp Out Bullying
+### 7.5 Celebrate Diversity and Stamp Out Bullying
 
 *(a)* 🌍 Ensure a supportive environment where everyone feels safe and respected. Recognize and address different types of bullying, including verbal, physical, social, cyberbullying, and constructive dismissal.
 
@@ -604,13 +611,13 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(b)* 🔍 Promote an inclusive culture where diversity is viewed as a strength, fostering innovation and creativity, while promptly addressing and taking action against any form of bullying. Show respect and understanding for cultural variations in working styles and communication.
 
-### 9.6 Honesty with Stakeholders
+### 7.6 Honesty with Stakeholders
 
 *(a)* 💬 Be transparent and honest with stakeholders, users, and clients. Avoid engaging in harmful business practices such as planned obsolescence or binding practices that trap individuals in an organization.
 
 *(b)* 🤝 Promote open communication and trust with all parties involved, ensuring that ethical standards are maintained in all business dealings.
 
-### 9.7 Joy in Building
+### 7.7 Joy in Building
 
 *(a)* 🎉 Focus on the enjoyable aspects of your work and celebrate small victories. Cultivate a positive work environment by supporting colleagues and promoting appreciation.
 
