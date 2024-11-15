@@ -691,11 +691,11 @@ We’re looking for people who can think outside the box, deliver quality work q
 
 1. 📊 What is an interesting idea to report task progress to users?
 
-1. 📚 How can the system detect if its information is accurate and up to date?
+1. 📚 How can the system detect if its information is correct and current?
 
 1. 🌱 What new technologies can we integrate?
 
-1. ⏲️ How can we better support users who are spread out geographically?
+1. ⏲️ How can we better support users who are spread out globally?
 
 1. ⚙️ What techniques can we use to optimize the system’s performance?
 
@@ -705,7 +705,7 @@ We’re looking for people who can think outside the box, deliver quality work q
 
 1. 💬 How should the system utilize feedback from its users?
 
-## Videos Library
+## Video Library
 
 Welcome to these TED Talks. Dive into a curated collection of insightful talks that inspire courage, honesty, tranquility, high performance, encouragement, inclusivity, and accountability.
 
