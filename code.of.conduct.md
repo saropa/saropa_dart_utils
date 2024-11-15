@@ -334,19 +334,19 @@ Be transparent about your progress, skills, and contributions. Provide realistic
 
 ### 2.8 Work-Life Balance and Managing Irregular Hours
 
-*(c)* 🏋️ Engage in activities that promote mental and physical well-being.
+*(a)* 🏋️ Engage in activities that promote mental and physical well-being.
 
-*(d)* ⏰ Be mindful of the impact of irregular hours on your work-life balance and health.
+*(b)* ⏰ Be mindful of the impact of irregular hours on your work-life balance and health.
 
-*(e)* 💤 Ensure adequate rest and maintain a consistent sleep schedule.
+*(c)* 💤 Ensure adequate rest and maintain a consistent sleep schedule.
 
 ### 2.9 Addressing Challenges and Leveraging Opportunities
 
-*(b)* 🤝 Stay connected with colleagues through virtual interactions to combat isolation.
+*(a)* 🤝 Stay connected with colleagues through virtual interactions to combat isolation.
 
-*(c)* 📊 Use planning and scheduling techniques to manage both work tasks and personal responsibilities.
+*(b)* 📊 Use planning and scheduling techniques to manage both work tasks and personal responsibilities.
 
-*(d)* 💡 Continuously improve your skills through online resources and training, focusing on both technical abilities and self-management to enhance project ownership.
+*(c)* 💡 Continuously improve your skills through online resources and training, focusing on both technical abilities and self-management to enhance project ownership.
 
 ### 2.10 Report Challenges and Progress
 
@@ -719,17 +719,17 @@ Welcome to these TED Talks. Dive into a curated collection of insightful talks t
 
 ### Be Calm
 
-- ["How to make stress your friend "- Kelly McGonigal](https://www.ted.com/talks/kelly_mcgonigal_how_to_make_stress_your_friend?subtitle=en)
+- ["How to make stress your friend" - Kelly McGonigal](https://www.ted.com/talks/kelly_mcgonigal_how_to_make_stress_your_friend?subtitle=en)
 
 ### Be High Performing
 
-- ["As work gets more complex, 6 rules to simplify"](https://www.ted.com/talks/yves_morieux_as_work_gets_more_complex_6_rules_to_simplify?subtitle=en)
+- ["As work gets more complex, 6 rules to simplify" - Yves Morieux](https://www.ted.com/talks/yves_morieux_as_work_gets_more_complex_6_rules_to_simplify?subtitle=en)
 
 - ["How too many rules at work keep you from getting things done" - Yves Morieux](https://www.ted.com/talks/yves_morieux_how_too_many_rules_at_work_keep_you_from_getting_things_done?subtitle=en)
 
 ### Be Encouraging
 
-- ["How to set the right goals and stay motivated "- Ayelet Fishbach](https://www.ted.com/talks/ayelet_fishbach_how_to_set_the_right_goals_and_stay_motivated?subtitle=en)
+- ["How to set the right goals and stay motivated" - Ayelet Fishbach](https://www.ted.com/talks/ayelet_fishbach_how_to_set_the_right_goals_and_stay_motivated?subtitle=en)
 
 ### Be Welcoming
 
