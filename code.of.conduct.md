@@ -7,11 +7,11 @@
 
 <!-- markdownlint-disable MD033 - Disable No HTML -->
 <!-- markdownlint-disable MD041 - first-line-heading/first-line-h1: First line in a file should be a top-level heading -->
-<img src="https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png" alt="saropa company logo" style="filter: drop-shadow(0.2em 0.2em 0.13em rgba(68, 68, 68, 0.35));" width="200" />
+<img src="https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/SaropaLogo2019_contrast-1200.png" alt="saropa company logo" style="filter: drop-shadow(0.15em 0.15em 0.13em rgba(68, 68, 68, 0.25));" width="200" />
 
 # HONESTI: Saropa’s Code of Conduct
 
-> The Ultimate Developer’s Handbook: Code Quality, Ethics, and Performance at Saropa
+> At Saropa there are key non-negotiable behaviors: Honesty. Respect. Empathy. Success.
 
 As an organization, Saropa promotes behavior that reflects our values. This Code of Conduct outlines the minimum standards expected of our staff, contributors, and business partners. Compliance with the most restrictive applicable laws and regulations is required.
 
@@ -605,11 +605,11 @@ Focus on ethical practices, managing stress, identifying and handling risks, fos
 
 *(a)* 🌍 Ensure a supportive environment where everyone feels safe and respected. Recognize and address different types of bullying, including verbal, physical, social, cyberbullying, and constructive dismissal.
 
-*(a)* 🤝 Embrace and celebrate diversity in all its forms, including religion, sexual orientation, age, disabilities, medical needs, and family responsibilities. Acknowledge and celebrate cultural events and holidays to foster team unity.
+*(b)* 🤝 Embrace and celebrate diversity in all its forms, including religion, sexual orientation, age, disabilities, medical needs, and family responsibilities. Acknowledge and celebrate cultural events and holidays to foster team unity.
 
-*(b)* 🎉 Be aware of cultural differences and public holidays in different regions. Acknowledge and celebrate cultural events and holidays to foster team unity.
+*(c)* 🎉 Be aware of cultural differences and public holidays in different regions. Acknowledge and celebrate cultural events and holidays to foster team unity.
 
-*(b)* 🔍 Promote an inclusive culture where diversity is viewed as a strength, fostering innovation and creativity, while promptly addressing and taking action against any form of bullying. Show respect and understanding for cultural variations in working styles and communication.
+*(d)* 🔍 Promote an inclusive culture where diversity is viewed as a strength, fostering innovation and creativity, while promptly addressing and taking action against any form of bullying. Show respect and understanding for cultural variations in working styles and communication.
 
 ### 7.6 Honesty with Stakeholders
 
@@ -704,6 +704,44 @@ We’re looking for people who can think outside the box, deliver quality work q
 1. 🤖 How can AI be used to improve its capabilities?
 
 1. 💬 How should the system utilize feedback from its users?
+
+## Videos Library
+
+Welcome to these TED Talks. Dive into a curated collection of insightful talks that inspire courage, honesty, tranquility, high performance, encouragement, inclusivity, and accountability.
+
+### Be Brave
+
+- ["What I learned from going blind in space" - Chris Hadfield](https://www.ted.com/talks/chris_hadfield_what_i_learned_from_going_blind_in_space?subtitle=en)
+
+### Be Honest
+
+- ["The dangers of willful blindness" - Margaret Heffernan](https://www.ted.com/talks/margaret_heffernan_the_dangers_of_willful_blindness?subtitle=en)
+
+### Be Calm
+
+- ["How to make stress your friend "- Kelly McGonigal](https://www.ted.com/talks/kelly_mcgonigal_how_to_make_stress_your_friend?subtitle=en)
+
+### Be High Performing
+
+- ["As work gets more complex, 6 rules to simplify"](https://www.ted.com/talks/yves_morieux_as_work_gets_more_complex_6_rules_to_simplify?subtitle=en)
+
+- ["How too many rules at work keep you from getting things done" - Yves Morieux](https://www.ted.com/talks/yves_morieux_how_too_many_rules_at_work_keep_you_from_getting_things_done?subtitle=en)
+
+### Be Encouraging
+
+- ["How to set the right goals and stay motivated "- Ayelet Fishbach](https://www.ted.com/talks/ayelet_fishbach_how_to_set_the_right_goals_and_stay_motivated?subtitle=en)
+
+### Be Welcoming
+
+- ["Why being respectful to your coworkers is good for business" - Christine Porath](https://www.ted.com/talks/christine_porath_why_being_respectful_to_your_coworkers_is_good_for_business?subtitle=en)
+
+### Be Accountable
+
+- ["Accountability is a love language" - Tafadzwa Bete Sasa](https://www.youtube.com/watch?v=zVJgy-uGyw4)
+
+- ["Leadership is accountability, not perfection" - Queen Ramotsehoa](https://www.ted.com/talks/queen_ramotsehoa_leadership_is_accountability_not_perfection?subtitle=en)
+
+- ["Reviving the Culture of Accountability" - Chirangee Tisssera](https://www.ted.com/talks/chirangee_tisssera_reviving_the_culture_of_accountability?subtitle=en)
 
 `END`
 
