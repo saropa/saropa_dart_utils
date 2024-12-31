@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-/// Extension on Iterable<double> to provide additional properties and methods
-/// specifically for lists of doubles.
+/// Extension on Iterable&lt;double&gt; to provide additional properties and
+///  methods specifically for lists of doubles.
 extension DoubleIterableExtensions on Iterable<double> {
   /// Finds the smallest occurrence in the list.
   ///
