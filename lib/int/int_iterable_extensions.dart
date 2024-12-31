@@ -1,7 +1,8 @@
 import 'dart:collection';
 
 /// NOTE: Dart’s type system doesn’t consider int to be a subtype of
-///       Comparable<int>, even though int does implement Comparable<num>
+///       Comparable&lt;int&gt;, even though int does implement 
+///       Comparable&lt;num&gt;
 ///
 extension IntIterableExtensions on Iterable<int> {
   /// find the most common value in the list.

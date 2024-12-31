@@ -739,7 +739,7 @@ Welcome to these TED Talks. Dive into a curated collection of insightful talks t
 
 - ["Accountability is a love language" - Tafadzwa Bete Sasa](https://www.youtube.com/watch?v=zVJgy-uGyw4)
 
-- ["Leadership is accountability, not perfection" - Queen Ramotsehoa](https://www.ted.com/talks/queen_ramotsehoa_leadership_is_accountability_not_perfection?subtitle=en)
+- ["Leadership is accountability, not perfection" - Queen Ramotsehoa]()
 
 - ["Reviving the Culture of Accountability" - Chirangee Tisssera](https://www.ted.com/talks/chirangee_tisssera_reviving_the_culture_of_accountability?subtitle=en)
 

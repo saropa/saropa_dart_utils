@@ -1,7 +1,8 @@
 # Change History for Saropa Dart Utils
 
-## 0.3.11+Jakarta (Latest)
+## 0.3.13+Jakarta (Latest)
 
+* ✅ Added an unused flutter code detection script [Dead Code Die Hard: A Practical Guide to Identifying Orphan Flutter Methods](https://saropa-contacts.medium.com/dead-code-die-hard-a-practical-guide-to-identifying-orphan-flutter-methods-b112a1a07320)
 * 🤝 Added a video library of TED talks to the [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md)
 * 🚀 Removed [Codecov](https://community.codecov.com/) for being annoying
 * 🤝 Keep H.O.N.E.S.T.I. the acronym with new wording on Work from Home and Impossible Problems to the [Code of Conduct](https://github.com/saropa/saropa_dart_utils/blob/main/code.of.conduct.md)
