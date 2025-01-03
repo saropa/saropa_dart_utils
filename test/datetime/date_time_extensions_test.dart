@@ -39,11 +39,11 @@ void main() {
 
       test('generates a list of 1 day (startOfDay: false)', () {
         final DateTime startDate =
-            DateTime(2023, 6, 15, 12, 0); // Example with time
+            DateTime(2023, 6, 15, 12); // Example with time
         final List<DateTime> days =
             startDate.generateDayList(1, startOfDay: false);
         expect(days.length, 1);
-        expect(days[0], DateTime(2023, 6, 15, 12, 0));
+        expect(days[0], DateTime(2023, 6, 15, 12));
       });
 
       test('generates an empty list when days is 0 (startOfDay: true)', () {
@@ -54,7 +54,7 @@ void main() {
 
       test('generates an empty list when days is 0 (startOfDay: false)', () {
         final DateTime startDate =
-            DateTime(2023, 12, 31, 20, 0); // Example with time
+            DateTime(2023, 12, 31, 20); // Example with time
         final List<DateTime> days =
             startDate.generateDayList(0, startOfDay: false);
         expect(days.isEmpty, isTrue);
@@ -105,9 +105,11 @@ void main() {
       });
 
       test('returns the previous day (startOfDay: false)', () {
-        final DateTime date = DateTime(2023, 1, 15, 10, 0, 0);
+        final DateTime date = DateTime(2023, 1, 15, 10);
         expect(
-            date.prevDay(startOfDay: false), DateTime(2023, 1, 14, 10, 0, 0));
+          date.prevDay(startOfDay: false),
+          DateTime(2023, 1, 14, 10),
+        );
       });
 
       test('handles the first day of the month (startOfDay: true)', () {
@@ -127,7 +129,9 @@ void main() {
       test('handles the first day of the year (startOfDay: false)', () {
         final DateTime date = DateTime(2023, 1, 1, 5, 5, 5);
         expect(
-            date.prevDay(startOfDay: false), DateTime(2022, 12, 31, 5, 5, 5));
+          date.prevDay(startOfDay: false),
+          DateTime(2022, 12, 31, 5, 5, 5),
+        );
       });
 
       test('handles leap years (startOfDay: true)', () {

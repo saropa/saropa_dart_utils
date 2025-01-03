@@ -26,7 +26,7 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.3.14+Kyoto (Latest)
+## 0.3.15+Kyoto (Latest)
 
 * ⏰ Added many useful boilerplate date time utils
 * 📚 Added dependency to [jiffy](https://pub.dev/packages/jiffy/changelog) and [intl](https://pub.dev/packages/intl/changelog) for date processing
