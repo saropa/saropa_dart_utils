@@ -13,7 +13,7 @@
 +  semantics. There might still be edge cases where it misses usages or incorrectly identifies them.
 
 .NOTES
-  Version:   1.6
+  Version:   1.7
   Author:    Saropa
   Copyright: © 2024 Saropa. All rights reserved.
   Website:   https://saropa.com
@@ -228,6 +228,7 @@ $usedLogFile = "$filePrefix.used.log"
 $localCandidatesLogFile = "$filePrefix.localizable.log"
 $duplicateMethodsLogFile = "$filePrefix.duplicates.log"
 $debugLogFile = "$filePrefix.debug.log"
+$warningLogFile = "$filePrefix.warnings.log" # File to store all warnings
 
 ####################################################################################################
 # --- First Pass ---
@@ -235,6 +236,15 @@ $debugLogFile = "$filePrefix.debug.log"
 $pass1Index = 0
 $totalFiles = $sortedDartFiles.Count
 Write-Output "`r`nStarting Pass 1: Extracting method names and identifying duplicates from $totalFiles files..."
+
+# Redirect warnings to file and console. This ensures that the script continues execution even if warnings occur.
+$WarningPreference = "Continue"
+
+#  This is the crucial part. It tells PowerShell to "tee" the warnings, meaning to output them both to the console (standard behavior) and to a file.
+$WarningAction = "Tee"
+
+# This specifies the file where the warnings will be saved.
+$WarningFile = $warningLogFile
 
 foreach ($file in $sortedDartFiles) {
   # Initialize an empty array for the current file's debug data
@@ -390,7 +400,7 @@ foreach ($methodName in $methodNames.Keys | Sort-Object) {
       $usageCount += $usageMatches.Count
     }
     else {
-      Write-Warning "File not found: $($file.FullName)"
+      Write-Warning "File not found: $($file.FullName)" -WarningVariable +Warnings
     }
   }
 
@@ -411,7 +421,7 @@ foreach ($methodName in $methodNames.Keys | Sort-Object) {
       }
     }
     else {
-      Write-Warning "File not found: $($methodNames[$methodName].File)"
+      Write-Warning "File not found: $($file.FullName)" -WarningVariable +Warnings
     }
   }
 
@@ -575,7 +585,7 @@ foreach ($categoryName in $methodCategories.Keys) {
       $filePath = $fileGroup.Name
 
       # Updated format: File and line number on one line, method on the next
-      Add-Content -Path $logFile -Value ("File: {0}:{1}" -f $filePath, $line) -Encoding UTF8
+      Add-Content -Path $logFile -Value ("`r`nFile: {0}:{1}" -f $filePath, $line) -Encoding UTF8
       Add-Content -Path $logFile -Value ("  Usages: {0, -3} {1}" -f $count, $method) -Encoding UTF8
     }
     Add-Content -Path $logFile -Value "" -Encoding UTF8
@@ -593,7 +603,7 @@ foreach ($fileGroup in $groupedLocalCandidates) {
   # Add-Content -Path $localCandidatesLogFile "`r`nFile: $($fileGroup.Name)" -Encoding UTF8
   foreach ($entry in $fileGroup.Group) {
     # Updated format: File and line number on one line, method on the next
-    Add-Content -Path $localCandidatesLogFile ("File: {0}:{1}" -f $entry.File, $entry.Line) -Encoding UTF8
+    Add-Content -Path $localCandidatesLogFile ("`r`nFile: {0}:{1}" -f $entry.File, $entry.Line) -Encoding UTF8
     Add-Content -Path $localCandidatesLogFile ("  {0}" -f $entry.Method) -Encoding UTF8
   }
 }
@@ -653,7 +663,7 @@ if ($methodUsage.GetEnumerator() | Where-Object { $_.Value -gt 0 }) {
     }
     else {
       # Handle the case where the key is not found (optional: log an error or warning)
-      Write-Warning "Method '$method' not found in method definitions."
+      Write-Warning "Method '$method' not found in method definitions." -WarningVariable +Warnings
       "{0,-40} {1,-10} Line: N/A     File: N/A" -f $method, $_.Value
     }
   }
@@ -669,10 +679,15 @@ if ($methodUsage.GetEnumerator() | Where-Object { $_.Value -gt 0 }) {
   Write-Output "Debug log created at: $debugLogFile"
 }
 
+# Add header for warning log
+$warningLogSummary = "Log of warnings encountered during analysis."
+New-LogFileHeader -logFile $warningLogFile -logTitle "WARNING LOG" -summaryContent $warningLogSummary
+
 Write-Output "Log file created at: $reportLogFile"
 Write-Output "Used methods log file created at: $usedLogFile"
 Write-Output "Local candidates log file created at: $localCandidatesLogFile"
 Write-Output "Duplicate methods log file created at: $duplicateMethodsLogFile"
+Write-Output "Warning log file created at: $warningLogFile"
 
 Write-Output "Analysis complete!"
 
@@ -688,4 +703,5 @@ Write-Output "Analysis complete!"
 #   & notepad.exe $localCandidatesLogFile
 #   & notepad.exe $debugLogFile
 #   & notepad.exe $duplicateMethodsLogFile
+#   & notepad.exe $warningLogFile
 # }

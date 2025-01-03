@@ -19,13 +19,15 @@
   ],
   "useGitignore": true,
   "words": [
+    "COPPA",
     "Github",
-    "saropa_dart_utils"
+    "saropa_dart_utils",
+    "timezone"
   ],
   // Specify paths/files to ignore.
   "ignorePaths": [
     "pub/cache", // this will ignore anything the node_modules directory
-    "flutter\bin", // this will ignore anything the node_modules directory
+    "flutter\\bin", // this will ignore anything the node_modules directory
     "flutter/bin", // this will ignore anything the node_modules directory
     "node_modules", // this will ignore anything the node_modules directory
     "**/node_modules", // the same for this one

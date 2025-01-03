@@ -1,5 +1,37 @@
 # Change History for Saropa Dart Utils
 
+``` text
+                                                ....
+                                       -+shdmNMMMMNmdhs+-
+                                    -odMMMNyo/-..``.++:+o+/-
+                                 /dMMMMMM/               `````
+                                dMMMMMMMMNdhhhdddmmmNmmddhs+-
+                                /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/
+                              . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+
+                              o     ..~~~::~+==+~:/+sdNMMMMMMMMMMMo
+                              m                        .+NMMMMMMMMMN
+                              m+                         :MMMMMMMMMm
+                              /N:                        :MMMMMMMMM/
+                               oNs.                    +NMMMMMMMMo
+                                :dNy/.              ./smMMMMMMMMm:
+                                 /dMNmhyso+++oosydNNMMMMMMMMMd/
+                                    .odMMMMMMMMMMMMMMMMMMMMdo-
+                                       -+shdNNMMMMNNdhs+-
+                                               ``
+
+Made by Saropa. All rights reserved.
+
+Learn more at https://saropa.com, or email dev.tools@saropa.com
+```
+
+****
+
+## 0.3.14+Kyoto (Latest)
+
+* ⏰ Added many useful boilerplate date time utils
+* 📚 Added dependency to [jiffy](https://pub.dev/packages/jiffy/changelog) and [intl](https://pub.dev/packages/intl/changelog) for date processing
+* ✅ Updated unused flutter code detection script to log warnings to a file
+
 ## 0.3.13+Jakarta (Latest)
 
 * ✅ Added an unused flutter code detection script [Dead Code Die Hard: A Practical Guide to Identifying Orphan Flutter Methods](https://saropa-contacts.medium.com/dead-code-die-hard-a-practical-guide-to-identifying-orphan-flutter-methods-b112a1a07320)
@@ -114,3 +146,10 @@
 ## 0.0.1
 
 * Initial release with bool list methods.
+
+****
+
+``` plain
+
+      Made by Saropa. All rights reserved.
+```
