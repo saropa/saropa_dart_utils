@@ -109,7 +109,7 @@ if ($upload -eq 'y') {
     # Uploading to gh-pages branch
     git checkout --orphan gh-pages
     mkdir -p doc/api
-    cp -r $apiDocPath/* doc/api/
+    Copy-Item -r $apiDocPath/* doc/api/
     git add doc
     git commit -m "Update generated documentation"
     git push origin gh-pages --force
