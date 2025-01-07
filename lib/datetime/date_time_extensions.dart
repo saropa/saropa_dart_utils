@@ -487,6 +487,47 @@ extension DateTimeExtensions on DateTime {
     return toUtc().add(Duration(hours: hours, minutes: minutes));
   }
 
+  /// Checks if the current [DateTime] is within the specified range,
+  /// considering all years in the range if the current year is 0.
+  ///
+  /// Args:
+  ///   range (DateTimeRange?): The range to check against.
+  ///   inclusive (bool): If true, the start and end dates of the range are
+  ///   included in the check. Defaults to true.
+  ///
+  /// Returns:
+  ///   bool: True if the [DateTime] is within the range, false otherwise.
+  bool isAnnualDateInRange(
+    DateTimeRange? range, {
+    bool inclusive = true,
+  }) {
+    if (range == null) {
+      return true;
+    }
+
+    if (year == 0) {
+      // If year is 0, check if the month and day fall within the range for
+      // any year
+      final startMonth = range.start.month;
+      final startDay = range.start.day;
+      final endMonth = range.end.month;
+      final endDay = range.end.day;
+
+      if (month < startMonth || (month == startMonth && day < startDay)) {
+        return false;
+      }
+
+      if (month > endMonth || (month == endMonth && day > endDay)) {
+        return false;
+      }
+
+      return true;
+    }
+
+    // If year is provided, use it for comparison
+    return isBetweenRange(range, inclusive: inclusive);
+  }
+
   /// Checks if the current [DateTime] is within the specified range.
   ///
   /// Args:

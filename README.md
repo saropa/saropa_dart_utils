@@ -166,5 +166,3 @@ PRs, ideas and issues are always welcome! Email for any questions [app.dev.utils
 💙 Saropa
 
 [saropa_link]: https://saropa.com
-
-<!-- Github Repo Link -->

@@ -5,6 +5,96 @@ import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
 void main() {
   group('DateTimeExtensions', () {
+    group('isAnnualDateInRange', () {
+      test('returns true when date is within range with specific year', () {
+        final DateTime date = DateTime(2023, 6, 15);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2023, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), true);
+      });
+
+      test('returns false when date is outside range with specific year', () {
+        final DateTime date = DateTime(2024, 6, 15);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2023, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), false);
+      });
+
+      test('returns true when date with year 0 is within range', () {
+        final DateTime date = DateTime(0, 6, 15);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2025, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), true);
+      });
+
+      test('returns false when date with year 0 is outside range', () {
+        final DateTime date = DateTime(0, 12, 31);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2025, 11, 30),
+        );
+        expect(date.isAnnualDateInRange(range), false);
+      });
+
+      test('returns true when date is at start of range', () {
+        final DateTime date = DateTime(2023);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2023, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), true);
+      });
+
+      test('returns true when date is at end of range', () {
+        final DateTime date = DateTime(2023, 12, 31);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2023, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), true);
+      });
+
+      test('returns true when range is null', () {
+        final DateTime date = DateTime(2023, 6, 15);
+        expect(date.isAnnualDateInRange(null), true);
+      });
+
+      test('returns true for leap year date within range', () {
+        final DateTime date = DateTime(0, 2, 29);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2025, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), true);
+      });
+
+      test('returns false for date just before range start', () {
+        final DateTime date = DateTime(2022, 12, 31);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2025, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), false);
+      });
+
+      test('returns false for date just after range end', () {
+        final DateTime date = DateTime(2026);
+        final DateTimeRange range = DateTimeRange(
+          start: DateTime(2023),
+          end: DateTime(2025, 12, 31),
+        );
+        expect(date.isAnnualDateInRange(range), false);
+      });
+    });
+  });
+
+  group('DateTimeExtensions', () {
     group('generateDayList', () {
       test('generates a list of 5 consecutive days (startOfDay: true)', () {
         final DateTime startDate = DateTime(2023);
