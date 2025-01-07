@@ -26,9 +26,10 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.3.15+Kyoto (Latest)
+## 0.3.16+Kyoto (Latest)
 
-* ⏰ Added many useful boilerplate date time utils
+* ⏰ Added boilerplate [DateTimeRange] utils
+* ⏰ Added many useful boilerplate [DateTime] utils
 * 📚 Added dependency to [jiffy](https://pub.dev/packages/jiffy/changelog) and [intl](https://pub.dev/packages/intl/changelog) for date processing
 * ✅ Updated unused flutter code detection script to log warnings to a file
 
