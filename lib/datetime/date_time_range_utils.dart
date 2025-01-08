@@ -6,7 +6,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// Determines if the nth occurrence of a specific day of the week in a given
   ///  month falls within the specified date range.
   ///
-  bool isNthDayOfMonth(
+  bool isNthDayOfMonthInRange(
     int n,
     int dayOfWeek,
     int month, {
