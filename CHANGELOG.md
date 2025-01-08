@@ -26,7 +26,7 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.3.17+Kyoto (Latest)
+## 0.3.18+Kyoto (Latest)
 
 * ⏰ Added boilerplate [DateTimeRange] utils
 * ⏰ Added many useful boilerplate [DateTime] utils
