@@ -5,6 +5,55 @@ import 'package:saropa_dart_utils/int/int_string_extensions.dart';
 
 /// Extensions on the [DateTime] class to provide additional functionality.
 extension DateTimeExtensions on DateTime {
+  /// Returns the date of the nth occurrence of a specific weekday in a given
+  ///  month and year.
+  ///
+  /// Args:
+  ///   n (int): The desired occurrence (e.g., 1 for the 1st, 2 for the 2nd,
+  ///  etc.).
+  ///   dayOfWeek (int): The day of the week (e.g., DateTime.monday,
+  ///  DateTime.tuesday, etc.).
+  ///   month (int): The month (1-12).
+  ///   year (int): The year.
+  ///
+  /// Returns:
+  ///   DateTime?: The date of the nth occurrence, or null if it does not exist
+  ///  (e.g., 5th Friday in February).
+  DateTime? getNthWeekdayOfMonthInYear(
+    int n,
+    int dayOfWeek,
+  ) {
+    if (n < 1) {
+      return null; // Invalid input: n must be at least 1
+    }
+
+    // Get the first day of the month for the current year
+    final DateTime firstDayOfMonth = DateTime(year, month);
+
+    // Calculate the offset to the first occurrence of the desired day
+    // of the week
+    final int offset = (dayOfWeek - firstDayOfMonth.weekday + 7) % 7;
+
+    // Calculate the date of the first occurrence
+    final DateTime firstOccurrence =
+        firstDayOfMonth.add(Duration(days: offset));
+
+    // Calculate the date of the nth occurrence
+    final DateTime nthOccurrence =
+        firstOccurrence.add(Duration(days: (n - 1) * 7));
+    // Check if the nth occurrence is within the target month
+    if (nthOccurrence.month != month) {
+      return null; // The nth occurrence falls outside the month
+    }
+
+    // **Set time components to zero (midnight)**
+    return DateTime(
+      nthOccurrence.year,
+      nthOccurrence.month,
+      nthOccurrence.day,
+    );
+  }
+
   /// Determines if the date (of birth) is under 13 years old.
   ///
   /// This is useful for determining non-child content access based on
