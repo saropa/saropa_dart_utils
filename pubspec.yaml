@@ -22,7 +22,7 @@ dependencies:
   # International date formats
   # https://pub.dev/packages/intl/changelog
   # intl comes with a horrible mess of dependencies ... it would be great to resolve this once and for all
-  intl: ^0.19.0
+  intl: ">=0.19.0 <0.21.0"
 
   # Jiffy is a Flutter (Android, IOS and Web) date time package inspired by moment js for parsing, manipulating, querying and formatting dates
   # https://pub.dev/packages/jiffy/changelog
