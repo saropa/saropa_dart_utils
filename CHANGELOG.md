@@ -26,7 +26,7 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.4.0+Bristol (Latest)
+## 0.4.1+Bristol (Latest)
 
 * 📚 Added dependency to intl v0.20.2 [intl](https://pub.dev/packages/intl/changelog)
 
