@@ -26,7 +26,11 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.3.18+Kyoto (Latest)
+## 0.4.0+Bristol (Latest)
+
+* 📚 Added dependency to intl v0.20.2 [intl](https://pub.dev/packages/intl/changelog)
+
+## 0.3.18+Kyoto
 
 * ⏰ Added boilerplate [DateTimeRange] utils
 * ⏰ Added many useful boilerplate [DateTime] utils
