@@ -21,9 +21,7 @@ void main() {
 
   group('Swipe - Properties', () {
     test('should detect swipe right', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(2000, 0)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(2000, 0)));
 
       expect(details.swipeDirection, SwipeDirection.right);
       expect(details.swipeSpeed, SwipeSpeed.fast);
@@ -32,9 +30,7 @@ void main() {
     });
 
     test('should detect swipe left', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(-2000, 0)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(-2000, 0)));
 
       expect(details.swipeDirection, SwipeDirection.left);
       expect(details.swipeSpeed, SwipeSpeed.fast);
@@ -43,9 +39,7 @@ void main() {
     });
 
     test('should detect swipe up', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(0, -2000)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(0, -2000)));
 
       expect(details.swipeDirection, SwipeDirection.up);
       expect(details.swipeSpeed, SwipeSpeed.fast);
@@ -54,9 +48,7 @@ void main() {
     });
 
     test('should detect swipe down', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(0, 2000)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(0, 2000)));
 
       expect(details.swipeDirection, SwipeDirection.down);
       expect(details.swipeSpeed, SwipeSpeed.fast);
@@ -65,9 +57,7 @@ void main() {
     });
 
     test('should detect diagonal swipe', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(2000, 2000)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(2000, 2000)));
 
       expect(
         details.swipeDirection,
@@ -83,8 +73,7 @@ void main() {
   });
 
   group('Swipe - Extra', () {
-    test(
-        'should create Swipe with correct direction, speed, magnitude, and '
+    test('should create Swipe with correct direction, speed, magnitude, and '
         'angle', () {
       const swipe = Swipe(
         SwipeDirection.left,
@@ -101,8 +90,7 @@ void main() {
   });
 
   group('Swipe', () {
-    test(
-        'should create Swipe with correct direction, speed, magnitude, '
+    test('should create Swipe with correct direction, speed, magnitude, '
         'and angle', () {
       const swipe = Swipe(
         SwipeDirection.left,
@@ -120,9 +108,7 @@ void main() {
 
   group('DragEndDetailsProperties', () {
     test('should detect swipe right', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(2000, 0)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(2000, 0)));
 
       expect(details.swipeDirection, equals(SwipeDirection.right));
       expect(details.swipeSpeed, equals(SwipeSpeed.fast));
@@ -131,9 +117,7 @@ void main() {
     });
 
     test('should detect swipe left', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(-2000, 0)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(-2000, 0)));
 
       expect(details.swipeDirection, equals(SwipeDirection.left));
       expect(details.swipeSpeed, equals(SwipeSpeed.fast));
@@ -142,9 +126,7 @@ void main() {
     });
 
     test('should detect swipe up', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(0, -2000)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(0, -2000)));
 
       expect(details.swipeDirection, equals(SwipeDirection.up));
       expect(details.swipeSpeed, equals(SwipeSpeed.fast));
@@ -153,9 +135,7 @@ void main() {
     });
 
     test('should detect swipe down', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(0, 2000)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(0, 2000)));
 
       expect(details.swipeDirection, equals(SwipeDirection.down));
       expect(details.swipeSpeed, equals(SwipeSpeed.fast));
@@ -164,22 +144,16 @@ void main() {
     });
 
     test('should detect diagonal swipe', () {
-      final details = DragEndDetails(
-        velocity: const Velocity(pixelsPerSecond: Offset(2000, 2000)),
-      );
+      final details = DragEndDetails(velocity: const Velocity(pixelsPerSecond: Offset(2000, 2000)));
 
       expect(
         details.swipeDirection,
-        equals(
-          SwipeDirection.right,
-        ),
+        equals(SwipeDirection.right),
       ); // The direction is determined by the larger component of the velocity.
       expect(details.swipeSpeed, equals(SwipeSpeed.fast));
       expect(
         details.swipeMagnitude,
-        equals(
-          SwipeMagnitude.massive,
-        ),
+        equals(SwipeMagnitude.massive),
       ); // The magnitude is the Euclidean distance of the velocity.
       expect(details.swipeAngle, equals(SwipeAngle.diagonal));
     });

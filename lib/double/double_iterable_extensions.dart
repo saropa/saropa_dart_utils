@@ -13,10 +13,7 @@ extension DoubleIterableExtensions on Iterable<double> {
       return null;
     }
 
-    return reduce(
-      (double value, double element) =>
-          value.compareTo(element) < 0 ? value : element,
-    );
+    return reduce((double value, double element) => value.compareTo(element) < 0 ? value : element);
   }
 
   /// Finds the biggest occurrence in the list.
@@ -29,10 +26,7 @@ extension DoubleIterableExtensions on Iterable<double> {
       return null;
     }
 
-    return reduce(
-      (double value, double element) =>
-          value.compareTo(element) > 0 ? value : element,
-    );
+    return reduce((double value, double element) => value.compareTo(element) > 0 ? value : element);
   }
 
   /// Finds the most common value in the list.
@@ -52,20 +46,14 @@ extension DoubleIterableExtensions on Iterable<double> {
     for (final item in this) {
       // Update the frequency of the current double in the map, or set it to
       // 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
     final mostCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<double, int>? previous, MapEntry<double, int> element) =>
-          previous == null || element.value > previous.value
-              ? element
-              : previous,
+          previous == null || element.value > previous.value ? element : previous,
     );
     if (mostCommonEntry == null) {
       return null;
@@ -92,20 +80,14 @@ extension DoubleIterableExtensions on Iterable<double> {
     for (final item in this) {
       // Update the frequency of the current double in the map,
       // or set it to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
     final leastCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<double, int>? previous, MapEntry<double, int> element) =>
-          previous == null || element.value < previous.value
-              ? element
-              : previous,
+          previous == null || element.value < previous.value ? element : previous,
     );
 
     if (leastCommonEntry == null) {

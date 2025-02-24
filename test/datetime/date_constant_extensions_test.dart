@@ -24,10 +24,7 @@ void main() {
       expect(DateTime.utc(1970, 1, 1, 0, 0, 1).isUnixEpochDateTime, isFalse);
       expect(DateTime.utc(1970, 1, 1, 0, 1).isUnixEpochDateTime, isFalse);
       expect(DateTime.utc(1970, 1, 1, 1).isUnixEpochDateTime, isFalse);
-      expect(
-        DateTime.utc(1969, 12, 31, 23, 59, 59).isUnixEpochDateTime,
-        isFalse,
-      );
+      expect(DateTime.utc(1969, 12, 31, 23, 59, 59).isUnixEpochDateTime, isFalse);
     });
   });
 }

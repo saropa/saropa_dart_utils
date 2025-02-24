@@ -26,17 +26,12 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
     for (final Enum item in this) {
       // Update the frequency of the current integer in the map, or set it
       // to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
     final mostCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<Enum, int> a, MapEntry<Enum, int> b) =>
-          a.value > b.value ? a : b,
+      (MapEntry<Enum, int> a, MapEntry<Enum, int> b) => a.value > b.value ? a : b,
     );
 
     // Return a MapEntry with the most common value and its frequency.
@@ -58,10 +53,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   ///
   /// - Returns: The first enum value whose [name] matches the given [name],
   ///  or `null` if no such value is found.
-  T? byNameTry(
-    String? name, {
-    bool caseSensitive = true,
-  }) {
+  T? byNameTry(String? name, {bool caseSensitive = true}) {
     if (name == null || name.isEmpty) {
       return null;
     }
@@ -71,9 +63,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
 
     // Find the first enum value whose name matches the provided name
     return firstWhereOrNull(
-      (T e) => caseSensitive
-          ? e.name == comparisonName
-          : e.name.toLowerCase() == comparisonName,
+      (T e) => caseSensitive ? e.name == comparisonName : e.name.toLowerCase() == comparisonName,
     );
   }
 

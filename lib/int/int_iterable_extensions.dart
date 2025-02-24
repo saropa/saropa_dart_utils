@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 /// NOTE: Dart’s type system doesn’t consider int to be a subtype of
-///       Comparable&lt;int&gt;, even though int does implement 
+///       Comparable&lt;int&gt;, even though int does implement
 ///       Comparable&lt;num&gt;
 ///
 extension IntIterableExtensions on Iterable<int> {
@@ -19,11 +19,7 @@ extension IntIterableExtensions on Iterable<int> {
     for (final item in this) {
       // Update the frequency of the current integer in the map, or
       // set it to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.
@@ -48,11 +44,7 @@ extension IntIterableExtensions on Iterable<int> {
     for (final item in this) {
       // Update the frequency of the current integer in the map, or
       // set it to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.

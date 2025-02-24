@@ -25,12 +25,7 @@ class IntUtils {
   ///
   /// Both [a] and [b] must be non-negative.
   ///
-  static int? findGreatestCommonDenominator(
-    int a,
-    int b, {
-    int depth = 0,
-    int maxDepth = 500,
-  }) {
+  static int? findGreatestCommonDenominator(int a, int b, {int depth = 0, int maxDepth = 500}) {
     // Both numbers must be non-negative.
     if (a < 0 || b < 0) {
       return null;
@@ -55,11 +50,6 @@ class IntUtils {
 
     // Otherwise, recursively call this method with [b] and the remainder of
     // [a] divided by [b].
-    return findGreatestCommonDenominator(
-      b,
-      a % b,
-      depth: depth + 1,
-      maxDepth: maxDepth,
-    );
+    return findGreatestCommonDenominator(b, a % b, depth: depth + 1, maxDepth: maxDepth);
   }
 }

@@ -20,9 +20,14 @@
   "useGitignore": true,
   "words": [
     "COPPA",
+    "foresightmobile",
     "Github",
+    "jfif",
+    "résumé",
     "saropa_dart_utils",
-    "timezone"
+    "timezone",
+    "uppercasing",
+    "webp"
   ],
   // Specify paths/files to ignore.
   "ignorePaths": [

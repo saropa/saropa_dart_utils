@@ -75,8 +75,7 @@ void main() {
       expect((-12345).countDigits(), equals(5));
     });
 
-    test('returns the correct number of digits for numbers with leading zeros',
-        () {
+    test('returns the correct number of digits for numbers with leading zeros', () {
       expect(00123.countDigits(), equals(3));
     });
 

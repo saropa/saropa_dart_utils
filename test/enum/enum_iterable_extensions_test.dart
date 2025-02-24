@@ -1,11 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/enum/enum_iterable_extensions.dart';
 
-enum EnumListTestEnum {
-  value1,
-  value2,
-  value3,
-}
+enum EnumListTestEnum { value1, value2, value3 }
 
 void main() {
   group('mostOccurrences tests', () {
@@ -95,39 +91,19 @@ void main() {
     test('Test case 1: Normal case', () {
       const list = EnumListTestEnum.values;
       final result = list.sortedEnumValues();
-      expect(result, [
-        EnumListTestEnum.value1,
-        EnumListTestEnum.value2,
-        EnumListTestEnum.value3,
-      ]);
+      expect(result, [EnumListTestEnum.value1, EnumListTestEnum.value2, EnumListTestEnum.value3]);
     });
 
     test('Test case 2: Already sorted', () {
-      final list = [
-        EnumListTestEnum.value1,
-        EnumListTestEnum.value2,
-        EnumListTestEnum.value3,
-      ];
+      final list = [EnumListTestEnum.value1, EnumListTestEnum.value2, EnumListTestEnum.value3];
       final result = list.sortedEnumValues();
-      expect(result, [
-        EnumListTestEnum.value1,
-        EnumListTestEnum.value2,
-        EnumListTestEnum.value3,
-      ]);
+      expect(result, [EnumListTestEnum.value1, EnumListTestEnum.value2, EnumListTestEnum.value3]);
     });
 
     test('Test case 3: Reverse order', () {
-      final list = [
-        EnumListTestEnum.value3,
-        EnumListTestEnum.value2,
-        EnumListTestEnum.value1,
-      ];
+      final list = [EnumListTestEnum.value3, EnumListTestEnum.value2, EnumListTestEnum.value1];
       final result = list.sortedEnumValues();
-      expect(result, [
-        EnumListTestEnum.value1,
-        EnumListTestEnum.value2,
-        EnumListTestEnum.value3,
-      ]);
+      expect(result, [EnumListTestEnum.value1, EnumListTestEnum.value2, EnumListTestEnum.value3]);
     });
 
     test('Test case 4: Single element', () {

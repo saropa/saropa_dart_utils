@@ -13,5 +13,4 @@ import 'dart:math';
 ///  it.
 ///
 // ignore: non_constant_identifier_names
-Random CommonRandom([int? seed]) =>
-    Random(seed ?? DateTime.now().millisecondsSinceEpoch);
+Random CommonRandom([int? seed]) => Random(seed ?? DateTime.now().millisecondsSinceEpoch);

@@ -14,22 +14,14 @@ void main() {
     });
 
     test('mostOccurrences', () {
-      expect(
-        [3.5, 1.2, 4.8, 1.2, 5.9, 9.1, 1.2].mostOccurrences(),
-        equals((1.2, 3)),
-      );
+      expect([3.5, 1.2, 4.8, 1.2, 5.9, 9.1, 1.2].mostOccurrences(), equals((1.2, 3)));
       expect(<double>[].mostOccurrences(), isNull);
     });
 
     test('leastOccurrences', () {
       expect(
         [3.5, 1.2, 4.8, 1.2, 5.9, 9.1, 1.2].leastOccurrences(),
-        anyOf(
-          equals((3.5, 1)),
-          equals((4.8, 1)),
-          equals((5.9, 1)),
-          equals((9.1, 1)),
-        ),
+        anyOf(equals((3.5, 1)), equals((4.8, 1)), equals((5.9, 1)), equals((9.1, 1))),
       );
       expect(<double>[].leastOccurrences(), isNull);
     });

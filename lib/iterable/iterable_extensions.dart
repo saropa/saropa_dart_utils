@@ -13,9 +13,7 @@ extension IterableExtensions<T extends Comparable<T>> on Iterable<T> {
       return null;
     }
 
-    return reduce(
-      (T value, T element) => value.compareTo(element) < 0 ? value : element,
-    );
+    return reduce((T value, T element) => value.compareTo(element) < 0 ? value : element);
   }
 
   /// Finds the biggest occurrence in the list.
@@ -28,9 +26,7 @@ extension IterableExtensions<T extends Comparable<T>> on Iterable<T> {
       return null;
     }
 
-    return reduce(
-      (T value, T element) => value.compareTo(element) > 0 ? value : element,
-    );
+    return reduce((T value, T element) => value.compareTo(element) > 0 ? value : element);
   }
 
   /// Finds the most common value in the list.
@@ -50,11 +46,7 @@ extension IterableExtensions<T extends Comparable<T>> on Iterable<T> {
     for (final item in this) {
       // Update the frequency of the current integer in the map, or set it to
       //   1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // NOTE: reduce throws an error if it’s used on an empty list, while fold
@@ -64,9 +56,7 @@ extension IterableExtensions<T extends Comparable<T>> on Iterable<T> {
     final mostCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<T, int>? previous, MapEntry<T, int> element) =>
-          previous == null || element.value > previous.value
-              ? element
-              : previous,
+          previous == null || element.value > previous.value ? element : previous,
     );
     if (mostCommonEntry == null) {
       return null;
@@ -89,20 +79,14 @@ extension IterableExtensions<T extends Comparable<T>> on Iterable<T> {
     for (final item in this) {
       // Update the frequency of the current integer in the map,
       // or set it to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
     final leastCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<T, int>? previous, MapEntry<T, int> element) =>
-          previous == null || element.value < previous.value
-              ? element
-              : previous,
+          previous == null || element.value < previous.value ? element : previous,
     );
 
     if (leastCommonEntry == null) {

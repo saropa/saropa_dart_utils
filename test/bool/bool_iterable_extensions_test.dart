@@ -34,29 +34,24 @@ void main() {
       expect([true, false, true, false, true].anyTrue, true);
     });
 
-    test(
-        'returns false for list with alternating false and true elements '
+    test('returns false for list with alternating false and true elements '
         'starting with false', () {
       expect([false, true, false, true, false].anyTrue, true);
     });
 
-    test('returns true for list with all elements true except the first one',
-        () {
+    test('returns true for list with all elements true except the first one', () {
       expect([false, true, true, true, true].anyTrue, true);
     });
 
-    test('returns true for list with all elements true except the last one',
-        () {
+    test('returns true for list with all elements true except the last one', () {
       expect([true, true, true, true, false].anyTrue, true);
     });
 
-    test('returns true for list with all elements true except the middle one',
-        () {
+    test('returns true for list with all elements true except the middle one', () {
       expect([true, true, false, true, true].anyTrue, true);
     });
 
-    test('returns false for list with all elements false except the middle one',
-        () {
+    test('returns false for list with all elements false except the middle one', () {
       expect([false, false, true, false, false].anyTrue, true);
     });
   });
@@ -71,8 +66,7 @@ void main() {
       expect([true, false, true, false, true].anyFalse, true);
     });
 
-    test('returns true for list with all elements true except the first one',
-        () {
+    test('returns true for list with all elements true except the first one', () {
       expect([true, true, true, true, false].anyFalse, true);
     });
   });
@@ -113,22 +107,14 @@ void main() {
       expect([false].reverse, [true]);
     });
 
-    test(
-        'returns [false, true, false, true, false] for list with alternating '
+    test('returns [false, true, false, true, false] for list with alternating '
         'true and false elements', () {
-      expect(
-        [true, false, true, false, true].reverse,
-        [false, true, false, true, false],
-      );
+      expect([true, false, true, false, true].reverse, [false, true, false, true, false]);
     });
 
-    test(
-        'returns [true, false, false, false, false] for list with all '
+    test('returns [true, false, false, false, false] for list with all '
         'elements true except the first one', () {
-      expect(
-        [false, true, true, true, true].reverse,
-        [true, false, false, false, false],
-      );
+      expect([false, true, true, true, true].reverse, [true, false, false, false, false]);
     });
   });
 }

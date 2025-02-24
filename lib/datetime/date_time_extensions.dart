@@ -19,10 +19,7 @@ extension DateTimeExtensions on DateTime {
   /// Returns:
   ///   DateTime?: The date of the nth occurrence, or null if it does not exist
   ///  (e.g., 5th Friday in February).
-  DateTime? getNthWeekdayOfMonthInYear(
-    int n,
-    int dayOfWeek,
-  ) {
+  DateTime? getNthWeekdayOfMonthInYear(int n, int dayOfWeek) {
     if (n < 1) {
       return null; // Invalid input: n must be at least 1
     }
@@ -35,23 +32,17 @@ extension DateTimeExtensions on DateTime {
     final int offset = (dayOfWeek - firstDayOfMonth.weekday + 7) % 7;
 
     // Calculate the date of the first occurrence
-    final DateTime firstOccurrence =
-        firstDayOfMonth.add(Duration(days: offset));
+    final DateTime firstOccurrence = firstDayOfMonth.add(Duration(days: offset));
 
     // Calculate the date of the nth occurrence
-    final DateTime nthOccurrence =
-        firstOccurrence.add(Duration(days: (n - 1) * 7));
+    final DateTime nthOccurrence = firstOccurrence.add(Duration(days: (n - 1) * 7));
     // Check if the nth occurrence is within the target month
     if (nthOccurrence.month != month) {
       return null; // The nth occurrence falls outside the month
     }
 
     // **Set time components to zero (midnight)**
-    return DateTime(
-      nthOccurrence.year,
-      nthOccurrence.month,
-      nthOccurrence.day,
-    );
+    return DateTime(nthOccurrence.year, nthOccurrence.month, nthOccurrence.day);
   }
 
   /// Determines if the date (of birth) is under 13 years old.
@@ -64,9 +55,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// NOTE:  the legal definition of "under 13" can vary slightly by region or
   ///  specific regulation.
-  bool isUnder13({
-    DateTime? today,
-  }) {
+  bool isUnder13({DateTime? today}) {
     today ??= DateTime.now();
 
     // NEW: Check if the date of birth is in the future.
@@ -85,17 +74,12 @@ extension DateTimeExtensions on DateTime {
   /// Generates a list of [DateTime] objects for consecutive days.
   ///
   /// Starts from `this` and generates [days] number of dates.
-  List<DateTime> generateDayList(
-    int days, {
-    bool startOfDay = true,
-  }) {
+  List<DateTime> generateDayList(int days, {bool startOfDay = true}) {
     final List<DateTime> dayList = <DateTime>[];
     DateTime currentDate = this;
     for (int i = 0; i < days; i++) {
       dayList.add(currentDate);
-      currentDate = currentDate.nextDay(
-        startOfDay: startOfDay,
-      );
+      currentDate = currentDate.nextDay(startOfDay: startOfDay);
     }
     return dayList;
   }
@@ -105,9 +89,7 @@ extension DateTimeExtensions on DateTime {
   /// This method calculates the day before the current [DateTime] object.
   /// It handles month and year changes correctly.
   /// [startOfDay] if true, returns the previous day at 00:00:00.
-  DateTime prevDay({
-    bool startOfDay = true,
-  }) {
+  DateTime prevDay({bool startOfDay = true}) {
     DateTime result = add(const Duration(days: -1));
     if (startOfDay) {
       result = DateTime(result.year, result.month, result.day);
@@ -120,9 +102,7 @@ extension DateTimeExtensions on DateTime {
   /// This method calculates the day after the current [DateTime] object.
   /// It handles month and year changes correctly.
   /// [startOfDay] if true, returns the next day at 00:00:00.
-  DateTime nextDay({
-    bool startOfDay = true,
-  }) {
+  DateTime nextDay({bool startOfDay = true}) {
     DateTime result = add(const Duration(days: 1));
     if (startOfDay) {
       result = DateTime(result.year, result.month, result.day);
@@ -248,10 +228,7 @@ extension DateTimeExtensions on DateTime {
   /// Returns:
   ///   int?: The time difference in milliseconds, or null if [compareTo]
   ///   is null.
-  int? getTimeDifferenceMs(
-    DateTime? compareTo, {
-    bool alwaysPositive = true,
-  }) {
+  int? getTimeDifferenceMs(DateTime? compareTo, {bool alwaysPositive = true}) {
     if (compareTo == null) {
       return null;
     }
@@ -511,11 +488,7 @@ extension DateTimeExtensions on DateTime {
 
   /// Removes the time component from the [DateTime] object, returning only
   /// the date part (year, month, and day).
-  DateTime toDateOnly() => DateTime(
-        year,
-        month,
-        day,
-      );
+  DateTime toDateOnly() => DateTime(year, month, day);
 
   /// Converts the current [DateTime] to UTC and adds the specified offset.
   ///
@@ -546,10 +519,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the [DateTime] is within the range, false otherwise.
-  bool isAnnualDateInRange(
-    DateTimeRange? range, {
-    bool inclusive = true,
-  }) {
+  bool isAnnualDateInRange(DateTimeRange? range, {bool inclusive = true}) {
     if (range == null) {
       return true;
     }
@@ -586,10 +556,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the [DateTime] is within the range, false otherwise.
-  bool isBetweenRange(
-    DateTimeRange? range, {
-    bool inclusive = true,
-  }) {
+  bool isBetweenRange(DateTimeRange? range, {bool inclusive = true}) {
     if (range == null) {
       return false;
     }
@@ -609,14 +576,9 @@ extension DateTimeExtensions on DateTime {
   /// Returns:
   ///   bool: True if the [DateTime] is between the start and end dates,
   ///   false otherwise.
-  bool isBetween(
-    DateTime start,
-    DateTime end, {
-    bool inclusive = true,
-  }) {
+  bool isBetween(DateTime start, DateTime end, {bool inclusive = true}) {
     if (inclusive) {
-      return (this == start || isAfter(start)) &&
-          (this == end || isBefore(end));
+      return (this == start || isAfter(start)) && (this == end || isBefore(end));
     }
 
     return isAfter(start) && isBefore(end);
@@ -634,9 +596,7 @@ extension DateTimeExtensions on DateTime {
   ///   // dateToCheck is after today
   /// }
   /// ```
-  bool isDateAfterToday(
-    DateTime dateToCheck,
-  ) {
+  bool isDateAfterToday(DateTime dateToCheck) {
     // Get the current date and time
     final DateTime now = DateTime.now();
 
@@ -659,16 +619,11 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the [DateTime] matches the current date, false otherwise.
-  bool isToday({
-    DateTime? now,
-    bool ignoreYear = false,
-  }) {
+  bool isToday({DateTime? now, bool ignoreYear = false}) {
     now ??= DateTime.now();
 
     // https://stackoverflow.com/questions/54391477/check-if-datetime-variable-is-today-tomorrow-or-yesterday
-    return now.day == day &&
-        now.month == month &&
-        (ignoreYear || now.year == year);
+    return now.day == day && now.month == month && (ignoreYear || now.year == year);
   }
 
   /// Checks if the current [DateTime] has the same date (year, month, day)
@@ -713,16 +668,8 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the updated time.
-  DateTime setTime({
-    required TimeOfDay time,
-  }) {
-    return DateTime(
-      year,
-      month,
-      day,
-      time.hour,
-      time.minute,
-    );
+  DateTime setTime({required TimeOfDay time}) {
+    return DateTime(year, month, day, time.hour, time.minute);
   }
 
   /// Aligns the current [DateTime] to the specified duration.
@@ -734,10 +681,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object aligned to the specified duration.
-  DateTime alignDateTime({
-    required Duration alignment,
-    bool roundUp = false,
-  }) {
+  DateTime alignDateTime({required Duration alignment, bool roundUp = false}) {
     // ref: https://stackoverflow.com/questions/60880315/how-to-round-up-the-date-time-nearest-to-30-min-interval-in-dart-flutter
     if (alignment == Duration.zero) {
       return this;
@@ -745,24 +689,28 @@ extension DateTimeExtensions on DateTime {
 
     final Duration correction = Duration(
       //days: 0,
-      hours: alignment.inDays > 0
-          ? hour
-          : alignment.inHours > 0
+      hours:
+          alignment.inDays > 0
+              ? hour
+              : alignment.inHours > 0
               ? hour % alignment.inHours
               : 0,
-      minutes: alignment.inHours > 0
-          ? minute
-          : alignment.inMinutes > 0
+      minutes:
+          alignment.inHours > 0
+              ? minute
+              : alignment.inMinutes > 0
               ? minute % alignment.inMinutes
               : 0,
-      seconds: alignment.inMinutes > 0
-          ? second
-          : alignment.inSeconds > 0
+      seconds:
+          alignment.inMinutes > 0
+              ? second
+              : alignment.inSeconds > 0
               ? second % alignment.inSeconds
               : 0,
-      milliseconds: alignment.inSeconds > 0
-          ? millisecond
-          : alignment.inMilliseconds > 0
+      milliseconds:
+          alignment.inSeconds > 0
+              ? millisecond
+              : alignment.inMilliseconds > 0
               ? millisecond % alignment.inMilliseconds
               : 0,
       microseconds: alignment.inMilliseconds > 0 ? microsecond : 0,
@@ -785,9 +733,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   int: The calculated age.
-  int calculateAgeFromNow({
-    DateTime? now,
-  }) {
+  int calculateAgeFromNow({DateTime? now}) {
     now ??= DateTime.now();
 
     return calculateAgeFromDate(now);
@@ -821,8 +767,7 @@ extension DateTimeExtensions on DateTime {
     int age = fromDate.year - year;
 
     // Adjust age if the birthday hasn't occurred yet this year
-    if (month > fromDate.month ||
-        (month == fromDate.month && day > fromDate.day)) {
+    if (month > fromDate.month || (month == fromDate.month && day > fromDate.day)) {
       age--;
     }
 

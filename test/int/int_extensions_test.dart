@@ -21,8 +21,7 @@ void main() {
       expect(IntUtils.findGreatestCommonDenominator(13, 7), equals(1));
     });
 
-    test(
-        'returns the common factor when a and b are multiples of '
+    test('returns the common factor when a and b are multiples of '
         'a common number', () {
       expect(IntUtils.findGreatestCommonDenominator(15, 45), equals(15));
     });

@@ -1,4 +1,5 @@
-import 'package:intl/intl.dart';
+import 'dart:io';
+
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
 /// A utility class for working with [DateTime] objects.
@@ -13,10 +14,7 @@ class DateTimeUtils {
   /// Returns:
   ///   int?: The calculated age at death, or null if either [dob] or [dod]
   ///   is null, or if [dod] is before [dob].
-  static int? calculateAgeAtDeath({
-    required DateTime? dob,
-    required DateTime? dod,
-  }) {
+  static int? calculateAgeAtDeath({required DateTime? dob, required DateTime? dod}) {
     // Check if either dob or dod is null
     if (dob == null || dod == null) {
       return null;
@@ -30,8 +28,7 @@ class DateTimeUtils {
     int age = dod.year - dob.year;
 
     // Adjust age if the birthday hasn't occurred yet in the dod year
-    if (dod.month < dob.month ||
-        (dod.month == dob.month && dod.day < dob.day)) {
+    if (dod.month < dob.month || (dod.month == dob.month && dod.day < dob.day)) {
       age--;
     }
 
@@ -80,12 +77,7 @@ class DateTimeUtils {
   ///
   /// Returns:
   ///   DateTime: The date for tomorrow at the specified time.
-  static DateTime tomorrow({
-    DateTime? now,
-    int? hour,
-    int? minute = 0,
-    int? second = 0,
-  }) {
+  static DateTime tomorrow({DateTime? now, int? hour, int? minute = 0, int? second = 0}) {
     // Get the current date and time
     now ??= DateTime.now();
 
@@ -100,23 +92,57 @@ class DateTimeUtils {
     );
   }
 
+  // /// Method to check if the device date format is month first.
+  // ///
+  // /// The method uses the `DateFormat` class from the `intl` package to format a
+  // /// test date, and then checks if the month appears before the day in the
+  // /// resulting string.
+  // ///
+  // /// Note: This method assumes that the device's locale has been properly set.
+  // /// If the locale is not set, the method may not return accurate results.
+  // static bool isDeviceDateMonthFirst() {
+  //   // Create a test date (2nd of January 2023) with a KNOWN month and day
+  //   final DateTime testDate = DateTime(2023, 2);
+
+  //   // Format the test date using the device's locale
+  //   final String formattedDate = DateFormat.yMd().format(testDate);
+
+  //   // Check if the month (2) appears before the day (1) in the formatted string
+  //   return formattedDate.indexOf('2') < formattedDate.indexOf('1');
+  // }
+
   /// Method to check if the device date format is month first.
   ///
-  /// The method uses the `DateFormat` class from the `intl` package to format a
-  /// test date, and then checks if the month appears before the day in the
-  /// resulting string.
+  /// This method directly checks the device's locale to determine if the
+  /// date format is month-first.  It supports a limited number of locales
+  /// known to commonly use month-first formats.
   ///
-  /// Note: This method assumes that the device's locale has been properly set.
-  /// If the locale is not set, the method may not return accurate results.
+  /// Returns true if the locale is likely month-first (e.g., en_US, en_CA),
+  /// false otherwise.
+  /// Note: This method provides a simplified approximation and may not be
+  /// accurate for all locales or regions within those locales.  Date format
+  /// usage can be complex and vary.
   static bool isDeviceDateMonthFirst() {
-    // Create a test date (2nd of January 2023) with a KNOWN month and day
-    final DateTime testDate = DateTime(2023, 2);
+    final locale = Platform.localeName;
 
-    // Format the test date using the device's locale
-    final String formattedDate = DateFormat.yMd().format(testDate);
+    /// Locales that are commonly month-first (MM/DD/YYYY)
+    switch (locale) {
+      case 'en_US':
+      case 'en_PH':
+      case 'en_CA': // Canadian English - month-day-year common but YYYY-MM-DD official
+      case 'fil': // Filipino
+      case 'fsm': // Micronesian - Federated States of Micronesia
+      case 'gu_GU': // Guamanian - Guam
+      case 'mh': // Marshallese - Marshall Islands
+      // cspell: ignore Palauan
+      case 'pw': // Palauan - Palau
+      case 'en_BZ': // Belize
+        return true;
 
-    // Check if the month (2) appears before the day (1) in the formatted string
-    return formattedDate.indexOf('2') < formattedDate.indexOf('1');
+      //Default to false, assuming day-first or year-first format for other locales.
+      default:
+        return false;
+    }
   }
 
   /// Function to convert an integer representing days into a string format of
@@ -163,10 +189,7 @@ class DateTimeUtils {
   /// Returns:
   ///   DateTime?: The first day of the next month, or null if the month is
   ///   invalid.
-  static DateTime? firstDayNextMonth({
-    required int month,
-    required int year,
-  }) {
+  static DateTime? firstDayNextMonth({required int month, required int year}) {
     // ref: https://stackoverflow.com/questions/61881850/sort-list-based-on-boolean
     // ref: https://stackoverflow.com/questions/67144785/flutter-dart-datetime-max-min-value
     if (month < 1 || month > 12) {
@@ -183,10 +206,7 @@ class DateTimeUtils {
   /// Returns the later of two dates.
   ///
   /// If [date2] is null, [date1] is returned.
-  static DateTime maxDate(
-    DateTime date1,
-    DateTime? date2,
-  ) {
+  static DateTime maxDate(DateTime date1, DateTime? date2) {
     if (date2 == null) {
       return date1;
     }
@@ -197,10 +217,7 @@ class DateTimeUtils {
   /// Returns the earlier of two dates.
   ///
   /// If [date2] is null, [date1] is returned.
-  static DateTime minDate(
-    DateTime date1,
-    DateTime? date2,
-  ) {
+  static DateTime minDate(DateTime date1, DateTime? date2) {
     if (date2 == null) {
       return date1;
     }
@@ -211,9 +228,7 @@ class DateTimeUtils {
   /// Checks if the given year is a leap year.
   ///
   /// Returns true if the year is a leap year, false otherwise.
-  static bool isLeapYear({
-    required int year,
-  }) {
+  static bool isLeapYear({required int year}) {
     // A year is a leap year if it is divisible by 4
     return year % 4 == 0
         // A year is not a leap year if it is divisible by 100
@@ -227,33 +242,14 @@ class DateTimeUtils {
   /// Returns the number of days in the given month and year.
   ///
   /// Takes into account leap years for February.
-  static int monthDayCount({
-    required int year,
-    required int month,
-  }) {
+  static int monthDayCount({required int year, required int month}) {
     if (month < 1 || month > 12) {
       throw ArgumentError('Month must be between 1 and 12');
     }
 
-    const List<int> daysInMonth = <int>[
-      31,
-      28,
-      31,
-      30,
-      31,
-      30,
-      31,
-      31,
-      30,
-      31,
-      30,
-      31,
-    ];
+    const List<int> daysInMonth = <int>[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    if (month == 2 &&
-        isLeapYear(
-          year: year,
-        )) {
+    if (month == 2 && isLeapYear(year: year)) {
       return 29;
     }
 
