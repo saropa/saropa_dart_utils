@@ -2,6 +2,45 @@ import 'package:saropa_dart_utils/string/string_nullable_extensions.dart';
 
 /// A set of utility methods for working with strings.
 extension StringExtensions on String {
+  // cspell: ignore Corrext
+  /// Compares this string with another string character by character and returns the first character that differs between them, or an empty string if the strings are identical up to the length of the shorter string.
+  ///
+  /// This method is optimized for quickly pinpointing the location of the first difference in strings, especially useful in test assertions for identifying subtle discrepancies.
+  ///
+  /// Returns the first differing [String] character from the `other` string, or an empty [String] if:
+  /// - The strings are identical up to the length of the shorter string.
+  /// - This string is empty or `other` string is empty and they are identical.
+  ///
+  /// If the strings have different lengths and no difference is found within the shorter length, an empty string is returned, implying identity up to the shorter length.
+  ///
+  /// Example Usage in Tests:
+  /// ```dart
+  /// test('String comparison - find first different char', () {
+  ///   String expected = 'Correct String';
+  ///   String actual = 'Corrext String'; // 'r' vs 'x'
+  ///   expect(actual, expected, reason: expected.getFirstDiffChar(actual)); // Use getFirstDiffChar as reason
+  /// });
+  /// ```
+  ///
+  /// Parameters:
+  ///   - `other`: The [String] to compare this string to. Must not be `null`.
+  ///
+  /// Returns:
+  /// A [String] representing the first differing character from the `other` string, or an empty [String] if no difference is found up to the length of the shorter string, or if either string is empty and they are considered equal.
+  String getFirstDiffChar(String other) {
+    final int len1 = length;
+    final int len2 = other.length;
+    final int shorterLength = len1 < len2 ? len1 : len2;
+
+    for (int i = 0; i < shorterLength; i++) {
+      if (this[i] != other[i]) {
+        return other[i]; // Return the differing character from the 'other' string
+      }
+    }
+
+    return ''; // Empty string indicates no difference up to shorter length
+  }
+
   /// Splits the string into a list of words, using space (" ") as the delimiter.
   ///
   /// This method splits the string by spaces, trims each resulting word to remove
