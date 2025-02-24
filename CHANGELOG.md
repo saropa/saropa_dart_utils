@@ -26,9 +26,10 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.4.1+Bristol (Latest)
+## 0.4.2+Bristol (Latest)
 
-* 📚 Added dependency to intl v0.20.2 [intl](https://pub.dev/packages/intl/changelog)
+* 📚 Changed line length to 100 [foresightmobile.com](https://foresightmobile.com/blog/flutter-3-29-and-dart-3-7-making-our-dev-lives-even-easier)
+* 📚 Added then Removed dependency to intl v0.20.2 [intl](https://pub.dev/packages/intl/changelog) -- too many conflicting dependencies
 
 ## 0.3.18+Kyoto
 
