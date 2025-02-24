@@ -51,12 +51,7 @@ void main() {
       });
 
       test('extracts year from string with multiple numbers', () {
-        expect(
-          DateTimeUtils.extractYear(
-            'In 2023, 123 events happened in 456 days',
-          ),
-          2023,
-        );
+        expect(DateTimeUtils.extractYear('In 2023, 123 events happened in 456 days'), 2023);
       });
     });
 
@@ -68,10 +63,7 @@ void main() {
 
       test('returns tomorrow at specified hour', () {
         final DateTime now = DateTime(2023, 6, 15, 10, 30);
-        expect(
-          DateTimeUtils.tomorrow(now: now, hour: 12),
-          DateTime(2023, 6, 16, 12),
-        );
+        expect(DateTimeUtils.tomorrow(now: now, hour: 12), DateTime(2023, 6, 16, 12));
       });
 
       test('returns tomorrow at specified hour, minute, and second', () {
@@ -111,33 +103,21 @@ void main() {
       });
 
       test('returns correct string for a combination of years and months', () {
-        expect(
-          DateTimeUtils.convertDaysToYearsAndMonths(400),
-          '1 year and 1 month',
-        );
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(400), '1 year and 1 month');
       });
     });
 
     group('firstDayNextMonth', () {
       test('returns first day of next month', () {
-        expect(
-          DateTimeUtils.firstDayNextMonth(month: 6, year: 2023),
-          DateTime(2023, 7),
-        );
+        expect(DateTimeUtils.firstDayNextMonth(month: 6, year: 2023), DateTime(2023, 7));
       });
 
       test('handles December to January transition', () {
-        expect(
-          DateTimeUtils.firstDayNextMonth(month: 12, year: 2023),
-          DateTime(2024),
-        );
+        expect(DateTimeUtils.firstDayNextMonth(month: 12, year: 2023), DateTime(2024));
       });
 
       test('handles leap year (February)', () {
-        expect(
-          DateTimeUtils.firstDayNextMonth(month: 2, year: 2024),
-          DateTime(2024, 3),
-        );
+        expect(DateTimeUtils.firstDayNextMonth(month: 2, year: 2024), DateTime(2024, 3));
       });
 
       test('returns null for invalid month', () {
@@ -145,10 +125,7 @@ void main() {
       });
 
       test('works for January', () {
-        expect(
-          DateTimeUtils.firstDayNextMonth(month: 1, year: 2023),
-          DateTime(2023, 2),
-        );
+        expect(DateTimeUtils.firstDayNextMonth(month: 1, year: 2023), DateTime(2023, 2));
       });
     });
 
@@ -254,10 +231,7 @@ void main() {
       });
 
       test('throws ArgumentError for invalid month', () {
-        expect(
-          () => DateTimeUtils.monthDayCount(year: 2023, month: 13),
-          throwsArgumentError,
-        );
+        expect(() => DateTimeUtils.monthDayCount(year: 2023, month: 13), throwsArgumentError);
       });
     });
   });

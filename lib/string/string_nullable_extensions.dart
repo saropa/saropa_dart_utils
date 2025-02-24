@@ -17,4 +17,8 @@ extension StringNullableExtensions on String? {
   /// print(text.isNullOrEmpty); // Output: false
   /// ```
   bool get isNullOrEmpty => this == null || this!.isEmpty;
+  
+  /// IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool
+  /// Return true if the string is null or empty
+  bool get isNotNullOrEmpty => this != null && this!.isNotEmpty;
 }

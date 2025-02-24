@@ -21,17 +21,12 @@ extension BoolIterableExtensions on Iterable<bool> {
     for (final item in this) {
       // Update the frequency of the current boolean in the map, or
       // set it to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.
     final mostCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<bool, int> a, MapEntry<bool, int> b) =>
-          a.value > b.value ? a : b,
+      (MapEntry<bool, int> a, MapEntry<bool, int> b) => a.value > b.value ? a : b,
     );
 
     // Return a tuple with the most common value and its frequency.
@@ -55,17 +50,12 @@ extension BoolIterableExtensions on Iterable<bool> {
     for (final item in this) {
       // Update the frequency of the current boolean in the map, or
       // set it to 1 if it's not in the map yet.
-      frequencyMap.update(
-        item,
-        (int value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the lowest value (frequency) in the map.
     final leastCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<bool, int> a, MapEntry<bool, int> b) =>
-          a.value < b.value ? a : b,
+      (MapEntry<bool, int> a, MapEntry<bool, int> b) => a.value < b.value ? a : b,
     );
 
     // Return a tuple with the least common value and its frequency.

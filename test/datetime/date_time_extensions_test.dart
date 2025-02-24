@@ -6,121 +6,101 @@ import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 void main() {
   group('getNthWeekdayOfMonthInYear', () {
     test('1st Monday of January 2023', () {
-      final date =
-          DateTime(2023).getNthWeekdayOfMonthInYear(1, DateTime.monday);
+      final date = DateTime(2023).getNthWeekdayOfMonthInYear(1, DateTime.monday);
       expect(date, DateTime(2023, 1, 2));
     });
 
     test('2nd Tuesday of February 2023', () {
-      final date =
-          DateTime(2023, 2).getNthWeekdayOfMonthInYear(2, DateTime.tuesday);
+      final date = DateTime(2023, 2).getNthWeekdayOfMonthInYear(2, DateTime.tuesday);
       expect(date, DateTime(2023, 2, 14));
     });
 
     test('3rd Wednesday of March 2023', () {
-      final date =
-          DateTime(2023, 3).getNthWeekdayOfMonthInYear(3, DateTime.wednesday);
+      final date = DateTime(2023, 3).getNthWeekdayOfMonthInYear(3, DateTime.wednesday);
       expect(date, DateTime(2023, 3, 15));
     });
 
     test('4th Thursday of April 2023', () {
-      final date =
-          DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.thursday);
+      final date = DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.thursday);
       expect(date, DateTime(2023, 4, 27));
     });
 
     test('5th Friday of May 2023 (does not exist)', () {
-      final date =
-          DateTime(2023, 5).getNthWeekdayOfMonthInYear(5, DateTime.friday);
+      final date = DateTime(2023, 5).getNthWeekdayOfMonthInYear(5, DateTime.friday);
       expect(date, isNull); // Should expect null because it doesn't exist
     });
 
     test('1st Saturday of June 2024 (Leap Year)', () {
-      final date =
-          DateTime(2024, 6).getNthWeekdayOfMonthInYear(1, DateTime.saturday);
+      final date = DateTime(2024, 6).getNthWeekdayOfMonthInYear(1, DateTime.saturday);
       expect(date, DateTime(2024, 6));
     });
 
     test('2nd Sunday of July 2024 (Leap Year)', () {
-      final date =
-          DateTime(2024, 7).getNthWeekdayOfMonthInYear(2, DateTime.sunday);
+      final date = DateTime(2024, 7).getNthWeekdayOfMonthInYear(2, DateTime.sunday);
       expect(date, DateTime(2024, 7, 14));
     });
 
     test('3rd Monday of August 2024 (Leap Year)', () {
-      final date =
-          DateTime(2024, 8).getNthWeekdayOfMonthInYear(3, DateTime.monday);
+      final date = DateTime(2024, 8).getNthWeekdayOfMonthInYear(3, DateTime.monday);
       expect(date, DateTime(2024, 8, 19));
     });
 
     test('4th Tuesday of September 2024 (Leap Year)', () {
-      final date =
-          DateTime(2024, 9).getNthWeekdayOfMonthInYear(4, DateTime.tuesday);
+      final date = DateTime(2024, 9).getNthWeekdayOfMonthInYear(4, DateTime.tuesday);
       expect(date, DateTime(2024, 9, 24));
     });
 
     test('5th Wednesday of October 2024 (Leap Year)', () {
-      final date =
-          DateTime(2024, 10).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
+      final date = DateTime(2024, 10).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
       expect(date, DateTime(2024, 10, 30));
     });
 
     test('5th Saturday of December 2023', () {
-      final date =
-          DateTime(2023, 12).getNthWeekdayOfMonthInYear(5, DateTime.saturday);
+      final date = DateTime(2023, 12).getNthWeekdayOfMonthInYear(5, DateTime.saturday);
       expect(date, DateTime(2023, 12, 30));
     });
 
     test('5th Wednesday of May 2024', () {
-      final date =
-          DateTime(2024, 5).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
+      final date = DateTime(2024, 5).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
       expect(date, DateTime(2024, 5, 29));
     });
 
     test('5th Thursday of February 2024 (Leap Year - exists)', () {
-      final date =
-          DateTime(2024, 2).getNthWeekdayOfMonthInYear(5, DateTime.thursday);
+      final date = DateTime(2024, 2).getNthWeekdayOfMonthInYear(5, DateTime.thursday);
       expect(date, DateTime(2024, 2, 29));
     });
 
     test('5th Friday of February 2023 (non-Leap Year - does not exist)', () {
-      final date =
-          DateTime(2023, 2).getNthWeekdayOfMonthInYear(5, DateTime.friday);
+      final date = DateTime(2023, 2).getNthWeekdayOfMonthInYear(5, DateTime.friday);
       expect(date, isNull);
     });
 
     test('Invalid input: n = 0', () {
-      final date =
-          DateTime(2023).getNthWeekdayOfMonthInYear(0, DateTime.monday);
+      final date = DateTime(2023).getNthWeekdayOfMonthInYear(0, DateTime.monday);
       expect(date, isNull);
     });
 
     test('Invalid input: n = -1', () {
-      final date =
-          DateTime(2023).getNthWeekdayOfMonthInYear(-1, DateTime.monday);
+      final date = DateTime(2023).getNthWeekdayOfMonthInYear(-1, DateTime.monday);
       expect(date, isNull);
     });
     test('1st Sunday of November 2024', () {
-      final date =
-          DateTime(2024, 11).getNthWeekdayOfMonthInYear(1, DateTime.sunday);
+      final date = DateTime(2024, 11).getNthWeekdayOfMonthInYear(1, DateTime.sunday);
       expect(date, DateTime(2024, 11, 3));
     });
 
     test('3rd Friday of December 2024', () {
-      final date =
-          DateTime(2024, 12).getNthWeekdayOfMonthInYear(3, DateTime.friday);
+      final date = DateTime(2024, 12).getNthWeekdayOfMonthInYear(3, DateTime.friday);
       expect(date, DateTime(2024, 12, 20));
     });
 
     test('4th Sunday of April 2023', () {
-      final date =
-          DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.sunday);
+      final date = DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.sunday);
       expect(date, DateTime(2023, 4, 23));
     });
 
     test('2nd Monday of June 2023', () {
-      final date =
-          DateTime(2023, 6).getNthWeekdayOfMonthInYear(2, DateTime.monday);
+      final date = DateTime(2023, 6).getNthWeekdayOfMonthInYear(2, DateTime.monday);
       expect(date, DateTime(2023, 6, 12));
     });
   });
@@ -227,10 +207,8 @@ void main() {
       });
 
       test('generates a list of 5 consecutive days (startOfDay: false)', () {
-        final DateTime startDate =
-            DateTime(2023, 1, 1, 10, 30); // Example with time
-        final List<DateTime> days =
-            startDate.generateDayList(5, startOfDay: false);
+        final DateTime startDate = DateTime(2023, 1, 1, 10, 30); // Example with time
+        final List<DateTime> days = startDate.generateDayList(5, startOfDay: false);
         expect(days.length, 5);
         expect(days[0], DateTime(2023, 1, 1, 10, 30));
         expect(days[1], DateTime(2023, 1, 2, 10, 30));
@@ -247,10 +225,8 @@ void main() {
       });
 
       test('generates a list of 1 day (startOfDay: false)', () {
-        final DateTime startDate =
-            DateTime(2023, 6, 15, 12); // Example with time
-        final List<DateTime> days =
-            startDate.generateDayList(1, startOfDay: false);
+        final DateTime startDate = DateTime(2023, 6, 15, 12); // Example with time
+        final List<DateTime> days = startDate.generateDayList(1, startOfDay: false);
         expect(days.length, 1);
         expect(days[0], DateTime(2023, 6, 15, 12));
       });
@@ -262,10 +238,8 @@ void main() {
       });
 
       test('generates an empty list when days is 0 (startOfDay: false)', () {
-        final DateTime startDate =
-            DateTime(2023, 12, 31, 20); // Example with time
-        final List<DateTime> days =
-            startDate.generateDayList(0, startOfDay: false);
+        final DateTime startDate = DateTime(2023, 12, 31, 20); // Example with time
+        final List<DateTime> days = startDate.generateDayList(0, startOfDay: false);
         expect(days.isEmpty, isTrue);
       });
 
@@ -279,8 +253,7 @@ void main() {
       });
       test('handles crossing month boundaries (startOfDay: false)', () {
         final DateTime startDate = DateTime(2023, 1, 30, 5, 5);
-        final List<DateTime> days =
-            startDate.generateDayList(3, startOfDay: false);
+        final List<DateTime> days = startDate.generateDayList(3, startOfDay: false);
         expect(days.length, 3);
         expect(days[0], DateTime(2023, 1, 30, 5, 5));
         expect(days[1], DateTime(2023, 1, 31, 5, 5));
@@ -298,8 +271,7 @@ void main() {
 
       test('handles crossing year boundaries (startOfDay: false)', () {
         final DateTime startDate = DateTime(2023, 12, 30, 10, 10, 10);
-        final List<DateTime> days =
-            startDate.generateDayList(3, startOfDay: false);
+        final List<DateTime> days = startDate.generateDayList(3, startOfDay: false);
         expect(days.length, 3);
         expect(days[0], DateTime(2023, 12, 30, 10, 10, 10));
         expect(days[1], DateTime(2023, 12, 31, 10, 10, 10));
@@ -315,10 +287,7 @@ void main() {
 
       test('returns the previous day (startOfDay: false)', () {
         final DateTime date = DateTime(2023, 1, 15, 10);
-        expect(
-          date.prevDay(startOfDay: false),
-          DateTime(2023, 1, 14, 10),
-        );
+        expect(date.prevDay(startOfDay: false), DateTime(2023, 1, 14, 10));
       });
 
       test('handles the first day of the month (startOfDay: true)', () {
@@ -337,10 +306,7 @@ void main() {
 
       test('handles the first day of the year (startOfDay: false)', () {
         final DateTime date = DateTime(2023, 1, 1, 5, 5, 5);
-        expect(
-          date.prevDay(startOfDay: false),
-          DateTime(2022, 12, 31, 5, 5, 5),
-        );
+        expect(date.prevDay(startOfDay: false), DateTime(2022, 12, 31, 5, 5, 5));
       });
 
       test('handles leap years (startOfDay: true)', () {
@@ -396,38 +362,30 @@ void main() {
 
     group('isUnder13', () {
       test('returns true if date of birth is less than 13 years ago', () {
-        final DateTime dob =
-            DateTime.now().subtract(const Duration(days: 365 * 12));
+        final DateTime dob = DateTime.now().subtract(const Duration(days: 365 * 12));
         expect(dob.isUnder13(), isTrue);
       });
 
       test('returns false if date of birth is exactly 13 years ago', () {
         // We need to account for leap years - hence the use of Jiffy
-        final DateTime dob = Jiffy.parseFromDateTime(DateTime.now())
-            .subtract(years: 13)
-            .dateTime;
+        final DateTime dob = Jiffy.parseFromDateTime(DateTime.now()).subtract(years: 13).dateTime;
 
         expect(dob.isUnder13(), isFalse);
       });
 
       test('returns false if date of birth is more than 13 years ago', () {
-        final DateTime dob =
-            DateTime.now().subtract(const Duration(days: 365 * 14));
+        final DateTime dob = DateTime.now().subtract(const Duration(days: 365 * 14));
         expect(dob.isUnder13(), isFalse);
       });
 
       test('returns true if date of birth is 1 day less than 13 years ago', () {
-        final DateTime dob =
-            DateTime.now().subtract(const Duration(days: 365 * 13 - 1));
+        final DateTime dob = DateTime.now().subtract(const Duration(days: 365 * 13 - 1));
         expect(dob.isUnder13(), isTrue);
       });
 
       test('returns false if date of birth is in the future', () {
         final DateTime dob = DateTime.now().add(const Duration(days: 365));
-        expect(
-          dob.isUnder13(),
-          isFalse,
-        ); // Assuming future dates are not considered under 13
+        expect(dob.isUnder13(), isFalse); // Assuming future dates are not considered under 13
       });
     });
 
@@ -453,8 +411,7 @@ void main() {
       });
 
       test('returns false if date is one second in the past', () {
-        final DateTime date =
-            DateTime.now().subtract(const Duration(seconds: 1));
+        final DateTime date = DateTime.now().subtract(const Duration(seconds: 1));
         expect(date.isAfterNow(), isFalse);
       });
     });
@@ -476,8 +433,7 @@ void main() {
       });
 
       test('returns true if date is one second in the past', () {
-        final DateTime date =
-            DateTime.now().subtract(const Duration(seconds: 1));
+        final DateTime date = DateTime.now().subtract(const Duration(seconds: 1));
         expect(date.isBeforeNow(), isTrue);
       });
 
@@ -1474,10 +1430,7 @@ void main() {
       test('aligns to 1 hour interval (round up)', () {
         final DateTime date = DateTime(2023, 6, 15, 10, 37);
         expect(
-          date.alignDateTime(
-            alignment: const Duration(hours: 1),
-            roundUp: true,
-          ),
+          date.alignDateTime(alignment: const Duration(hours: 1), roundUp: true),
           DateTime(2023, 6, 15, 11),
         );
       });
@@ -1492,10 +1445,7 @@ void main() {
 
       test('returns same time if alignment is zero', () {
         final DateTime date = DateTime(2023, 6, 15, 10, 37);
-        expect(
-          date.alignDateTime(alignment: Duration.zero),
-          date,
-        );
+        expect(date.alignDateTime(alignment: Duration.zero), date);
       });
 
       test('aligns to 5 second interval (round down)', () {
@@ -1535,14 +1485,12 @@ void main() {
         });
 
         test('On Feb 28 in the year they turn a multiple of 4', () {
-          final DateTime now =
-              DateTime(2024, 2, 28); // Before leap day in a leap year
+          final DateTime now = DateTime(2024, 2, 28); // Before leap day in a leap year
           expect(dob.calculateAgeFromNow(now: now), 23);
         });
 
         test('On Feb 29 in the year they turn a multiple of 4', () {
-          final DateTime now =
-              DateTime(2024, 2, 29); // On leap day in a leap year
+          final DateTime now = DateTime(2024, 2, 29); // On leap day in a leap year
           expect(dob.calculateAgeFromNow(now: now), 24);
         });
 

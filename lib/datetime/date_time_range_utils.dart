@@ -6,12 +6,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// Determines if the nth occurrence of a specific day of the week in a given
   ///  month falls within the specified date range.
   ///
-  bool isNthDayOfMonthInRange(
-    int n,
-    int dayOfWeek,
-    int month, {
-    bool inclusive = true,
-  }) {
+  bool isNthDayOfMonthInRange(int n, int dayOfWeek, int month, {bool inclusive = true}) {
     // Check if the month is even within the range's months
     if (month < start.month || month > end.month) {
       return false;
@@ -21,14 +16,15 @@ extension DateTimeRangeExtensions on DateTimeRange {
     for (int year = start.year; year <= end.year; year++) {
       // Optimization: Only proceed if the month is within the range for the
       // current year
-      if ((year == start.year && month < start.month) ||
-          (year == end.year && month > end.month)) {
+      if ((year == start.year && month < start.month) || (year == end.year && month > end.month)) {
         continue;
       }
 
       // Use getNthWeekdayOfMonthInYear to get the date
-      final DateTime? nthOccurrence =
-          DateTime(year, month).getNthWeekdayOfMonthInYear(n, dayOfWeek);
+      final DateTime? nthOccurrence = DateTime(
+        year,
+        month,
+      ).getNthWeekdayOfMonthInYear(n, dayOfWeek);
 
       // Crucial Check: Ensure the nth occurrence is within the target month
       if (nthOccurrence == null || nthOccurrence.month != month) {
@@ -38,10 +34,8 @@ extension DateTimeRangeExtensions on DateTimeRange {
       // Check if the nth occurrence is in
       // Check if the nth occurrence is in range
       if (inclusive) {
-        if ((nthOccurrence.isAtSameMomentAs(start) ||
-                nthOccurrence.isAfter(start)) &&
-            (nthOccurrence.isAtSameMomentAs(end) ||
-                nthOccurrence.isBefore(end))) {
+        if ((nthOccurrence.isAtSameMomentAs(start) || nthOccurrence.isAfter(start)) &&
+            (nthOccurrence.isAtSameMomentAs(end) || nthOccurrence.isBefore(end))) {
           return true;
         }
       } else {

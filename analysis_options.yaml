@@ -5,6 +5,12 @@
 
 # Ref: https://pub.dev/packages/very_good_analysis
 include: package:very_good_analysis/analysis_options.yaml
+
+# https://foresightmobile.com/blog/flutter-3-29-and-dart-3-7-making-our-dev-lives-even-easier
+formatter:
+  page_width: 100 # configure the page_width (formerly --line-length) for dart format on a project-wide basis
+
 analyzer:
   errors:
     omit_local_variable_types: ignore
+    lines_longer_than_80_chars: ignore

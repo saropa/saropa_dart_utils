@@ -89,12 +89,7 @@ class Swipe {
   /// var swipe = Swipe(SwipeDirection.left, SwipeSpeed.fast,
   ///   SwipeMagnitude.large, SwipeAngle.horizontal);
   /// ```
-  const Swipe(
-    this.direction,
-    this.speed,
-    this.magnitude,
-    this.angle,
-  );
+  const Swipe(this.direction, this.speed, this.magnitude, this.angle);
 
   /// The direction of the swipe.
   ///
@@ -133,18 +128,13 @@ extension SwipeProperties on DragEndDetails {
   /// This method returns the direction of the swipe based on the velocity.
   SwipeDirection get swipeDirection {
     // Ref: https://stackoverflow.com/questions/61901468/how-to-detect-left-and-right-swipes-in-flutter
-    if (velocity.pixelsPerSecond.dx.abs() >=
-        velocity.pixelsPerSecond.dy.abs()) {
+    if (velocity.pixelsPerSecond.dx.abs() >= velocity.pixelsPerSecond.dy.abs()) {
       // Horizontal swipe
-      return velocity.pixelsPerSecond.dx > 0
-          ? SwipeDirection.right
-          : SwipeDirection.left;
+      return velocity.pixelsPerSecond.dx > 0 ? SwipeDirection.right : SwipeDirection.left;
     }
 
     // Vertical swipe
-    return velocity.pixelsPerSecond.dy > 0
-        ? SwipeDirection.down
-        : SwipeDirection.up;
+    return velocity.pixelsPerSecond.dy > 0 ? SwipeDirection.down : SwipeDirection.up;
   }
 
   /// Method to get the swipe speed.
@@ -162,17 +152,13 @@ extension SwipeProperties on DragEndDetails {
   SwipeMagnitude get swipeMagnitude {
     final magnitude = velocity.pixelsPerSecond.distance;
     // Add logic here to convert the magnitude to a SwipeMagnitude enum.
-    if (magnitude <
-        (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.minimal] ?? 0)) {
+    if (magnitude < (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.minimal] ?? 0)) {
       return SwipeMagnitude.minimal;
-    } else if (magnitude <
-        (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.small] ?? 0)) {
+    } else if (magnitude < (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.small] ?? 0)) {
       return SwipeMagnitude.small;
-    } else if (magnitude <
-        (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.medium] ?? 0)) {
+    } else if (magnitude < (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.medium] ?? 0)) {
       return SwipeMagnitude.medium;
-    } else if (magnitude <
-        (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.large] ?? 0)) {
+    } else if (magnitude < (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.large] ?? 0)) {
       return SwipeMagnitude.large;
     } else {
       return SwipeMagnitude.massive;
@@ -203,12 +189,7 @@ extension SwipeProperties on DragEndDetails {
   /// This method returns a [Swipe] record that contains the direction
   /// and speed of the swipe.
   Swipe get swipe {
-    return Swipe(
-      swipeDirection,
-      swipeSpeed,
-      swipeMagnitude,
-      swipeAngle,
-    );
+    return Swipe(swipeDirection, swipeSpeed, swipeMagnitude, swipeAngle);
   }
 }
 

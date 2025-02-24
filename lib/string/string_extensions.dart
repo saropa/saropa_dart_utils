@@ -2,6 +2,43 @@ import 'package:saropa_dart_utils/string/string_nullable_extensions.dart';
 
 /// A set of utility methods for working with strings.
 extension StringExtensions on String {
+  /// Splits the string into a list of words, using space (" ") as the delimiter.
+  ///
+  /// This method splits the string by spaces, trims each resulting word to remove
+  /// leading/trailing whitespace, and filters out any empty words.
+  ///
+  /// Returns:
+  /// A [List<String>] containing the words from the string, or `null` if the
+  /// original string is empty or if an error occurs during processing.
+  /// Empty words resulting from multiple spaces or leading/trailing spaces are not included
+  /// in the returned list.
+  ///
+  /// Example:
+  /// ```dart
+  /// String text = "  Hello   world from Dart  ";
+  /// List<String>? wordList = text.words();
+  /// print(wordList); // Output: [Hello, world, from, Dart]
+  ///
+  /// String emptyText = "";
+  /// List<String>? emptyWordList = emptyText.words();
+  /// print(emptyWordList); // Output: null
+  /// ```
+  List<String>? words() {
+    if (isEmpty) {
+      // failed null or empty check
+      return null;
+    }
+
+    return isEmpty
+        ? null
+        : split(' ')
+            .map((String word) {
+              return word.nullIfEmpty();
+            })
+            .nonNulls
+            .toList();
+  }
+
   /// Returns a new string with the specified [start] removed from the beginning
   /// of the original string, if it exists.
   ///
@@ -12,17 +49,10 @@ extension StringExtensions on String {
   /// String text = 'www.saropa.com';
   /// print(text.removeStart('www.')); // Output: saropa.com
   /// ```
-  String? removeStart(
-    String? start, {
-    bool isCaseSensitive = true,
-    bool trimFirst = false,
-  }) {
+  String? removeStart(String? start, {bool isCaseSensitive = true, bool trimFirst = false}) {
     if (trimFirst) {
       // recurse on trimmed
-      return trim().removeStart(
-        start,
-        isCaseSensitive: isCaseSensitive,
-      );
+      return trim().removeStart(start, isCaseSensitive: isCaseSensitive);
     }
 
     if (start.isNullOrEmpty) {
@@ -41,9 +71,7 @@ extension StringExtensions on String {
   /// Checks if a string is empty.
   ///
   /// Returns null if the string is empty, otherwise returns the string itself.
-  String? nullIfEmpty({
-    bool trimFirst = true,
-  }) {
+  String? nullIfEmpty({bool trimFirst = true}) {
     /// If the string is empty, return null.
     if (isEmpty) {
       return null;
