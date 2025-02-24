@@ -313,6 +313,7 @@ extension StringCaseExtensions on String {
   /// ```
   ///
   /// NOTE:  No split for Unicode
+  /// NOTE:  .trim() is applied afterwards
   String insertSpaceBetweenCapitalized({bool splitNumbers = false}) {
     if (isEmpty) {
       // failed null or empty check
@@ -327,7 +328,6 @@ extension StringCaseExtensions on String {
     // the first word may not be capitalized
     words[0] = words.first.capitalize();
 
-    // TODO: make the trim optional
     return words.join(' ').trim();
   }
 

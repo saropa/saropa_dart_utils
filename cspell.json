@@ -1,23 +1,60 @@
 {
-  "version": "0.2",
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-  "dictionaries": [
-    "vgv_allowed",
-    "vgv_forbidden"
-  ],
+  // NOTE: VGV's forbidden list likely includes "Github" for brand neutrality or internal style consistency, not because it's inherently wrong.
+  // "dictionaries": [
+  //   "vgv_allowed",
+  //   "vgv_forbidden"
+  // ],
   "dictionaryDefinitions": [
     {
+      "description": "Allowed VGV Spellings",
       "name": "vgv_allowed",
-      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/allowed.txt",
-      "description": "Allowed VGV Spellings"
+      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/allowed.txt"
     },
     {
+      "description": "Forbidden VGV Spellings",
       "name": "vgv_forbidden",
-      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/forbidden.txt",
-      "description": "Forbidden VGV Spellings"
+      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/forbidden.txt"
     }
   ],
+  // Specify paths/files to ignore.
+  "ignorePaths": [
+    "**/*.dll", // this will ignore anything the node_modules directory
+    "**/*.g.dart", // this will ignore anything the node_modules directory
+    "**/*.gradle", // this will ignore anything the node_modules directory
+    "**/*.json", // this will ignore anything the node_modules directory
+    "**/*.ps1", // the same for this one
+    "**/cspell.json", // the same for this one
+    "**/dependency_overrides", // Doesn't currently work due to how the current working directory is determined.
+    "**/gradle.properties", //
+    "**/node_modules", // Ignore the .git directory
+    "**/node_modules/**", // Ignore all .dll files.
+    "*.dll", // Ignore all .dll files
+    ".git", // Ignore all .json files
+    "flutter/bin", // Ignore all .g.dart files
+    "flutter\\bin", // Ignore all .g.dart files
+    "node_modules", // Ignore all .g.dart files
+    "node_modules/**", // ignore powershell - mostly because it includes ASCII art
+    "pub/cache" // Ignore this file (Self)
+  ],
+  "ignoreWords": [
+    "Ndhhhdddmmm",
+    "Ndhs",
+    "Nmdhs",
+    "Nmhyso",
+    "Nmmddhs",
+    "NMMMM",
+    "NMMMMMMM",
+    "NMMMMMMMMMM",
+    "NMMMMMMMMMN",
+    "NNMMMMMMMM",
+    "NNMMMMN",
+    "NNNNMMMMMNNNMMMMMMMMMMMMMMM",
+    "oosyd",
+    "shdm"
+  ],
   "useGitignore": true,
+  "version": "0.2",
   "words": [
     "COPPA",
     "foresightmobile",
@@ -28,25 +65,5 @@
     "timezone",
     "uppercasing",
     "webp"
-  ],
-  // Specify paths/files to ignore.
-  "ignorePaths": [
-    "pub/cache", // this will ignore anything the node_modules directory
-    "flutter\\bin", // this will ignore anything the node_modules directory
-    "flutter/bin", // this will ignore anything the node_modules directory
-    "node_modules", // this will ignore anything the node_modules directory
-    "**/node_modules", // the same for this one
-    "**/node_modules/**", // the same for this one
-    "node_modules/**", // Doesn't currently work due to how the current working directory is determined.
-    "**/dependency_overrides", //
-    ".git", // Ignore the .git directory
-    "*.dll", // Ignore all .dll files.
-    "**/*.dll", // Ignore all .dll files
-    "**/*.json", // Ignore all .json files
-    "**/*.g.dart", // Ignore all .g.dart files
-    "**/*.gradle", // Ignore all .g.dart files
-    "**/gradle.properties", // Ignore all .g.dart files
-    "**/*.ps1", // ignore powershell - mostly because it includes ASCII art
-    "**/cspell.json" // Ignore this file (Self)
   ]
 }

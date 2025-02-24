@@ -1,9 +1,78 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/string/string_case_extensions.dart';
+import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 void main() {
-  // cspell: disable
   group('StringCaseExtensions', () {
+    group('getFirstDiffChar', () {
+      test('Identical strings - returns empty string', () {
+        const String str1 = 'identical string';
+        const String str2 = 'identical string';
+        expect(str1.getFirstDiffChar(str2), ''); // Expect empty string
+      });
+
+      test('Different length strings, same up to shorter length - returns empty string', () {
+        const String str1 = 'short';
+        const String str2 = 'shorter string';
+        expect(
+          str1.getFirstDiffChar(str2),
+          '',
+        ); // Expect empty string as they are identical up to 'short' length
+      });
+
+      test('Character difference at start - returns diff char', () {
+        const String str1 = 'aBC';
+        const String str2 = 'xBC';
+        expect(str1.getFirstDiffChar(str2), 'x');
+      });
+
+      test('Character difference in the middle - returns diff char', () {
+        const String str1 = 'ABcDE';
+        const String str2 = 'ABxDE';
+        expect(str1.getFirstDiffChar(str2), 'x');
+      });
+
+      test('Character difference at the end - returns diff char', () {
+        const String str1 = 'ABCd';
+        const String str2 = 'ABCx';
+        expect(str1.getFirstDiffChar(str2), 'x');
+      });
+
+      test('Whitespace difference - space vs tab - returns diff char (tab)', () {
+        const String str1 = 'space ';
+        const String str2 = 'space\t';
+        expect(str1.getFirstDiffChar(str2), '\t');
+      });
+
+      test('Whitespace difference - space vs newline - returns diff char (newline)', () {
+        const String str1 = 'space ';
+        const String str2 = 'space\n';
+        expect(str1.getFirstDiffChar(str2), '\n');
+      });
+
+      test('Unicode character difference - returns diff char (e)', () {
+        const String str1 = 'café';
+        const String str2 = 'cafe';
+        expect(str1.getFirstDiffChar(str2), 'e'); // e' is the char in str2 where diff starts
+      });
+
+      test('Empty strings - returns empty string', () {
+        const String str1 = '';
+        const String str2 = '';
+        expect(str1.getFirstDiffChar(str2), ''); // Expect empty string
+      });
+
+      test('One empty, one non-empty - returns empty string', () {
+        const String str1 = '';
+        const String str2 = 'non-empty';
+        expect(
+          str1.getFirstDiffChar(str2),
+          '',
+        ); // Expect empty string as they are identical up to empty string length
+      });
+    });
+
+    // cspell: disable
     group('isAllLetterLowerCase', () {
       test('All lowercase letters returns true', () {
         expect('lowercase'.isAllLetterLowerCase, true);
@@ -165,7 +234,7 @@ void main() {
       });
 
       test('String with mixed case words', () {
-        expect('mIxEd cAsE wOrDs'.capitalizeWords(), 'MIxEd CASe WOrDs');
+        expect('mIxEd cAsE wOrDs'.capitalizeWords(), 'MIxEd CAsE WOrDs');
       });
 
       test('String with numbers in words', () {
