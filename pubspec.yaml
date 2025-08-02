@@ -8,8 +8,8 @@ issue_tracker: https://github.com/saropa/saropa_dart_utils/issues
 documentation: https://pub.dev/documentation/saropa_dart_utils/latest/
 
 environment:
-  sdk: ">=3.7.0 <4.0.0" # detect: flutter doctor -v
-  flutter: ">=3.29.0" # run: flutter upgrade
+  sdk: ">=3.8.1 <4.0.0" # detect: flutter doctor -v
+  flutter: ">=3.32.8" # run: flutter upgrade
 
 dependencies:
   # Contains utility functions and classes in the style of dart:collection to make working with collections easier.
@@ -26,7 +26,7 @@ dependencies:
 
   # Jiffy is a Flutter (Android, IOS and Web) date time package inspired by moment js for parsing, manipulating, querying and formatting dates
   # https://pub.dev/packages/jiffy/changelog
-  jiffy: ^6.3.2
+  jiffy: ^6.4.3
 
 dev_dependencies:
   flutter_test:
@@ -38,7 +38,7 @@ dev_dependencies:
 
   # This package provides lint rules for Dart and Flutter which are used at Very Good Ventures. For more information, see the complete list of options.
   # https://pub.dev/packages/very_good_analysis/changelog
-  very_good_analysis: ^7.0.0
+  very_good_analysis: ^9.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
