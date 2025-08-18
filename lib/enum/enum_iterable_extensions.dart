@@ -20,7 +20,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
     // Create a new HashMap to store each integer and its frequency.
     // In Dart, Map is an interface that HashMap implements. Using Map makes
     // code more flexible, as it can work with any class that implements Map.
-    final frequencyMap = <Enum, int>{};
+    final Map<Enum, int> frequencyMap = <Enum, int>{};
 
     // Iterate over each integer in the list.
     for (final Enum item in this) {
@@ -30,7 +30,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
     }
 
     // Find and return the key with the highest value (frequency) in the map.
-    final mostCommonEntry = frequencyMap.entries.reduce(
+    final MapEntry<Enum, int> mostCommonEntry = frequencyMap.entries.reduce(
       (MapEntry<Enum, int> a, MapEntry<Enum, int> b) => a.value > b.value ? a : b,
     );
 
@@ -59,7 +59,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
     }
 
     // Use a local variable to store the name for comparison
-    final comparisonName = caseSensitive ? name : name.toLowerCase();
+    final String comparisonName = caseSensitive ? name : name.toLowerCase();
 
     // Find the first enum value whose name matches the provided name
     return firstWhereOrNull(
@@ -78,10 +78,9 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   /// ```
   ///
   /// - Returns: A list of enum values sorted alphabetically by name.
-  List<T> sortedEnumValues() {
-    // Map the list of enum values to a list of their names as strings
-    return toList()
-      // Sort the list of names in alphabetical order
-      ..sort((T a, T b) => a.name.compareTo(b.name));
-  }
+  List<T> sortedEnumValues() =>
+      // Map the list of enum values to a list of their names as strings
+      toList()
+        // Sort the list of names in alphabetical order
+        ..sort((T a, T b) => a.name.compareTo(b.name));
 }

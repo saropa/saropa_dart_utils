@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/string/string_case_extensions.dart';
-import 'package:saropa_dart_utils/string/string_extensions.dart';
+import 'package:saropa_dart_utils/string/string_validation_and_comparison_extensions.dart';
 
 void main() {
   group('StringCaseExtensions', () {
@@ -524,11 +524,11 @@ void main() {
       });
 
       test('Single capitalized word', () {
-        expect('One capitalized word'.findCapitalizedWords(), ['One']);
+        expect('One capitalized word'.findCapitalizedWords(), <String>['One']);
       });
 
       test('Multiple capitalized words', () {
-        expect('Multiple Capitalized Words'.findCapitalizedWords(), [
+        expect('Multiple Capitalized Words'.findCapitalizedWords(), <String>[
           'Multiple',
           'Capitalized',
           'Words',
@@ -536,15 +536,15 @@ void main() {
       });
 
       test('Mixed case words, some capitalized', () {
-        expect('mIxEd Capitalized wOrDs'.findCapitalizedWords(), ['Capitalized']);
+        expect('mIxEd Capitalized wOrDs'.findCapitalizedWords(), <String>['Capitalized']);
       });
 
       test('String with leading and trailing spaces', () {
-        expect('  Leading and Trailing  '.findCapitalizedWords(), ['Leading', 'Trailing']);
+        expect('  Leading and Trailing  '.findCapitalizedWords(), <String>['Leading', 'Trailing']);
       });
 
       test('String with multiple spaces', () {
-        expect('Multiple   Capitalized  Words'.findCapitalizedWords(), [
+        expect('Multiple   Capitalized  Words'.findCapitalizedWords(), <String>[
           'Multiple',
           'Capitalized',
           'Words',
@@ -552,17 +552,17 @@ void main() {
       });
 
       test('String with numbers', () {
-        expect('Words with 123 Numbers'.findCapitalizedWords(), ['Words', 'Numbers']);
+        expect('Words with 123 Numbers'.findCapitalizedWords(), <String>['Words', 'Numbers']);
       });
 
       test('String with symbols', () {
-        expect('Words-with-Symbols'.findCapitalizedWords(), [
+        expect('Words-with-Symbols'.findCapitalizedWords(), <String>[
           'Words-with-Symbols',
         ]); // Hyphenated word is considered as one word
       });
 
       test('String with unicode words', () {
-        expect('Unicode Слова Capitalized'.findCapitalizedWords(), [
+        expect('Unicode Слова Capitalized'.findCapitalizedWords(), <String>[
           'Unicode',
           'Capitalized',
         ]); // Unicode words are not considered capitalized
@@ -641,19 +641,23 @@ void main() {
       });
 
       test('No capitalized letters returns list with original string', () {
-        expect('nocapitals'.splitCapitalized(), ['nocapitals']);
+        expect('nocapitals'.splitCapitalized(), <String>['nocapitals']);
       });
 
       test('Single capitalized word', () {
-        expect('CapitalizedWord'.splitCapitalized(), ['Capitalized', 'Word']);
+        expect('CapitalizedWord'.splitCapitalized(), <String>['Capitalized', 'Word']);
       });
 
       test('Multiple capitalized words', () {
-        expect('MultipleCapitalizedWords'.splitCapitalized(), ['Multiple', 'Capitalized', 'Words']);
+        expect('MultipleCapitalizedWords'.splitCapitalized(), <String>[
+          'Multiple',
+          'Capitalized',
+          'Words',
+        ]);
       });
 
       test('Mixed case with capitalized words', () {
-        expect('mixedCaseCapitalizedWords'.splitCapitalized(), [
+        expect('mixedCaseCapitalizedWords'.splitCapitalized(), <String>[
           'mixed',
           'Case',
           'Capitalized',
@@ -662,11 +666,11 @@ void main() {
       });
 
       test('String with numbers (no splitNumbers)', () {
-        expect('StringWithNumbers123'.splitCapitalized(), ['String', 'With', 'Numbers123']);
+        expect('StringWithNumbers123'.splitCapitalized(), <String>['String', 'With', 'Numbers123']);
       });
 
       test('String with numbers (splitNumbers true)', () {
-        expect('StringWithNumbers123'.splitCapitalized(splitNumbers: true), [
+        expect('StringWithNumbers123'.splitCapitalized(splitNumbers: true), <String>[
           'String',
           'With',
           'Numbers',
@@ -675,19 +679,19 @@ void main() {
       });
 
       test('String with symbols', () {
-        expect('String-With-Symbols'.splitCapitalized(), [
+        expect('String-With-Symbols'.splitCapitalized(), <String>[
           'String-With-Symbols',
         ]); // Symbols are not word boundaries
       });
 
       test('String already with spaces', () {
-        expect('String With Spaces'.splitCapitalized(), [
+        expect('String With Spaces'.splitCapitalized(), <String>[
           'String With Spaces',
         ]); // Spaces are not considered for splitting
       });
 
       test('String with leading and trailing spaces', () {
-        expect('  LeadingCapitalizedTrailing  '.splitCapitalized(), [
+        expect('  LeadingCapitalizedTrailing  '.splitCapitalized(), <String>[
           '  Leading',
           'Capitalized',
           'Trailing  ',
@@ -695,7 +699,7 @@ void main() {
       });
 
       test('String with unicode letters', () {
-        expect('UnicodeСловаCapitalized'.splitCapitalized(), [
+        expect('UnicodeСловаCapitalized'.splitCapitalized(), <String>[
           'UnicodeСловаCapitalized', // NOTE: No split at Unicode boundary
         ]); // Unicode letters are not considered for splitting
       });
@@ -711,11 +715,11 @@ void main() {
       });
 
       test('Single uncapitalized word', () {
-        expect('One uncapitalized Word'.unCapitalizedWords(), ['uncapitalized']);
+        expect('One uncapitalized Word'.unCapitalizedWords(), <String>['uncapitalized']);
       });
 
       test('Multiple uncapitalized words', () {
-        expect('multiple uncapitalized words here'.unCapitalizedWords(), [
+        expect('multiple uncapitalized words here'.unCapitalizedWords(), <String>[
           'multiple',
           'uncapitalized',
           'words',
@@ -724,7 +728,7 @@ void main() {
       });
 
       test('Mixed case words, some uncapitalized', () {
-        expect('mIxEd unCapitalized wOrDs'.unCapitalizedWords(), [
+        expect('mIxEd unCapitalized wOrDs'.unCapitalizedWords(), <String>[
           'mIxEd',
           'unCapitalized',
           'wOrDs',
@@ -732,11 +736,15 @@ void main() {
       });
 
       test('String with leading and trailing spaces', () {
-        expect('  leading and trailing  '.unCapitalizedWords(), ['leading', 'and', 'trailing']);
+        expect('  leading and trailing  '.unCapitalizedWords(), <String>[
+          'leading',
+          'and',
+          'trailing',
+        ]);
       });
 
       test('String with multiple spaces', () {
-        expect('multiple   uncapitalized  words'.unCapitalizedWords(), [
+        expect('multiple   uncapitalized  words'.unCapitalizedWords(), <String>[
           'multiple',
           'uncapitalized',
           'words',
@@ -744,17 +752,17 @@ void main() {
       });
 
       test('String with numbers', () {
-        expect('words with 123 numbers'.unCapitalizedWords(), ['words', 'with', 'numbers']);
+        expect('words with 123 numbers'.unCapitalizedWords(), <String>['words', 'with', 'numbers']);
       });
 
       test('String with symbols', () {
-        expect('words-with-symbols'.unCapitalizedWords(), [
+        expect('words-with-symbols'.unCapitalizedWords(), <String>[
           'words-with-symbols',
         ]); // Hyphenated word is considered one word
       });
 
       test('String with unicode words', () {
-        expect('unicode слова uncapitalized'.unCapitalizedWords(), [
+        expect('unicode слова uncapitalized'.unCapitalizedWords(), <String>[
           'unicode',
           'слова',
           'uncapitalized',

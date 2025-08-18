@@ -1,5 +1,5 @@
 import 'package:saropa_dart_utils/list/list_extensions.dart';
-import 'package:saropa_dart_utils/string/string_extensions.dart';
+import 'package:saropa_dart_utils/string/string_parsing_and_slicing_extensions.dart';
 
 /// Extension methods for [String] to provide advanced case manipulation functionalities.
 extension StringCaseExtensions on String {
@@ -90,13 +90,12 @@ extension StringCaseExtensions on String {
     final List<String> originalWords = split(' '); // Keep original words with spaces
 
     // The original code was using words() which effectively removed extra spaces.
-    final List<String> capitalizedWords =
-        originalWords.map((String word) {
-          if (word.isNotEmpty) {
-            return word.capitalize(lowerCaseRemaining: lowerCaseRemaining);
-          }
-          return word; // Keep empty strings (for multiple spaces)
-        }).toList();
+    final List<String> capitalizedWords = originalWords.map((String word) {
+      if (word.isNotEmpty) {
+        return word.capitalize(lowerCaseRemaining: lowerCaseRemaining);
+      }
+      return word; // Keep empty strings (for multiple spaces)
+    }).toList();
 
     return capitalizedWords.join(' ');
   }
@@ -286,9 +285,7 @@ extension StringCaseExtensions on String {
     }
 
     return words()
-        ?.where((String word) {
-          return word.isNotEmpty && word[0].isAllLetterUpperCase;
-        })
+        ?.where((String word) => word.isNotEmpty && word[0].isAllLetterUpperCase)
         .toList()
         .nullIfEmpty();
   }
@@ -353,15 +350,14 @@ extension StringCaseExtensions on String {
   List<String> splitCapitalized({bool splitNumbers = false}) {
     // Return empty list for empty input string
     if (isEmpty) {
-      return [];
+      return <String>[];
     }
 
     // ref: https://stackoverflow.com/questions/53718516/separate-a-pascalcase-string-into-separate-words-using-dart
-    final RegExp pattern =
-        splitNumbers
-            // RegExp to split numbers
-            ? RegExp('(?<=[a-z])(?=[A-Z0-9])')
-            : RegExp('(?<=[a-z])(?=[A-Z])');
+    final RegExp pattern = splitNumbers
+        // RegExp to split numbers
+        ? RegExp('(?<=[a-z])(?=[A-Z0-9])')
+        : RegExp('(?<=[a-z])(?=[A-Z])');
 
     return split(pattern);
   }
@@ -383,11 +379,8 @@ extension StringCaseExtensions on String {
   /// 'CAPITALIZED WORDS'.unCapitalizedWords();           // Returns null
   /// ''.unCapitalizedWords();                              // Returns null
   /// ```
-  List<String>? unCapitalizedWords() =>
-      words()
-          ?.where((String word) {
-            return word.isNotEmpty && word[0].isAllLetterLowerCase;
-          })
-          .toList()
-          .nullIfEmpty();
+  List<String>? unCapitalizedWords() => words()
+      ?.where((String word) => word.isNotEmpty && word[0].isAllLetterLowerCase)
+      .toList()
+      .nullIfEmpty();
 }
