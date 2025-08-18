@@ -53,32 +53,19 @@ extension StringValidationAndComparisonExtensions on String {
     return toLowerCase().contains(other.toLowerCase());
   }
 
-  /// Compares this string with another string character by character and returns the first character that differs between them.
+  /// Finds the first differing character between two strings.
   ///
-  /// Returns an empty string if the strings are identical up to the length of the shorter string.
+  /// If the strings are identical up to the length of the shorter string,
+  /// it returns an empty string.
   String getFirstDiffChar(String other) {
-    // Find the length of the shorter string.
-    final int minLength = length < other.length ? length : other.length;
+    final int length = this.length < other.length ? this.length : other.length;
 
-    // Iterate up to the length of the shorter string to find a character difference.
-    for (int i = 0; i < minLength; i++) {
-      // If a character difference is found, return the character from the 'other' string.
+    for (int i = 0; i < length; i++) {
       if (this[i] != other[i]) {
         return other[i];
       }
     }
 
-    // If the loop completes, it means no difference was found in the shared portion.
-    // The difference must be in the remaining characters of the longer string.
-    // If the strings are not the same length, return the first character of the longer string's remaining part.
-    if (length > other.length) {
-      return this[minLength];
-    } else if (other.length > length) {
-      return other[minLength];
-    }
-
-    // If both strings have the same length and no difference was found, they are identical.
-    // Return an empty string.
     return '';
   }
 }
