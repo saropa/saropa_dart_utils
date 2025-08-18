@@ -140,9 +140,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the year is a leap year, false otherwise.
-  bool isLeapYear() {
-    return DateTimeUtils.isLeapYear(year: year);
-  }
+  bool isLeapYear() => DateTimeUtils.isLeapYear(year: year);
 
   /// Gets the start date of the year.
   ///
@@ -207,9 +205,7 @@ extension DateTimeExtensions on DateTime {
   /// with the specified [setYear].
   ///
   /// Requires [month] and [day] to be set in the current [DateTime].
-  DateTime? toDateInYear(int setYear) {
-    return DateTime(setYear, month, day);
-  }
+  DateTime? toDateInYear(int setYear) => DateTime(setYear, month, day);
 
   /// Returns the ordinal representation of the day of the month.
   ///
@@ -428,10 +424,8 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the date is in the current year, false otherwise.
-  bool get isYearCurrent {
-    // https://stackoverflow.com/questions/56427418/how-to-extract-only-the-time-from-datetime-now
-    return year == DateTime.now().year;
-  }
+  // https://stackoverflow.com/questions/56427418/how-to-extract-only-the-time-from-datetime-now
+  bool get isYearCurrent => year == DateTime.now().year;
 
   /// Returns true if this date is the same as or after [other] date.
   ///
@@ -527,10 +521,10 @@ extension DateTimeExtensions on DateTime {
     if (year == 0) {
       // If year is 0, check if the month and day fall within the range for
       // any year
-      final startMonth = range.start.month;
-      final startDay = range.start.day;
-      final endMonth = range.end.month;
-      final endDay = range.end.day;
+      final int startMonth = range.start.month;
+      final int startDay = range.start.day;
+      final int endMonth = range.end.month;
+      final int endDay = range.end.day;
 
       if (month < startMonth || (month == startMonth && day < startDay)) {
         return false;
@@ -634,9 +628,8 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the dates are the same, false otherwise.
-  bool isSameDateOnly(DateTime other) {
-    return year == other.year && month == other.month && day == other.day;
-  }
+  bool isSameDateOnly(DateTime other) =>
+      year == other.year && month == other.month && day == other.day;
 
   /// Checks if the current [DateTime] has the same day and month as another
   /// [DateTime].
@@ -646,9 +639,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the day and month are the same, false otherwise.
-  bool isSameDayMonth(DateTime other) {
-    return month == other.month && day == other.day;
-  }
+  bool isSameDayMonth(DateTime other) => month == other.month && day == other.day;
 
   /// Checks if the current [DateTime] has the same month as another [DateTime].
   ///
@@ -657,9 +648,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   bool: True if the month is the same, false otherwise.
-  bool isSameMonth(DateTime other) {
-    return month == other.month;
-  }
+  bool isSameMonth(DateTime other) => month == other.month;
 
   /// Sets the time of the current [DateTime] to the specified [TimeOfDay].
   ///
@@ -668,9 +657,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the updated time.
-  DateTime setTime({required TimeOfDay time}) {
-    return DateTime(year, month, day, time.hour, time.minute);
-  }
+  DateTime setTime({required TimeOfDay time}) => DateTime(year, month, day, time.hour, time.minute);
 
   /// Aligns the current [DateTime] to the specified duration.
   ///
@@ -689,30 +676,26 @@ extension DateTimeExtensions on DateTime {
 
     final Duration correction = Duration(
       //days: 0,
-      hours:
-          alignment.inDays > 0
-              ? hour
-              : alignment.inHours > 0
-              ? hour % alignment.inHours
-              : 0,
-      minutes:
-          alignment.inHours > 0
-              ? minute
-              : alignment.inMinutes > 0
-              ? minute % alignment.inMinutes
-              : 0,
-      seconds:
-          alignment.inMinutes > 0
-              ? second
-              : alignment.inSeconds > 0
-              ? second % alignment.inSeconds
-              : 0,
-      milliseconds:
-          alignment.inSeconds > 0
-              ? millisecond
-              : alignment.inMilliseconds > 0
-              ? millisecond % alignment.inMilliseconds
-              : 0,
+      hours: alignment.inDays > 0
+          ? hour
+          : alignment.inHours > 0
+          ? hour % alignment.inHours
+          : 0,
+      minutes: alignment.inHours > 0
+          ? minute
+          : alignment.inMinutes > 0
+          ? minute % alignment.inMinutes
+          : 0,
+      seconds: alignment.inMinutes > 0
+          ? second
+          : alignment.inSeconds > 0
+          ? second % alignment.inSeconds
+          : 0,
+      milliseconds: alignment.inSeconds > 0
+          ? millisecond
+          : alignment.inMilliseconds > 0
+          ? millisecond % alignment.inMilliseconds
+          : 0,
       microseconds: alignment.inMilliseconds > 0 ? microsecond : 0,
     );
 

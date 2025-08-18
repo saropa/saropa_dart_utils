@@ -40,17 +40,17 @@ extension DoubleIterableExtensions on Iterable<double> {
     }
 
     // Create a new HashMap to store each double and its frequency.
-    final frequencyMap = HashMap<double, int>();
+    final HashMap<double, int> frequencyMap = HashMap<double, int>();
 
     // Iterate over each double in the list.
-    for (final item in this) {
+    for (final double item in this) {
       // Update the frequency of the current double in the map, or set it to
       // 1 if it's not in the map yet.
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
-    final mostCommonEntry = frequencyMap.entries.fold(
+    final MapEntry<double, int>? mostCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<double, int>? previous, MapEntry<double, int> element) =>
           previous == null || element.value > previous.value ? element : previous,
@@ -74,17 +74,17 @@ extension DoubleIterableExtensions on Iterable<double> {
     }
 
     // Create a new HashMap to store each double and its frequency.
-    final frequencyMap = HashMap<double, int>();
+    final HashMap<double, int> frequencyMap = HashMap<double, int>();
 
     // Iterate over each double in the list.
-    for (final item in this) {
+    for (final double item in this) {
       // Update the frequency of the current double in the map,
       // or set it to 1 if it's not in the map yet.
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
-    final leastCommonEntry = frequencyMap.entries.fold(
+    final MapEntry<double, int>? leastCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<double, int>? previous, MapEntry<double, int> element) =>
           previous == null || element.value < previous.value ? element : previous,

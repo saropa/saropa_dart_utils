@@ -54,9 +54,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   ///
   /// [date] The date to check
   /// Returns true if the date is within the range, false otherwise
-  bool inRange(DateTime date) {
-    return date.isAfter(start) && date.isBefore(end);
-  }
+  bool inRange(DateTime date) => date.isAfter(start) && date.isBefore(end);
 
   /// Checks if the current date and time is within the range
   ///

@@ -13,17 +13,17 @@ extension IntIterableExtensions on Iterable<int> {
     }
 
     // Create a new HashMap to store each integer and its frequency.
-    final frequencyMap = HashMap<int, int>();
+    final HashMap<int, int> frequencyMap = HashMap<int, int>();
 
     // Iterate over each integer in the list.
-    for (final item in this) {
+    for (final int item in this) {
       // Update the frequency of the current integer in the map, or
       // set it to 1 if it's not in the map yet.
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.
-    final mostCommonEntry = frequencyMap.entries.reduce(
+    final MapEntry<int, int> mostCommonEntry = frequencyMap.entries.reduce(
       (MapEntry<int, int> a, MapEntry<int, int> b) => a.value > b.value ? a : b,
     );
 
@@ -39,16 +39,16 @@ extension IntIterableExtensions on Iterable<int> {
     }
 
     // Create a new HashMap to store each integer and its frequency.
-    final frequencyMap = HashMap<int, int>();
+    final HashMap<int, int> frequencyMap = HashMap<int, int>();
     // Iterate over each integer in the list.
-    for (final item in this) {
+    for (final int item in this) {
       // Update the frequency of the current integer in the map, or
       // set it to 1 if it's not in the map yet.
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.
-    final mostCommonEntry = frequencyMap.entries.reduce(
+    final MapEntry<int, int> mostCommonEntry = frequencyMap.entries.reduce(
       (MapEntry<int, int> a, MapEntry<int, int> b) => a.value < b.value ? a : b,
     );
 

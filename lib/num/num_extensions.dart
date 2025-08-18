@@ -1,4 +1,3 @@
-/// Extension methods for `num` (and its subtypes like `int`, `double`).
 extension NumExtensions on num {
   /// Returns `true` if the number is not zero and not negative.
   ///

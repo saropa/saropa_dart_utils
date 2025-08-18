@@ -15,17 +15,17 @@ extension BoolIterableExtensions on Iterable<bool> {
     }
 
     // Create a new HashMap to store each boolean and its frequency.
-    final frequencyMap = HashMap<bool, int>();
+    final HashMap<bool, int> frequencyMap = HashMap<bool, int>();
 
     // Iterate over each boolean in the list.
-    for (final item in this) {
+    for (final bool item in this) {
       // Update the frequency of the current boolean in the map, or
       // set it to 1 if it's not in the map yet.
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.
-    final mostCommonEntry = frequencyMap.entries.reduce(
+    final MapEntry<bool, int> mostCommonEntry = frequencyMap.entries.reduce(
       (MapEntry<bool, int> a, MapEntry<bool, int> b) => a.value > b.value ? a : b,
     );
 
@@ -45,16 +45,16 @@ extension BoolIterableExtensions on Iterable<bool> {
     }
 
     // Create a new HashMap to store each boolean and its frequency.
-    final frequencyMap = HashMap<bool, int>();
+    final HashMap<bool, int> frequencyMap = HashMap<bool, int>();
     // Iterate over each boolean in the list.
-    for (final item in this) {
+    for (final bool item in this) {
       // Update the frequency of the current boolean in the map, or
       // set it to 1 if it's not in the map yet.
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the lowest value (frequency) in the map.
-    final leastCommonEntry = frequencyMap.entries.reduce(
+    final MapEntry<bool, int> leastCommonEntry = frequencyMap.entries.reduce(
       (MapEntry<bool, int> a, MapEntry<bool, int> b) => a.value < b.value ? a : b,
     );
 
@@ -73,9 +73,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// - `true` if at least one element in the iterable is `true`.
   /// - `false` if no elements in the iterable are `true` or the iterable
   ///  is empty.
-  bool get anyTrue {
-    return where((bool e) => e).isNotEmpty;
-  }
+  bool get anyTrue => where((bool e) => e).isNotEmpty;
 
   /// Checks if any element in the iterable is `false`.
   ///
@@ -88,9 +86,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// - `true` if at least one element in the iterable is `false`.
   /// - `false` if no elements in the iterable are `false` or the iterable is
   ///  empty.
-  bool get anyFalse {
-    return where((bool e) => !e).isNotEmpty;
-  }
+  bool get anyFalse => where((bool e) => !e).isNotEmpty;
 
   /// Counts the number of `true` values in the iterable.
   ///
@@ -100,9 +96,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   ///
   /// Returns:
   /// - The number of `true` values in the iterable.
-  int get countTrue {
-    return where((bool e) => e).length;
-  }
+  int get countTrue => where((bool e) => e).length;
 
   /// Counts the number of `false` values in the iterable.
   ///
@@ -112,9 +106,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   ///
   /// Returns:
   /// - The number of `false` values in the iterable.
-  int get countFalse {
-    return where((bool e) => !e).length;
-  }
+  int get countFalse => where((bool e) => !e).length;
 
   /// Reverses the boolean values in the list.
   ///
@@ -124,7 +116,5 @@ extension BoolIterableExtensions on Iterable<bool> {
   ///
   /// Returns:
   /// - A new list with the boolean values reversed.
-  List<bool> get reverse {
-    return map((b) => !b).toList();
-  }
+  List<bool> get reverse => map((bool b) => !b).toList();
 }

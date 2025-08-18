@@ -35,10 +35,10 @@ extension IntExtensions on int {
     }
 
     // Take the absolute value of the number
-    var number = abs();
+    int number = abs();
 
     // Initialize a counter for the number of digits
-    var count = 0;
+    int count = 0;
 
     // Repeat until the number becomes 0
     while (number != 0) {

@@ -123,7 +123,7 @@ class DateTimeUtils {
   /// accurate for all locales or regions within those locales.  Date format
   /// usage can be complex and vary.
   static bool isDeviceDateMonthFirst() {
-    final locale = Platform.localeName;
+    final String locale = Platform.localeName;
 
     /// Locales that are commonly month-first (MM/DD/YYYY)
     switch (locale) {
@@ -228,16 +228,15 @@ class DateTimeUtils {
   /// Checks if the given year is a leap year.
   ///
   /// Returns true if the year is a leap year, false otherwise.
-  static bool isLeapYear({required int year}) {
-    // A year is a leap year if it is divisible by 4
-    return year % 4 == 0
-        // A year is not a leap year if it is divisible by 100
-        &&
-        (year % 100 != 0
-            // unless it is also divisible by 400
-            ||
-            year % 400 == 0);
-  }
+  static bool isLeapYear({required int year}) =>
+      // A year is a leap year if it is divisible by 4
+      year % 4 == 0
+      // A year is not a leap year if it is divisible by 100
+      &&
+      (year % 100 != 0
+          // unless it is also divisible by 400
+          ||
+          year % 400 == 0);
 
   /// Returns the number of days in the given month and year.
   ///

@@ -47,11 +47,11 @@ void main() {
 
     group('generateIntList', () {
       test('Valid range start < end', () {
-        expect(NumberUtils.generateIntList(1, 5), [1, 2, 3, 4, 5]);
+        expect(NumberUtils.generateIntList(1, 5), <int>[1, 2, 3, 4, 5]);
       });
 
       test('Valid range start == end', () {
-        expect(NumberUtils.generateIntList(3, 3), [3]);
+        expect(NumberUtils.generateIntList(3, 3), <int>[3]);
       });
 
       test('Invalid range start > end returns null', () {
@@ -59,30 +59,30 @@ void main() {
       });
 
       test('Zero start and positive end', () {
-        expect(NumberUtils.generateIntList(0, 3), [0, 1, 2, 3]);
+        expect(NumberUtils.generateIntList(0, 3), <int>[0, 1, 2, 3]);
       });
 
       test('Negative start and positive end', () {
-        expect(NumberUtils.generateIntList(-2, 2), [-2, -1, 0, 1, 2]);
+        expect(NumberUtils.generateIntList(-2, 2), <int>[-2, -1, 0, 1, 2]);
       });
 
       test('Large range', () {
-        expect(NumberUtils.generateIntList(100, 105), [100, 101, 102, 103, 104, 105]);
+        expect(NumberUtils.generateIntList(100, 105), <int>[100, 101, 102, 103, 104, 105]);
       });
 
       test('Negative range', () {
-        expect(NumberUtils.generateIntList(-5, -1), [-5, -4, -3, -2, -1]);
+        expect(NumberUtils.generateIntList(-5, -1), <int>[-5, -4, -3, -2, -1]);
       });
 
       test('Start and end are same negative', () {
-        expect(NumberUtils.generateIntList(-3, -3), [-3]);
+        expect(NumberUtils.generateIntList(-3, -3), <int>[-3]);
       });
 
       test('Start negative, end zero', () {
-        expect(NumberUtils.generateIntList(-2, 0), [-2, -1, 0]);
+        expect(NumberUtils.generateIntList(-2, 0), <int>[-2, -1, 0]);
       });
       test('Small positive range', () {
-        expect(NumberUtils.generateIntList(2, 4), [2, 3, 4]);
+        expect(NumberUtils.generateIntList(2, 4), <int>[2, 3, 4]);
       });
     });
   });

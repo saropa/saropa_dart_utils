@@ -26,7 +26,15 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.4.3+Bristol (Latest)
+## 0.4.4+Utrecht (Latest)
+
+✂️ The big file for string code was split into smaller, more specific files.
+➕ New code was added for things like unique lists and number ranges.
+🧹 The existing code was cleaned up, making it safer and more efficient.
+🔄 The tests and imports were updated to match the new file structure.
+⚙️ The code analysis settings were improved to help keep things organized.
+
+## 0.4.3+Bristol
 
 * ✂️ Removed VGV's spelling lists as they are not inherently wrong or needed
 * 📦 Many more framework extensions added for primitives (num, string, etc. )

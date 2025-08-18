@@ -7,101 +7,101 @@ void main() {
   group('DateTimeExtensions', () {
     group('getNthWeekdayOfMonthInYear', () {
       test('1st Monday of January 2023', () {
-        final date = DateTime(2023).getNthWeekdayOfMonthInYear(1, DateTime.monday);
+        final DateTime? date = DateTime(2023).getNthWeekdayOfMonthInYear(1, DateTime.monday);
         expect(date, DateTime(2023, 1, 2));
       });
 
       test('2nd Tuesday of February 2023', () {
-        final date = DateTime(2023, 2).getNthWeekdayOfMonthInYear(2, DateTime.tuesday);
+        final DateTime? date = DateTime(2023, 2).getNthWeekdayOfMonthInYear(2, DateTime.tuesday);
         expect(date, DateTime(2023, 2, 14));
       });
 
       test('3rd Wednesday of March 2023', () {
-        final date = DateTime(2023, 3).getNthWeekdayOfMonthInYear(3, DateTime.wednesday);
+        final DateTime? date = DateTime(2023, 3).getNthWeekdayOfMonthInYear(3, DateTime.wednesday);
         expect(date, DateTime(2023, 3, 15));
       });
 
       test('4th Thursday of April 2023', () {
-        final date = DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.thursday);
+        final DateTime? date = DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.thursday);
         expect(date, DateTime(2023, 4, 27));
       });
 
       test('5th Friday of May 2023 (does not exist)', () {
-        final date = DateTime(2023, 5).getNthWeekdayOfMonthInYear(5, DateTime.friday);
+        final DateTime? date = DateTime(2023, 5).getNthWeekdayOfMonthInYear(5, DateTime.friday);
         expect(date, isNull); // Should expect null because it doesn't exist
       });
 
       test('1st Saturday of June 2024 (Leap Year)', () {
-        final date = DateTime(2024, 6).getNthWeekdayOfMonthInYear(1, DateTime.saturday);
+        final DateTime? date = DateTime(2024, 6).getNthWeekdayOfMonthInYear(1, DateTime.saturday);
         expect(date, DateTime(2024, 6));
       });
 
       test('2nd Sunday of July 2024 (Leap Year)', () {
-        final date = DateTime(2024, 7).getNthWeekdayOfMonthInYear(2, DateTime.sunday);
+        final DateTime? date = DateTime(2024, 7).getNthWeekdayOfMonthInYear(2, DateTime.sunday);
         expect(date, DateTime(2024, 7, 14));
       });
 
       test('3rd Monday of August 2024 (Leap Year)', () {
-        final date = DateTime(2024, 8).getNthWeekdayOfMonthInYear(3, DateTime.monday);
+        final DateTime? date = DateTime(2024, 8).getNthWeekdayOfMonthInYear(3, DateTime.monday);
         expect(date, DateTime(2024, 8, 19));
       });
 
       test('4th Tuesday of September 2024 (Leap Year)', () {
-        final date = DateTime(2024, 9).getNthWeekdayOfMonthInYear(4, DateTime.tuesday);
+        final DateTime? date = DateTime(2024, 9).getNthWeekdayOfMonthInYear(4, DateTime.tuesday);
         expect(date, DateTime(2024, 9, 24));
       });
 
       test('5th Wednesday of October 2024 (Leap Year)', () {
-        final date = DateTime(2024, 10).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
+        final DateTime? date = DateTime(2024, 10).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
         expect(date, DateTime(2024, 10, 30));
       });
 
       test('5th Saturday of December 2023', () {
-        final date = DateTime(2023, 12).getNthWeekdayOfMonthInYear(5, DateTime.saturday);
+        final DateTime? date = DateTime(2023, 12).getNthWeekdayOfMonthInYear(5, DateTime.saturday);
         expect(date, DateTime(2023, 12, 30));
       });
 
       test('5th Wednesday of May 2024', () {
-        final date = DateTime(2024, 5).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
+        final DateTime? date = DateTime(2024, 5).getNthWeekdayOfMonthInYear(5, DateTime.wednesday);
         expect(date, DateTime(2024, 5, 29));
       });
 
       test('5th Thursday of February 2024 (Leap Year - exists)', () {
-        final date = DateTime(2024, 2).getNthWeekdayOfMonthInYear(5, DateTime.thursday);
+        final DateTime? date = DateTime(2024, 2).getNthWeekdayOfMonthInYear(5, DateTime.thursday);
         expect(date, DateTime(2024, 2, 29));
       });
 
       test('5th Friday of February 2023 (non-Leap Year - does not exist)', () {
-        final date = DateTime(2023, 2).getNthWeekdayOfMonthInYear(5, DateTime.friday);
+        final DateTime? date = DateTime(2023, 2).getNthWeekdayOfMonthInYear(5, DateTime.friday);
         expect(date, isNull);
       });
 
       test('Invalid input: n = 0', () {
-        final date = DateTime(2023).getNthWeekdayOfMonthInYear(0, DateTime.monday);
+        final DateTime? date = DateTime(2023).getNthWeekdayOfMonthInYear(0, DateTime.monday);
         expect(date, isNull);
       });
 
       test('Invalid input: n = -1', () {
-        final date = DateTime(2023).getNthWeekdayOfMonthInYear(-1, DateTime.monday);
+        final DateTime? date = DateTime(2023).getNthWeekdayOfMonthInYear(-1, DateTime.monday);
         expect(date, isNull);
       });
       test('1st Sunday of November 2024', () {
-        final date = DateTime(2024, 11).getNthWeekdayOfMonthInYear(1, DateTime.sunday);
+        final DateTime? date = DateTime(2024, 11).getNthWeekdayOfMonthInYear(1, DateTime.sunday);
         expect(date, DateTime(2024, 11, 3));
       });
 
       test('3rd Friday of December 2024', () {
-        final date = DateTime(2024, 12).getNthWeekdayOfMonthInYear(3, DateTime.friday);
+        final DateTime? date = DateTime(2024, 12).getNthWeekdayOfMonthInYear(3, DateTime.friday);
         expect(date, DateTime(2024, 12, 20));
       });
 
       test('4th Sunday of April 2023', () {
-        final date = DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.sunday);
+        final DateTime? date = DateTime(2023, 4).getNthWeekdayOfMonthInYear(4, DateTime.sunday);
         expect(date, DateTime(2023, 4, 23));
       });
 
       test('2nd Monday of June 2023', () {
-        final date = DateTime(2023, 6).getNthWeekdayOfMonthInYear(2, DateTime.monday);
+        final DateTime? date = DateTime(2023, 6).getNthWeekdayOfMonthInYear(2, DateTime.monday);
         expect(date, DateTime(2023, 6, 12));
       });
     });
