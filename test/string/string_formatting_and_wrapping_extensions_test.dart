@@ -31,8 +31,8 @@ void main() {
       '5. encloseInParentheses on empty with wrapEmpty: false (default)',
       () => expect(''.encloseInParentheses(), null),
     );
-    test('6. wrapSingleQuotes on empty', () => expect(''.wrapSingleQuotes(), "''"));
-    test('7. wrapDoubleQuotes on empty', () => expect(''.wrapDoubleQuotes(), '""'));
+    // test('6. wrapSingleQuotes on empty', () => expect(''.wrapSingleQuotes(), "''"));
+    // test('7. wrapDoubleQuotes on empty', () => expect(''.wrapDoubleQuotes(), '""'));
     test(
       '8. wrapSingleQuotes with existing quotes',
       () => expect("'a'".wrapSingleQuotes(), "''a''"),
@@ -89,5 +89,137 @@ void main() {
     );
     test('9. With Unicode', () => expect('你好世界'.truncateWithEllipsis(2), '你好…'));
     test('10. Truncate exactly at end', () => expect('abcdef'.truncateWithEllipsis(5), 'abcde…'));
+  });
+
+  group('wrapSingleQuotes', () {
+    test('1. should wrap a simple word', () {
+      expect('hello'.wrapSingleQuotes(), "'hello'");
+    });
+    test('2. should return an empty string for an empty input by default', () {
+      expect(''.wrapSingleQuotes(), '');
+    });
+    test('3. should return empty quotes for an empty input when quoteEmpty is true', () {
+      expect(''.wrapSingleQuotes(quoteEmpty: true), "''");
+    });
+    test('4. should wrap a sentence with spaces', () {
+      expect('hello world'.wrapSingleQuotes(), "'hello world'");
+    });
+    test('5. should wrap a string containing numbers', () {
+      expect('12345'.wrapSingleQuotes(), "'12345'");
+    });
+    test('6. should wrap a string of special characters', () {
+      expect('@#\$%^&*()'.wrapSingleQuotes(), "'@#\$%^&*()'");
+    });
+    test('7. should wrap a string that already contains double quotes', () {
+      expect('"quoted"'.wrapSingleQuotes(), "'\"quoted\"'");
+    });
+    test('8. should re-wrap a string that already contains single quotes', () {
+      expect("'quoted'".wrapSingleQuotes(), "''quoted''");
+    });
+    test('9. should wrap a single character', () {
+      expect('a'.wrapSingleQuotes(), "'a'");
+    });
+    test('10. should wrap a string with leading/trailing whitespace', () {
+      expect('  spaced out  '.wrapSingleQuotes(), "'  spaced out  '");
+    });
+  });
+
+  group('wrapDoubleQuotes', () {
+    test('1. should wrap a simple word', () {
+      expect('hello'.wrapDoubleQuotes(), '"hello"');
+    });
+    test('2. should return an empty string for an empty input by default', () {
+      expect(''.wrapDoubleQuotes(), '');
+    });
+    test('3. should return empty quotes for an empty input when quoteEmpty is true', () {
+      expect(''.wrapDoubleQuotes(quoteEmpty: true), '""');
+    });
+    test('4. should wrap a sentence with spaces', () {
+      expect('hello world'.wrapDoubleQuotes(), '"hello world"');
+    });
+    test('5. should wrap a string containing numbers', () {
+      expect('12345'.wrapDoubleQuotes(), '"12345"');
+    });
+    test('6. should wrap a string of special characters', () {
+      expect('@#\$%^&*()'.wrapDoubleQuotes(), '"@#\$%^&*()"');
+    });
+    test('7. should wrap a string that already contains single quotes', () {
+      expect("'quoted'".wrapDoubleQuotes(), "\"'quoted'\"");
+    });
+    test('8. should re-wrap a string that already contains double quotes', () {
+      expect('"quoted"'.wrapDoubleQuotes(), '""quoted""');
+    });
+    test('9. should wrap a single character', () {
+      expect('a'.wrapDoubleQuotes(), '"a"');
+    });
+    test('10. should wrap a string with leading/trailing whitespace', () {
+      expect('  spaced out  '.wrapDoubleQuotes(), '"  spaced out  "');
+    });
+  });
+
+  group('wrapSingleAccentedQuotes', () {
+    test('1. should wrap a simple word', () {
+      expect('hello'.wrapSingleAccentedQuotes(), '‘hello’');
+    });
+    test('2. should return an empty string for an empty input by default', () {
+      expect(''.wrapSingleAccentedQuotes(), '');
+    });
+    test('3. should return empty quotes for an empty input when quoteEmpty is true', () {
+      expect(''.wrapSingleAccentedQuotes(quoteEmpty: true), '‘’');
+    });
+    test('4. should wrap a sentence with spaces', () {
+      expect('hello world'.wrapSingleAccentedQuotes(), '‘hello world’');
+    });
+    test('5. should wrap a string containing numbers', () {
+      expect('12345'.wrapSingleAccentedQuotes(), '‘12345’');
+    });
+    test('6. should wrap a string of special characters', () {
+      expect('@#\$%^&*()'.wrapSingleAccentedQuotes(), '‘@#\$%^&*()’');
+    });
+    test('7. should wrap a string that already contains regular single quotes', () {
+      expect("'quoted'".wrapSingleAccentedQuotes(), "‘'quoted'’");
+    });
+    test('8. should re-wrap a string that already contains accented quotes', () {
+      expect('‘quoted’'.wrapSingleAccentedQuotes(), '‘‘quoted’’');
+    });
+    test('9. should wrap a single character', () {
+      expect('a'.wrapSingleAccentedQuotes(), '‘a’');
+    });
+    test('10. should wrap a string with leading/trailing whitespace', () {
+      expect('  spaced out  '.wrapSingleAccentedQuotes(), '‘  spaced out  ’');
+    });
+  });
+
+  group('wrapDoubleAccentedQuotes', () {
+    test('1. should wrap a simple word', () {
+      expect('hello'.wrapDoubleAccentedQuotes(), '“hello”');
+    });
+    test('2. should return an empty string for an empty input by default', () {
+      expect(''.wrapDoubleAccentedQuotes(), '');
+    });
+    test('3. should return empty quotes for an empty input when quoteEmpty is true', () {
+      expect(''.wrapDoubleAccentedQuotes(quoteEmpty: true), '“”');
+    });
+    test('4. should wrap a sentence with spaces', () {
+      expect('hello world'.wrapDoubleAccentedQuotes(), '“hello world”');
+    });
+    test('5. should wrap a string containing numbers', () {
+      expect('12345'.wrapDoubleAccentedQuotes(), '“12345”');
+    });
+    test('6. should wrap a string of special characters', () {
+      expect('@#\$%^&*()'.wrapDoubleAccentedQuotes(), '“@#\$%^&*()”');
+    });
+    test('7. should wrap a string that already contains regular double quotes', () {
+      expect('"quoted"'.wrapDoubleAccentedQuotes(), '“"quoted"”');
+    });
+    test('8. should re-wrap a string that already contains accented quotes', () {
+      expect('“quoted”'.wrapDoubleAccentedQuotes(), '““quoted””');
+    });
+    test('9. should wrap a single character', () {
+      expect('a'.wrapDoubleAccentedQuotes(), '“a”');
+    });
+    test('10. should wrap a string with leading/trailing whitespace', () {
+      expect('  spaced out  '.wrapDoubleAccentedQuotes(), '“  spaced out  ”');
+    });
   });
 }

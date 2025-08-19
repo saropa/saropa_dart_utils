@@ -3,6 +3,78 @@ import 'package:saropa_dart_utils/list/list_extensions.dart';
 
 void main() {
   group('ListExtensions', () {
+    group('equalsIgnoringOrder', () {
+      // Test Case 1: Basic Equality - Two lists with the same elements in a different order.
+      test('should return true for lists with same elements in different order', () {
+        final List<int> listA = <int>[1, 2, 3];
+        final List<int> listB = <int>[3, 1, 2];
+        expect(listA.equalsIgnoringOrder(listB), isTrue);
+      });
+
+      // Test Case 2: Basic Inequality - Two lists with different elements.
+      test('should return false for lists with different elements', () {
+        final List<int> listA = <int>[1, 2, 3];
+        final List<int> listB = <int>[1, 2, 4];
+        expect(listA.equalsIgnoringOrder(listB), isFalse);
+      });
+
+      // Test Case 3: Duplicate Elements - Lists with duplicate elements that are still considered equal.
+      test('should return true when duplicates are present but unique elements match', () {
+        final List<int> listA = <int>[1, 2, 2, 3];
+        final List<int> listB = <int>[3, 2, 1, 2];
+        expect(listA.equalsIgnoringOrder(listB), isTrue);
+      });
+
+      // Test Case 4: Empty Lists - Comparing two empty lists.
+      test('should return true for two empty lists', () {
+        final List<int> listA = <int>[];
+        final List<int> listB = <int>[];
+        expect(listA.equalsIgnoringOrder(listB), isTrue);
+      });
+
+      // Test Case 5: One Empty List - Comparing an empty list with a non-empty list.
+      test('should return false when one list is empty and the other is not', () {
+        final List<int> listA = <int>[];
+        final List<int> listB = <int>[1];
+        expect(listA.equalsIgnoringOrder(listB), isFalse);
+      });
+
+      // Test Case 6: Different Lengths - Comparing two lists with different numbers of elements.
+      test('should return false for lists with different lengths', () {
+        final List<int> listA = <int>[1, 2, 3];
+        final List<int> listB = <int>[1, 2];
+        expect(listA.equalsIgnoringOrder(listB), isFalse);
+      });
+
+      // Test Case 7: Identical Lists - Comparing a list to itself, which should always be true.
+      test('should return true when comparing a list to itself', () {
+        final List<int> listA = <int>[1, 2, 3];
+        expect(listA.equalsIgnoringOrder(listA), isTrue);
+      });
+
+      // Test Case 8: Lists with Nulls - Comparing lists that both contain null values.
+      test('should return true for lists with same elements including nulls', () {
+        final List<int?> listA = <int?>[1, null, 3];
+        final List<int?> listB = <int?>[3, 1, null];
+        expect(listA.equalsIgnoringOrder(listB), isTrue);
+      });
+
+      // Test Case 9: One Null List - Comparing a non-null list to a null list.
+      test('should return false when comparing a non-null list to a null list', () {
+        final List<int> listA = <int>[1, 2, 3];
+        expect(listA.equalsIgnoringOrder(null), isFalse);
+      });
+
+      // Test Case 10: Different Data Types (when T is dynamic or Object)
+      // Note: If T is explicitly defined (e.g., List<int>), this test might not compile.
+      // It's valid if the lists are `List<Object>` or `List<dynamic>`.
+      test('should return false for lists with elements of different types (if allowed by T)', () {
+        final List<Object> listA = <Object>[1, 'a', 3];
+        final List<Object> listB = <Object>[3, 1, 'b']; // 'b' is different from 'a'
+        expect(listA.equalsIgnoringOrder(listB), isFalse);
+      });
+    });
+
     group('topOccurrence', () {
       test('Empty list returns null', () {
         final List<String> list = <String>[];

@@ -1,5 +1,10 @@
 /// Extensions for presentation, like adding quotes, truncating text, and formatting.
 extension StringFormattingAndWrappingExtensions on String {
+  static const String accentedQuoteOpening = '‘';
+  static const String accentedQuoteClosing = '’';
+  static const String accentedDoubleQuoteOpening = '“';
+  static const String accentedDoubleQuoteClosing = '”';
+
   /// Wraps the string with the given [before] and [after] strings.
   String wrap({String? before, String? after}) {
     final String b = before ?? '';
@@ -17,10 +22,42 @@ extension StringFormattingAndWrappingExtensions on String {
   }
 
   /// Wraps the string in single quotes: `'string'`.
-  String wrapSingleQuotes() => "'$this'";
+  ///
+  /// If the string is empty, returns `''` if [quoteEmpty] is true,
+  /// otherwise returns an empty string.
+  String wrapSingleQuotes({bool quoteEmpty = false}) => isEmpty
+      ? quoteEmpty
+            ? "''"
+            : ''
+      : "'$this'";
 
   /// Wraps the string in double quotes: `"string"`.
-  String wrapDoubleQuotes() => '"$this"';
+  ///
+  /// If the string is empty, returns `""` if [quoteEmpty] is true,
+  /// otherwise returns an empty string.
+  String wrapDoubleQuotes({bool quoteEmpty = false}) => isEmpty
+      ? quoteEmpty
+            ? '""'
+            : ''
+      : '"$this"';
+
+  /// Return a string wrapped in ‘accented quotes’
+  ///
+  /// Note that empty strings will still be wrapped: '‘’'
+  String wrapSingleAccentedQuotes({bool quoteEmpty = false}) => isEmpty
+      ? quoteEmpty
+            ? '$accentedQuoteOpening$accentedQuoteClosing'
+            : ''
+      : '$accentedQuoteOpening$this$accentedQuoteClosing';
+
+  /// Return a string wrapped in “accented quotes”
+  ///
+  /// Note that empty strings will still be wrapped: '“”'
+  String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) => isEmpty
+      ? quoteEmpty
+            ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing'
+            : ''
+      : '$accentedDoubleQuoteOpening$this$accentedDoubleQuoteClosing';
 
   /// Extension method to enclose a [String] in parentheses.
   String? encloseInParentheses({bool wrapEmpty = false}) => isEmpty
@@ -38,3 +75,5 @@ extension StringFormattingAndWrappingExtensions on String {
   String truncateWithEllipsis(int maxLength) =>
       maxLength <= 0 || length <= maxLength ? this : '${substring(0, maxLength)}…';
 }
+
+

@@ -1,5 +1,33 @@
+import 'package:collection/collection.dart';
+
 /// Extension methods for [List].
 extension ListExtensions<T> on List<T> {
+  /// Compares this list to [other], ignoring the order of elements.
+  ///
+  /// Returns `true` if both lists contain the same elements, regardless of their
+  /// order, and `false` otherwise.  Duplicate elements are treated as equivalent
+  /// (e.g., `[1, 1, 2]` is considered equal to `[2, 1, 1]`).
+  ///
+  /// Null lists are considered equal to other null lists but not to empty lists.
+  /// This behavior aligns with how Dart's `ListEquality` handles nulls.
+  bool equalsIgnoringOrder(List<T>? other) {
+    // Handle nulls (two nulls are equal, a null and a non-null are not).
+    // if (this == null) return other == null;
+    if (other == null) return false; // this is non-null, other is null
+
+    // Quick exits for empty or identical lists.
+    if (isEmpty && other.isEmpty) return true; // Both empty
+    if (identical(this, other)) return true; // Identical references
+    if (length != other.length) return false; // Different lengths
+
+    // Creating a set does involve the overhead of deduplication. However, in the context of
+    // comparing lists while ignoring order and treating duplicates as equivalent (as indicated
+    // by the original code's use of .toUnique()), this overhead is usually more than offset by
+    // the efficiency gains of using sets for the comparison itself.
+    // Optimized comparison using sets for larger lists.
+    return SetEquality<T>().equals(Set<T>.from(this), Set<T>.from(other));
+  }
+
   /// Returns the element that occurs most frequently in the list.
   ///
   /// This method iterates through the list, counts the occurrences of each element,

@@ -52,4 +52,22 @@ extension IntExtensions on int {
     // Return the count
     return count;
   }
+
+  /// Ensure NOT this greater than
+  /// or equal to [from] and less than or equal to [to]?
+  int forceBetween(int from, final int to) {
+    if (from > to) {
+      return this;
+    }
+
+    if (this < from) {
+      return from;
+    }
+
+    if (this > to) {
+      return to;
+    }
+
+    return this;
+  }
 }
