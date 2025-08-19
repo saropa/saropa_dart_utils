@@ -1,5 +1,5 @@
 import 'package:saropa_dart_utils/list/list_extensions.dart';
-import 'package:saropa_dart_utils/string/string_parsing_and_slicing_extensions.dart';
+import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Extension methods for [String] to provide advanced case manipulation functionalities.
 extension StringCaseExtensions on String {
