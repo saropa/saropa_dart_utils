@@ -2,6 +2,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/string/string_number_extensions.dart';
 
 void main() {
+  group('isNumeric', () {
+    test('1. Integer string', () => expect('123'.isNumeric(), isTrue));
+    test('2. Double string', () => expect('123.45'.isNumeric(), isTrue));
+    test('3. Negative number string', () => expect('-50'.isNumeric(), isTrue));
+    test('4. String with letters', () => expect('123a'.isNumeric(), isFalse));
+    test('5. Purely alphabetical string', () => expect('abc'.isNumeric(), isFalse));
+    test('6. Empty string', () => expect(''.isNumeric(), isFalse));
+    test('7. Whitespace string', () => expect('   '.isNumeric(), isFalse));
+    test('8. String with symbols', () => expect('1,000'.isNumeric(), isFalse));
+    test('9. Scientific notation', () => expect('1.2e3'.isNumeric(), isTrue));
+    test('10. Hexadecimal string', () => expect('0xFF'.isNumeric(), isFalse));
+  });
+
   group('toDoubleNullable', () {
     test('Result should be a double', () {
       // valid data

@@ -3,6 +3,11 @@
 /// This extension provides a method to get the trailing integer from a string.
 /// If the string is empty or does not contain a trailing integer, it returns null.
 extension StringNumberExtensions on String {
+  /// Checks if the string can be parsed as a number.
+  bool isNumeric() =>
+      // Attempt to parse as a double and check if the result is not null.
+      double.tryParse(this) != null;
+
   /// safely get an double from a string
   // https://api.flutter.dev/flutter/dart-core/double/tryParse.html
   double? toDoubleNullable() => isEmpty ? null : double.tryParse(this);
