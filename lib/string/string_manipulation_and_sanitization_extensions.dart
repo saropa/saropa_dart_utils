@@ -131,6 +131,13 @@ extension StringManipulationAndSanitizationExtensions on String {
     return replaceAll(regExp, '');
   }
 
+  /// Replaces all characters that are not digits (0-9) with the [replacement] string.
+  ///
+  /// For example, `'abc123def'.replaceNonNumbers(replacement: '-')` results in `'---123---'`.
+  String replaceNonNumbers({String replacement = ''}) =>
+      // The regex \D matches any non-digit character and replaces it.
+      replaceAll(RegExp(r'\D'), replacement);
+      
   /// Removes all characters that are not digits (0-9).
   String removeNonNumbers() =>
       // The regex \D matches any non-digit character.

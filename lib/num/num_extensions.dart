@@ -1,4 +1,4 @@
-extension NumExtensions on num {
+extension NumberExtensions on num {
   /// Returns `true` if the number is not zero and not negative.
   ///
   /// This is a convenient way to check if a number is strictly positive.
@@ -40,7 +40,7 @@ extension NumExtensions on num {
 }
 
 /// Extension methods for nullable `num?`.
-extension NumNullableExtensions on num? {
+extension NumberNullableExtensions on num? {
   /// Returns `true` if the nullable number is not null, not zero, and not negative.
   ///
   /// This is a null-safe version of `isNotZeroOrNegative` for nullable numbers.

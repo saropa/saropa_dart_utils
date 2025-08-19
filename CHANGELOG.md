@@ -26,7 +26,14 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 
 ****
 
-## 0.4.4+Utrecht (Latest)
+## 0.5.0+Rotterdam (Latest)
+➕ New extension methods were added for numbers, lists, and strings (like forceBetween, order‑agnostic list comparison, and safer string number parsing).
+🧪 Fresh test files were created to cover the new extensions, and overall test coverage has been improved.
+🔄 Some extension names were refactored for consistency across the codebase.
+🧹 Test imports and structures were updated to align with the refactored code.
+
+<!-- cspell: ignore Utrech -->
+## 0.4.4+Utrech
 
 ✂️ The big file for string code was split into smaller, more specific files.
 ➕ New code was added for things like unique lists and number ranges.
