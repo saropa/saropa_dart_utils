@@ -25,8 +25,10 @@ Learn more at https://saropa.com, or email dev.tools@saropa.com
 ```
 
 ****
+## 0.5.2+Düsseldorf (Latest)
+🧹 Rename StringFormattingAndWrappingExtensions to StringExtensions
 
-## 0.5.1+Essen (Latest)
+## 0.5.1+Essen
 🧩 All string extension methods for formatting, manipulation, parsing, and validation were merged into a single file: `lib/string/string_extensions.dart`.
 🔗 Imports across dependent files were updated to point to the unified extension file.
 🗑️ Redundant string extension files and their old test files were removed.

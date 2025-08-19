@@ -1,7 +1,7 @@
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 
 /// Extensions for presentation, like adding quotes, truncating text, and formatting.
-extension StringFormattingAndWrappingExtensions on String {
+extension StringExtensions on String {
   static const String accentedQuoteOpening = '‘';
   static const String accentedQuoteClosing = '’';
   static const String accentedDoubleQuoteOpening = '“';
