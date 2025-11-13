@@ -74,7 +74,13 @@ extension DateTimeExtensions on DateTime {
   /// Generates a list of [DateTime] objects for consecutive days.
   ///
   /// Starts from `this` and generates [days] number of dates.
+  /// 
+  /// NOTE: generates an empty list when [days] is 0
   List<DateTime> generateDayList(int days, {bool startOfDay = true}) {
+    // if (days <= 0) {
+    //   throw ArgumentError('The number of days must be greater than zero.');
+    // }
+
     final List<DateTime> dayList = <DateTime>[];
     DateTime currentDate = this;
     for (int i = 0; i < days; i++) {

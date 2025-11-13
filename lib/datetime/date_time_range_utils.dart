@@ -26,12 +26,11 @@ extension DateTimeRangeExtensions on DateTimeRange {
         month,
       ).getNthWeekdayOfMonthInYear(n, dayOfWeek);
 
-      // Crucial Check: Ensure the nth occurrence is within the target month
+      // Ensure the nth occurrence is within the target month
       if (nthOccurrence == null || nthOccurrence.month != month) {
         continue;
       }
 
-      // Check if the nth occurrence is in
       // Check if the nth occurrence is in range
       if (inclusive) {
         if ((nthOccurrence.isAtSameMomentAs(start) || nthOccurrence.isAfter(start)) &&
