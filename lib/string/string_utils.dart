@@ -1,3 +1,9 @@
+/// Utility methods for string operations.
+///
+/// These methods are designed to provide additional functionality for
+/// working with strings, such as splitting, extracting, and appending.
+library;
+
 /// `StringUtils` is a utility class in Dart that provides static methods
 /// for manipulating and analyzing strings. This class cannot be instantiated.
 ///
@@ -33,7 +39,7 @@ class StringUtils {
     }
 
     // Calculate the Unicode code point of the n-th letter of the alphabet.
-    final codePoint = 'A'.codeUnitAt(0) + n - 1;
+    final int codePoint = 'A'.codeUnitAt(0) + n - 1;
 
     // Create a new string from the Unicode code point and return it.
     return String.fromCharCode(codePoint);
@@ -55,7 +61,7 @@ class StringUtils {
     }
 
     // Calculate the Unicode code point of the n-th letter of the alphabet.
-    final codePoint = 'a'.codeUnitAt(0) + n - 1;
+    final int codePoint = 'a'.codeUnitAt(0) + n - 1;
 
     // Create a new string from the Unicode code point and return it.
     return String.fromCharCode(codePoint);

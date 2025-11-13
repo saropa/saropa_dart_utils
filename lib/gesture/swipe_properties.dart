@@ -142,7 +142,7 @@ extension SwipeProperties on DragEndDetails {
   /// This method returns the speed of the swipe based on the velocity and
   /// the thresholds defined in swipeThresholds.
   SwipeSpeed get swipeSpeed {
-    final speed = velocity.pixelsPerSecond.distance;
+    final double speed = velocity.pixelsPerSecond.distance;
     return GestureUtils._getSwipeSpeed(speed);
   }
 
@@ -150,7 +150,7 @@ extension SwipeProperties on DragEndDetails {
   ///
   /// This method returns the magnitude of the swipe based on the velocity.
   SwipeMagnitude get swipeMagnitude {
-    final magnitude = velocity.pixelsPerSecond.distance;
+    final double magnitude = velocity.pixelsPerSecond.distance;
     // Add logic here to convert the magnitude to a SwipeMagnitude enum.
     if (magnitude < (GestureUtils._swipeMagnitudeThresholds[SwipeMagnitude.minimal] ?? 0)) {
       return SwipeMagnitude.minimal;
@@ -169,8 +169,8 @@ extension SwipeProperties on DragEndDetails {
   ///
   /// This method returns the angle of the swipe based on the velocity.
   SwipeAngle get swipeAngle {
-    final dx = velocity.pixelsPerSecond.dx;
-    final dy = velocity.pixelsPerSecond.dy;
+    final double dx = velocity.pixelsPerSecond.dx;
+    final double dy = velocity.pixelsPerSecond.dy;
     // Add logic here to convert the angle to a SwipeAngle enum.
     if (dx.abs() > dy.abs()) {
       // Horizontal swipe
@@ -188,9 +188,7 @@ extension SwipeProperties on DragEndDetails {
   ///
   /// This method returns a [Swipe] record that contains the direction
   /// and speed of the swipe.
-  Swipe get swipe {
-    return Swipe(swipeDirection, swipeSpeed, swipeMagnitude, swipeAngle);
-  }
+  Swipe get swipe => Swipe(swipeDirection, swipeSpeed, swipeMagnitude, swipeAngle);
 }
 
 /// This is a utility class that contains static methods related to gesture
@@ -218,7 +216,7 @@ class GestureUtils {
   /// threshold. The thresholds are measured in logical pixels per second.
   /// These thresholds are used in the [SwipeProperties.swipeMagnitude] method
   /// to determine the magnitude of a swipe.
-  static const Map<SwipeMagnitude, double> _swipeMagnitudeThresholds = {
+  static const Map<SwipeMagnitude, double> _swipeMagnitudeThresholds = <SwipeMagnitude, double>{
     SwipeMagnitude.minimal: 200.0,
 
     /// Threshold for very small swipes.
@@ -242,7 +240,7 @@ class GestureUtils {
   /// The thresholds are measured in logical pixels per second.
   /// These thresholds are used in the [SwipeProperties.swipeSpeed]
   /// method to determine the speed of a swipe.
-  static const Map<SwipeSpeed, double> _swipeSpeedThresholds = {
+  static const Map<SwipeSpeed, double> _swipeSpeedThresholds = <SwipeSpeed, double>{
     /// Threshold for very slow swipes.
     SwipeSpeed.minimal: 1,
 

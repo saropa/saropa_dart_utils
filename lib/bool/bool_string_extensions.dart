@@ -14,9 +14,7 @@ extension BoolStringExtensions on String {
 
   /// Converts a case-insensitive string of 'true' to a boolean.
   /// Returns false if the string is not 'true'.
-  bool toBool() {
-    return toLowerCase() == 'true';
-  }
+  bool toBool() => toLowerCase() == 'true';
 }
 
 /// Saropa extensions for converting [bool] to [String]
@@ -24,7 +22,5 @@ extension BoolStringExtensions on String {
 extension BoolStringNullableExtensions on String? {
   /// Converts a case-insensitive string of 'true' to a boolean.
   /// Returns false if the string is null, empty, or not 'true'.
-  bool toBool() {
-    return this?.toLowerCase() == 'true';
-  }
+  bool toBool() => this?.toLowerCase() == 'true';
 }
