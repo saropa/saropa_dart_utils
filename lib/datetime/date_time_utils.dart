@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
+final RegExp _yearRegex = RegExp(r'\b\d{4}\b');
+
 /// A utility class for working with [DateTime] objects.
 class DateTimeUtils {
   /// Calculates the age at death based on the date of birth (DOB) and date
@@ -50,7 +52,7 @@ class DateTimeUtils {
   /// @return The extracted year as an integer, or null if no year is found.
   static int? extractYear(String input) {
     // Regular expression to match a 4-digit year
-    final RegExp yearRegex = RegExp(r'\b\d{4}\b');
+    final RegExp yearRegex = _yearRegex;
 
     // Search for the first match of the regex in the input string
     // \b in a regular expression is a word boundary anchor
