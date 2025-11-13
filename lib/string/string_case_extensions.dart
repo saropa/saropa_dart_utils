@@ -1,6 +1,16 @@
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
+final RegExp _allLetterLowerCaseRegex = RegExp(r'^[\p{Ll}]+$', unicode: true);
+
+final RegExp _anyCaseLetterRegex = RegExp(r'^[\p{L}]+$', unicode: true);
+
+final RegExp _allLetterUpperCaseRegex = RegExp(r'^[A-Z]+$');
+
+final RegExp _splitCapitalizedWithNumbersRegex = RegExp('(?<=[a-z])(?=[A-Z0-9])');
+
+final RegExp _splitCapitalizedRegex = RegExp('(?<=[a-z])(?=[A-Z])');
+
 /// Extension methods for [String] to provide advanced case manipulation functionalities.
 extension StringCaseExtensions on String {
   /// Checks if the string contains only lowercase letters (a-z).
@@ -20,7 +30,7 @@ extension StringCaseExtensions on String {
   /// '123'.isAllLetterLowerCase;     // Returns false
   /// ''.isAllLetterLowerCase;        // Returns false
   /// ```
-  bool get isAllLetterLowerCase => RegExp(r'^[\p{Ll}]+$', unicode: true).hasMatch(this);
+  bool get isAllLetterLowerCase => _allLetterLowerCaseRegex.hasMatch(this);
 
   /// Checks if the string contains only letters, regardless of case (a-z, A-Z).
   ///
@@ -41,7 +51,7 @@ extension StringCaseExtensions on String {
   /// ```
   ///
   /// NOTE: supports unicode
-  bool get isAnyCaseLetter => RegExp(r'^[\p{L}]+$', unicode: true).hasMatch(this);
+  bool get isAnyCaseLetter => _anyCaseLetterRegex.hasMatch(this);
 
   /// Checks if the string contains only uppercase letters (A-Z).
   ///
@@ -60,7 +70,7 @@ extension StringCaseExtensions on String {
   /// '123'.isAllLetterUpperCase;     // Returns false
   /// ''.isAllLetterUpperCase;        // Returns false
   /// ```
-  bool get isAllLetterUpperCase => RegExp(r'^[A-Z]+$').hasMatch(this);
+  bool get isAllLetterUpperCase => _allLetterUpperCaseRegex.hasMatch(this);
 
   /// Capitalizes the first letter of each word in the string, leaving other characters as they are.
   ///
@@ -90,13 +100,12 @@ extension StringCaseExtensions on String {
     final List<String> originalWords = split(' '); // Keep original words with spaces
 
     // The original code was using words() which effectively removed extra spaces.
-    final List<String> capitalizedWords =
-        originalWords.map((String word) {
-          if (word.isNotEmpty) {
-            return word.capitalize(lowerCaseRemaining: lowerCaseRemaining);
-          }
-          return word; // Keep empty strings (for multiple spaces)
-        }).toList();
+    final List<String> capitalizedWords = originalWords.map((String word) {
+      if (word.isNotEmpty) {
+        return word.capitalize(lowerCaseRemaining: lowerCaseRemaining);
+      }
+      return word; // Keep empty strings (for multiple spaces)
+    }).toList();
 
     return capitalizedWords.join(' ');
   }
@@ -286,9 +295,7 @@ extension StringCaseExtensions on String {
     }
 
     return words()
-        ?.where((String word) {
-          return word.isNotEmpty && word[0].isAllLetterUpperCase;
-        })
+        ?.where((String word) => word.isNotEmpty && word[0].isAllLetterUpperCase)
         .toList()
         .nullIfEmpty();
   }
@@ -353,15 +360,14 @@ extension StringCaseExtensions on String {
   List<String> splitCapitalized({bool splitNumbers = false}) {
     // Return empty list for empty input string
     if (isEmpty) {
-      return [];
+      return <String>[];
     }
 
     // ref: https://stackoverflow.com/questions/53718516/separate-a-pascalcase-string-into-separate-words-using-dart
-    final RegExp pattern =
-        splitNumbers
-            // RegExp to split numbers
-            ? RegExp('(?<=[a-z])(?=[A-Z0-9])')
-            : RegExp('(?<=[a-z])(?=[A-Z])');
+    final RegExp pattern = splitNumbers
+        // RegExp to split numbers
+        ? _splitCapitalizedWithNumbersRegex
+        : _splitCapitalizedRegex;
 
     return split(pattern);
   }
@@ -383,11 +389,8 @@ extension StringCaseExtensions on String {
   /// 'CAPITALIZED WORDS'.unCapitalizedWords();           // Returns null
   /// ''.unCapitalizedWords();                              // Returns null
   /// ```
-  List<String>? unCapitalizedWords() =>
-      words()
-          ?.where((String word) {
-            return word.isNotEmpty && word[0].isAllLetterLowerCase;
-          })
-          .toList()
-          .nullIfEmpty();
+  List<String>? unCapitalizedWords() => words()
+      ?.where((String word) => word.isNotEmpty && word[0].isAllLetterLowerCase)
+      .toList()
+      .nullIfEmpty();
 }

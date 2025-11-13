@@ -1,16 +1,251 @@
-# include: package:flutter_lints/flutter.yaml
+# cspell: ignore ktlint tearoffs interps
+#
+# ==> IMPORTANT NOTE: MANUAL LINT CONFIGURATION <==
+#
+# The `include: package:flutter_lints/flutter.yaml` directive has been intentionally
+# removed and its contents, along with its nested dependencies, have been manually
+# flattened into the `rules` list below.
+#
+# REASON:
+# There is a persistent bug in the `dart format` command-line tool that prevents it
+# from correctly resolving nested `include` statements. When run, it fails with the error:
+#
+#   Warning: Package resolution error when reading "analysis_options.yaml" file:
+#   Failed to resolve package URI "package:flutter_lints/flutter.yaml" in include.
+#
+# The root cause is that `flutter.yaml` includes `recommended.yaml`, which in turn
+# includes `core.yaml`. The `dart format` tool cannot handle this multi-level include chain.
+# Ironically, this failure is triggered by the standard Flutter lints package maintained by Google.
+#
+# SOLUTION:
+# This file now contains the combined, de-duplicated rules from all three files:
+#   1. package:lints/core.yaml
+#   2. package:lints/recommended.yaml
+#   3. package:flutter_lints/flutter.yaml
+#
+# Any custom rules or overrides for this project are placed at the end of the list.
+# Do not re-enable the `include:` directive unless this bug is confirmed to be fixed
+# in a future Dart SDK version.
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+# include: package:flutter_lints/flutter.yaml << DO NOT RE-ENABLE
 
-# Ref: https://pub.dev/packages/very_good_analysis
-include: package:very_good_analysis/analysis_options.yaml
-
-# https://foresightmobile.com/blog/flutter-3-29-and-dart-3-7-making-our-dev-lives-even-easier
-formatter:
-  page_width: 100 # configure the page_width (formerly --line-length) for dart format on a project-wide basis
 
 analyzer:
+  # plugins:
+  #   - custom_lint
+
+  exclude:
+    # === Generated Code ===
+    - "**/*.g.dart" # Exclude generated files
+    - "**/*.freezed.dart" # Exclude generated files
+    - "lib/generated_plugin_registrant.dart" # Exclude generated plugin registration
+    - "**/*.bak" # Exclude backups
+    - "**/*.old" # Exclude history
+
+    # === Build & Cache ===
+    - ".crashlytics/**"
+    - ".dart_tool/**" # Exclude Dart tool cache/generated files
+    - ".dev/**"
+    - ".github/**"
+    - ".idea/**"
+    - ".vs/**"
+    - ".vscode/**"
+
+    # build output
+    - "bin/cache/**" # Exclude cache directory (if used)
+    - "build/**" # Exclude Flutter build output directory
+
+    # scripts for build & testing
+    - "scripts/**"
+
+    # === Test Specific ===
+    - "test/.test_coverage.dart" # Exclude test coverage helper
+
+    # === Exclude native platform directories completely (no valid linters anyway)
+    - "android/**" # Exclude native platform code
+    - "ios/**" # Exclude native platform code
+
+    # === External packages (let them manage internally) ===
+    - "dependency_overrides/**" # Exclude 3rd party packages
+
+    # === System Resources (should not be necessary) ===
+    - "assets/**" # Exclude system fonts, images, static data
+    - "ktlint" # Kotlin linter
+
+  language:
+    strict-casts: true # Enable stricter type checking for casts
+    strict-inference: true # TRUE = instructing the Dart analyzer to be more stringent about type inference. FALSE = Enable stricter type checking for type inference # disable to allow linter rules to take precedence
+    strict-raw-types: true # Enable stricter type checking for raw types (like List without <T>)
+
+  # =================  THIS SECTION CHANGES RULE SEVERITY   =================
   errors:
-    omit_local_variable_types: ignore
-    lines_longer_than_80_chars: ignore
+    # Raise the severity from 'info' to 'warning'.
+    cast_nullable_to_non_nullable: warning
+    missing_required_param: error # Treat missing required parameters as errors instead of hints
+    missing_return: error # Treat missing returns as errors instead of hints
+    record_literal_one_positional_no_trailing_comma: error # Enforce trailing comma for single-field record literals
+    collection_methods_unrelated_type: warning # Warn when collection methods are used with unrelated types
+    unrelated_type_equality_checks: warning # Warn when == is used on unrelated types
+    parameter_assignments: warning # Warn when function/method parameters are reassigned (enables this non-default rule)
+    todo: ignore # Do not flag TODO comments
+    always_specify_types: warning
+    prefer_final_locals: warning
+    prefer_const_declarations: warning
+
+  strong-mode:
+    implicit-dynamic: false # Disallow dynamic when a type cannot be inferred
+    implicit-casts: false # Disable implicit casts if not already default
+
+formatter:
+  page_width: 100 # 80 is too restrictive
+  
+# NOTE: you cannot mix rule types under the linter: -> rules: section. The analyzer expects either a list of rules to enable (using dashes -) or a map of rules to enable/disable (using key: value pairs without dashes), but not both at the same time.
+linter:
+  rules:
+    # --------------------------------------------------------------------------
+    # --- BEGIN MANUALLY FLATTENED SDK LINT SET ---
+    # This block is a combination of the rules from flutter.yaml,
+    # recommended.yaml, and core.yaml to work around a bug in the
+    # dart format tool.
+    # --------------------------------------------------------------------------
+
+    # === RULES FROM LINTS/CORE.YAML ===
+    avoid_empty_else: true
+    avoid_relative_lib_imports: true
+    avoid_shadowing_type_parameters: true
+    avoid_types_as_parameter_names: true
+    await_only_futures: true
+    camel_case_extensions: true
+    camel_case_types: true
+    collection_methods_unrelated_type: true
+    curly_braces_in_flow_control_structures: true
+    dangling_library_doc_comments: true
+    depend_on_referenced_packages: true
+    empty_catches: true
+    file_names: true
+    hash_and_equals: true
+    implicit_call_tearoffs: true
+    library_annotations: true
+    no_duplicate_case_values: true
+    no_wildcard_variable_uses: true
+    non_constant_identifier_names: true
+    null_check_on_nullable_type_parameter: true
+    prefer_generic_function_type_aliases: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_iterable_whereType: true
+    prefer_typing_uninitialized_variables: true
+    provide_deprecation_message: true
+    secure_pubspec_urls: true
+    strict_top_level_inference: true
+    type_literal_in_constant_pattern: true
+    unintended_html_in_doc_comment: true
+    unnecessary_overrides: true
+    unrelated_type_equality_checks: true
+    use_string_in_part_of_directives: true
+    valid_regexps: true
+    void_checks: true
+
+    # === RULES FROM LINTS/RECOMMENDED.YAML ===
+    annotate_overrides: true
+    avoid_function_literals_in_foreach_calls: true
+    avoid_init_to_null: true
+    avoid_renaming_method_parameters: true
+    avoid_return_types_on_setters: true
+    avoid_returning_null_for_void: true
+    avoid_single_cascade_in_expression_statements: true
+    control_flow_in_finally: true
+    empty_constructor_bodies: true
+    empty_statements: true
+    exhaustive_cases: true
+    implementation_imports: true
+    invalid_runtime_check_with_js_interop_types: true
+    library_prefixes: true
+    library_private_types_in_public_api: true
+    no_leading_underscores_for_library_prefixes: true
+    no_leading_underscores_for_local_identifiers: true
+    null_closures: true
+    overridden_fields: true
+    package_names: true
+    prefer_adjacent_string_concatenation: true
+    prefer_collection_literals: true
+    prefer_conditional_assignment: true
+    prefer_contains: true
+    prefer_for_elements_to_map_fromIterable: true
+    prefer_function_declarations_over_variables: true
+    prefer_if_null_operators: true
+    prefer_initializing_formals: true
+    prefer_inlined_adds: true
+    prefer_interpolation_to_compose_strings: true
+    prefer_is_not_operator: true
+    prefer_null_aware_operators: true
+    prefer_spread_collections: true
+    recursive_getters: true
+    slash_for_doc_comments: true
+    type_init_formals: true
+    unnecessary_brace_in_string_interps: true
+    unnecessary_const: true
+    unnecessary_constructor_name: true
+    unnecessary_getters_setters: true
+    unnecessary_late: true
+    unnecessary_library_name: true
+    unnecessary_new: true
+    unnecessary_null_aware_assignments: true
+    unnecessary_null_in_if_null_operators: true
+    unnecessary_nullable_for_final_variable_declarations: true
+    unnecessary_string_escapes: true
+    unnecessary_string_interpolations: true
+    unnecessary_this: true
+    unnecessary_to_list_in_spreads: true
+    unnecessary_underscores: true
+    use_function_type_syntax_for_parameters: true
+    use_rethrow_when_possible: true
+
+    # === RULES FROM FLUTTER/FLUTTER.YAML ===
+    avoid_unnecessary_containers: true
+    avoid_web_libraries_in_flutter: true
+    no_logic_in_create_state: true
+    prefer_const_constructors_in_immutables: true
+    sized_box_for_whitespace: true
+    sort_child_properties_last: true
+    use_build_context_synchronously: true
+    use_full_hex_values_for_flutter_colors: true
+    use_key_in_widget_constructors: true
+
+    # --------------------------------------------------------------------------
+    # --- CUSTOM RULES ---
+    # --------------------------------------------------------------------------
+    prefer_single_quotes: true
+    cancel_subscriptions: true # Cancelling instances of StreamSubscription prevents memory leaks and unexpected behavior.
+
+
+    # === Enabled Rules (Rules that are actively enforced) ===
+    always_declare_return_types: true
+    always_use_package_imports: true
+    always_specify_types: true
+    omit_local_variable_types: false # CRITICAL: This MUST be false to enable always_specify_types
+    prefer_const_literals_to_create_immutables: true # Enforces that `const` is used for list or map literals inside other constant contexts.
+    prefer_const_constructors: true # It enforces that constructors that can be `const` are marked as `const`.
+    prefer_const_declarations: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    type_annotate_public_apis: true
+    avoid_catches_without_on_clauses: true
+    avoid_print: true
+    constant_identifier_names: true
+    prefer_expression_function_bodies: true
+    require_trailing_commas: true
+    sort_constructors_first: true
+    unnecessary_async: true
+    use_super_parameters: true
+    
+    # === Disabled/Overridden Rules (Rules that are intentionally ignored) ===
+    avoid_annotating_with_dynamic: false
+    avoid_classes_with_only_static_members: false
+    avoid_positional_boolean_parameters: false
+    avoid_redundant_argument_values: false
+    flutter_style_todos: false
+    lines_longer_than_80_chars: false
+    prefer_relative_imports: false
+    public_member_api_docs: false
+    sort_pub_dependencies: false
