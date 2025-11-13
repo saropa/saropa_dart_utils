@@ -21,11 +21,16 @@
 
 Made by Saropa. All rights reserved.
 
-Learn more at https://saropa.com, or email dev.tools@saropa.com
+Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.2+Düsseldorf (Latest)
+## 0.5.3+Christchurch (Latest)
+
+🔄 Enhanced `string_utils.dart` to optimize final regex usages.
+📚 Improved documentation and usage for `CommonRandom` and list generation.
+
+## 0.5.2+Düsseldorf
 🧹 Rename StringFormattingAndWrappingExtensions to StringExtensions
 
 ## 0.5.1+Essen
