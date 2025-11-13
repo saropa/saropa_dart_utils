@@ -26,7 +26,6 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 
 ****
 ## 0.5.3+Christchurch (Latest)
-
 🔄 Enhanced `string_utils.dart` to optimize final regex usages.
 📚 Improved documentation and usage for `CommonRandom` and list generation.
 
