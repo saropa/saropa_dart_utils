@@ -1,3 +1,5 @@
+final RegExp _trailingIntRegex = RegExp(r'\d+$');
+
 /// An extension on the String class to extract the trailing integer from a string.
 ///
 /// This extension provides a method to get the trailing integer from a string.
@@ -39,7 +41,7 @@ extension StringNumberExtensions on String {
     }
 
     // Regular expression to match trailing digits
-    final RegExp regex = RegExp(r'\d+$');
+    final RegExp regex = _trailingIntRegex;
 
     final RegExpMatch? match = regex.firstMatch(this);
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+final RegExp _hexRegex = RegExp(r'^[0-9a-fA-F]+$');
+
 /// Extension methods for [String] to facilitate hexadecimal conversions.
 extension HexExtensions on String {
   /// Converts a hexadecimal string to an integer ([int]).
@@ -27,7 +29,7 @@ extension HexExtensions on String {
       return null;
     }
     // Check if the hexadecimal string is valid using a regular expression.
-    if (!RegExp(r'^[0-9a-fA-F]+$').hasMatch(this)) {
+    if (!_hexRegex.hasMatch(this)) {
       debugPrint('WARNING: Invalid [hexValue]: `$this`');
       return null;
     }

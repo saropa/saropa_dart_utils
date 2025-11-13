@@ -1,5 +1,30 @@
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 
+final RegExp _apostropheRegex = RegExp("['’]");
+
+final RegExp _alphaOnlyRegex = RegExp('[^A-Za-z]');
+
+final RegExp _alphaOnlyWithSpaceRegex = RegExp('[^A-Za-z ]');
+
+final RegExp _alphaNumericOnlyRegex = RegExp('[^A-Za-z0-9]');
+
+final RegExp _alphaNumericOnlyWithSpaceRegex = RegExp('[^A-Za-z0-9 ]');
+
+final RegExp _nonDigitRegex = RegExp(r'\D');
+
+final RegExp _regexSpecialCharsRegex = RegExp(r'[.*+?^${}()|[\]\\]');
+
+final RegExp _consecutiveSpacesRegex = RegExp(r'\s+');
+
+final RegExp _latinRegex = RegExp(r'^[a-zA-Z]+$');
+
+final RegExp _splitCapitalizedUnicodeRegex = RegExp(r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt})', unicode: true);
+
+final RegExp _splitCapitalizedUnicodeWithNumbersRegex = RegExp(
+  r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt}|\p{Nd})|(?<=\p{Nd})(?=\p{L})',
+  unicode: true,
+);
+
 /// Extensions for presentation, like adding quotes, truncating text, and formatting.
 extension StringExtensions on String {
   static const String accentedQuoteOpening = '‘';
@@ -268,40 +293,34 @@ extension StringExtensions on String {
   /// Replaces different apostrophe characters (’ and ') with a standard single quote.
   String normalizeApostrophe() =>
       // Use a regex to find and replace apostrophe variants.
-      replaceAll(RegExp("['’]"), "'");
+      replaceAll(_apostropheRegex, "'");
 
   /// Removes all characters that are not letters (A-Z, a-z).
-  String toAlphaOnly({bool allowSpace = false}) {
-    // Define the regex based on whether spaces are allowed.
-    final RegExp regExp = allowSpace ? RegExp('[^A-Za-z ]') : RegExp('[^A-Za-z]');
-    // Replace all non-matching characters.
-    return replaceAll(regExp, '');
-  }
+  // Replace all non-matching characters.
+  String toAlphaOnly({bool allowSpace = false}) =>
+      replaceAll(allowSpace ? _alphaOnlyWithSpaceRegex : _alphaOnlyRegex, '');
 
   /// Removes all characters that are not letters or numbers.
-  String removeNonAlphaNumeric({bool allowSpace = false}) {
-    // Define the regex based on whether spaces are allowed.
-    final RegExp regExp = allowSpace ? RegExp('[^A-Za-z0-9 ]') : RegExp('[^A-Za-z0-9]');
-    // Replace all non-matching characters.
-    return replaceAll(regExp, '');
-  }
+  // Replace all non-matching characters.
+  String removeNonAlphaNumeric({bool allowSpace = false}) =>
+      replaceAll(allowSpace ? _alphaNumericOnlyWithSpaceRegex : _alphaNumericOnlyRegex, '');
 
   /// Replaces all characters that are not digits (0-9) with the [replacement] string.
   ///
   /// For example, `'abc123def'.replaceNonNumbers(replacement: '-')` results in `'---123---'`.
   String replaceNonNumbers({String replacement = ''}) =>
       // The regex \D matches any non-digit character and replaces it.
-      replaceAll(RegExp(r'\D'), replacement);
+      replaceAll(_nonDigitRegex, replacement);
 
   /// Removes all characters that are not digits (0-9).
   String removeNonNumbers() =>
       // The regex \D matches any non-digit character.
-      replaceAll(RegExp(r'\D'), '');
+      replaceAll(_nonDigitRegex, '');
 
   /// Escapes characters in a string that have a special meaning in regular expressions.
   String escapeForRegex() =>
       // The regex finds any special regex character, and the callback prepends a backslash.
-      replaceAllMapped(RegExp(r'[.*+?^${}()|[\]\\]'), (Match m) => '\\${m[0]}');
+      replaceAllMapped(_regexSpecialCharsRegex, (Match m) => '\\${m[0]}');
 
   /// Extension method to remove consecutive spaces in a [String]
   /// and optionally trim the result.
@@ -311,7 +330,7 @@ extension StringExtensions on String {
       return null;
     }
     // The regex \s+ matches one or more whitespace characters.
-    final String replaced = replaceAll(RegExp(r'\s+'), ' ');
+    final String replaced = replaceAll(_consecutiveSpacesRegex, ' ');
     // Return the result, potentially trimmed and checked for emptiness.
     return replaced.nullIfEmpty(trimFirst: trim);
   }
@@ -337,14 +356,9 @@ extension StringExtensions on String {
     if (isEmpty) return <String>[]; // Handle empty string case.
 
     // Define the regex for splitting at capitalized letters (and optionally numbers).
-    final RegExp capitalizationPattern = RegExp(
-      splitNumbers
-          // FIX: Added an OR condition `|(?<=\p{Nd})(?=\p{L})`
-          // This now handles both (lowercase -> uppercase/digit) AND (digit -> letter).
-          ? r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt}|\p{Nd})|(?<=\p{Nd})(?=\p{L})' // Lower -> Upper/Title/Digit OR Digit -> Letter
-          : r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt})', // Lower -> Upper/Title
-      unicode: true,
-    );
+    final RegExp capitalizationPattern = splitNumbers
+        ? _splitCapitalizedUnicodeWithNumbersRegex
+        : _splitCapitalizedUnicodeRegex;
     // Perform the initial split based on the capitalization pattern.
     List<String> intermediateSplit = split(capitalizationPattern);
 
@@ -376,7 +390,7 @@ extension StringExtensions on String {
 
     // Otherwise, split each segment by space and flatten the list.
     return intermediateSplit
-        .expand((String part) => part.split(RegExp(r'\s+')))
+        .expand((String part) => part.split(_consecutiveSpacesRegex))
         .where((String s) => s.isNotEmpty)
         .toList();
   }
@@ -459,7 +473,7 @@ extension StringExtensions on String {
   /// Checks if the string contains only Latin alphabet characters (a-z, A-Z).
   bool isLatin() =>
       // Use a regular expression to match only alphabetic characters from start to end.
-      RegExp(r'^[a-zA-Z]+$').hasMatch(this);
+      _latinRegex.hasMatch(this);
 
   /// Checks if the string starts and ends with matching brackets.
   /// e.g., `(abc)`, `[abc]`, `{abc}`, `<abc>`.
@@ -489,8 +503,8 @@ extension StringExtensions on String {
     }
     // If normalizing apostrophes, replace variants with a standard one.
     if (normalizeApostrophe) {
-      first = first.replaceAll(RegExp("['’]"), "'");
-      second = second.replaceAll(RegExp("['’]"), "'");
+      first = first.replaceAll(_apostropheRegex, "'");
+      second = second.replaceAll(_apostropheRegex, "'");
     }
     // Perform the final comparison.
     return first == second;
