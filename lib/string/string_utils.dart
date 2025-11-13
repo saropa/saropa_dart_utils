@@ -1,3 +1,9 @@
+/// Utility methods for string operations.
+///
+/// These methods are designed to provide additional functionality for
+/// working with strings, such as splitting, extracting, and appending.
+library;
+
 /// `StringUtils` is a utility class in Dart that provides static methods
 /// for manipulating and analyzing strings. This class cannot be instantiated.
 ///
