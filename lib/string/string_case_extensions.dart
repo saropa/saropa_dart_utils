@@ -156,10 +156,13 @@ extension StringCaseExtensions on String {
   String titleCase() => isEmpty ? '' : this[0].toUpperCase() + substring(1).toLowerCase();
 
   /// Converts only the Latin alphabetic characters (a-z) in the string to uppercase, leaving
-  ///  other characters unchanged.
+  /// other characters unchanged.
   ///
   /// This method iterates through the string and converts any Latin lowercase letters to uppercase,
   /// while leaving numbers, symbols, whitespace, and non-Latin characters untouched.
+  ///
+  /// Performance: Uses [StringBuffer] for O(n) time complexity instead of string concatenation
+  /// which would be O(n²).
   ///
   /// Returns:
   /// A new string with Latin alphabetic characters converted to uppercase.
@@ -169,21 +172,28 @@ extension StringCaseExtensions on String {
   /// ```dart
   /// 'latincafé123'.toUpperLatinOnly(); // Returns 'LATINcafé123' (only 'latin' part is uppercased)
   /// 'UPPERCASE'.toUpperLatinOnly();    // Returns 'UPPERCASE' (already uppercase)
-  /// ''.toUpperLatinOnly();           // Returns ''
+  /// ''.toUpperLatinOnly();             // Returns ''
   /// ```
   String toUpperLatinOnly() {
-    String result = '';
+    if (isEmpty) {
+      return '';
+    }
 
-    final int codeUnitA = 'a'.codeUnitAt(0);
-    final int codeUnitZ = 'z'.codeUnitAt(0);
+    // Use StringBuffer for O(n) performance instead of O(n²) string concatenation
+    final StringBuffer buffer = StringBuffer();
 
-    // don't iterate over runes because unicode / emoji == multiple runes
+    // ASCII code points for lowercase Latin letters
+    const int codeUnitA = 0x61; // 'a'
+    const int codeUnitZ = 0x7A; // 'z'
+
+    // Don't iterate over runes because unicode / emoji == multiple runes
     for (int i = 0; i < length; i++) {
       final String s = this[i];
-      if (s.codeUnitAt(0) >= codeUnitA && s.codeUnitAt(0) <= codeUnitZ) {
-        result += s.toUpperCase();
+      final int codeUnit = s.codeUnitAt(0);
+      if (codeUnit >= codeUnitA && codeUnit <= codeUnitZ) {
+        buffer.write(s.toUpperCase());
       } else {
-        result += s;
+        buffer.write(s);
       }
     }
 
@@ -193,14 +203,14 @@ extension StringCaseExtensions on String {
     // would likely involve:
     //
     // Creating a mapping of lowercase accented Latin characters to their uppercase counterparts.
-    //You would need to identify the specific accented characters you want to handle.
+    // You would need to identify the specific accented characters you want to handle.
     //
     // Checking for these lowercase accented characters in your loop.
     //
     // Replacing them with their uppercase equivalents from your mapping if found.
     //
     // For other characters, keep the existing toUpperCase() logic.
-    return result;
+    return buffer.toString();
   }
 
   /// Capitalizes the first letter of the string, leaving the rest of the string unchanged.
@@ -238,7 +248,10 @@ extension StringCaseExtensions on String {
   /// Extracts and concatenates only the uppercase letters from the string.
   ///
   /// This method iterates through the runes of the string and checks if each character is an uppercase letter.
-  /// If it is, the character is appended to the result string.
+  /// If it is, the character is appended to the result.
+  ///
+  /// Performance: Uses [StringBuffer] for O(n) time complexity instead of string concatenation
+  /// which would be O(n²).
   ///
   /// Returns:
   /// A new string containing only the uppercase letters from the original string.
@@ -248,26 +261,26 @@ extension StringCaseExtensions on String {
   /// 'Ben Bright 1234'.upperCaseLettersOnly(); // Returns 'BB'
   /// 'UPPERCASE'.upperCaseLettersOnly();       // Returns 'UPPERCASE'
   /// 'lowercase'.upperCaseLettersOnly();       // Returns ''
-  /// ''.upperCaseLettersOnly();              // Returns ''
+  /// ''.upperCaseLettersOnly();                // Returns ''
   /// ```
   String upperCaseLettersOnly() {
     if (isEmpty) {
-      // failed null or empty check
       return '';
     }
 
-    String result = '';
+    // Use StringBuffer for O(n) performance instead of O(n²) string concatenation
+    final StringBuffer buffer = StringBuffer();
 
     // https://stackoverflow.com/questions/9286885/how-to-iterate-over-a-string-char-by-char-in-dart
     for (final int rune in runes) {
       final String c = String.fromCharCode(rune);
 
       if (c.isAllLetterUpperCase) {
-        result += c;
+        buffer.write(c);
       }
     }
 
-    return result;
+    return buffer.toString();
   }
 
   /// Finds and returns a list of words from the string that are capitalized (start with an

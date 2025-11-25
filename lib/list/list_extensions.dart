@@ -4,15 +4,31 @@ import 'package:collection/collection.dart';
 extension ListExtensions<T> on List<T> {
   /// Compares this list to [other], ignoring the order of elements.
   ///
-  /// Returns `true` if both lists contain the same elements, regardless of their
-  /// order, and `false` otherwise.  Duplicate elements are treated as equivalent
-  /// (e.g., `[1, 1, 2]` is considered equal to `[2, 1, 1]`).
+  /// Returns `true` if both lists contain the same elements with the same
+  /// frequencies, regardless of their order. For example:
+  /// - `[1, 1, 2]` equals `[2, 1, 1]` (same elements, same counts, different order)
+  /// - `[1, 1, 2]` does NOT equal `[1, 2, 2]` (different duplicate counts)
   ///
-  /// Null lists are considered equal to other null lists but not to empty lists.
-  /// This behavior aligns with how Dart's `ListEquality` handles nulls.
+  /// This method correctly handles duplicates by comparing element frequency maps
+  /// rather than converting to sets (which would lose duplicate count information).
+  ///
+  /// Args:
+  ///   other (List<T>?): The list to compare against. Returns `false` if null.
+  ///
+  /// Returns:
+  ///   bool: `true` if both lists contain the same elements with the same
+  ///   frequencies, `false` otherwise.
+  ///
+  /// Example:
+  /// ```dart
+  /// [1, 2, 3].equalsIgnoringOrder([3, 2, 1]); // true
+  /// [1, 1, 2].equalsIgnoringOrder([2, 1, 1]); // true
+  /// [1, 1, 2].equalsIgnoringOrder([1, 2, 2]); // false (different counts)
+  /// [1, 2, 3].equalsIgnoringOrder([1, 2]); // false (different lengths)
+  /// [1, 2, 3].equalsIgnoringOrder(null); // false
+  /// ```
   bool equalsIgnoringOrder(List<T>? other) {
     // Handle nulls (two nulls are equal, a null and a non-null are not).
-    // if (this == null) return other == null;
     if (other == null) return false; // this is non-null, other is null
 
     // Quick exits for empty or identical lists.
@@ -20,12 +36,21 @@ extension ListExtensions<T> on List<T> {
     if (identical(this, other)) return true; // Identical references
     if (length != other.length) return false; // Different lengths
 
-    // Creating a set does involve the overhead of deduplication. However, in the context of
-    // comparing lists while ignoring order and treating duplicates as equivalent (as indicated
-    // by the original code's use of .toUnique()), this overhead is usually more than offset by
-    // the efficiency gains of using sets for the comparison itself.
-    // Optimized comparison using sets for larger lists.
-    return SetEquality<T>().equals(Set<T>.from(this), Set<T>.from(other));
+    // Build frequency maps for both lists to correctly handle duplicates.
+    // This ensures [1, 1, 2] is NOT considered equal to [1, 2, 2].
+    final Map<T, int> thisFrequency = <T, int>{};
+    final Map<T, int> otherFrequency = <T, int>{};
+
+    for (final T element in this) {
+      thisFrequency[element] = (thisFrequency[element] ?? 0) + 1;
+    }
+
+    for (final T element in other) {
+      otherFrequency[element] = (otherFrequency[element] ?? 0) + 1;
+    }
+
+    // Compare the frequency maps using MapEquality for accurate comparison
+    return const MapEquality<dynamic, int>().equals(thisFrequency, otherFrequency);
   }
 
   /// Returns the element that occurs most frequently in the list.

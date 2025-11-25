@@ -155,27 +155,40 @@ extension StringExtensions on String {
   /// Truncates the string to [cutoff] and appends an ellipsis '…'.
   ///
   /// This method will not cut words in half. It will truncate at the last
-  /// full word that fits within the [cutoff].
+  /// full word that fits within the [cutoff]. If the first word is longer than
+  /// the cutoff, it falls back to simple truncation at the cutoff point to
+  /// ensure some content is always returned.
   ///
-  /// Returns the original string if it's shorter than [cutoff].
+  /// Args:
+  ///   cutoff (int?): The maximum length before truncation. If null, 0, or negative,
+  ///   returns the original string.
+  ///
+  /// Returns:
+  ///   String: The truncated string with ellipsis, or the original string if it's
+  ///   shorter than [cutoff].
+  ///
+  /// Example:
+  /// ```dart
+  /// 'Hello World'.truncateWithEllipsisPreserveWords(8); // Returns 'Hello…'
+  /// 'Hello World'.truncateWithEllipsisPreserveWords(20); // Returns 'Hello World'
+  /// 'Supercalifragilistic'.truncateWithEllipsisPreserveWords(5); // Returns 'Super…'
+  /// ```
   String truncateWithEllipsisPreserveWords(int? cutoff) {
     // Return original string if it's empty, cutoff is invalid, or it's already short enough.
     if (isEmpty || cutoff == null || cutoff <= 0 || length <= cutoff) {
       return this;
     }
 
-    // Ensure we don't exceed the string's length when finding the last space.
-    final int effectiveCutoff = cutoff >= length ? length : cutoff;
+    // Find the last space within the allowed length (checking up to cutoff + 1 to include
+    // a space right at the cutoff boundary)
+    final int searchLength = cutoff + 1 > length ? length : cutoff + 1;
+    final int lastSpaceIndex = substring(0, searchLength).lastIndexOf(' ');
 
-    // Find the last space within the allowed length
-    final int lastSpaceIndex = substring(
-      0,
-      effectiveCutoff + 1 > length ? length : effectiveCutoff + 1,
-    ).lastIndexOf(' ');
-
-    // If no space is found (e.g., a single long word), we'll just return the ellipsis.
-    if (lastSpaceIndex == -1) {
-      return '…';
+    // If no space is found (e.g., a single long word), fall back to simple truncation
+    // at the cutoff point. This ensures we always return some meaningful content
+    // rather than just an ellipsis.
+    if (lastSpaceIndex == -1 || lastSpaceIndex == 0) {
+      return '${substring(0, cutoff)}$ellipsis';
     }
 
     // Truncate at the last space found and remove any trailing space before adding the ellipsis.
@@ -511,10 +524,33 @@ extension StringExtensions on String {
   }
 
   /// Checks if this string contains [other] in a case-insensitive manner.
+  ///
+  /// Following standard string semantics, an empty string is considered to be
+  /// contained in any string (including empty strings). Returns `false` only
+  /// when [other] is `null`.
+  ///
+  /// Args:
+  ///   other (String?): The substring to search for. Returns `false` if null.
+  ///
+  /// Returns:
+  ///   bool: `true` if this string contains [other] (case-insensitive), `false` if
+  ///   [other] is null.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'Hello World'.containsIgnoreCase('world'); // true
+  /// 'Hello World'.containsIgnoreCase('HELLO'); // true
+  /// 'Hello World'.containsIgnoreCase('xyz'); // false
+  /// 'Hello World'.containsIgnoreCase(''); // true (empty string is always contained)
+  /// 'Hello World'.containsIgnoreCase(null); // false
+  /// ''.containsIgnoreCase(''); // true
+  /// ```
   bool containsIgnoreCase(String? other) {
-    // If other is null or empty, it cannot be contained.
-    if (other == null || other.isEmpty) return false;
-    // Perform a case-insensitive search.
+    // Null cannot be contained
+    if (other == null) return false;
+    // Empty string is always contained (standard string semantics)
+    if (other.isEmpty) return true;
+    // Perform a case-insensitive search
     return toLowerCase().contains(other.toLowerCase());
   }
 
