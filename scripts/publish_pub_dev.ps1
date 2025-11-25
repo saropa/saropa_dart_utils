@@ -308,11 +308,11 @@ Write-Section "Committing Changes"
 $tagName = "v$releaseNumber"
 
 if ($DryRun) {
-    Write-Host "[DRY RUN] Would run: git add pubspec.yaml CHANGELOG.md" -ForegroundColor Yellow
+    Write-Host "[DRY RUN] Would run: git add -A" -ForegroundColor Yellow
     Write-Host "[DRY RUN] Would run: git commit -m 'Release $tagName'" -ForegroundColor Yellow
     Write-Host "[DRY RUN] Would run: git push origin main" -ForegroundColor Yellow
 } else {
-    git add pubspec.yaml CHANGELOG.md
+    git add -A
     Exit-OnError "git add failed"
 
     git commit -m "Release $tagName"
