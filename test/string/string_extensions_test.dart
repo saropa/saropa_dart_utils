@@ -134,7 +134,10 @@ void main() {
     // Updated: Now returns truncated content instead of just '…' when first word is longer than cutoff
     test(
       '10. Single long word string',
-      () => expect('supercalifragilisticexpialidocious'.truncateWithEllipsisPreserveWords(10), 'supercalif…'),
+      () => expect(
+        'supercalifragilisticexpialidocious'.truncateWithEllipsisPreserveWords(10),
+        'supercalif…',
+      ),
     );
 
     // Fix 9: Additional algorithm fix tests
@@ -157,7 +160,9 @@ void main() {
     test(
       '15. First word exceeds cutoff returns truncated content',
       () => expect(
-        'Pneumonoultramicroscopicsilicovolcanoconiosis is long'.truncateWithEllipsisPreserveWords(10),
+        'Pneumonoultramicroscopicsilicovolcanoconiosis is long'.truncateWithEllipsisPreserveWords(
+          10,
+        ),
         'Pneumonoul…',
       ),
     );
@@ -978,7 +983,10 @@ void main() {
     test('2. Normal ASCII string unchanged', () => expect('hello'.removeInvalidUnicode(), 'hello'));
     test('3. Valid unicode unchanged', () => expect('你好世界'.removeInvalidUnicode(), '你好世界'));
     test('4. Valid emoji unchanged', () => expect('👍🚀'.removeInvalidUnicode(), '👍🚀'));
-    test('5. Mixed valid content unchanged', () => expect('Hello 你好'.removeInvalidUnicode(), 'Hello 你好'));
+    test(
+      '5. Mixed valid content unchanged',
+      () => expect('Hello 你好'.removeInvalidUnicode(), 'Hello 你好'),
+    );
     test('6. Numbers unchanged', () => expect('12345'.removeInvalidUnicode(), '12345'));
     test('7. Whitespace unchanged', () => expect(' \t\n'.removeInvalidUnicode(), ' \t\n'));
     test('8. Accented characters unchanged', () => expect('café'.removeInvalidUnicode(), 'café'));
@@ -1067,7 +1075,10 @@ void main() {
 
   group('removeAll', () {
     test('1. Remove single char pattern', () => expect('a-b-c'.removeAll('-'), 'abc'));
-    test('2. Remove multiple char pattern', () => expect('abXYZcdXYZef'.removeAll('XYZ'), 'abcdef'));
+    test(
+      '2. Remove multiple char pattern',
+      () => expect('abXYZcdXYZef'.removeAll('XYZ'), 'abcdef'),
+    );
     test('3. Pattern not found', () => expect('hello'.removeAll('xyz'), 'hello'));
     test('4. Remove all occurrences', () => expect('aaa'.removeAll('a'), ''));
     test('5. Empty string', () => expect(''.removeAll('a'), ''));
@@ -1079,14 +1090,20 @@ void main() {
   });
 
   group('replaceLastNCharacters', () {
-    test('1. Replace last 3 chars', () => expect('password'.replaceLastNCharacters(3, '*'), 'passw***'));
+    test(
+      '1. Replace last 3 chars',
+      () => expect('password'.replaceLastNCharacters(3, '*'), 'passw***'),
+    );
     test('2. Replace last 1 char', () => expect('test'.replaceLastNCharacters(1, '#'), 'tes#'));
     test('3. Replace more than length', () => expect('ab'.replaceLastNCharacters(5, '*'), 'ab'));
     test('4. Replace 0 chars', () => expect('hello'.replaceLastNCharacters(0, '*'), 'hello'));
     test('5. Replace negative', () => expect('hello'.replaceLastNCharacters(-1, '*'), 'hello'));
     test('6. Replace all chars', () => expect('abc'.replaceLastNCharacters(3, '*'), '***'));
     test('7. Empty string', () => expect(''.replaceLastNCharacters(2, '*'), ''));
-    test('8. Replace with multiple chars', () => expect('test'.replaceLastNCharacters(2, 'XX'), 'teXXXX'));
+    test(
+      '8. Replace with multiple chars',
+      () => expect('test'.replaceLastNCharacters(2, 'XX'), 'teXXXX'),
+    );
     test('9. Replace exactly length', () => expect('abc'.replaceLastNCharacters(3, '#'), '###'));
     test('10. Single char string', () => expect('a'.replaceLastNCharacters(1, '*'), '*'));
   });
@@ -1101,20 +1118,54 @@ void main() {
     test('7. Multiple spaces', () => expect('a b c'.makeNonBreaking(), 'a\u00A0b\u00A0c'));
     test('8. Only hyphens', () => expect('---'.makeNonBreaking(), '\u2011\u2011\u2011'));
     test('9. Only spaces', () => expect('   '.makeNonBreaking(), '\u00A0\u00A0\u00A0'));
-    test('10. Mixed content', () => expect('hello-world test'.makeNonBreaking(), 'hello\u2011world\u00A0test'));
+    test(
+      '10. Mixed content',
+      () => expect('hello-world test'.makeNonBreaking(), 'hello\u2011world\u00A0test'),
+    );
   });
 
   group('removeSingleCharacterWords', () {
-    test('1. Remove single letter words', () => expect('a b c test'.removeSingleCharacterWords(), 'test'));
-    test('2. No single char words', () => expect('hello world'.removeSingleCharacterWords(), 'hello world'));
+    test(
+      '1. Remove single letter words',
+      () => expect('a b c test'.removeSingleCharacterWords(), 'test'),
+    );
+    test(
+      '2. No single char words',
+      () => expect('hello world'.removeSingleCharacterWords(), 'hello world'),
+    );
     test('3. Empty string', () => expect(''.removeSingleCharacterWords(), ''));
     test('4. Only single char words', () => expect('a b c'.removeSingleCharacterWords(), null));
-    test('5. Preserve multi-char words', () => expect('I am a test'.removeSingleCharacterWords(), 'am test'));
-    test('6. Without trim', () => expect('  a test  '.removeSingleCharacterWords(trim: false), ' test '));
-    test('7. Without removing multiple spaces', () => expect('a  test'.removeSingleCharacterWords(removeMultipleSpaces: false, trim: false), '  test'));
-    test('8. Numbers as single chars', () => expect('1 2 test'.removeSingleCharacterWords(), 'test'));
-    test('9. Mixed content', () => expect('a test b word c'.removeSingleCharacterWords(), 'test word'));
-    test('10. Single word preserved', () => expect('a hello'.removeSingleCharacterWords(), 'hello'));
+    test(
+      '5. Preserve multi-char words',
+      () => expect('I am a test'.removeSingleCharacterWords(), 'am test'),
+    );
+    test(
+      '6. Without trim',
+      () => expect('  a test  '.removeSingleCharacterWords(trim: false), ' test '),
+    );
+    test(
+      '7. Without removing multiple spaces',
+      () => expect(
+        'a  test'.removeSingleCharacterWords(removeMultipleSpaces: false, trim: false),
+        '  test',
+      ),
+    );
+    test(
+      '8. Numbers as single chars',
+      () => expect('1 2 test'.removeSingleCharacterWords(), 'test'),
+    );
+    test(
+      '9. Mixed content',
+      () => expect('a test b word c'.removeSingleCharacterWords(), 'test word'),
+    );
+    test(
+      '10. Single word preserved',
+      () => expect('a hello'.removeSingleCharacterWords(), 'hello'),
+    );
+    test(
+      '11. Unicode single-letter words',
+      () => expect('你 好 test'.removeSingleCharacterWords(), 'test'),
+    );
   });
 
   group('replaceLineBreaks', () {
@@ -1124,24 +1175,56 @@ void main() {
     test('4. Empty string', () => expect(''.replaceLineBreaks(' '), ''));
     test('5. Replace with comma', () => expect('a\nb\nc'.replaceLineBreaks(', '), 'a, b, c'));
     test('6. Null replacement', () => expect('a\nb'.replaceLineBreaks(null), 'ab'));
-    test('7. Multiple consecutive newlines with dedup', () => expect('a\n\nb'.replaceLineBreaks(' '), 'a b'));
-    test('8. Multiple newlines without dedup', () => expect('a\n\nb'.replaceLineBreaks(' ', deduplicate: false), 'a  b'));
-    test('9. Only newlines', () => expect('\n\n\n'.replaceLineBreaks(' '), '  ')); // Dedup only does one pass
-    test('10. Newline at start and end', () => expect('\nhello\n'.replaceLineBreaks(' '), ' hello '));
+    test(
+      '7. Multiple consecutive newlines with dedup',
+      () => expect('a\n\nb'.replaceLineBreaks(' '), 'a b'),
+    );
+    test(
+      '8. Multiple newlines without dedup',
+      () => expect('a\n\nb'.replaceLineBreaks(' ', deduplicate: false), 'a  b'),
+    );
+    test('9. Only newlines', () => expect('\n\n\n'.replaceLineBreaks(' '), ' '));
+    test(
+      '10. Newline at start and end',
+      () => expect('\nhello\n'.replaceLineBreaks(' '), ' hello '),
+    );
+    test('11. Special replacement +', () => expect('a\n\n\nb'.replaceLineBreaks('+'), 'a+b'));
+    test(
+      '12. Special replacement regex chars',
+      () => expect('a\n\nb'.replaceLineBreaks('.*'), 'a.*b'),
+    );
   });
 
   group('removeLeadingAndTrailing', () {
-    test('1. Remove from both ends', () => expect('---hello---'.removeLeadingAndTrailing('-'), 'hello'));
-    test('2. Remove from start only', () => expect('---hello'.removeLeadingAndTrailing('-'), 'hello'));
-    test('3. Remove from end only', () => expect('hello---'.removeLeadingAndTrailing('-'), 'hello'));
+    test(
+      '1. Remove from both ends',
+      () => expect('---hello---'.removeLeadingAndTrailing('-'), 'hello'),
+    );
+    test(
+      '2. Remove from start only',
+      () => expect('---hello'.removeLeadingAndTrailing('-'), 'hello'),
+    );
+    test(
+      '3. Remove from end only',
+      () => expect('hello---'.removeLeadingAndTrailing('-'), 'hello'),
+    );
     test('4. Nothing to remove', () => expect('hello'.removeLeadingAndTrailing('-'), 'hello'));
     test('5. Empty string', () => expect(''.removeLeadingAndTrailing('-'), ''));
     test('6. Null find', () => expect('hello'.removeLeadingAndTrailing(null), 'hello'));
     test('7. Empty find', () => expect('hello'.removeLeadingAndTrailing(''), 'hello'));
-    test('8. Remove multi-char pattern', () => expect('XXhelloXX'.removeLeadingAndTrailing('XX'), 'hello'));
-    test('9. With trim enabled', () => expect('  ---hello---  '.removeLeadingAndTrailing('-', trim: true), 'hello'));
+    test(
+      '8. Remove multi-char pattern',
+      () => expect('XXhelloXX'.removeLeadingAndTrailing('XX'), 'hello'),
+    );
+    test(
+      '9. With trim enabled',
+      () => expect('  ---hello---  '.removeLeadingAndTrailing('-', trim: true), 'hello'),
+    );
     test('10. All removed returns null', () => expect('---'.removeLeadingAndTrailing('-'), null));
-    test('11. Keep middle occurrences', () => expect('---hel-lo---'.removeLeadingAndTrailing('-'), 'hel-lo'));
+    test(
+      '11. Keep middle occurrences',
+      () => expect('---hel-lo---'.removeLeadingAndTrailing('-'), 'hel-lo'),
+    );
     test('12. Unicode pattern', () => expect('你你hello你你'.removeLeadingAndTrailing('你'), 'hello'));
   });
 
@@ -1155,7 +1238,10 @@ void main() {
     test('7. Numbers as first word', () => expect('123 abc'.firstWord(), '123'));
     test('8. Punctuation attached', () => expect('hello, world'.firstWord(), 'hello,'));
     test('9. Hyphenated word', () => expect('well-known fact'.firstWord(), 'well-known'));
-    test('10. Tab separator', () => expect('hello\tworld'.firstWord(), 'hello\tworld')); // Tab not a separator
+    test(
+      '10. Tab separator',
+      () => expect('hello\tworld'.firstWord(), 'hello\tworld'),
+    ); // Tab not a separator
   });
 
   group('secondWord', () {
@@ -1213,7 +1299,10 @@ void main() {
   group('firstLines', () {
     test('1. Get first 2 lines', () => expect('line1\nline2\nline3'.firstLines(2), 'line1\nline2'));
     test('2. Get first 1 line', () => expect('line1\nline2'.firstLines(1), 'line1'));
-    test('3. Request more lines than exist', () => expect('line1\nline2'.firstLines(5), 'line1\nline2'));
+    test(
+      '3. Request more lines than exist',
+      () => expect('line1\nline2'.firstLines(5), 'line1\nline2'),
+    );
     test('4. Single line string', () => expect('single'.firstLines(3), 'single'));
     test('5. Empty string', () => expect(''.firstLines(2), ''));
     test('6. Zero lines', () => expect('line1\nline2'.firstLines(0), ''));
@@ -1241,21 +1330,36 @@ void main() {
     test('2. Single line', () => expect('hello'.multiLinePrefix('> '), '> hello'));
     test('3. Empty prefix', () => expect('a\nb'.multiLinePrefix(''), 'a\nb'));
     test('4. Empty string no prefix', () => expect(''.multiLinePrefix('> '), ''));
-    test('5. Empty string with prefix when enabled', () => expect(''.multiLinePrefix('> ', prefixEmptyStrings: true), '> '));
+    test(
+      '5. Empty string with prefix when enabled',
+      () => expect(''.multiLinePrefix('> ', prefixEmptyStrings: true), '> '),
+    );
     test('6. Number prefix', () => expect('a\nb'.multiLinePrefix('1. '), '1. a\n1. b'));
     test('7. Tab prefix', () => expect('a\nb'.multiLinePrefix('\t'), '\ta\n\tb'));
     test('8. Multi-char prefix', () => expect('a\nb'.multiLinePrefix('>>> '), '>>> a\n>>> b'));
     test('9. Unicode prefix', () => expect('a\nb'.multiLinePrefix('• '), '• a\n• b'));
-    test('10. Nested content', () => expect('line1\nline2'.multiLinePrefix('  '), '  line1\n  line2'));
+    test(
+      '10. Nested content',
+      () => expect('line1\nline2'.multiLinePrefix('  '), '  line1\n  line2'),
+    );
   });
 
   group('endsWithAny', () {
-    test('1. Ends with one of list', () => expect('hello!'.endsWithAny(<String>['.', '!', '?']), isTrue));
-    test('2. Does not end with any', () => expect('hello'.endsWithAny(<String>['.', '!', '?']), isFalse));
+    test(
+      '1. Ends with one of list',
+      () => expect('hello!'.endsWithAny(<String>['.', '!', '?']), isTrue),
+    );
+    test(
+      '2. Does not end with any',
+      () => expect('hello'.endsWithAny(<String>['.', '!', '?']), isFalse),
+    );
     test('3. Empty list', () => expect('hello!'.endsWithAny(<String>[]), isFalse));
     test('4. Empty string', () => expect(''.endsWithAny(<String>['a']), isFalse));
     test('5. Ends with period', () => expect('test.'.endsWithAny(<String>['.', '!']), isTrue));
-    test('6. Multiple matches (first wins)', () => expect('test?'.endsWithAny(<String>['!', '?']), isTrue));
+    test(
+      '6. Multiple matches (first wins)',
+      () => expect('test?'.endsWithAny(<String>['!', '?']), isTrue),
+    );
     test('7. Single char string', () => expect('a'.endsWithAny(<String>['a', 'b']), isTrue));
     test('8. Unicode ending', () => expect('hello世'.endsWithAny(<String>['世', '界']), isTrue));
     test('9. Space ending', () => expect('hello '.endsWithAny(<String>[' ', '\t']), isTrue));
@@ -1302,7 +1406,10 @@ void main() {
   });
 
   group('extractCurlyBraces', () {
-    test('1. Single match', () => expect('Hello {world}'.extractCurlyBraces(), <String>['{world}']));
+    test(
+      '1. Single match',
+      () => expect('Hello {world}'.extractCurlyBraces(), <String>['{world}']),
+    );
     test('2. Multiple matches', () {
       final List<String>? result = '{a} and {b}'.extractCurlyBraces();
       expect(result, isNotNull);
@@ -1315,14 +1422,24 @@ void main() {
       final List<String>? result = '{{nested}}'.extractCurlyBraces();
       expect(result, isNotNull);
     });
-    test('7. At edges', () {
-      final List<String>? result = '{start} middle {end}'.extractCurlyBraces();
-      expect(result, isNotNull);
-      expect(result!.isNotEmpty, isTrue);
-    });
+    test(
+      '7. At edges exact order',
+      () => expect('{start} middle {end}'.extractCurlyBraces(), <String>['{start}', '{end}']),
+    );
     test('8. With content', () => expect('Value: {123}'.extractCurlyBraces(), <String>['{123}']));
-    test('9. Complex content', () => expect('func({x: 1})'.extractCurlyBraces(), <String>['{x: 1}']));
+    test(
+      '9. Complex content',
+      () => expect('func({x: 1})'.extractCurlyBraces(), <String>['{x: 1}']),
+    );
     test('10. Unicode inside', () => expect('{你好}'.extractCurlyBraces(), <String>['{你好}']));
+    test(
+      '11. Many adjacent groups',
+      () => expect('{a}{b}{c}'.extractCurlyBraces(), <String>['{a}', '{b}', '{c}']),
+    );
+    test(
+      '12. Non-greedy across groups',
+      () => expect('{a}{bc}'.extractCurlyBraces(), <String>['{a}', '{bc}']),
+    );
   });
 
   group('appendNotEmpty', () {
@@ -1364,12 +1481,19 @@ void main() {
     test('10. Single vowel', () => expect('a'.grammarArticle(), 'an'));
     test('11. Single consonant', () => expect('b'.grammarArticle(), 'a'));
     test('12. Number', () => expect('8'.grammarArticle(), 'a'));
+    test('13. Silent h word', () => expect('hour'.grammarArticle(), 'an'));
+    test('14. User with you-sound', () => expect('user'.grammarArticle(), 'a'));
+    test('15. University you-sound', () => expect('university'.grammarArticle(), 'a'));
+    test('16. One- prefixed', () => expect('one-time'.grammarArticle(), 'a'));
   });
 
   group('possess', () {
     test('1. Regular word', () => expect('John'.possess(), "John's"));
     test('2. Word ending in s (US)', () => expect('James'.possess(), "James'"));
-    test('3. Word ending in s (non-US)', () => expect('James'.possess(isLocaleUS: false), "James's"));
+    test(
+      '3. Word ending in s (non-US)',
+      () => expect('James'.possess(isLocaleUS: false), "James's"),
+    );
     test('4. Empty string', () => expect(''.possess(), ''));
     test('5. Single char', () => expect('a'.possess(), "a's"));
     test('6. Single char s', () => expect('s'.possess(), "s'"));
@@ -1377,6 +1501,7 @@ void main() {
     test('8. Unicode', () => expect('你好'.possess(), "你好's"));
     test('9. Plural ending in s', () => expect('cats'.possess(), "cats'"));
     test('10. Word ending in ss', () => expect('boss'.possess(), "boss'"));
+    test('11. Trims input whitespace', () => expect('  James  '.possess(), "James'"));
   });
 
   group('pluralize', () {
@@ -1442,15 +1567,48 @@ void main() {
   });
 
   group('collapseMultilineString', () {
-    test('1. Collapse newlines', () => expect('hello\nworld'.collapseMultilineString(cropLength: 20), 'hello world'));
-    test('2. Crop long string', () => expect('hello world test'.collapseMultilineString(cropLength: 10), 'hello…'));
-    test('3. No ellipsis option', () => expect('hello world test'.collapseMultilineString(cropLength: 10, appendEllipsis: false), 'hello'));
+    test(
+      '1. Collapse newlines',
+      () => expect('hello\nworld'.collapseMultilineString(cropLength: 20), 'hello world'),
+    );
+    test(
+      '2. Crop long string',
+      () => expect('hello world test'.collapseMultilineString(cropLength: 10), 'hello…'),
+    );
+    test(
+      '3. No ellipsis option',
+      () => expect(
+        'hello world test'.collapseMultilineString(cropLength: 10, appendEllipsis: false),
+        'hello',
+      ),
+    );
     test('4. Empty string', () => expect(''.collapseMultilineString(cropLength: 10), ''));
-    test('5. Short string unchanged', () => expect('hi'.collapseMultilineString(cropLength: 10), 'hi'));
-    test('6. Multiple newlines', () => expect('a\nb\nc'.collapseMultilineString(cropLength: 20), 'a b c'));
-    test('7. Collapse double spaces', () => expect('hello  world'.collapseMultilineString(cropLength: 20), 'hello world'));
-    test('8. Crop at word boundary', () => expect('hello beautiful world'.collapseMultilineString(cropLength: 15), 'hello beautiful…'));
-    test('9. Leading/trailing whitespace', () => expect('  hello world  '.collapseMultilineString(cropLength: 20), 'hello world'));
-    test('10. Unicode content', () => expect('你好\n世界'.collapseMultilineString(cropLength: 10), '你好 世界'));
+    test(
+      '5. Short string unchanged',
+      () => expect('hi'.collapseMultilineString(cropLength: 10), 'hi'),
+    );
+    test(
+      '6. Multiple newlines',
+      () => expect('a\nb\nc'.collapseMultilineString(cropLength: 20), 'a b c'),
+    );
+    test(
+      '7. Collapse double spaces',
+      () => expect('hello  world'.collapseMultilineString(cropLength: 20), 'hello world'),
+    );
+    test(
+      '8. Crop at word boundary',
+      () => expect(
+        'hello beautiful world'.collapseMultilineString(cropLength: 15),
+        'hello beautiful…',
+      ),
+    );
+    test(
+      '9. Leading/trailing whitespace',
+      () => expect('  hello world  '.collapseMultilineString(cropLength: 20), 'hello world'),
+    );
+    test(
+      '10. Unicode content',
+      () => expect('你好\n世界'.collapseMultilineString(cropLength: 10), '你好 世界'),
+    );
   });
 }

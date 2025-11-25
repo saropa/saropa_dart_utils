@@ -25,11 +25,11 @@ final RegExp _splitCapitalizedUnicodeWithNumbersRegex = RegExp(
   unicode: true,
 );
 
-final RegExp _singleCharWordRegex = RegExp(r'\b\w\b');
+final RegExp _singleCharWordRegex = RegExp(r'(?<=^|\s)[\p{L}\p{N}](?=\s|$)', unicode: true);
 
 final RegExp _anyDigitsRegex = RegExp(r'\d');
 
-final RegExp _curlyBracesRegex = RegExp(r'\{.+\}');
+final RegExp _curlyBracesRegex = RegExp(r'\{.+?\}');
 
 final RegExp _lineBreakRegex = RegExp('\n');
 
@@ -678,7 +678,11 @@ extension StringExtensions on String {
   /// Repeats this string [count] times.
   String repeat(int count) {
     if (isEmpty || count <= 0) return '';
-    return List<String>.filled(count, this).join();
+    final StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < count; i++) {
+      buffer.write(this);
+    }
+    return buffer.toString();
   }
 
   /// Replaces all occurrences of [pattern] with an empty string.
@@ -694,8 +698,7 @@ extension StringExtensions on String {
   }
 
   /// Replaces hyphens and spaces with non-breaking equivalents.
-  String makeNonBreaking() => replaceAll('-', nonBreakingHyphen)
-      .replaceAll(' ', nonBreakingSpace);
+  String makeNonBreaking() => replaceAll('-', nonBreakingHyphen).replaceAll(' ', nonBreakingSpace);
 
   /// Removes single-character words from this string.
   String? removeSingleCharacterWords({bool trim = true, bool removeMultipleSpaces = true}) {
@@ -714,7 +717,9 @@ extension StringExtensions on String {
   String replaceLineBreaks(String? replacement, {bool deduplicate = true}) {
     final String result = replaceAll(_lineBreakRegex, replacement ?? '');
     if (deduplicate && replacement != null && replacement.isNotEmpty) {
-      return result.replaceAll(replacement + replacement, replacement);
+      final String pattern = '(?:${RegExp.escape(replacement)})+';
+      final RegExp r = RegExp(pattern);
+      return result.replaceAll(r, replacement);
     }
     return result;
   }
@@ -749,6 +754,8 @@ extension StringExtensions on String {
   }
 
   /// Counts occurrences of [find] in this string.
+  /// Note: counts non-overlapping matches. Consider an `allowOverlap`
+  /// parameter if overlapping occurrences are desired.
   int count(String find) {
     if (find.isEmpty) return 0;
     return split(find).length - 1;
@@ -757,25 +764,13 @@ extension StringExtensions on String {
   /// Extracts only letter characters (A-Z, a-z) from this string.
   String lettersOnly() {
     if (isEmpty) return '';
-    final StringBuffer result = StringBuffer();
-    for (int rune in runes) {
-      if ((rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122)) {
-        result.write(String.fromCharCode(rune));
-      }
-    }
-    return result.toString();
+    return replaceAll(RegExp(r'[^A-Za-z]'), '');
   }
 
   /// Extracts only lowercase letter characters (a-z) from this string.
   String lowerCaseLettersOnly() {
     if (isEmpty) return '';
-    final StringBuffer result = StringBuffer();
-    for (int rune in runes) {
-      if (rune >= 97 && rune <= 122) {
-        result.write(String.fromCharCode(rune));
-      }
-    }
-    return result.toString();
+    return replaceAll(RegExp(r'[^a-z]'), '');
   }
 
   /// Returns the first [limit] lines of this string.
@@ -786,10 +781,9 @@ extension StringExtensions on String {
   }
 
   /// Trims each line and removes empty lines.
-  String trimLines() => split(newLine)
-        .map((String line) => line.trim())
-        .where((String line) => line.isNotEmpty)
-        .join(newLine);
+  String trimLines() => split(
+    newLine,
+  ).map((String line) => line.trim()).where((String line) => line.isNotEmpty).join(newLine);
 
   /// Prefixes every line with [insertText].
   String multiLinePrefix(String insertText, {bool prefixEmptyStrings = false}) {
@@ -823,6 +817,9 @@ extension StringExtensions on String {
   }
 
   /// Extracts all text within curly braces.
+  ///
+  /// Uses a non-greedy match to find multiple groups like `{a}` and `{b}`.
+  /// Note: This does not handle nested braces.
   List<String>? extractCurlyBraces() {
     final List<String> matches = _curlyBracesRegex
         .allMatches(this)
@@ -844,7 +841,23 @@ extension StringExtensions on String {
   /// Returns 'a' or 'an' based on the first character (for English grammar).
   String grammarArticle() {
     if (isEmpty) return '';
-    switch (this[0].toLowerCase()) {
+    final String word = trim();
+    if (word.isEmpty) return '';
+    final String lower = word.toLowerCase();
+
+    const List<String> silentH = <String>['hour', 'honest', 'honor', 'heir'];
+    for (final String ex in silentH) {
+      if (lower.startsWith(ex)) return 'an';
+    }
+
+    const List<String> youSound = <String>['uni', 'use', 'user', 'union', 'university'];
+    for (final String ex in youSound) {
+      if (lower.startsWith(ex)) return 'a';
+    }
+
+    if (lower.startsWith('one')) return 'a';
+
+    switch (lower[0]) {
       case 'a':
       case 'e':
       case 'i':
@@ -859,10 +872,13 @@ extension StringExtensions on String {
   /// Returns the possessive form of this string.
   String possess({bool isLocaleUS = true}) {
     if (isEmpty) return this;
-    if (isLocaleUS && lastChars(1) == 's') {
-      return "$this'";
+    final String base = trim();
+    if (base.isEmpty) return base;
+    final String last = base.lastChars(1).toLowerCase();
+    if (last == 's') {
+      return isLocaleUS ? "$base'" : "$base's";
     }
-    return "$this's";
+    return "$base's";
   }
 
   /// Returns the plural form of this string.
@@ -887,6 +903,11 @@ extension StringExtensions on String {
   }
 
   /// Creates an obscured version of this string.
+  ///
+  /// Note: This implementation varies the output length using a
+  /// time-based jitter, so results are non-deterministic. For
+  /// deterministic obfuscation, use a fixed length or inject a
+  /// `Random` to control variability.
   String? obscureText({String char = '•', int obscureLength = 3}) {
     if (isEmpty) return null;
     final int seed = DateTime.now().microsecondsSinceEpoch;

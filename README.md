@@ -46,7 +46,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  saropa_dart_utils: ^0.5.6
+  saropa_dart_utils: ^0.5.7
 ```
 
 Import the package:
