@@ -4,7 +4,11 @@
       "Bash(flutter test:*)",
       "Bash(del \"d:\\src\\saropa_dart_utils\\test\\fixes\\algorithm_fixes_test.dart\")",
       "Bash(git -C \"d:\\src\\saropa_dart_utils\" add -A)",
-      "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Release v0.5.5 - Remove debugPrint warnings, streamline publish script\")"
+      "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Release v0.5.5 - Remove debugPrint warnings, streamline publish script\")",
+      "Bash(git -C \"d:\\src\\saropa_dart_utils\" push origin main)",
+      "Bash(git -C \"d:\\src\\saropa_dart_utils\" tag -a v0.5.5 -m \"Release v0.5.5\")",
+      "Bash(git -C \"d:\\src\\saropa_dart_utils\" push origin v0.5.5)",
+      "Bash(gh release create:*)"
     ],
     "deny": [],
     "ask": []
