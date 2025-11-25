@@ -42,6 +42,92 @@ extension UriExtensions on Uri {
     if (dotIndex == -1 || dotIndex == name.length - 1) return null;
     return name.substring(dotIndex + 1).toLowerCase();
   }
+
+  /// Returns true if this URI uses HTTPS scheme.
+  ///
+  /// Example:
+  /// ```dart
+  /// Uri.parse('https://example.com').isSecure; // true
+  /// Uri.parse('http://example.com').isSecure; // false
+  /// ```
+  bool get isSecure => scheme.toLowerCase() == 'https';
+
+  /// Adds or updates a query parameter in this URI.
+  ///
+  /// If [value] is null or empty, the parameter is removed instead.
+  ///
+  /// Args:
+  ///   key (String): The query parameter key.
+  ///   value (String?): The query parameter value. If null/empty, removes the parameter.
+  ///
+  /// Returns:
+  ///   Uri: A new URI with the updated query parameters.
+  ///
+  /// Example:
+  /// ```dart
+  /// Uri.parse('https://example.com').addQueryParameter('page', '1');
+  /// // Returns: https://example.com?page=1
+  /// Uri.parse('https://example.com?a=1').addQueryParameter('b', '2');
+  /// // Returns: https://example.com?a=1&b=2
+  /// ```
+  Uri addQueryParameter(String key, String? value) {
+    if (key.isEmpty) return this;
+    final Map<String, dynamic> params = Map<String, dynamic>.from(queryParameters);
+    if (value == null || value.isEmpty) {
+      params.remove(key);
+    } else {
+      params[key] = value;
+    }
+    return replace(queryParameters: params);
+  }
+
+  /// Returns true if this URI has a specific query parameter.
+  ///
+  /// Args:
+  ///   key (String): The query parameter key to check.
+  ///
+  /// Returns:
+  ///   bool: True if the parameter exists, false otherwise.
+  ///
+  /// Example:
+  /// ```dart
+  /// Uri.parse('https://example.com?page=1').hasQueryParameter('page'); // true
+  /// Uri.parse('https://example.com?page=1').hasQueryParameter('limit'); // false
+  /// ```
+  bool hasQueryParameter(String key) => queryParameters.containsKey(key);
+
+  /// Gets the value of a specific query parameter.
+  ///
+  /// Args:
+  ///   key (String): The query parameter key.
+  ///
+  /// Returns:
+  ///   String?: The parameter value, or null if not found.
+  ///
+  /// Example:
+  /// ```dart
+  /// Uri.parse('https://example.com?page=1').getQueryParameter('page'); // '1'
+  /// Uri.parse('https://example.com').getQueryParameter('page'); // null
+  /// ```
+  String? getQueryParameter(String key) => queryParameters[key];
+
+  /// Returns a new URI with the host replaced.
+  ///
+  /// Args:
+  ///   newHost (String): The new host to use.
+  ///
+  /// Returns:
+  ///   Uri: A new URI with the replaced host, or this URI if newHost is empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// Uri.parse('https://example.com/path').replaceHost('newdomain.com');
+  /// // Returns: https://newdomain.com/path
+  /// ```
+  Uri replaceHost(String newHost) {
+    if (newHost.isEmpty) return this;
+    return replace(host: newHost);
+  }
 }
 
 /// Extension methods for nullable URI.
