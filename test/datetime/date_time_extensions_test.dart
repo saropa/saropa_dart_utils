@@ -1881,8 +1881,9 @@ void main() {
     });
 
     group('isBeforeNow', () {
-      test('Current date should be in the past', () {
-        expect(DateTime.now().isBeforeNow(), false);
+      test('Current date should NOT be in the past', () {
+        final DateTime now = DateTime.now();
+        expect(now.isBeforeNow(now), false);
       });
 
       test('Past date should be in the past', () {
@@ -1893,8 +1894,10 @@ void main() {
         expect(DateTime(2050).isBeforeNow(DateTime(2050)), false);
       });
 
-      test('Null date (defaults to current date) should NOT be in the past', () {
-        expect(DateTime.now().isBeforeNow(), false);
+      test('Slightly older date should be in the past', () {
+        final DateTime now = DateTime.now();
+        final DateTime slightlyBefore = now.subtract(const Duration(milliseconds: 1));
+        expect(slightlyBefore.isBeforeNow(now), true);
       });
 
       test('Custom current date should NOT be in the past', () {
