@@ -262,5 +262,148 @@ void main() {
         expect(() => DateTimeUtils.monthDayCount(year: 2023, month: 13), throwsArgumentError);
       });
     });
+
+    group('isValidDateParts', () {
+      test('1. Valid year', () {
+        expect(DateTimeUtils.isValidDateParts(year: 2023), isTrue);
+      });
+      test('2. Year at lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(year: 0), isTrue);
+      });
+      test('3. Year at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(year: 9999), isTrue);
+      });
+      test('4. Year below lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(year: -1), isFalse);
+      });
+      test('5. Year above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(year: 10000), isFalse);
+      });
+      test('6. Valid month', () {
+        expect(DateTimeUtils.isValidDateParts(month: 6), isTrue);
+      });
+      test('7. Month at lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(month: 1), isTrue);
+      });
+      test('8. Month at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(month: 12), isTrue);
+      });
+      test('9. Month below lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(month: 0), isFalse);
+      });
+      test('10. Month above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(month: 13), isFalse);
+      });
+      test('11. Valid day requires month', () {
+        expect(DateTimeUtils.isValidDateParts(day: 15), isFalse);
+      });
+      test('12. Valid day with month', () {
+        expect(DateTimeUtils.isValidDateParts(month: 6, day: 15), isTrue);
+      });
+      test('13. Day at lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(month: 1, day: 1), isTrue);
+      });
+      test('14. Day at upper bound for 31-day month', () {
+        expect(DateTimeUtils.isValidDateParts(month: 1, day: 31), isTrue);
+      });
+      test('15. Day exceeds month limit', () {
+        expect(DateTimeUtils.isValidDateParts(month: 2, day: 30), isFalse);
+      });
+      test('16. Feb 29 in leap year', () {
+        expect(DateTimeUtils.isValidDateParts(year: 2024, month: 2, day: 29), isTrue);
+      });
+      test('17. Feb 29 in non-leap year', () {
+        expect(DateTimeUtils.isValidDateParts(year: 2023, month: 2, day: 29), isFalse);
+      });
+      test('18. Valid hour', () {
+        expect(DateTimeUtils.isValidDateParts(hour: 12), isTrue);
+      });
+      test('19. Hour at lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(hour: 0), isTrue);
+      });
+      test('20. Hour at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(hour: 23), isTrue);
+      });
+      test('21. Hour below lower bound', () {
+        expect(DateTimeUtils.isValidDateParts(hour: -1), isFalse);
+      });
+      test('22. Hour above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(hour: 24), isFalse);
+      });
+      test('23. Valid minute', () {
+        expect(DateTimeUtils.isValidDateParts(minute: 30), isTrue);
+      });
+      test('24. Minute at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(minute: 59), isTrue);
+      });
+      test('25. Minute above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(minute: 60), isFalse);
+      });
+      test('26. Valid second', () {
+        expect(DateTimeUtils.isValidDateParts(second: 45), isTrue);
+      });
+      test('27. Second at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(second: 59), isTrue);
+      });
+      test('28. Second above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(second: 60), isFalse);
+      });
+      test('29. Valid millisecond', () {
+        expect(DateTimeUtils.isValidDateParts(millisecond: 500), isTrue);
+      });
+      test('30. Millisecond at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(millisecond: 999), isTrue);
+      });
+      test('31. Millisecond above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(millisecond: 1000), isFalse);
+      });
+      test('32. Valid microsecond', () {
+        expect(DateTimeUtils.isValidDateParts(microsecond: 500), isTrue);
+      });
+      test('33. Microsecond at upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(microsecond: 999), isTrue);
+      });
+      test('34. Microsecond above upper bound', () {
+        expect(DateTimeUtils.isValidDateParts(microsecond: 1000), isFalse);
+      });
+      test('35. All null returns true', () {
+        expect(DateTimeUtils.isValidDateParts(), isTrue);
+      });
+      test('36. Complete valid date', () {
+        expect(
+          DateTimeUtils.isValidDateParts(
+            year: 2023,
+            month: 6,
+            day: 15,
+            hour: 12,
+            minute: 30,
+            second: 45,
+            millisecond: 500,
+            microsecond: 250,
+          ),
+          isTrue,
+        );
+      });
+      test('37. Invalid date with one bad component', () {
+        expect(
+          DateTimeUtils.isValidDateParts(
+            year: 2023,
+            month: 6,
+            day: 15,
+            hour: 25,
+          ),
+          isFalse,
+        );
+      });
+      test('38. Day 31 in April (30-day month)', () {
+        expect(DateTimeUtils.isValidDateParts(month: 4, day: 31), isFalse);
+      });
+      test('39. Day 0 is invalid', () {
+        expect(DateTimeUtils.isValidDateParts(month: 1, day: 0), isFalse);
+      });
+      test('40. Negative minute', () {
+        expect(DateTimeUtils.isValidDateParts(minute: -1), isFalse);
+      });
+    });
   });
 }

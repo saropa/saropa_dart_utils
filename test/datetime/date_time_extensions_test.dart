@@ -1910,5 +1910,341 @@ void main() {
         expect(DateTime(2023).isBeforeNow(DateTime(2023, DateTime.january, 3)), true);
       });
     });
+
+    group('mostRecentSunday', () {
+      test('1. Sunday returns same date', () {
+        final DateTime date = DateTime(2023, 6, 11);
+        expect(date.mostRecentSunday.day, date.day);
+        expect(date.mostRecentSunday.weekday, DateTime.sunday);
+      });
+      test('2. Monday returns previous Sunday', () {
+        final DateTime result = DateTime(2023, 6, 12).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+        expect(result.day, 11);
+      });
+      test('3. Saturday returns previous Sunday', () {
+        final DateTime result = DateTime(2023, 6, 17).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('4. Wednesday mid-week', () {
+        final DateTime result = DateTime(2023, 6, 14).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('5. First day of month', () {
+        final DateTime result = DateTime(2023, 6).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('6. First day of year 2023', () {
+        final DateTime result = DateTime(2023).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('7. Leap year February', () {
+        final DateTime result = DateTime(2024, 3).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('8. Year boundary', () {
+        final DateTime result = DateTime(2024, 1, 3).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('9. End of December', () {
+        final DateTime result = DateTime(2023, 12, 30).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+      test('10. Month boundary', () {
+        final DateTime result = DateTime(2023, 7, 2).mostRecentSunday;
+        expect(result.weekday, DateTime.sunday);
+      });
+    });
+
+    group('mostRecentWeekday', () {
+      test('1. Target Monday from Monday', () {
+        final DateTime result = DateTime(2023, 6, 12).mostRecentWeekday(DateTime.monday);
+        expect(result.weekday, DateTime.monday);
+      });
+      test('2. Target Monday from Friday', () {
+        final DateTime result = DateTime(2023, 6, 16).mostRecentWeekday(DateTime.monday);
+        expect(result.weekday, DateTime.monday);
+      });
+      test('3. Target Friday from Monday', () {
+        final DateTime result = DateTime(2023, 6, 12).mostRecentWeekday(DateTime.friday);
+        expect(result.weekday, DateTime.friday);
+      });
+      test('4. Target Wednesday from Sunday', () {
+        final DateTime result = DateTime(2023, 6, 11).mostRecentWeekday(DateTime.wednesday);
+        expect(result.weekday, DateTime.wednesday);
+      });
+      test('5. Target Saturday from Saturday', () {
+        final DateTime result = DateTime(2023, 6, 17).mostRecentWeekday(DateTime.saturday);
+        expect(result.weekday, DateTime.saturday);
+      });
+      test('6. Cross month boundary', () {
+        final DateTime result = DateTime(2023, 7, 3).mostRecentWeekday(DateTime.friday);
+        expect(result.weekday, DateTime.friday);
+      });
+      test('7. Cross year boundary', () {
+        final DateTime result = DateTime(2024, 1, 3).mostRecentWeekday(DateTime.friday);
+        expect(result.weekday, DateTime.friday);
+      });
+      test('8. Target Tuesday from Thursday', () {
+        final DateTime result = DateTime(2023, 6, 15).mostRecentWeekday(DateTime.tuesday);
+        expect(result.weekday, DateTime.tuesday);
+      });
+      test('9. Leap year date', () {
+        final DateTime result = DateTime(2024, 3).mostRecentWeekday(DateTime.thursday);
+        expect(result.weekday, DateTime.thursday);
+      });
+      test('10. Target Sunday from Thursday', () {
+        final DateTime result = DateTime(2023, 6, 15).mostRecentWeekday(DateTime.sunday);
+        expect(result.weekday, DateTime.sunday);
+      });
+    });
+
+    group('dayOfYear', () {
+      test('1. First day of year', () {
+        expect(DateTime(2023).dayOfYear, 1);
+      });
+      test('2. Last day of year', () {
+        expect(DateTime(2023, 12, 31).dayOfYear, 365);
+      });
+      test('3. Last day of leap year', () {
+        expect(DateTime(2024, 12, 31).dayOfYear, 366);
+      });
+      test('4. Mid-year June 15', () {
+        final int day = DateTime(2023, 6, 15).dayOfYear;
+        expect(day, greaterThan(160));
+        expect(day, lessThan(170));
+      });
+      test('5. February 28 non-leap year', () {
+        expect(DateTime(2023, 2, 28).dayOfYear, 59);
+      });
+      test('6. February 29 leap year', () {
+        expect(DateTime(2024, 2, 29).dayOfYear, 60);
+      });
+      test('7. March 1 non-leap year', () {
+        expect(DateTime(2023, 3).dayOfYear, 60);
+      });
+      test('8. March 1 leap year', () {
+        expect(DateTime(2024, 3).dayOfYear, 61);
+      });
+      test('9. July 4', () {
+        final int day = DateTime(2023, 7, 4).dayOfYear;
+        expect(day, greaterThan(180));
+        expect(day, lessThan(190));
+      });
+      test('10. October 31', () {
+        final int day = DateTime(2023, 10, 31).dayOfYear;
+        expect(day, greaterThan(300));
+        expect(day, lessThan(310));
+      });
+    });
+
+    group('weekOfYear', () {
+      test('1. Returns positive week number', () {
+        expect(DateTime(2023, 1, 2).weekOfYear, greaterThan(0));
+      });
+      test('2. December week', () {
+        expect(DateTime(2023, 12, 25).weekOfYear, greaterThan(50));
+      });
+      test('3. Mid-year returns reasonable week', () {
+        final int week = DateTime(2023, 6, 15).weekOfYear;
+        expect(week, greaterThan(20));
+        expect(week, lessThan(30));
+      });
+      test('4. March returns week 9-10', () {
+        final int week = DateTime(2023, 3).weekOfYear;
+        expect(week, greaterThanOrEqualTo(9));
+        expect(week, lessThanOrEqualTo(10));
+      });
+      test('5. End of February', () {
+        final int week = DateTime(2023, 2, 28).weekOfYear;
+        expect(week, greaterThanOrEqualTo(8));
+        expect(week, lessThanOrEqualTo(10));
+      });
+      test('6. July 4', () {
+        final int week = DateTime(2023, 7, 4).weekOfYear;
+        expect(week, greaterThan(25));
+        expect(week, lessThan(30));
+      });
+      test('7. October 15', () {
+        final int week = DateTime(2023, 10, 15).weekOfYear;
+        expect(week, greaterThan(40));
+        expect(week, lessThan(45));
+      });
+      test('8. January 8', () {
+        final int week = DateTime(2023, 1, 8).weekOfYear;
+        expect(week, greaterThanOrEqualTo(1));
+        expect(week, lessThanOrEqualTo(2));
+      });
+      test('9. January 9', () {
+        final int week = DateTime(2023, 1, 9).weekOfYear;
+        expect(week, greaterThanOrEqualTo(1));
+        expect(week, lessThanOrEqualTo(3));
+      });
+      test('10. Leap year week', () {
+        final int week = DateTime(2024, 2, 29).weekOfYear;
+        expect(week, greaterThanOrEqualTo(8));
+        expect(week, lessThanOrEqualTo(10));
+      });
+    });
+
+    group('numOfWeeks', () {
+      test('1. Year returns 52 or 53 weeks', () {
+        final int weeks = DateTime(2023).numOfWeeks(2023);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('2. Year 2020', () {
+        final int weeks = DateTime(2020).numOfWeeks(2020);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('3. Year 2024', () {
+        final int weeks = DateTime(2024).numOfWeeks(2024);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('4. Year 2015', () {
+        final int weeks = DateTime(2015).numOfWeeks(2015);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('5. Year 2000', () {
+        final int weeks = DateTime(2000).numOfWeeks(2000);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('6. Year 2004', () {
+        final int weeks = DateTime(2004).numOfWeeks(2004);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('7. Year 2010', () {
+        final int weeks = DateTime(2010).numOfWeeks(2010);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('8. Year 2009', () {
+        final int weeks = DateTime(2009).numOfWeeks(2009);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('9. Year 2021', () {
+        final int weeks = DateTime(2021).numOfWeeks(2021);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+      test('10. Year 2026', () {
+        final int weeks = DateTime(2026).numOfWeeks(2026);
+        expect(weeks, anyOf(equals(52), equals(53)));
+      });
+    });
+
+    group('weekNumber', () {
+      test('1. Normal mid-year week', () {
+        final int week = DateTime(2023, 6, 15).weekNumber();
+        expect(week, greaterThan(20));
+        expect(week, lessThan(30));
+      });
+      test('2. First week of year', () {
+        final int week = DateTime(2023, 1, 5).weekNumber();
+        expect(week, greaterThanOrEqualTo(1));
+        expect(week, lessThanOrEqualTo(2));
+      });
+      test('3. Last week of year', () {
+        final int week = DateTime(2023, 12, 28).weekNumber();
+        expect(week, greaterThanOrEqualTo(51));
+        expect(week, lessThanOrEqualTo(53));
+      });
+      test('4. Early January week number', () {
+        final int week = DateTime(2023, 1, 1).weekNumber();
+        expect(week, anyOf(equals(1), equals(52), equals(53)));
+      });
+      test('5. Late December week number', () {
+        final int week = DateTime(2020, 12, 31).weekNumber();
+        expect(week, anyOf(equals(1), equals(52), equals(53)));
+      });
+      test('6. December 28', () {
+        final int week = DateTime(2020, 12, 28).weekNumber();
+        expect(week, greaterThanOrEqualTo(51));
+        expect(week, lessThanOrEqualTo(53));
+      });
+      test('7. Leap year week', () {
+        final int week = DateTime(2024, 2, 29).weekNumber();
+        expect(week, greaterThanOrEqualTo(8));
+        expect(week, lessThanOrEqualTo(10));
+      });
+      test('8. Mid-October', () {
+        final int week = DateTime(2023, 10, 15).weekNumber();
+        expect(week, greaterThan(40));
+        expect(week, lessThan(45));
+      });
+      test('9. March 1', () {
+        final int week = DateTime(2023, 3).weekNumber();
+        expect(week, greaterThanOrEqualTo(8));
+        expect(week, lessThanOrEqualTo(10));
+      });
+      test('10. July 4', () {
+        final int week = DateTime(2023, 7, 4).weekNumber();
+        expect(week, greaterThan(25));
+        expect(week, lessThan(30));
+      });
+    });
+
+    group('toSerialString', () {
+      test('1. Basic date time', () {
+        expect(DateTime(2023, 6, 15, 12, 30, 45).toSerialString, '20230615T123045');
+      });
+      test('2. Midnight', () {
+        expect(DateTime(2023, 6, 15).toSerialString, '20230615T000000');
+      });
+      test('3. End of day', () {
+        expect(DateTime(2023, 6, 15, 23, 59, 59).toSerialString, '20230615T235959');
+      });
+      test('4. Single digit month and day', () {
+        expect(DateTime(2023, 1, 5, 9, 8, 7).toSerialString, '20230105T090807');
+      });
+      test('5. New year', () {
+        expect(DateTime(2024).toSerialString, '20240101T000000');
+      });
+      test('6. Leap year date', () {
+        expect(DateTime(2024, 2, 29, 12).toSerialString, '20240229T120000');
+      });
+      test('7. December 31', () {
+        expect(DateTime(2023, 12, 31, 23, 59, 59).toSerialString, '20231231T235959');
+      });
+      test('8. Year with leading zeros', () {
+        expect(DateTime(99, 1, 1, 0, 0, 0).toSerialString, '00990101T000000');
+      });
+      test('9. February date', () {
+        expect(DateTime(2023, 2, 14, 14, 30).toSerialString, '20230214T143000');
+      });
+      test('10. Summer date', () {
+        expect(DateTime(2023, 7, 4, 10, 15, 30).toSerialString, '20230704T101530');
+      });
+    });
+
+    group('toSerialStringDay', () {
+      test('1. Basic date', () {
+        expect(DateTime(2023, 6, 15).toSerialStringDay, '20230615');
+      });
+      test('2. Single digit month', () {
+        expect(DateTime(2023, 1, 15).toSerialStringDay, '20230115');
+      });
+      test('3. Single digit day', () {
+        expect(DateTime(2023, 6, 5).toSerialStringDay, '20230605');
+      });
+      test('4. Both single digit', () {
+        expect(DateTime(2023, 1, 1).toSerialStringDay, '20230101');
+      });
+      test('5. Leap year date', () {
+        expect(DateTime(2024, 2, 29).toSerialStringDay, '20240229');
+      });
+      test('6. December 31', () {
+        expect(DateTime(2023, 12, 31).toSerialStringDay, '20231231');
+      });
+      test('7. New year', () {
+        expect(DateTime(2024).toSerialStringDay, '20240101');
+      });
+      test('8. Time is ignored', () {
+        expect(DateTime(2023, 6, 15, 23, 59, 59).toSerialStringDay, '20230615');
+      });
+      test('9. Year with leading zeros', () {
+        expect(DateTime(99, 1, 1).toSerialStringDay, '00990101');
+      });
+      test('10. October date', () {
+        expect(DateTime(2023, 10, 31).toSerialStringDay, '20231031');
+      });
+    });
   });
 }
