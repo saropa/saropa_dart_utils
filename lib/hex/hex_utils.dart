@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 final RegExp _hexRegex = RegExp(r'^[0-9a-fA-F]+$');
 
 /// Extension methods for [String] to facilitate hexadecimal conversions.
@@ -42,7 +40,6 @@ extension HexExtensions on String {
 
     // Check if the hexadecimal string is valid using a regular expression.
     if (!_hexRegex.hasMatch(this)) {
-      debugPrint('WARNING: Invalid [hexValue]: `$this`');
       return null;
     }
 
@@ -51,9 +48,6 @@ extension HexExtensions on String {
     // mixed case (e.g., '7fffffffffffffff' should equal '7FFFFFFFFFFFFFFF').
     final String upperHex = toUpperCase();
     if (length > 16 || (length == 16 && upperHex.compareTo(_maxInt64Hex) > 0)) {
-      debugPrint(
-        'WARNING: [hexValue] too large to be represented as an int: `$this`',
-      );
       return null;
     }
 

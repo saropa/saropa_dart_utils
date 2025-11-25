@@ -217,55 +217,20 @@ Exit-OnError "Tests failed. Fix test failures before publishing."
 Write-Host "All tests passed." -ForegroundColor Green
 
 #------------------------------------------------------------------------------
-# Step 4: Get and Validate Release Version
+# Step 4: Read Release Version from pubspec.yaml
 #------------------------------------------------------------------------------
 Write-Section "Release Version"
 
-# Show current version from pubspec.yaml
-$currentVersion = (Get-Content pubspec.yaml | Select-String -Pattern "^version:\s*(.+)$").Matches.Groups[1].Value
-Write-Host "Current version: $currentVersion"
-
-$releaseNumber = Read-Host "Enter the new release number (e.g., 0.4.0)"
+# Read version from pubspec.yaml (user should have already updated this)
+$releaseNumber = (Get-Content pubspec.yaml | Select-String -Pattern "^version:\s*(.+)$").Matches.Groups[1].Value
 
 # Validate semantic version format
 if (-not ($releaseNumber -match "^\d+\.\d+\.\d+$")) {
-    Write-Error "Invalid version format. Use semantic versioning: MAJOR.MINOR.PATCH (e.g., 0.4.0)"
+    Write-Error "Invalid version format in pubspec.yaml. Use semantic versioning: MAJOR.MINOR.PATCH (e.g., 0.4.0)"
     exit 1
 }
 
-# Check that new version is different from current
-if ($releaseNumber -eq $currentVersion) {
-    Write-Error "New version ($releaseNumber) is the same as current version. Please specify a different version."
-    exit 1
-}
-
-#------------------------------------------------------------------------------
-# Step 5: Update pubspec.yaml
-#------------------------------------------------------------------------------
-Write-Section "Updating pubspec.yaml"
-
-Write-Host "Updating version: $currentVersion -> $releaseNumber"
-
-$pubspecPath = Join-Path $workingDir "pubspec.yaml"
-$pubspecContent = Get-Content $pubspecPath -Raw
-$updatedContent = $pubspecContent -replace "(?m)^version:\s*.+$", "version: $releaseNumber"
-
-if ($DryRun) {
-    Write-Host "[DRY RUN] Would update pubspec.yaml" -ForegroundColor Yellow
-} else {
-    Set-Content -Path $pubspecPath -Value $updatedContent -NoNewline
-}
-
-# Verify the update worked
-if (-not $DryRun) {
-    $verifyVersion = (Get-Content $pubspecPath | Select-String -Pattern "^version:\s*(.+)$").Matches.Groups[1].Value
-    if ($verifyVersion -ne $releaseNumber) {
-        Write-Error "Failed to update version in pubspec.yaml. Expected '$releaseNumber', found '$verifyVersion'"
-        exit 1
-    }
-}
-
-Write-Host "pubspec.yaml updated successfully." -ForegroundColor Green
+Write-Host "Version to publish: $releaseNumber" -ForegroundColor Green
 
 #------------------------------------------------------------------------------
 # Step 6: Extract Release Notes from CHANGELOG

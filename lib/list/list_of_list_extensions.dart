@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:saropa_dart_utils/list/unique_list_extensions.dart';
 
 extension ListOfListExtension<T> on List<List<T>> {
@@ -61,21 +59,12 @@ extension ListOfListExtension<T> on List<List<T>> {
   bool copy(List<List<T>> destination) {
     // Check row count first
     if (length != destination.length) {
-      debugPrint(
-        'The number of rows in destination (${destination.length}) '
-        'must be the same as this list ($length)',
-      );
       return false;
     }
 
     // Check column count for ALL rows before starting the copy
     for (int i = 0; i < length; i++) {
       if (this[i].length != destination[i].length) {
-        debugPrint(
-          'The number of columns in row `$i` '
-          'of destination (${destination[i].length}) '
-          'must be the same as this list (${this[i].length})',
-        );
         return false;
       }
     }

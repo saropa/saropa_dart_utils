@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// Utility class for number-related operations.
 class NumberUtils {
   /// Returns the maximum of two nullable numbers.
@@ -48,10 +46,6 @@ class NumberUtils {
   /// ```
   static List<int>? generateIntList(int start, int end) {
     if (start > end) {
-      debugPrint(
-        'Invalid [start]: `$start` for '
-        '[end]: `$end`',
-      );
       return null;
     }
 
