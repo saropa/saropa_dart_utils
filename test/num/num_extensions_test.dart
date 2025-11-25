@@ -198,5 +198,91 @@ void main() {
         expect(n.isGreaterThanOne, false);
       });
     });
+
+    group('toDoubleOrNull', () {
+      test('1. Null returns null', () {
+        const num? n = null;
+        expect(n.toDoubleOrNull(), isNull);
+      });
+      test('2. Integer converts to double', () {
+        const num n = 42;
+        expect(n.toDoubleOrNull(), 42.0);
+      });
+      test('3. Double returns double', () {
+        const num n = 3.14;
+        expect(n.toDoubleOrNull(), 3.14);
+      });
+      test('4. Zero converts to 0.0', () {
+        const num n = 0;
+        expect(n.toDoubleOrNull(), 0.0);
+      });
+      test('5. Negative integer', () {
+        const num n = -5;
+        expect(n.toDoubleOrNull(), -5.0);
+      });
+      test('6. Negative double', () {
+        const num n = -3.14;
+        expect(n.toDoubleOrNull(), -3.14);
+      });
+      test('7. Large integer', () {
+        const num n = 1000000;
+        expect(n.toDoubleOrNull(), 1000000.0);
+      });
+      test('8. Small decimal', () {
+        const num n = 0.001;
+        expect(n.toDoubleOrNull(), 0.001);
+      });
+      test('9. Result is double type', () {
+        const num n = 10;
+        expect(n.toDoubleOrNull(), isA<double>());
+      });
+      test('10. Integer one', () {
+        const num n = 1;
+        expect(n.toDoubleOrNull(), 1.0);
+      });
+    });
+
+    group('toIntOrNull', () {
+      test('1. Null returns null', () {
+        const num? n = null;
+        expect(n.toIntOrNull(), isNull);
+      });
+      test('2. Integer returns int', () {
+        const num n = 42;
+        expect(n.toIntOrNull(), 42);
+      });
+      test('3. Double truncates to int', () {
+        const num n = 3.14;
+        expect(n.toIntOrNull(), 3);
+      });
+      test('4. Zero returns 0', () {
+        const num n = 0;
+        expect(n.toIntOrNull(), 0);
+      });
+      test('5. Negative integer', () {
+        const num n = -5;
+        expect(n.toIntOrNull(), -5);
+      });
+      test('6. Negative double truncates', () {
+        const num n = -3.14;
+        expect(n.toIntOrNull(), -3);
+      });
+      test('7. Large integer', () {
+        const num n = 1000000;
+        expect(n.toIntOrNull(), 1000000);
+      });
+      test('8. Double 0.999 truncates to 0', () {
+        const num n = 0.999;
+        expect(n.toIntOrNull(), 0);
+      });
+      test('9. Result is int type', () {
+        const num n = 10.5;
+        expect(n.toIntOrNull(), isA<int>());
+      });
+      test('10. Double 9.9 truncates to 9', () {
+        const num n = 9.9;
+        expect(n.toIntOrNull(), 9);
+      });
+    });
   });
 }

@@ -151,5 +151,139 @@ void main() {
         expect(list.leastOccurrences(), equals((obj3, 1)));
       });
     });
+
+    group('randomElement', () {
+      test('1. Empty list returns null', () {
+        expect(<int>[].randomElement(), isNull);
+      });
+      test('2. Single element returns that element', () {
+        expect(<int>[42].randomElement(), 42);
+      });
+      test('3. Returns element from list', () {
+        final List<int> list = <int>[1, 2, 3, 4, 5];
+        final int? result = list.randomElement();
+        expect(list.contains(result), isTrue);
+      });
+      test('4. Works with strings', () {
+        final List<String> list = <String>['a', 'b', 'c'];
+        final String? result = list.randomElement();
+        expect(list.contains(result), isTrue);
+      });
+      test('5. Works with doubles', () {
+        final List<double> list = <double>[1.1, 2.2, 3.3];
+        final double? result = list.randomElement();
+        expect(list.contains(result), isTrue);
+      });
+      test('6. Result is not null for non-empty list', () {
+        expect(<int>[1, 2, 3].randomElement(), isNotNull);
+      });
+      test('7. Works with custom objects', () {
+        const _ComparableObject obj1 = _ComparableObject(1, 'A');
+        const _ComparableObject obj2 = _ComparableObject(2, 'B');
+        final List<_ComparableObject> list = <_ComparableObject>[obj1, obj2];
+        final _ComparableObject? result = list.randomElement();
+        expect(list.contains(result), isTrue);
+      });
+      test('8. Two elements returns one of them', () {
+        final List<int> list = <int>[1, 2];
+        final int? result = list.randomElement();
+        expect(result == 1 || result == 2, isTrue);
+      });
+      test('9. Works with Set iterable', () {
+        final Set<int> set = <int>{10, 20, 30};
+        final int? result = set.randomElement();
+        expect(set.contains(result), isTrue);
+      });
+      test('10. Large list returns element', () {
+        final List<int> list = List<int>.generate(100, (int i) => i);
+        final int? result = list.randomElement();
+        expect(result, isNotNull);
+        expect(result! >= 0 && result < 100, isTrue);
+      });
+    });
+
+    group('containsAll', () {
+      test('1. Empty list contains empty list', () {
+        expect(<int>[].containsAll(<int>[]), isTrue);
+      });
+      test('2. Non-empty list contains empty list', () {
+        expect(<int>[1, 2, 3].containsAll(<int>[]), isTrue);
+      });
+      test('3. List contains all its elements', () {
+        expect(<int>[1, 2, 3].containsAll(<int>[1, 2, 3]), isTrue);
+      });
+      test('4. List contains subset', () {
+        expect(<int>[1, 2, 3, 4, 5].containsAll(<int>[2, 4]), isTrue);
+      });
+      test('5. List does not contain missing element', () {
+        expect(<int>[1, 2, 3].containsAll(<int>[1, 4]), isFalse);
+      });
+      test('6. Empty list does not contain elements', () {
+        expect(<int>[].containsAll(<int>[1]), isFalse);
+      });
+      test('7. Works with strings', () {
+        expect(<String>['a', 'b', 'c'].containsAll(<String>['a', 'c']), isTrue);
+      });
+      test('8. Works with duplicates', () {
+        expect(<int>[1, 1, 2, 2, 3].containsAll(<int>[1, 2]), isTrue);
+      });
+      test('9. Single element check', () {
+        expect(<int>[5].containsAll(<int>[5]), isTrue);
+      });
+      test('10. Does not contain different elements', () {
+        expect(<int>[1, 2, 3].containsAll(<int>[4, 5, 6]), isFalse);
+      });
+      test('11. Partial match returns false', () {
+        expect(<int>[1, 2].containsAll(<int>[1, 2, 3]), isFalse);
+      });
+      test('12. Order does not matter', () {
+        expect(<int>[3, 2, 1].containsAll(<int>[1, 2, 3]), isTrue);
+      });
+    });
+
+    group('countWhere', () {
+      test('1. Empty list returns 0', () {
+        expect(<int>[].countWhere((int e) => e > 0), 0);
+      });
+      test('2. All match', () {
+        expect(<int>[1, 2, 3, 4, 5].countWhere((int e) => e > 0), 5);
+      });
+      test('3. None match', () {
+        expect(<int>[1, 2, 3].countWhere((int e) => e > 10), 0);
+      });
+      test('4. Some match', () {
+        expect(<int>[1, 2, 3, 4, 5].countWhere((int e) => e > 3), 2);
+      });
+      test('5. Count even numbers', () {
+        expect(<int>[1, 2, 3, 4, 5, 6].countWhere((int e) => e.isEven), 3);
+      });
+      test('6. Count odd numbers', () {
+        expect(<int>[1, 2, 3, 4, 5, 6].countWhere((int e) => e.isOdd), 3);
+      });
+      test('7. Works with strings', () {
+        expect(
+          <String>['apple', 'banana', 'cherry'].countWhere((String s) => s.startsWith('a')),
+          1,
+        );
+      });
+      test('8. Count negative numbers', () {
+        expect(<int>[-2, -1, 0, 1, 2].countWhere((int e) => e < 0), 2);
+      });
+      test('9. Single element matches', () {
+        expect(<int>[5].countWhere((int e) => e == 5), 1);
+      });
+      test('10. Single element does not match', () {
+        expect(<int>[5].countWhere((int e) => e == 10), 0);
+      });
+      test('11. Count with length condition', () {
+        expect(
+          <String>['a', 'bb', 'ccc', 'dddd'].countWhere((String s) => s.length > 2),
+          2,
+        );
+      });
+      test('12. Count duplicates that match', () {
+        expect(<int>[1, 1, 1, 2, 2, 3].countWhere((int e) => e == 1), 3);
+      });
+    });
   });
 }
