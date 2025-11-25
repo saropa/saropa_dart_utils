@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(flutter test:*)"
+      "Bash(flutter test:*)",
+      "Bash(del \"d:\\src\\saropa_dart_utils\\test\\fixes\\algorithm_fixes_test.dart\")"
     ],
     "deny": [],
     "ask": []

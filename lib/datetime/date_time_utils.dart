@@ -312,4 +312,42 @@ class DateTimeUtils {
 
     return daysInMonth[month - 1];
   }
+
+  /// Validates date and time components.
+  ///
+  /// Returns true if all provided components are within valid ranges:
+  /// - year: 0-9999
+  /// - month: 1-12
+  /// - day: 1 to max days in month (requires month to be set)
+  /// - hour: 0-23
+  /// - minute: 0-59
+  /// - second: 0-59
+  /// - millisecond: 0-999
+  /// - microsecond: 0-999
+  ///
+  /// Components that are null are not validated.
+  static bool isValidDateParts({
+    int? year,
+    int? month,
+    int? day,
+    int? hour,
+    int? minute,
+    int? second,
+    int? millisecond,
+    int? microsecond,
+  }) {
+    if (year != null && (year < 0 || year > 9999)) return false;
+    if (month != null && (month < 1 || month > 12)) return false;
+    if (day != null) {
+      if (month == null) return false;
+      final int maxDay = monthDayCount(year: year ?? 2000, month: month);
+      if (day < 1 || day > maxDay) return false;
+    }
+    if (hour != null && (hour < 0 || hour > 23)) return false;
+    if (minute != null && (minute < 0 || minute > 59)) return false;
+    if (second != null && (second < 0 || second > 59)) return false;
+    if (millisecond != null && (millisecond < 0 || millisecond > 999)) return false;
+    if (microsecond != null && (microsecond < 0 || microsecond > 999)) return false;
+    return true;
+  }
 }

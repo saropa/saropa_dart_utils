@@ -135,11 +135,14 @@ void main() {
           expect(date.isAnnualDateInRange(range), true);
         });
 
+        // Updated: The new cross-year logic correctly finds Dec 31, 2023/2024 are
+        // within the range 2023-2025/11/30. Use a narrower range for this test.
         test('returns false when date with year 0 is outside range', () {
           final DateTime date = DateTime(0, 12, 31);
+          // Range: March 1-31, 2023 only - Dec 31 is outside all years in range
           final DateTimeRange range = DateTimeRange(
-            start: DateTime(2023),
-            end: DateTime(2025, 11, 30),
+            start: DateTime(2023, 3),
+            end: DateTime(2023, 3, 31),
           );
           expect(date.isAnnualDateInRange(range), false);
         });
@@ -192,6 +195,70 @@ void main() {
             end: DateTime(2025, 12, 31),
           );
           expect(date.isAnnualDateInRange(range), false);
+        });
+
+        // Tests for cross-year range logic fix
+        test('year=0 date in range spanning year boundary (January)', () {
+          final DateTime date = DateTime(0, 1, 15);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isAnnualDateInRange(range), isTrue);
+        });
+
+        test('year=0 date in range spanning year boundary (December)', () {
+          final DateTime date = DateTime(0, 12, 15);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isAnnualDateInRange(range), isTrue);
+        });
+
+        test('year=0 date outside range spanning year boundary', () {
+          final DateTime date = DateTime(0, 3, 15);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isAnnualDateInRange(range), isFalse);
+        });
+
+        test('year=0 date at exact start boundary', () {
+          final DateTime date = DateTime(0, 12, 1);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isAnnualDateInRange(range, inclusive: true), isTrue);
+        });
+
+        test('year=0 date at exact end boundary', () {
+          final DateTime date = DateTime(0, 2, 28);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isAnnualDateInRange(range, inclusive: true), isTrue);
+        });
+
+        test('year=0 with inclusive=false excludes boundaries', () {
+          final DateTime date = DateTime(0, 12, 1);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isAnnualDateInRange(range, inclusive: false), isFalse);
+        });
+
+        test('year=0 date with multi-year range', () {
+          final DateTime date = DateTime(0, 6, 15);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2022, 1, 1),
+            end: DateTime(2024, 12, 31),
+          );
+          expect(date.isAnnualDateInRange(range), isTrue);
         });
       });
 
@@ -1193,6 +1260,57 @@ void main() {
             end: DateTime(2023, 6, 30),
           );
           expect(date.isBetweenRange(range), isFalse);
+        });
+
+        // Tests for inclusive parameter forwarding fix
+        test('inclusive=false excludes start date', () {
+          final DateTime date = DateTime(2024, 6, 1);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2024, 6, 1),
+            end: DateTime(2024, 6, 30),
+          );
+          expect(date.isBetweenRange(range, inclusive: false), isFalse);
+        });
+
+        test('inclusive=false excludes end date', () {
+          final DateTime date = DateTime(2024, 6, 30);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2024, 6, 1),
+            end: DateTime(2024, 6, 30),
+          );
+          expect(date.isBetweenRange(range, inclusive: false), isFalse);
+        });
+
+        test('inclusive=false includes middle date', () {
+          final DateTime date = DateTime(2024, 6, 15);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2024, 6, 1),
+            end: DateTime(2024, 6, 30),
+          );
+          expect(date.isBetweenRange(range, inclusive: false), isTrue);
+        });
+
+        test('null range returns false', () {
+          final DateTime date = DateTime(2024, 6, 15);
+          expect(date.isBetweenRange(null), isFalse);
+        });
+
+        test('handles cross-year range with inclusive=true', () {
+          final DateTime date = DateTime(2024, 1, 1);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2023, 12, 1),
+            end: DateTime(2024, 2, 28),
+          );
+          expect(date.isBetweenRange(range, inclusive: true), isTrue);
+        });
+
+        test('handles single-day range with inclusive=true', () {
+          final DateTime date = DateTime(2024, 6, 15);
+          final DateTimeRange range = DateTimeRange(
+            start: DateTime(2024, 6, 15),
+            end: DateTime(2024, 6, 15),
+          );
+          expect(date.isBetweenRange(range, inclusive: true), isTrue);
         });
       });
 

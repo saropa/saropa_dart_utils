@@ -25,6 +25,14 @@ final RegExp _splitCapitalizedUnicodeWithNumbersRegex = RegExp(
   unicode: true,
 );
 
+final RegExp _singleCharWordRegex = RegExp(r'\b\w\b');
+
+final RegExp _anyDigitsRegex = RegExp(r'\d');
+
+final RegExp _curlyBracesRegex = RegExp(r'\{.+\}');
+
+final RegExp _lineBreakRegex = RegExp('\n');
+
 /// Extensions for presentation, like adding quotes, truncating text, and formatting.
 extension StringExtensions on String {
   static const String accentedQuoteOpening = '‘';
@@ -68,6 +76,43 @@ extension StringExtensions on String {
   /// For not breaking words into newline at hyphen in Text
   // ref https://stackoverflow.com/questions/59441148/flutter-no-breaking-words-into-newline-at-hyphen-in-text
   static const String nonBreakingHyphen = '\u2011';
+
+  /// Bullet point character (•).
+  static const String bullet = '\u2022';
+
+  /// Alias for [bullet].
+  static const String dot = bullet;
+
+  /// A dot with spaces for joining items (e.g., "Item 1 • Item 2").
+  static const String dotJoiner = ' $bullet ';
+
+  /// Common word-ending characters for text processing.
+  static const List<String> commonWordEndings = <String>[
+    ' ',
+    '.',
+    ',',
+    '?',
+    '!',
+    ':',
+    ';',
+    '{',
+    '}',
+    '[',
+    ']',
+    '(',
+    ')',
+    '-',
+    hyphen,
+    '"',
+    "'",
+    ellipsis,
+    dot,
+    accentedQuoteOpening,
+    accentedQuoteClosing,
+    accentedDoubleQuoteOpening,
+    accentedDoubleQuoteClosing,
+    newLine,
+  ];
 
   /// Wraps the string with the given [before] and [after] strings.
   String wrap({String? before, String? after}) {
@@ -574,5 +619,304 @@ extension StringExtensions on String {
 
     // If the strings are identical, return an empty string.
     return '';
+  }
+
+  /// The Unicode replacement character code point for invalid sequences.
+  static const int _invalidUnicodeReplacementRuneCode = 56327;
+
+  /// Returns true if this string contains invalid Unicode characters.
+  bool get hasInvalidUnicode {
+    if (isEmpty) return false;
+    return runes.any((int r) => r == _invalidUnicodeReplacementRuneCode);
+  }
+
+  /// Removes all invalid Unicode replacement characters.
+  String removeInvalidUnicode() {
+    if (isEmpty) return this;
+    final StringBuffer buffer = StringBuffer();
+    for (int r in runes.where((int e) => e != _invalidUnicodeReplacementRuneCode)) {
+      buffer.write(String.fromCharCode(r));
+    }
+    return buffer.toString();
+  }
+
+  /// Returns true if this single-character string is a vowel.
+  bool isVowel() {
+    if (isEmpty || length != 1) return false;
+    switch (toLowerCase()) {
+      case 'a':
+      case 'e':
+      case 'i':
+      case 'o':
+      case 'u':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /// Returns true if this string contains any digit characters.
+  bool hasAnyDigits() => contains(_anyDigitsRegex);
+
+  /// Gets the last [len] characters of this string, handling Unicode correctly.
+  ///
+  /// Returns the full string if [len] is greater than the string length.
+  String last(int len) {
+    if (isEmpty || len <= 0) return '';
+    if (len >= runes.length) return this;
+    final List<int> runeList = runes.toList().sublist(runes.length - len);
+    return String.fromCharCodes(runeList);
+  }
+
+  /// Returns a random character from this string.
+  String getRandomChar() {
+    if (isEmpty) return '';
+    final int index = DateTime.now().microsecondsSinceEpoch % length;
+    return this[index];
+  }
+
+  /// Repeats this string [count] times.
+  String repeat(int count) {
+    if (isEmpty || count <= 0) return '';
+    return List<String>.filled(count, this).join();
+  }
+
+  /// Replaces all occurrences of [pattern] with an empty string.
+  String removeAll(Pattern? pattern) {
+    if (pattern == null) return this;
+    return replaceAll(pattern, '');
+  }
+
+  /// Replaces the last [n] characters with [replacementChar].
+  String replaceLastNCharacters(int n, String replacementChar) {
+    if (n <= 0 || n > length) return this;
+    return substring(0, length - n) + replacementChar * n;
+  }
+
+  /// Replaces hyphens and spaces with non-breaking equivalents.
+  String makeNonBreaking() => replaceAll('-', nonBreakingHyphen)
+      .replaceAll(' ', nonBreakingSpace);
+
+  /// Removes single-character words from this string.
+  String? removeSingleCharacterWords({bool trim = true, bool removeMultipleSpaces = true}) {
+    if (isEmpty) return this;
+    String result = removeAll(_singleCharWordRegex);
+    if (removeMultipleSpaces) {
+      result = result.replaceAll(RegExp(r'\s+'), ' ');
+    }
+    if (trim) {
+      result = result.trim();
+    }
+    return result.isEmpty ? null : result;
+  }
+
+  /// Replaces line breaks with a specified string.
+  String replaceLineBreaks(String? replacement, {bool deduplicate = true}) {
+    final String result = replaceAll(_lineBreakRegex, replacement ?? '');
+    if (deduplicate && replacement != null && replacement.isNotEmpty) {
+      return result.replaceAll(replacement + replacement, replacement);
+    }
+    return result;
+  }
+
+  /// Removes leading and trailing occurrences of [find].
+  String? removeLeadingAndTrailing(String? find, {bool trim = false}) {
+    if (isEmpty || find == null || find.isEmpty) return this;
+    String value = trim ? this.trim() : this;
+    while (value.startsWith(find)) {
+      value = value.substring(find.length);
+      if (trim) value = value.trim();
+    }
+    while (value.endsWith(find)) {
+      value = value.substring(0, value.length - find.length);
+      if (trim) value = value.trim();
+    }
+    return value.isEmpty ? null : value;
+  }
+
+  /// Returns the first word of this string.
+  String? firstWord() {
+    if (isEmpty) return null;
+    return words()?.firstOrNull;
+  }
+
+  /// Returns the second word of this string.
+  String? secondWord() {
+    if (isEmpty) return null;
+    final List<String>? wordList = words();
+    if (wordList == null || wordList.length < 2) return null;
+    return wordList[1];
+  }
+
+  /// Counts occurrences of [find] in this string.
+  int count(String find) {
+    if (find.isEmpty) return 0;
+    return split(find).length - 1;
+  }
+
+  /// Extracts only letter characters (A-Z, a-z) from this string.
+  String lettersOnly() {
+    if (isEmpty) return '';
+    final StringBuffer result = StringBuffer();
+    for (int rune in runes) {
+      if ((rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122)) {
+        result.write(String.fromCharCode(rune));
+      }
+    }
+    return result.toString();
+  }
+
+  /// Extracts only lowercase letter characters (a-z) from this string.
+  String lowerCaseLettersOnly() {
+    if (isEmpty) return '';
+    final StringBuffer result = StringBuffer();
+    for (int rune in runes) {
+      if (rune >= 97 && rune <= 122) {
+        result.write(String.fromCharCode(rune));
+      }
+    }
+    return result.toString();
+  }
+
+  /// Returns the first [limit] lines of this string.
+  String firstLines(int limit) {
+    if (isEmpty || limit <= 0) return '';
+    final List<String> lines = split(newLine);
+    return lines.take(limit).join(newLine);
+  }
+
+  /// Trims each line and removes empty lines.
+  String trimLines() => split(newLine)
+        .map((String line) => line.trim())
+        .where((String line) => line.isNotEmpty)
+        .join(newLine);
+
+  /// Prefixes every line with [insertText].
+  String multiLinePrefix(String insertText, {bool prefixEmptyStrings = false}) {
+    if (insertText.isEmpty) return this;
+    if (isEmpty) return prefixEmptyStrings ? insertText : '';
+    return insertText + replaceAll(newLine, newLine + insertText);
+  }
+
+  /// Returns true if this string ends with any character in [find].
+  bool endsWithAny(List<String> find) {
+    if (isEmpty || find.isEmpty) return false;
+    final String lastChar = last(1);
+    return find.any((String e) => e == lastChar);
+  }
+
+  /// Returns true if this string ends with punctuation.
+  bool endsWithPunctuation() => endsWithAny(const <String>['.', '?', '!']);
+
+  /// Returns true if this string equals any item in [list].
+  bool isAny(List<String> list) {
+    if (isEmpty || list.isEmpty) return false;
+    return list.any((String e) => e == this);
+  }
+
+  /// Finds the index of the second occurrence of [char].
+  int secondIndex(String char) {
+    if (char.isEmpty || isEmpty) return -1;
+    final int firstIdx = indexOf(char);
+    if (firstIdx == -1) return -1;
+    return indexOf(char, firstIdx + 1);
+  }
+
+  /// Extracts all text within curly braces.
+  List<String>? extractCurlyBraces() {
+    final List<String> matches = _curlyBracesRegex
+        .allMatches(this)
+        .map((Match m) => m[0])
+        .whereType<String>()
+        .toList();
+    return matches.isEmpty ? null : matches;
+  }
+
+  /// Appends [value] only if this string is not empty.
+  String appendNotEmpty(String value) => isEmpty ? '' : this + value;
+
+  /// Prepends [value] only if this string is not empty.
+  String prefixNotEmpty(String? value) {
+    if (isEmpty || value == null || value.isEmpty) return this;
+    return value + this;
+  }
+
+  /// Returns 'a' or 'an' based on the first character (for English grammar).
+  String grammarArticle() {
+    if (isEmpty) return '';
+    switch (this[0].toLowerCase()) {
+      case 'a':
+      case 'e':
+      case 'i':
+      case 'o':
+      case 'u':
+        return 'an';
+      default:
+        return 'a';
+    }
+  }
+
+  /// Returns the possessive form of this string.
+  String possess({bool isLocaleUS = true}) {
+    if (isEmpty) return this;
+    if (isLocaleUS && lastChars(1) == 's') {
+      return "$this'";
+    }
+    return "$this's";
+  }
+
+  /// Returns the plural form of this string.
+  String pluralize(num? count, {bool simple = false}) {
+    if (isEmpty || count == 1 || length == 1) return this;
+    if (simple) return '${this}s';
+
+    final String lastChar = lastChars(1);
+    switch (lastChar) {
+      case 's':
+      case 'x':
+      case 'z':
+        return '${this}es';
+      case 'y':
+        if (length > 2 && this[length - 2].isVowel()) return '${this}s';
+        return '${substring(0, length - 1)}ies';
+    }
+
+    final String lastTwo = lastChars(2);
+    if (lastTwo == 'sh' || lastTwo == 'ch') return '${this}es';
+    return '${this}s';
+  }
+
+  /// Creates an obscured version of this string.
+  String? obscureText({String char = '•', int obscureLength = 3}) {
+    if (isEmpty) return null;
+    final int seed = DateTime.now().microsecondsSinceEpoch;
+    final int extraLength = (seed % (2 * obscureLength + 1)) - obscureLength;
+    final int finalLength = length + extraLength;
+    return char * (finalLength > 0 ? finalLength : 1);
+  }
+
+  /// Truncates with ellipsis at both ends.
+  String trimWithEllipsis({int minLength = 5}) {
+    if (length < minLength) return ellipsis;
+    if (length < (minLength * 2) + 2) {
+      return substring(0, minLength) + ellipsis;
+    }
+    return substring(0, minLength) + ellipsis + substring(length - minLength);
+  }
+
+  /// Collapses a multiline string into a single line with optional truncation.
+  String collapseMultilineString({required int cropLength, bool appendEllipsis = true}) {
+    if (isEmpty) return this;
+    final String collapsed = replaceAll(newLine, ' ').replaceAll('  ', ' ');
+    if (collapsed.length <= cropLength) return collapsed.trim();
+
+    String cropped = collapsed.substring(0, cropLength + 1);
+    while (cropped.isNotEmpty && !cropped.endsWithAny(commonWordEndings)) {
+      cropped = cropped.substring(0, cropped.length - 1);
+    }
+    if (cropped.isNotEmpty) {
+      cropped = cropped.substring(0, cropped.length - 1).trim();
+    }
+    return appendEllipsis ? cropped + ellipsis : cropped;
   }
 }

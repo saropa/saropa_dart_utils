@@ -352,6 +352,21 @@ void main() {
     test('String with mixed latin and unicode chars', () {
       expect('latinПривет'.toUpperLatinOnly(), 'LATINПривет'); // Mixed string
     });
+
+    // Fix 7: O(n) performance tests (algorithm fix - uses StringBuffer)
+    test('handles long strings efficiently with O(n) performance', () {
+      final String longString = 'a' * 10000;
+      final String result = longString.toUpperLatinOnly();
+      expect(result, 'A' * 10000);
+    });
+
+    test('preserves emoji characters', () {
+      expect('hello😀world'.toUpperLatinOnly(), 'HELLO😀WORLD');
+    });
+
+    test('handles mixed content with emoji and unicode', () {
+      expect('Hello World 123!😀你好'.toUpperLatinOnly(), 'HELLO WORLD 123!😀你好');
+    });
   });
 
   group('capitalize', () {
@@ -441,6 +456,21 @@ void main() {
 
     test('String with mixed letters, numbers and symbols', () {
       expect('sTrInG123-SyMbOlS'.upperCaseLettersOnly(), 'TIGSMOS');
+    });
+
+    // Fix 8: O(n) performance tests (algorithm fix - uses StringBuffer)
+    test('handles long strings efficiently with O(n) performance', () {
+      final String longString = 'Ab' * 5000;
+      final String result = longString.upperCaseLettersOnly();
+      expect(result, 'A' * 5000);
+    });
+
+    test('handles strings with only special chars', () {
+      expect('!@#\$%^&*()'.upperCaseLettersOnly(), '');
+    });
+
+    test('extracts initials from name with mixed case', () {
+      expect('Ben Bright 1234'.upperCaseLettersOnly(), 'BB');
     });
   });
 

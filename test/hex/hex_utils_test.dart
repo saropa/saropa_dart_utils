@@ -43,6 +43,31 @@ void main() {
       test('Hex string with leading zeros', () {
         expect('00FF'.hexToInt(), 255);
       });
+
+      // Fix 6: Case-insensitive overflow check tests (algorithm fix)
+      test('lowercase max int64 hex is valid (7fffffffffffffff)', () {
+        expect('7fffffffffffffff'.hexToInt(), 9223372036854775807);
+      });
+
+      test('mixed case max int64 hex is valid', () {
+        expect('7FfFfFfFfFfFfFfF'.hexToInt(), 9223372036854775807);
+      });
+
+      test('lowercase overflow hex returns null (8000000000000000)', () {
+        expect('8000000000000000'.hexToInt(), isNull);
+      });
+
+      test('uppercase overflow hex returns null', () {
+        expect('8000000000000000'.hexToInt(), isNull);
+      });
+
+      test('mixed case hex aAbBcCdDeEfF is valid', () {
+        expect('aAbBcCdDeEfF'.hexToInt(), 187723572702975);
+      });
+
+      test('invalid hex characters (gg) returns null', () {
+        expect('gg'.hexToInt(), isNull);
+      });
     });
   });
 

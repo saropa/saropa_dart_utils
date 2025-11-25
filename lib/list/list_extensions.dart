@@ -13,7 +13,7 @@ extension ListExtensions<T> on List<T> {
   /// rather than converting to sets (which would lose duplicate count information).
   ///
   /// Args:
-  ///   other (List<T>?): The list to compare against. Returns `false` if null.
+  ///   other (`List<T>?`): The list to compare against. Returns `false` if null.
   ///
   /// Returns:
   ///   bool: `true` if both lists contain the same elements with the same
