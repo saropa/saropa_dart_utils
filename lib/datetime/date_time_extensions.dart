@@ -799,4 +799,63 @@ extension DateTimeExtensions on DateTime {
 
     return age;
   }
+
+  /// Returns the most recent Sunday before or on this date.
+  DateTime get mostRecentSunday => mostRecentWeekday(DateTime.sunday);
+
+  /// Returns the most recent occurrence of the specified weekday.
+  ///
+  /// Args:
+  ///   weekdayTarget: The target weekday (1 = Monday, 7 = Sunday).
+  ///
+  /// Returns:
+  ///   The most recent date that falls on the target weekday.
+  DateTime mostRecentWeekday(int weekdayTarget) =>
+      DateTime(year, month, day - (weekday - weekdayTarget) % 7);
+
+  /// Returns the day of the year (1-366).
+  int get dayOfYear {
+    final DateTime jan1 = DateTime(year);
+    return difference(jan1).inDays + 1;
+  }
+
+  /// Returns the ISO week number of the year.
+  int get weekOfYear => ((dayOfYear - weekday + 10) / 7).floor();
+
+  /// Returns the number of ISO weeks in the specified year.
+  int numOfWeeks(int targetYear) {
+    final DateTime dec28 = DateTime(targetYear, DateTime.december, 28);
+    final DateTime jan1 = DateTime(targetYear);
+    final int dayOfDec28 = dec28.difference(jan1).inDays + 1;
+    return ((dayOfDec28 - dec28.weekday + 10) / 7).floor();
+  }
+
+  /// Returns the ISO week number, handling year boundaries correctly.
+  ///
+  /// If the week number is less than 1, returns the last week of the previous year.
+  /// If the week number exceeds the number of weeks in the year, returns 1.
+  int weekNumber() {
+    if (weekOfYear < 1) return numOfWeeks(year - 1);
+    if (weekOfYear > numOfWeeks(year)) return 1;
+    return weekOfYear;
+  }
+
+  /// Converts this DateTime to a serial string format (yyyyMMdd'T'HHmmss).
+  String? get toSerialString {
+    final String y = year.toString().padLeft(4, '0');
+    final String m = month.toString().padLeft(2, '0');
+    final String d = day.toString().padLeft(2, '0');
+    final String h = hour.toString().padLeft(2, '0');
+    final String min = minute.toString().padLeft(2, '0');
+    final String s = second.toString().padLeft(2, '0');
+    return '$y$m${d}T$h$min$s';
+  }
+
+  /// Converts this DateTime to a serial day string format (yyyyMMdd).
+  String? get toSerialStringDay {
+    final String y = year.toString().padLeft(4, '0');
+    final String m = month.toString().padLeft(2, '0');
+    final String d = day.toString().padLeft(2, '0');
+    return '$y$m$d';
+  }
 }

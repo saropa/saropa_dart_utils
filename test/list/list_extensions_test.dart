@@ -73,6 +73,37 @@ void main() {
         final List<Object> listB = <Object>[3, 1, 'b']; // 'b' is different from 'a'
         expect(listA.equalsIgnoringOrder(listB), isFalse);
       });
+
+      // Fix 5: Duplicate count handling tests (algorithm fix)
+      test('should return false when duplicate counts differ for same unique elements', () {
+        // [1, 1, 2] has two 1s and one 2
+        // [1, 2, 2] has one 1 and two 2s
+        expect(<int>[1, 1, 2].equalsIgnoringOrder(<int>[1, 2, 2]), isFalse);
+      });
+
+      test('should return false when duplicate counts differ with same length', () {
+        // [1, 1, 1, 2] has three 1s and one 2
+        // [1, 2, 2, 2] has one 1 and three 2s
+        expect(<int>[1, 1, 1, 2].equalsIgnoringOrder(<int>[1, 2, 2, 2]), isFalse);
+      });
+
+      test('should return true for lists with same null element counts', () {
+        expect(
+          <int?>[1, null, null].equalsIgnoringOrder(<int?>[null, 1, null]),
+          isTrue,
+        );
+      });
+
+      test('should return false for lists with different null element counts', () {
+        expect(
+          <int?>[1, null, 2].equalsIgnoringOrder(<int?>[null, null, 1]),
+          isFalse,
+        );
+      });
+
+      test('should return true for lists with multiple duplicates in different order', () {
+        expect(<int>[1, 1, 2, 2, 3].equalsIgnoringOrder(<int>[3, 2, 1, 2, 1]), isTrue);
+      });
     });
 
     group('topOccurrence', () {

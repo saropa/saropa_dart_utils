@@ -111,4 +111,10 @@ extension NumberNullableExtensions on num? {
   /// num? n5 = -3; n5.isGreaterThanOne; // Returns false
   /// ```
   bool get isGreaterThanOne => this != null && this! > 1;
+
+  /// Converts this nullable num to a double, or returns null if null.
+  double? toDoubleOrNull() => this?.toDouble();
+
+  /// Converts this nullable num to an int, or returns null if null.
+  int? toIntOrNull() => this?.toInt();
 }

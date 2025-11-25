@@ -85,25 +85,53 @@ void main() {
       });
     });
 
+    // Note: These tests use average days per year (365.25) and month (30.4375)
+    // to account for leap years, providing more accurate calculations.
     group('convertDaysToYearsAndMonths', () {
-      test('returns correct string for 365 days', () {
-        expect(DateTimeUtils.convertDaysToYearsAndMonths(365), '1 year');
+      test('returns correct string for 366 days (1 year with leap year avg)', () {
+        // 366 days / 365.25 = 1.002 years = 1 year
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(366), '1 year');
       });
 
-      test('returns correct string for 730 days (2 years)', () {
-        expect(DateTimeUtils.convertDaysToYearsAndMonths(730), '2 years');
+      test('returns correct string for 365 days (11 months with leap year avg)', () {
+        // 365 days / 365.25 = 0.999 years = 11 months
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(365), '11 months');
       });
 
-      test('returns correct string for 30 days (1 month)', () {
-        expect(DateTimeUtils.convertDaysToYearsAndMonths(30), '1 month');
+      test('returns correct string for 731 days (2 years with leap year avg)', () {
+        // 731 days / 365.25 = 2.00 years = 2 years
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(731), '2 years');
       });
 
-      test('returns correct string for 60 days (2 months)', () {
-        expect(DateTimeUtils.convertDaysToYearsAndMonths(60), '2 months');
+      test('returns correct string for 31 days (1 month with avg days/month)', () {
+        // 31 days / 30.4375 = 1.02 months = 1 month
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(31), '1 month');
+      });
+
+      test('returns correct string for 61 days (2 months with avg days/month)', () {
+        // 61 days / 30.4375 = 2.00 months = 2 months
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(61), '2 months');
       });
 
       test('returns correct string for a combination of years and months', () {
+        // 400 days: 400 / 365.25 = 1.09 years = 1 year, remaining ~34 days = 1 month
         expect(DateTimeUtils.convertDaysToYearsAndMonths(400), '1 year and 1 month');
+      });
+
+      test('returns null for null input', () {
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(null), isNull);
+      });
+
+      test('returns null for 0 days', () {
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(0), isNull);
+      });
+
+      test('returns null for negative days', () {
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(-10), isNull);
+      });
+
+      test('returns 0 days for small numbers', () {
+        expect(DateTimeUtils.convertDaysToYearsAndMonths(10), '0 days');
       });
     });
 

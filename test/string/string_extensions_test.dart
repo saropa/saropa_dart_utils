@@ -109,9 +109,10 @@ void main() {
       '4. String with multiple spaces between words',
       () => expect('hello   world'.truncateWithEllipsisPreserveWords(8), 'hello…'),
     );
+    // Updated: Now returns truncated content instead of just '…' when first word is longer than cutoff
     test(
       '5. Cutoff is shorter than the first word',
-      () => expect('documentation'.truncateWithEllipsisPreserveWords(5), '…'),
+      () => expect('documentation'.truncateWithEllipsisPreserveWords(5), 'docum…'),
     );
     test(
       '6. String with leading space',
@@ -130,9 +131,35 @@ void main() {
       '9. Null cutoff value',
       () => expect('a string'.truncateWithEllipsisPreserveWords(null), 'a string'),
     );
+    // Updated: Now returns truncated content instead of just '…' when first word is longer than cutoff
     test(
       '10. Single long word string',
-      () => expect('supercalifragilisticexpialidocious'.truncateWithEllipsisPreserveWords(10), '…'),
+      () => expect('supercalifragilisticexpialidocious'.truncateWithEllipsisPreserveWords(10), 'supercalif…'),
+    );
+
+    // Fix 9: Additional algorithm fix tests
+    test(
+      '11. Empty string returns empty',
+      () => expect(''.truncateWithEllipsisPreserveWords(10), ''),
+    );
+    test(
+      '12. Zero cutoff returns original string',
+      () => expect('Hello World'.truncateWithEllipsisPreserveWords(0), 'Hello World'),
+    );
+    test(
+      '13. Negative cutoff returns original string',
+      () => expect('Hello World'.truncateWithEllipsisPreserveWords(-5), 'Hello World'),
+    );
+    test(
+      '14. String exactly at cutoff length',
+      () => expect('Hello'.truncateWithEllipsisPreserveWords(5), 'Hello'),
+    );
+    test(
+      '15. First word exceeds cutoff returns truncated content',
+      () => expect(
+        'Pneumonoultramicroscopicsilicovolcanoconiosis is long'.truncateWithEllipsisPreserveWords(10),
+        'Pneumonoul…',
+      ),
     );
   });
 
@@ -893,7 +920,8 @@ void main() {
     test('4. Not found', () => expect('Hello World'.containsIgnoreCase('xyz'), isFalse));
     test('5. Identical string', () => expect('Hello'.containsIgnoreCase('Hello'), isTrue));
     test('6. Case mismatch', () => expect('Hello'.containsIgnoreCase('hELLo'), isTrue));
-    test('7. Empty `other` parameter', () => expect('Hello'.containsIgnoreCase(''), isFalse));
+    // Updated: Empty string is always contained (standard string semantics)
+    test('7. Empty `other` parameter', () => expect('Hello'.containsIgnoreCase(''), isTrue));
     test('8. Null `other` parameter', () => expect('Hello'.containsIgnoreCase(null), isFalse));
     test(
       '9. Empty string does not contain anything',
@@ -902,6 +930,20 @@ void main() {
     test(
       '10. `other` is longer than the string',
       () => expect('Hi'.containsIgnoreCase('Hello'), isFalse),
+    );
+
+    // Fix 10: Additional algorithm fix tests (empty string semantics)
+    test(
+      '11. Empty string is contained in empty string',
+      () => expect(''.containsIgnoreCase(''), isTrue),
+    );
+    test(
+      '12. Lowercase search in uppercase text',
+      () => expect('HELLO WORLD'.containsIgnoreCase('hello'), isTrue),
+    );
+    test(
+      '13. Mixed case search in mixed case text',
+      () => expect('HeLLo WoRLd'.containsIgnoreCase('hello world'), isTrue),
     );
   });
 

@@ -231,6 +231,79 @@ void main() {
         true,
       ); // December has a Sunday on Dec.31
     });
+
+    // Cross-year range tests (Fix 3: algorithm fix for cross-year validation)
+    test('January month in range spanning Nov to Feb', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2023, 11, 15),
+        end: DateTime(2024, 2, 15),
+      );
+      // 2nd Monday of January 2024 is January 8
+      expect(range.isNthDayOfMonthInRange(2, DateTime.monday, 1), isTrue);
+    });
+
+    test('October month not in range spanning Nov to Feb', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2023, 11, 15),
+        end: DateTime(2024, 2, 15),
+      );
+      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 10), isFalse);
+    });
+
+    test('December month in range spanning Nov to Feb', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2023, 11, 15),
+        end: DateTime(2024, 2, 15),
+      );
+      // 1st Monday of December 2023 is December 4
+      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 12), isTrue);
+    });
+
+    test('invalid month 13 returns false', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2023),
+        end: DateTime(2023, 12, 31),
+      );
+      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 13), isFalse);
+    });
+
+    test('month 0 returns false', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2023),
+        end: DateTime(2023, 12, 31),
+      );
+      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 0), isFalse);
+    });
+
+    test('inclusive=false excludes boundary dates', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2024, 1, 8), // 2nd Monday of Jan
+        end: DateTime(2024, 1, 31),
+      );
+      expect(
+        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, inclusive: false),
+        isFalse,
+      );
+    });
+
+    test('inclusive=true includes boundary dates', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2024, 1, 8), // 2nd Monday of Jan
+        end: DateTime(2024, 1, 31),
+      );
+      expect(
+        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, inclusive: true),
+        isTrue,
+      );
+    });
+
+    test('range within same month finds occurrence', () {
+      final DateTimeRange<DateTime> range = DateTimeRange(
+        start: DateTime(2024),
+        end: DateTime(2024, 1, 31),
+      );
+      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 1), isTrue);
+    });
   });
 
   group('DateTimeCheck extension', () {
@@ -259,20 +332,38 @@ void main() {
         expect(range.inRange(DateTime(2025, 2)), isFalse);
       });
 
-      test('returns false when date is equal to start', () {
+      // Updated: inRange now defaults to inclusive=true
+      test('returns true when date is equal to start (inclusive default)', () {
         final DateTimeRange<DateTime> range = DateTimeRange(
           start: DateTime(2025),
           end: DateTime(2025, 1, 31),
         );
-        expect(range.inRange(DateTime(2025)), isFalse);
+        expect(range.inRange(DateTime(2025)), isTrue);
       });
 
-      test('returns false when date is equal to end', () {
+      test('returns false when date is equal to start with inclusive=false', () {
         final DateTimeRange<DateTime> range = DateTimeRange(
           start: DateTime(2025),
           end: DateTime(2025, 1, 31),
         );
-        expect(range.inRange(DateTime(2025, 1, 31)), isFalse);
+        expect(range.inRange(DateTime(2025), inclusive: false), isFalse);
+      });
+
+      // Updated: inRange now defaults to inclusive=true
+      test('returns true when date is equal to end (inclusive default)', () {
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: DateTime(2025),
+          end: DateTime(2025, 1, 31),
+        );
+        expect(range.inRange(DateTime(2025, 1, 31)), isTrue);
+      });
+
+      test('returns false when date is equal to end with inclusive=false', () {
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: DateTime(2025),
+          end: DateTime(2025, 1, 31),
+        );
+        expect(range.inRange(DateTime(2025, 1, 31), inclusive: false), isFalse);
       });
 
       test('returns true for date one millisecond after start', () {
@@ -315,6 +406,32 @@ void main() {
         );
         expect(range.inRange(DateTime(2026, 1, 15)), isFalse);
       });
+
+      // Fix 4: Additional inclusive boundary semantics tests
+      test('middle date is always in range regardless of inclusive flag', () {
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: DateTime(2024, 6, 1),
+          end: DateTime(2024, 6, 30),
+        );
+        expect(range.inRange(DateTime(2024, 6, 15), inclusive: false), isTrue);
+        expect(range.inRange(DateTime(2024, 6, 15), inclusive: true), isTrue);
+      });
+
+      test('single-day range with inclusive=true includes the date', () {
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: DateTime(2024, 6, 15),
+          end: DateTime(2024, 6, 15),
+        );
+        expect(range.inRange(DateTime(2024, 6, 15), inclusive: true), isTrue);
+      });
+
+      test('single-day range with inclusive=false excludes the date', () {
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: DateTime(2024, 6, 15),
+          end: DateTime(2024, 6, 15),
+        );
+        expect(range.inRange(DateTime(2024, 6, 15), inclusive: false), isFalse);
+      });
     });
 
     group('isNowInRange', () {
@@ -348,7 +465,8 @@ void main() {
         expect(range.isNowInRange(now: now), isFalse);
       });
 
-      test('returns false when current date is equal to start', () {
+      // Updated: isNowInRange now defaults to inclusive=true
+      test('returns true when current date is equal to start (inclusive default)', () {
         final DateTime now = DateTime.now();
 
         final DateTimeRange<DateTime> range = DateTimeRange(
@@ -357,16 +475,37 @@ void main() {
           end: now.add(const Duration(days: 1)),
         );
 
-        expect(range.isNowInRange(now: now), isFalse);
+        expect(range.isNowInRange(now: now), isTrue);
       });
 
-      test('returns false when current date is equal to end', () {
+      test('returns false when current date is equal to start with inclusive=false', () {
+        final DateTime now = DateTime.now();
+
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: now,
+          end: now.add(const Duration(days: 1)),
+        );
+
+        expect(range.isNowInRange(now: now, inclusive: false), isFalse);
+      });
+
+      // Updated: isNowInRange now defaults to inclusive=true
+      test('returns true when current date is equal to end (inclusive default)', () {
         final DateTime now = DateTime.now();
         final DateTimeRange<DateTime> range = DateTimeRange(
           start: now.subtract(const Duration(days: 1)),
           end: now,
         );
-        expect(range.isNowInRange(now: now), isFalse);
+        expect(range.isNowInRange(now: now), isTrue);
+      });
+
+      test('returns false when current date is equal to end with inclusive=false', () {
+        final DateTime now = DateTime.now();
+        final DateTimeRange<DateTime> range = DateTimeRange(
+          start: now.subtract(const Duration(days: 1)),
+          end: now,
+        );
+        expect(range.isNowInRange(now: now, inclusive: false), isFalse);
       });
 
       test('returns true when current date is one millisecond '

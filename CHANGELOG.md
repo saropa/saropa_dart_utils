@@ -25,7 +25,34 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.3+Christchurch (Latest)
+## 0.5.4+Auckland (Latest)
+
+### Algorithm Fixes & Improvements
+
+🐛 **DateTime Extensions**
+- Fixed `isBetweenRange` to properly forward the `inclusive` parameter (was being ignored)
+- Fixed `isAnnualDateInRange` to correctly handle date ranges spanning year boundaries (e.g., Dec-Feb ranges)
+- Fixed `isNthDayOfMonthInRange` cross-year range validation that incorrectly rejected valid months
+- Fixed `inRange` and `isNowInRange` to default to inclusive boundary semantics (more intuitive behavior)
+
+🐛 **List Extensions**
+- Fixed `equalsIgnoringOrder` to correctly compare duplicate counts (previously `[1,1,2]` incorrectly equaled `[1,2,2]`)
+
+🐛 **String Extensions**
+- Fixed `hexToInt` case-sensitive overflow check (lowercase `7fffffffffffffff` was incorrectly flagged as overflow)
+- Fixed `toUpperLatinOnly` O(n²) string concatenation - now uses StringBuffer for O(n) performance
+- Fixed `upperCaseLettersOnly` O(n²) string concatenation - now uses StringBuffer for O(n) performance
+- Fixed `truncateWithEllipsisPreserveWords` to return truncated content when first word exceeds cutoff (instead of just ellipsis)
+- Fixed `containsIgnoreCase` to follow standard string semantics (empty string is contained in any string)
+
+🐛 **DateTime Utils**
+- Improved `convertDaysToYearsAndMonths` precision using average days per year (365.25) and month (30.4375) to account for leap years
+- Added optional `includeRemainingDays` parameter for more detailed output
+
+🧪 **Testing**
+- Added 110 new test cases covering all algorithm fixes across respective test files
+
+## 0.5.3+Christchurch
 🔄 Enhanced `string_utils.dart` to optimize final regex usages.
 📚 Improved documentation and usage for `CommonRandom` and list generation.
 

@@ -68,4 +68,30 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
     // Return a tuple with the most common value and its frequency.
     return (leastCommonEntry.key, leastCommonEntry.value);
   }
+
+  /// Returns a random element from this iterable.
+  ///
+  /// Returns null if the iterable is empty.
+  T? randomElement() {
+    if (isEmpty) return null;
+    final int index = DateTime.now().microsecondsSinceEpoch % length;
+    return elementAt(index);
+  }
+
+  /// Returns true if this iterable contains all elements from [other].
+  bool containsAll(Iterable<T> other) {
+    for (final T element in other) {
+      if (!contains(element)) return false;
+    }
+    return true;
+  }
+
+  /// Counts elements that satisfy the given [predicate].
+  int countWhere(bool Function(T) predicate) {
+    int count = 0;
+    for (final T element in this) {
+      if (predicate(element)) count++;
+    }
+    return count;
+  }
 }
