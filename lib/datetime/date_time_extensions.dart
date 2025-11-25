@@ -512,13 +512,31 @@ extension DateTimeExtensions on DateTime {
   /// Checks if the current [DateTime] is within the specified range,
   /// considering all years in the range if the current year is 0.
   ///
+  /// When [year] is 0, this method checks if the month/day combination falls
+  /// within the range for ANY year covered by the range. This correctly handles
+  /// ranges that span year boundaries (e.g., Dec 2023 to Feb 2024).
+  ///
   /// Args:
-  ///   range (DateTimeRange?): The range to check against.
-  ///   inclusive (bool): If true, the start and end dates of the range are
-  ///   included in the check. Defaults to true.
+  ///   range (DateTimeRange?): The range to check against. Returns `true` if null.
+  ///   inclusive (bool): If `true` (default), the start and end dates of the range
+  ///   are included in the check. If `false`, only dates strictly between start
+  ///   and end are considered in range.
   ///
   /// Returns:
-  ///   bool: True if the [DateTime] is within the range, false otherwise.
+  ///   bool: `true` if the [DateTime] is within the range, `false` otherwise.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Range spanning year boundary: Dec 15, 2023 to Feb 15, 2024
+  /// final range = DateTimeRange(
+  ///   start: DateTime(2023, 12, 15),
+  ///   end: DateTime(2024, 2, 15),
+  /// );
+  /// // January 10 with year=0 should be in range
+  /// DateTime(0, 1, 10).isAnnualDateInRange(range); // true
+  /// // March 10 with year=0 should NOT be in range
+  /// DateTime(0, 3, 10).isAnnualDateInRange(range); // false
+  /// ```
   bool isAnnualDateInRange(DateTimeRange? range, {bool inclusive = true}) {
     if (range == null) {
       return true;
@@ -526,21 +544,23 @@ extension DateTimeExtensions on DateTime {
 
     if (year == 0) {
       // If year is 0, check if the month and day fall within the range for
-      // any year
-      final int startMonth = range.start.month;
-      final int startDay = range.start.day;
-      final int endMonth = range.end.month;
-      final int endDay = range.end.day;
+      // any year covered by the range.
+      //
+      // We need to handle ranges that span year boundaries correctly.
+      // For example, a range from Dec 2023 to Feb 2024 should include Jan 15.
 
-      if (month < startMonth || (month == startMonth && day < startDay)) {
-        return false;
+      // Check each year in the range to see if our month/day falls within it
+      for (int checkYear = range.start.year; checkYear <= range.end.year; checkYear++) {
+        // Create a date with our month/day in this year
+        final DateTime dateInYear = DateTime(checkYear, month, day);
+
+        // Check if this date falls within the range
+        if (dateInYear.isBetween(range.start, range.end, inclusive: inclusive)) {
+          return true;
+        }
       }
 
-      if (month > endMonth || (month == endMonth && day > endDay)) {
-        return false;
-      }
-
-      return true;
+      return false;
     }
 
     // If year is provided, use it for comparison
@@ -549,19 +569,36 @@ extension DateTimeExtensions on DateTime {
 
   /// Checks if the current [DateTime] is within the specified range.
   ///
+  /// This method delegates to [isBetween] with the range's start and end dates,
+  /// properly forwarding the [inclusive] parameter to control boundary behavior.
+  ///
   /// Args:
-  ///   range (DateTimeRange?): The range to check against.
-  ///   inclusive (bool): If true, the start and end dates of the range are
-  ///   included in the check. Defaults to true.
+  ///   range (DateTimeRange?): The range to check against. Returns `false` if null.
+  ///   inclusive (bool): If `true` (default), the start and end dates of the range
+  ///   are included in the check (closed interval). If `false`, only dates strictly
+  ///   between start and end are considered in range (open interval).
   ///
   /// Returns:
-  ///   bool: True if the [DateTime] is within the range, false otherwise.
+  ///   bool: `true` if the [DateTime] is within the range according to the
+  ///   [inclusive] setting, `false` otherwise.
+  ///
+  /// Example:
+  /// ```dart
+  /// final date = DateTime(2024, 6, 15);
+  /// final range = DateTimeRange(
+  ///   start: DateTime(2024, 6, 1),
+  ///   end: DateTime(2024, 6, 30),
+  /// );
+  /// date.isBetweenRange(range); // true
+  /// DateTime(2024, 6, 1).isBetweenRange(range, inclusive: true); // true
+  /// DateTime(2024, 6, 1).isBetweenRange(range, inclusive: false); // false
+  /// ```
   bool isBetweenRange(DateTimeRange? range, {bool inclusive = true}) {
     if (range == null) {
       return false;
     }
 
-    return isBetween(range.start, range.end);
+    return isBetween(range.start, range.end, inclusive: inclusive);
   }
 
   /// Checks if the current [DateTime] is between the specified start and

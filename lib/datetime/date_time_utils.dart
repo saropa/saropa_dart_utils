@@ -147,38 +147,94 @@ class DateTimeUtils {
     }
   }
 
-  /// Function to convert an integer representing days into a string format of
-  ///  years and months.
+  /// Average number of days per year, accounting for leap years.
+  /// (365 * 3 + 366) / 4 = 365.25
+  static const double _avgDaysPerYear = 365.25;
+
+  /// Average number of days per month.
+  /// 365.25 / 12 = 30.4375
+  static const double _avgDaysPerMonth = 30.4375;
+
+  /// Converts an integer representing days into a human-readable string format
+  /// of years, months, and optionally remaining days.
   ///
-  /// @param days - The number of days as an integer.
-  /// @return A string in the format of "X year(s) and Y month(s)".
-  static String? convertDaysToYearsAndMonths(int? days) {
+  /// This method uses average values that account for leap years:
+  /// - Average days per year: 365.25 (accounts for leap years)
+  /// - Average days per month: 30.4375 (365.25 / 12)
+  ///
+  /// Args:
+  ///   days (int?): The number of days to convert. Returns null if null or < 1.
+  ///   includeRemainingDays (bool): If true, includes remaining days in the output
+  ///   when they don't form a complete month. Defaults to false.
+  ///
+  /// Returns:
+  ///   String?: A human-readable string representing the duration, or null if
+  ///   [days] is null or less than 1.
+  ///
+  /// Example:
+  /// ```dart
+  /// convertDaysToYearsAndMonths(400); // '1 year and 1 month'
+  /// convertDaysToYearsAndMonths(365); // '1 year'
+  /// convertDaysToYearsAndMonths(45); // '1 month'
+  /// convertDaysToYearsAndMonths(45, includeRemainingDays: true); // '1 month and 14 days'
+  /// convertDaysToYearsAndMonths(10); // '0 days'
+  /// convertDaysToYearsAndMonths(10, includeRemainingDays: true); // '10 days'
+  /// ```
+  static String? convertDaysToYearsAndMonths(
+    int? days, {
+    bool includeRemainingDays = false,
+  }) {
     if (days == null || days < 1) {
       return null;
     }
 
-    // Calculate the number of years by integer division of the days by 365.
-    final int years = days ~/ 365;
+    // Calculate years using average days per year (365.25 to account for leap years)
+    final int years = (days / _avgDaysPerYear).floor();
+    double remainingDays = days - (years * _avgDaysPerYear);
 
-    // Calculate the remaining number of months by first getting the
-    // remainder of days when divided by 365 (which gives the number of
-    // days in the current year), then doing integer division by 30.
-    final int months = (days % 365) ~/ 30;
+    // Calculate months from remaining days using average days per month
+    final int months = (remainingDays / _avgDaysPerMonth).floor();
+    remainingDays = remainingDays - (months * _avgDaysPerMonth);
 
-    // Determine whether to use singular or plural form for "year" and
-    // "month".
+    // Round remaining days
+    final int remainingDaysInt = remainingDays.round();
+
+    // Determine whether to use singular or plural forms
     final String yearStr = (years == 1) ? 'year' : 'years';
     final String monthStr = (months == 1) ? 'month' : 'months';
+    final String dayStr = (remainingDaysInt == 1) ? 'day' : 'days';
 
-    // Construct the result string.
-    if (years > 0 && months > 0) {
-      return '$years $yearStr and $months $monthStr';
-    } else if (years > 0) {
-      return '$years $yearStr';
-    } else if (months > 0) {
-      return '$months $monthStr';
-    } else {
+    // Build result parts
+    final List<String> parts = <String>[];
+
+    if (years > 0) {
+      parts.add('$years $yearStr');
+    }
+
+    if (months > 0) {
+      parts.add('$months $monthStr');
+    }
+
+    if (includeRemainingDays && remainingDaysInt > 0) {
+      parts.add('$remainingDaysInt $dayStr');
+    }
+
+    // Handle case where we have no years or months
+    if (parts.isEmpty) {
+      if (includeRemainingDays && remainingDaysInt > 0) {
+        return '$remainingDaysInt $dayStr';
+      }
       return '0 days';
+    }
+
+    // Join parts with 'and' for readability
+    if (parts.length == 1) {
+      return parts.first;
+    } else if (parts.length == 2) {
+      return '${parts[0]} and ${parts[1]}';
+    } else {
+      // For 3 parts: "X years, Y months, and Z days"
+      return '${parts[0]}, ${parts[1]}, and ${parts[2]}';
     }
   }
 
