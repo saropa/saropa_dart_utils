@@ -16,5 +16,14 @@
         "workspaceRoot": null,
         "workspacePath": null,
         "id": "Q1U5CwnvZXDKTEFR"
+    },
+    {
+        "type": "File",
+        "name": "d:\\src\\saropa_dart_utils\\scripts\\publish_pub_dev.ps1",
+        "parent_id": null,
+        "fsPath": "d:\\src\\saropa_dart_utils\\scripts\\publish_pub_dev.ps1",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "9UWm8IubTRJ3sBF5"
     }
 ]
