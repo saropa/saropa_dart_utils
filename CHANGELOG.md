@@ -25,7 +25,47 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.4+Auckland (Latest)
+## 0.5.5+Brisbane (Latest)
+
+### New Utility Classes & Methods
+
+✨ **New Utility Classes**
+- `JsonUtils` - JSON parsing, type conversion, and validation (jsonDecodeToMap, jsonDecodeSafe, isJson, cleanJsonResponse, tryJsonDecode, toDateTimeJson, toDateTimeEpochJson, toBoolJson, toIntJson, toDoubleJson, toStringJson, and more)
+- `MapExtensions` - Map manipulation (nullIfEmpty, getRandomListExcept, getChildString, getGrandchild, formatReadableString)
+- `UrlExtensions` - URI manipulation (removeQuery, fileName, isValidUrl, isValidHttpUrl, tryParse)
+- `StringBetweenExtensions` - Content extraction (between, betweenLast, betweenBracketsResult, removeBetween, removeBetweenAll, betweenSplit)
+- `StringCharacterExtensions` - Character operations (splitByCharacterCount, charAtOrNull)
+- `StringSearchExtensions` - Search utilities (containsAnyIgnoreCase, indexOfAll, lastIndexOfPattern)
+- `MonthUtils`, `WeekdayUtils`, `SerialDateUtils` - Date constant lookups and parsing
+
+✨ **New DateTime Extensions**
+- `mostRecentSunday`, `mostRecentWeekday` - Find previous occurrence of a weekday
+- `dayOfYear`, `weekOfYear`, `numOfWeeks`, `weekNumber` - ISO week/day calculations
+- `toSerialString`, `toSerialStringDay` - Serial date formatting
+
+✨ **New String Extensions**
+- `removeSingleCharacterWords`, `removeLeadingAndTrailing` - Content cleanup
+- `firstWord`, `secondWord` - Word extraction
+- `endsWithAny`, `endsWithPunctuation`, `isAny` - Pattern matching
+- `extractCurlyBraces`, `obscureText` - Content extraction/masking
+- `hasInvalidUnicode`, `isVowel`, `hasAnyDigits` - Character validation
+
+✨ **New Iterable/Num Extensions**
+- `randomElement`, `containsAll` - Collection utilities
+- `toDoubleOrNull`, `toIntOrNull` - Safe numeric conversions
+
+✨ **Enhanced DateTimeUtils**
+- `isValidDateParts` - Comprehensive date part validation
+- `convertDaysToYearsAndMonths` - Now with `includeRemainingDays` option
+
+### Extended Test Coverage
+
+🧪 **Comprehensive Test Suite**
+- Added 10-20 test cases for each new utility method
+- Total test count: **2850 tests** (all passing)
+
+****
+## 0.5.4+Auckland
 
 ### Algorithm Fixes & Improvements
 
