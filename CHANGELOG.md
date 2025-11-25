@@ -25,7 +25,19 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.5+Brisbane (Latest)
+## 0.5.6+Wellington (Latest)
+
+### New URI/URL Extensions
+
+✨ **New UrlExtensions Methods**
+- `isSecure` - Check if URI uses HTTPS scheme
+- `addQueryParameter` - Add or update query parameters (removes if value is null/empty)
+- `hasQueryParameter` - Check if a specific query parameter exists
+- `getQueryParameter` - Get the value of a query parameter
+- `replaceHost` - Create a new URI with a different host
+
+****
+## 0.5.5+Brisbane
 
 ### New Utility Classes & Methods
 

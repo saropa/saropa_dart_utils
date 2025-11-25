@@ -249,4 +249,141 @@ void main() {
     test('11. No scheme', () => expect(UrlUtils.extractDomain('example.com'), isNull));
     test('12. With query', () => expect(UrlUtils.extractDomain('https://example.com?a=1'), 'example.com'));
   });
+
+  group('UriExtensions.isSecure', () {
+    test('1. HTTPS is secure', () => expect(Uri.parse('https://example.com').isSecure, isTrue));
+    test('2. HTTP is not secure', () => expect(Uri.parse('http://example.com').isSecure, isFalse));
+    test('3. HTTPS uppercase', () => expect(Uri.parse('HTTPS://example.com').isSecure, isTrue));
+    test('4. FTP is not secure', () => expect(Uri.parse('ftp://example.com').isSecure, isFalse));
+    test('5. File scheme not secure', () => expect(Uri.parse('file:///path').isSecure, isFalse));
+    test('6. With path', () => expect(Uri.parse('https://example.com/path').isSecure, isTrue));
+    test('7. With query', () => expect(Uri.parse('https://example.com?a=1').isSecure, isTrue));
+    test('8. Mixed case scheme', () => expect(Uri.parse('HtTpS://example.com').isSecure, isTrue));
+    test('9. HTTP with port', () => expect(Uri.parse('http://example.com:8080').isSecure, isFalse));
+    test('10. HTTPS with port', () => expect(Uri.parse('https://example.com:443').isSecure, isTrue));
+  });
+
+  group('UriExtensions.addQueryParameter', () {
+    test('1. Add to URI without query', () {
+      final Uri result = Uri.parse('https://example.com').addQueryParameter('page', '1');
+      expect(result.queryParameters['page'], '1');
+    });
+    test('2. Add to URI with existing query', () {
+      final Uri result = Uri.parse('https://example.com?a=1').addQueryParameter('b', '2');
+      expect(result.queryParameters['a'], '1');
+      expect(result.queryParameters['b'], '2');
+    });
+    test('3. Update existing parameter', () {
+      final Uri result = Uri.parse('https://example.com?page=1').addQueryParameter('page', '2');
+      expect(result.queryParameters['page'], '2');
+    });
+    test('4. Remove with null value', () {
+      final Uri result = Uri.parse('https://example.com?page=1').addQueryParameter('page', null);
+      expect(result.queryParameters.containsKey('page'), isFalse);
+    });
+    test('5. Remove with empty value', () {
+      final Uri result = Uri.parse('https://example.com?page=1').addQueryParameter('page', '');
+      expect(result.queryParameters.containsKey('page'), isFalse);
+    });
+    test('6. Empty key returns same URI', () {
+      final Uri original = Uri.parse('https://example.com');
+      final Uri result = original.addQueryParameter('', 'value');
+      expect(result.toString(), original.toString());
+    });
+    test('7. Special characters in value', () {
+      final Uri result = Uri.parse('https://example.com').addQueryParameter('q', 'hello world');
+      expect(result.queryParameters['q'], 'hello world');
+    });
+    test('8. Path preserved', () {
+      final Uri result = Uri.parse('https://example.com/path').addQueryParameter('x', '1');
+      expect(result.path, '/path');
+    });
+    test('9. Multiple params preserved', () {
+      final Uri result = Uri.parse('https://example.com?a=1&b=2&c=3').addQueryParameter('d', '4');
+      expect(result.queryParameters.length, 4);
+    });
+    test('10. Add to non-existent removes nothing', () {
+      final Uri result = Uri.parse('https://example.com?a=1').addQueryParameter('b', null);
+      expect(result.queryParameters['a'], '1');
+    });
+  });
+
+  group('UriExtensions.hasQueryParameter', () {
+    test('1. Parameter exists', () => expect(Uri.parse('https://example.com?page=1').hasQueryParameter('page'), isTrue));
+    test('2. Parameter does not exist', () => expect(Uri.parse('https://example.com?page=1').hasQueryParameter('limit'), isFalse));
+    test('3. No query parameters', () => expect(Uri.parse('https://example.com').hasQueryParameter('page'), isFalse));
+    test('4. Empty value parameter', () => expect(Uri.parse('https://example.com?flag=').hasQueryParameter('flag'), isTrue));
+    test('5. Multiple parameters', () {
+      final Uri uri = Uri.parse('https://example.com?a=1&b=2&c=3');
+      expect(uri.hasQueryParameter('b'), isTrue);
+    });
+    test('6. Case sensitive', () => expect(Uri.parse('https://example.com?Page=1').hasQueryParameter('page'), isFalse));
+    test('7. Empty key', () => expect(Uri.parse('https://example.com?=value').hasQueryParameter(''), isTrue));
+    test('8. Special characters in key', () => expect(Uri.parse('https://example.com?my-key=1').hasQueryParameter('my-key'), isTrue));
+    test('9. Check after removal', () {
+      final Uri uri = Uri.parse('https://example.com?a=1').addQueryParameter('a', null);
+      expect(uri.hasQueryParameter('a'), isFalse);
+    });
+    test('10. Numeric key', () => expect(Uri.parse('https://example.com?123=value').hasQueryParameter('123'), isTrue));
+  });
+
+  group('UriExtensions.getQueryParameter', () {
+    test('1. Get existing parameter', () => expect(Uri.parse('https://example.com?page=1').getQueryParameter('page'), '1'));
+    test('2. Non-existent returns null', () => expect(Uri.parse('https://example.com?page=1').getQueryParameter('limit'), isNull));
+    test('3. No query returns null', () => expect(Uri.parse('https://example.com').getQueryParameter('page'), isNull));
+    test('4. Empty value', () => expect(Uri.parse('https://example.com?flag=').getQueryParameter('flag'), ''));
+    test('5. Value with spaces', () => expect(Uri.parse('https://example.com?q=hello%20world').getQueryParameter('q'), 'hello world'));
+    test('6. Multiple params get specific', () {
+      final Uri uri = Uri.parse('https://example.com?a=1&b=2&c=3');
+      expect(uri.getQueryParameter('b'), '2');
+    });
+    test('7. Case sensitive key', () => expect(Uri.parse('https://example.com?Page=1').getQueryParameter('page'), isNull));
+    test('8. Numeric value', () => expect(Uri.parse('https://example.com?count=42').getQueryParameter('count'), '42'));
+    test('9. Special characters', () => expect(Uri.parse('https://example.com?email=test%40example.com').getQueryParameter('email'), 'test@example.com'));
+    test('10. Empty key', () => expect(Uri.parse('https://example.com?=value').getQueryParameter(''), 'value'));
+  });
+
+  group('UriExtensions.replaceHost', () {
+    test('1. Replace host', () {
+      final Uri result = Uri.parse('https://example.com/path').replaceHost('newdomain.com');
+      expect(result.host, 'newdomain.com');
+    });
+    test('2. Path preserved', () {
+      final Uri result = Uri.parse('https://example.com/a/b/c').replaceHost('new.com');
+      expect(result.path, '/a/b/c');
+    });
+    test('3. Query preserved', () {
+      final Uri result = Uri.parse('https://example.com?a=1').replaceHost('new.com');
+      expect(result.query, 'a=1');
+    });
+    test('4. Scheme preserved', () {
+      final Uri result = Uri.parse('http://example.com').replaceHost('new.com');
+      expect(result.scheme, 'http');
+    });
+    test('5. Port preserved', () {
+      final Uri result = Uri.parse('https://example.com:8080').replaceHost('new.com');
+      expect(result.port, 8080);
+    });
+    test('6. Empty host returns same', () {
+      final Uri original = Uri.parse('https://example.com');
+      final Uri result = original.replaceHost('');
+      expect(result.toString(), original.toString());
+    });
+    test('7. Replace subdomain', () {
+      final Uri result = Uri.parse('https://www.example.com').replaceHost('api.example.com');
+      expect(result.host, 'api.example.com');
+    });
+    test('8. Replace with IP', () {
+      final Uri result = Uri.parse('https://example.com').replaceHost('192.168.1.1');
+      expect(result.host, '192.168.1.1');
+    });
+    test('9. Replace IP with domain', () {
+      final Uri result = Uri.parse('https://192.168.1.1').replaceHost('example.com');
+      expect(result.host, 'example.com');
+    });
+    test('10. Fragment preserved', () {
+      final Uri result = Uri.parse('https://example.com#section').replaceHost('new.com');
+      expect(result.fragment, 'section');
+    });
+  });
 }

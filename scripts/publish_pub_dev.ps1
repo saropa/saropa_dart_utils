@@ -264,7 +264,21 @@ if ([string]::IsNullOrWhiteSpace($releaseNotes)) {
 }
 
 #------------------------------------------------------------------------------
-# Step 7: Confirm and Publish
+# Step 7: Generate Documentation
+#------------------------------------------------------------------------------
+Write-Section "Generating Documentation"
+
+if ($DryRun) {
+    Write-Host "[DRY RUN] Would run: dart doc" -ForegroundColor Yellow
+} else {
+    dart doc
+    Exit-OnError "Documentation generation failed"
+    
+    Write-Host "Documentation generated successfully." -ForegroundColor Green
+}
+
+#------------------------------------------------------------------------------
+# Step 8: Confirm and Publish
 #------------------------------------------------------------------------------
 Write-Section "Publish Confirmation"
 
@@ -282,7 +296,7 @@ if ($publish -ne 'y') {
 }
 
 #------------------------------------------------------------------------------
-# Step 8: Clean and Publish to pub.dev
+# Step 9: Clean and Publish to pub.dev
 #------------------------------------------------------------------------------
 Write-Section "Publishing to pub.dev"
 
@@ -301,7 +315,7 @@ if ($DryRun) {
 }
 
 #------------------------------------------------------------------------------
-# Step 9: Git Commit and Push
+# Step 10: Git Commit and Push
 #------------------------------------------------------------------------------
 Write-Section "Committing Changes"
 
@@ -325,7 +339,7 @@ if ($DryRun) {
 }
 
 #------------------------------------------------------------------------------
-# Step 10: Create and Push Git Tag
+# Step 11: Create and Push Git Tag
 #------------------------------------------------------------------------------
 Write-Section "Creating Git Tag"
 
@@ -343,7 +357,7 @@ if ($DryRun) {
 }
 
 #------------------------------------------------------------------------------
-# Step 11: Create GitHub Release
+# Step 12: Create GitHub Release
 #------------------------------------------------------------------------------
 Write-Section "Creating GitHub Release"
 
