@@ -25,6 +25,26 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
+## 0.5.7+Lisbon (Latest)
+
+### String Fixes & Improvements
+
+🐛 **Fixes**
+- `extractCurlyBraces`: switched to non-greedy matching to correctly extract multiple adjacent groups in order.
+- `removeSingleCharacterWords`: made Unicode-aware to properly remove standalone single-letter words beyond ASCII.
+- `replaceLineBreaks`: improved deduplication to collapse any run of replacements (robust for arbitrary replacement strings).
+- `grammarArticle`: enhanced heuristics for silent 'h' (e.g., "hour"), "you"-sound words ("user", "university"), and `one-` prefixes.
+- `possess`: trims input before applying trailing 's' rules (US vs. non-US style maintained).
+
+⚙️ **Performance/Behavior**
+- `repeat`: optimized concatenation with `StringBuffer` for better performance.
+- `lettersOnly`/`lowerCaseLettersOnly`: simplified to efficient regex-based ASCII filters.
+- Doc updates: clarified `count` counts non-overlapping matches (noting potential `allowOverlap`), and `obscureText` output length may vary due to jitter.
+
+🧪 **Tests**
+- Added tests for newline replacement dedupe with special replacement strings, Unicode single-letter removal, non-greedy curly brace extraction order, improved `grammarArticle` heuristics, and trimmed `possess` behavior.
+
+****
 ## 0.5.6+Wellington (Latest)
 
 ### New URI/URL Extensions
