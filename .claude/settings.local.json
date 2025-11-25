@@ -9,7 +9,8 @@
       "Bash(git -C \"d:\\src\\saropa_dart_utils\" tag -a v0.5.5 -m \"Release v0.5.5\")",
       "Bash(git -C \"d:\\src\\saropa_dart_utils\" push origin v0.5.5)",
       "Bash(gh release create:*)",
-      "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Fix publish script to stage all changes\")"
+      "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Fix publish script to stage all changes\")",
+      "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Fix flaky isBeforeNow test with race condition\")"
     ],
     "deny": [],
     "ask": []
