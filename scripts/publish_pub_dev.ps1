@@ -329,13 +329,19 @@ if ($DryRun) {
     git add -A
     Exit-OnError "git add failed"
 
-    git commit -m "Release $tagName"
-    Exit-OnError "git commit failed"
+    # Check if there are changes to commit
+    $gitStatus = git status --porcelain
+    if ($gitStatus) {
+        git commit -m "Release $tagName"
+        Exit-OnError "git commit failed"
 
-    git push origin main
-    Exit-OnError "git push failed"
+        git push origin main
+        Exit-OnError "git push failed"
 
-    Write-Host "Changes committed and pushed." -ForegroundColor Green
+        Write-Host "Changes committed and pushed." -ForegroundColor Green
+    } else {
+        Write-Host "No changes to commit. Skipping commit step." -ForegroundColor Yellow
+    }
 }
 
 #------------------------------------------------------------------------------
