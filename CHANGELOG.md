@@ -25,7 +25,17 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.7+Lisbon (Latest)
+## 0.5.8+Madrid (Latest)
+
+### Script Improvements
+
+🔧 **Publish Script**
+- `publish_pub_dev.ps1`: Added idempotent handling for git tags (skips if tag already exists locally or on remote)
+- `publish_pub_dev.ps1`: Added idempotent handling for GitHub releases (skips if release already exists)
+- Prevents script failures when re-running after partial completion
+
+****
+## 0.5.7+Lisbon
 
 ### String Fixes & Improvements
 
