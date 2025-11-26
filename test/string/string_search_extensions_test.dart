@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saropa_dart_utils/string/string_between_extensions.dart';
 import 'package:saropa_dart_utils/string/string_search_extensions.dart';
 
 // cspell: disable
@@ -206,5 +207,113 @@ void main() {
     test('8. Exact match positive', () => expect('test'.isStartsWithConditional('test', isPositiveSearch: true), isTrue));
     test('9. Exact match negative', () => expect('test'.isStartsWithConditional('test', isPositiveSearch: false), isFalse));
     test('10. Case sensitive', () => expect('Hello'.isStartsWithConditional('hello', isPositiveSearch: true), isFalse));
+  });
+
+  group('between', () {
+    test('1. Result should NOT be empty', () {
+      expect('www.website.com'.between('www.', '.com'), 'website');
+      expect('www.website.com'.between('.', '.'), 'website');
+    });
+    test('2. Result should be empty', () {
+      expect('www..com'.between('www.', '.com'), '');
+    });
+    test('3. String test with missing end', () {
+      expect('www.website.com'.between('www.', '.com2'), 'website.com');
+      expect('www.website.com'.between('www.', '.com2', endOptional: false), '');
+    });
+  });
+
+  group('removeBetweenAll', () {
+    // cspell: ignore wwwcom
+    test('1. Result should NOT be empty', () {
+      expect('www.website.com'.removeBetweenAll('.', '.'), 'wwwcom');
+      expect('[www.website.com]'.removeBetweenAll('www.', '.com'), '[]');
+      expect('[www.website.com]'.removeBetweenAll('www.', '.com', inclusive: false), '[www..com]');
+      expect('www.website.com'.removeBetweenAll('www.', '.com', inclusive: false), 'www..com');
+    });
+    test('2. Result should be empty', () {
+      expect(''.removeBetweenAll('www.', '.com'), '');
+      expect('..'.removeBetweenAll('.', '.'), '');
+      expect('www..com'.removeBetweenAll('www.', '.com'), '');
+      expect('www.website.com'.removeBetweenAll('www.', '.com'), '');
+    });
+    test('3. String test with missing end', () {
+      expect('www.website.com'.removeBetweenAll('www.', '.com2'), 'www.website.com');
+    });
+  });
+
+  group('betweenResult', () {
+    test('1. Simple case with no nesting', () {
+      expect('(test)'.betweenResult('(', ')'), equals(('test', '')));
+    });
+    test('2. Nested delimiters', () {
+      expect('(a(test)b)'.betweenResult('(', ')'), equals(('a(test)b', '')));
+    });
+    test('3. Multiple nested delimiters', () {
+      expect('((a)(test)(b))'.betweenResult('(', ')'), equals(('(a)(test)(b)', '')));
+    });
+    test('4. Deeply nested delimiters', () {
+      expect('((((test))))'.betweenResult('(', ')'), equals(('(((test)))', '')));
+    });
+    test('5. Unbalanced nested delimiters (favoring outer)', () {
+      expect('((a(test)b)'.betweenResult('(', ')'), equals(('(a(test)b', '')));
+    });
+    test('6. Using square brackets', () {
+      expect('[test]'.betweenResult('[', ']'), equals(('test', '')));
+    });
+    test('7. Using curly braces', () {
+      expect('{test}'.betweenResult('{', '}'), equals(('test', '')));
+    });
+    test('8. Using angle brackets', () {
+      expect('<test>'.betweenResult('<', '>'), equals(('test', '')));
+    });
+    test('9. Using mixed delimiters', () {
+      expect('(test]'.betweenResult('(', ']'), equals(('test', '')));
+    });
+    test('10. Empty input string', () {
+      expect(''.betweenResult('(', ')'), isNull);
+    });
+    test('11. Empty start delimiter', () {
+      expect('test)'.betweenResult('', ')'), isNull);
+    });
+    test('12. Empty end delimiter', () {
+      expect('(test'.betweenResult('(', ''), isNull);
+    });
+    test('13. Empty start and end delimiters', () {
+      expect('test'.betweenResult('', ''), isNull);
+    });
+    test('14. Start delimiter not found', () {
+      expect('test)'.betweenResult('(', ')'), isNull);
+    });
+    test('15. End delimiter not found', () {
+      expect('(test'.betweenResult('(', ')'), isNull);
+    });
+    test('16. Start delimiter after end delimiter', () {
+      expect(')test('.betweenResult('(', ')'), isNull);
+    });
+    test('17. Whitespace around delimiters', () {
+      expect(' ( test ) '.betweenResult('(', ')'), equals(('test', '')));
+    });
+    test('18. Whitespace inside delimiters', () {
+      expect('(  test  )'.betweenResult('(', ')'), equals(('test', '')));
+    });
+    test('19. Whitespace inside delimiters (trim:false)', () {
+      expect('(  test  )'.betweenResult('(', ')', trim: false), equals(('  test  ', '')));
+    });
+    test('20. Whitespace outside delimiters', () {
+      expect('  (test)  '.betweenResult('(', ')'), equals(('test', '')));
+    });
+    test('21. No whitespace', () {
+      expect('(test)'.betweenResult('(', ')'), equals(('test', '')));
+    });
+    test('22. Trim set to false (outer whitespace)', () {
+      expect('  (test)  '.betweenResult('(', ')', trim: false), equals(('test', '    ')));
+    });
+    test('23. Real-world example with URL and description', () {
+      expect(
+        'https://www.usfa.fema.gov/ (Federal Emergency Management Agency (FEMA))'.betweenResult('(', ')'),
+        equals(('Federal Emergency Management Agency (FEMA)', 'https://www.usfa.fema.gov/')),
+      );
+    });
   });
 }

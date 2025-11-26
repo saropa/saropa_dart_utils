@@ -72,7 +72,9 @@ extension StringSearchExtensions on String {
   bool isStartsWithAny(List<String>? list, {bool caseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) return false;
     final String find = caseSensitive ? this : toLowerCase();
-    return list.any((String item) => caseSensitive ? find.startsWith(item) : find.startsWith(item.toLowerCase()));
+    return list.any(
+      (String item) => caseSensitive ? find.startsWith(item) : find.startsWith(item.toLowerCase()),
+    );
   }
 
   /// Gets the first uppercase letter for use as a repeatable index.

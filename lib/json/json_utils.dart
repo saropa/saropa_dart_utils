@@ -18,7 +18,10 @@ enum JsonEpochScale {
 
 /// Utility class for JSON encoding of iterables.
 class JsonIterablesUtils<T> {
-  /// Encodes an iterable to a JSON string.
+  /// The elements of the iterable (type [T]) must be
+  /// directly encodable by `dart:convert.jsonEncode`
+  /// (e.g., `num`, `String`, `bool`, `null`, `List`, or `Map`
+  /// with encodable keys and values).
   static String jsonEncode<T>(Iterable<T> iterable) => dc.jsonEncode(iterable.toList());
 }
 
@@ -48,9 +51,12 @@ class JsonUtils {
 
   /// Checks if a string appears to be valid JSON.
   ///
-  /// Args:
-  ///   value: The string to check.
-  ///   testDecode: If true, actually attempts to decode to verify.
+  /// **Args:**
+  /// - [value]: The string to check.
+  /// - [testDecode]: If true, actually attempts to decode to verify.
+  ///
+  /// **Returns:**
+  /// True if the string appears to be valid JSON.
   static bool isJson(String? value, {bool testDecode = false}) {
     if (value == null || value.length < 2) return false;
     final String trimmed = value.trim();
@@ -117,8 +123,7 @@ class JsonUtils {
   /// Converts a dynamic list to a list of maps.
   static List<Map<String, dynamic>>? toListMap(List<dynamic>? valueList) {
     if (valueList == null) return null;
-    final List<Map<String, dynamic>> result =
-        valueList.whereType<Map<String, dynamic>>().toList();
+    final List<Map<String, dynamic>> result = valueList.whereType<Map<String, dynamic>>().toList();
     return result.isEmpty ? null : result;
   }
 

@@ -675,7 +675,25 @@ extension StringExtensions on String {
     return this[index];
   }
 
+// cspell: ignore abcabcabc 
   /// Repeats this string [count] times.
+  ///
+  /// Uses a [StringBuffer] for efficient concatenation. Returns an empty string
+  /// if [count] is zero or negative, or if this string is empty.
+  ///
+  /// **Args:**
+  /// - [count]: The number of times to repeat the string.
+  ///
+  /// **Returns:**
+  /// A new string containing this string repeated [count] times.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'abc'.repeat(3); // 'abcabcabc'
+  /// 'x'.repeat(5); // 'xxxxx'
+  /// 'test'.repeat(0); // ''
+  /// 'test'.repeat(-1); // ''
+  /// ```
   String repeat(int count) {
     if (isEmpty || count <= 0) return '';
     final StringBuffer buffer = StringBuffer();
@@ -700,7 +718,26 @@ extension StringExtensions on String {
   /// Replaces hyphens and spaces with non-breaking equivalents.
   String makeNonBreaking() => replaceAll('-', nonBreakingHyphen).replaceAll(' ', nonBreakingSpace);
 
-  /// Removes single-character words from this string.
+  /// Removes single-character words (letters and digits) from this string.
+  ///
+  /// Uses Unicode-aware matching to remove standalone single-character words,
+  /// including both letters (\p{L}) and digits (\p{N}). A "word" is defined as
+  /// a single character surrounded by whitespace or at the start/end of the string.
+  ///
+  /// **Args:**
+  /// - [trim]: If true (default), trims leading/trailing whitespace from the result.
+  /// - [removeMultipleSpaces]: If true (default), collapses consecutive spaces into one.
+  ///
+  /// **Returns:**
+  /// The modified string, or null if the result is empty.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'a hello world'.removeSingleCharacterWords(); // 'hello world'
+  /// 'I am 5 years old'.removeSingleCharacterWords(); // 'am years old'
+  /// '你 好 test'.removeSingleCharacterWords(); // 'test' (Unicode aware)
+  /// 'x y z'.removeSingleCharacterWords(); // null (all removed)
+  /// ```
   String? removeSingleCharacterWords({bool trim = true, bool removeMultipleSpaces = true}) {
     if (isEmpty) return this;
     String result = removeAll(_singleCharWordRegex);
@@ -713,7 +750,26 @@ extension StringExtensions on String {
     return result.isEmpty ? null : result;
   }
 
-  /// Replaces line breaks with a specified string.
+  /// Replaces all line breaks (\n) with a specified string.
+  ///
+  /// When [deduplicate] is true, collapses consecutive runs of the replacement
+  /// string into a single occurrence. This uses a non-capturing group regex to
+  /// handle any replacement string, including those with special regex characters.
+  ///
+  /// **Args:**
+  /// - [replacement]: The string to replace line breaks with. Null or empty removes line breaks.
+  /// - [deduplicate]: If true (default), collapses consecutive replacement sequences.
+  ///
+  /// **Returns:**
+  /// The string with line breaks replaced and optionally deduplicated.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'a\n\nb'.replaceLineBreaks(' '); // 'a b' (deduplicated)
+  /// 'a\n\nb'.replaceLineBreaks('+'); // 'a+b'
+  /// 'a\n\nb'.replaceLineBreaks('.*'); // 'a.*b' (special chars handled)
+  /// 'a\n\nb'.replaceLineBreaks(' ', deduplicate: false); // 'a  b'
+  /// ```
   String replaceLineBreaks(String? replacement, {bool deduplicate = true}) {
     final String result = replaceAll(_lineBreakRegex, replacement ?? '');
     if (deduplicate && replacement != null && replacement.isNotEmpty) {
@@ -754,20 +810,66 @@ extension StringExtensions on String {
   }
 
   /// Counts occurrences of [find] in this string.
-  /// Note: counts non-overlapping matches. Consider an `allowOverlap`
-  /// parameter if overlapping occurrences are desired.
+  ///
+  /// Uses a split-based approach that counts non-overlapping matches only.
+  /// For example, counting 'aa' in 'aaa' returns 1, not 2.
+  ///
+  /// Note: This method counts non-overlapping matches. Consider adding an
+  /// `allowOverlap` parameter if overlapping occurrences are desired.
+  ///
+  /// **Args:**
+  /// - [find]: The substring to count. Returns 0 if empty.
+  ///
+  /// **Returns:**
+  /// The number of non-overlapping occurrences of [find].
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'hello'.count('l'); // 2
+  /// 'aaa'.count('aa'); // 1 (non-overlapping)
+  /// 'test'.count('x'); // 0
+  /// 'hello'.count(''); // 0
+  /// ```
   int count(String find) {
     if (find.isEmpty) return 0;
     return split(find).length - 1;
   }
 
-  /// Extracts only letter characters (A-Z, a-z) from this string.
+  /// Extracts only ASCII letter characters (A-Z, a-z) from this string.
+  ///
+  /// Removes all characters that are not ASCII letters using a regex replacement.
+  /// Note: This is ASCII-only; Unicode letters like 'é' or '你' are removed.
+  ///
+  /// **Returns:**
+  /// A new string containing only ASCII letters, or empty string if none found.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'Hello123World!'.lettersOnly(); // 'HelloWorld'
+  /// 'abc-def'.lettersOnly(); // 'abcdef'
+  /// '123'.lettersOnly(); // ''
+  /// 'café'.lettersOnly(); // 'caf' (é removed)
+  /// ```
   String lettersOnly() {
     if (isEmpty) return '';
     return replaceAll(RegExp(r'[^A-Za-z]'), '');
   }
 
-  /// Extracts only lowercase letter characters (a-z) from this string.
+// cspell: ignore elloorld 
+  /// Extracts only ASCII lowercase letter characters (a-z) from this string.
+  ///
+  /// Removes all characters that are not lowercase ASCII letters using a regex.
+  /// Uppercase letters and Unicode characters are removed.
+  ///
+  /// **Returns:**
+  /// A new string containing only lowercase ASCII letters, or empty if none found.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'Hello123World!'.lowerCaseLettersOnly(); // 'elloorld'
+  /// 'ABC-def'.lowerCaseLettersOnly(); // 'def'
+  /// '123'.lowerCaseLettersOnly(); // ''
+  /// ```
   String lowerCaseLettersOnly() {
     if (isEmpty) return '';
     return replaceAll(RegExp(r'[^a-z]'), '');
@@ -816,10 +918,24 @@ extension StringExtensions on String {
     return indexOf(char, firstIdx + 1);
   }
 
-  /// Extracts all text within curly braces.
+  /// Extracts all text within curly braces from this string.
   ///
-  /// Uses a non-greedy match to find multiple groups like `{a}` and `{b}`.
-  /// Note: This does not handle nested braces.
+  /// Uses a non-greedy regex (\{.+?\}) to match multiple brace-enclosed groups
+  /// in the order they appear. Adjacent groups like `{a}{b}` are correctly separated.
+  ///
+  /// Limitation: Does not handle nested braces. For `{a{b}c}`, only `{a{b}` may match.
+  ///
+  /// **Returns:**
+  /// A list of matched strings (including braces), or null if no matches found.
+  /// The list preserves the order of matches in the original string.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// '{start} middle {end}'.extractCurlyBraces(); // ['{start}', '{end}']
+  /// '{a}{b}{c}'.extractCurlyBraces(); // ['{a}', '{b}', '{c}']
+  /// '{你好}'.extractCurlyBraces(); // ['{你好}'] (Unicode supported)
+  /// 'no braces'.extractCurlyBraces(); // null
+  /// ```
   List<String>? extractCurlyBraces() {
     final List<String> matches = _curlyBracesRegex
         .allMatches(this)
@@ -838,7 +954,29 @@ extension StringExtensions on String {
     return value + this;
   }
 
-  /// Returns 'a' or 'an' based on the first character (for English grammar).
+  /// Returns the appropriate indefinite article ('a' or 'an') for this word.
+  ///
+  /// Uses English grammar heuristics:
+  /// - Silent 'h' words (hour, honest, honor, heir) → 'an'
+  /// - "You"-sound words (uni, use, user, union, university) → 'a'
+  /// - Words starting with 'one' (one-time, one-way) → 'a'
+  /// - Vowel sounds (a, e, i, o, u) → 'an'
+  /// - Consonant sounds → 'a'
+  ///
+  /// The word is trimmed and compared case-insensitively.
+  ///
+  /// **Returns:**
+  /// 'a' or 'an' based on pronunciation heuristics, or empty string if input is empty.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'apple'.grammarArticle(); // 'an'
+  /// 'hour'.grammarArticle(); // 'an' (silent h)
+  /// 'user'.grammarArticle(); // 'a' (you-sound)
+  /// 'university'.grammarArticle(); // 'a'
+  /// 'one-time'.grammarArticle(); // 'a'
+  /// 'elephant'.grammarArticle(); // 'an'
+  /// ```
   String grammarArticle() {
     if (isEmpty) return '';
     final String word = trim();
@@ -869,7 +1007,27 @@ extension StringExtensions on String {
     }
   }
 
-  /// Returns the possessive form of this string.
+  /// Returns the possessive form of this string (e.g., "John's", "boss'").
+  ///
+  /// Trims the input before processing. For words ending in 's':
+  /// - US style (default): adds apostrophe only → "boss'"
+  /// - Non-US style: adds apostrophe-s → "boss's"
+  ///
+  /// All other words get apostrophe-s → "John's".
+  ///
+  /// **Args:**
+  /// - [isLocaleUS]: If true (default), uses US possessive style for words ending in 's'.
+  ///
+  /// **Returns:**
+  /// The possessive form of the trimmed string, or the original if empty.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'John'.possess(); // "John's"
+  /// 'boss'.possess(); // "boss'" (US style)
+  /// 'boss'.possess(isLocaleUS: false); // "boss's" (non-US)
+  /// '  James  '.possess(); // "James'" (trimmed)
+  /// ```
   String possess({bool isLocaleUS = true}) {
     if (isEmpty) return this;
     final String base = trim();
@@ -902,12 +1060,28 @@ extension StringExtensions on String {
     return '${this}s';
   }
 
-  /// Creates an obscured version of this string.
+  /// Creates an obscured version of this string (e.g., for masking passwords).
   ///
-  /// Note: This implementation varies the output length using a
-  /// time-based jitter, so results are non-deterministic. For
-  /// deterministic obfuscation, use a fixed length or inject a
-  /// `Random` to control variability.
+  /// The output length varies by ±[obscureLength] characters using a time-based jitter
+  /// (microseconds since epoch). This makes the output length non-deterministic and
+  /// prevents easy guessing of the original string length.
+  ///
+  /// **Important**: For deterministic output (e.g., in tests), consider using a fixed
+  /// length or injecting a seeded [Random] instance to control variability.
+  ///
+  /// **Args:**
+  /// - [char]: The character to use for obfuscation (default: '•').
+  /// - [obscureLength]: Maximum jitter in characters (default: 3).
+  ///
+  /// **Returns:**
+  /// A string of [char] repeated with variable length, or null if input is empty.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'password'.obscureText(); // '••••••••••' (length varies: 5-11 chars)
+  /// 'secret'.obscureText(char: '*'); // '******' (length varies)
+  /// ''.obscureText(); // null
+  /// ```
   String? obscureText({String char = '•', int obscureLength = 3}) {
     if (isEmpty) return null;
     final int seed = DateTime.now().microsecondsSinceEpoch;
