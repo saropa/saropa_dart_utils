@@ -25,7 +25,28 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.8+Madrid (Latest)
+## 0.5.9+Barcelona (Latest)
+
+### API Improvements
+
+✨ **JsonUtils**
+- `isJson`: Added `allowEmpty` parameter (default `false`) to optionally treat `{}` as valid JSON while maintaining backwards compatibility
+
+🐛 **Fixes**
+- `MakeListExtensions`: Changed extension from `T` to `T?` to properly support nullable types
+- `getUtcTimeFromLocal`: Fixed documentation (was incorrectly stating "returns null if offset is 0" when it returns the original instance)
+- `getNthWeekdayOfMonthInYear`: Removed stale `month` and `year` parameter references from documentation
+
+🧹 **Cleanup**
+- `UniqueListExtensionsUniqueBy`: Removed unused `propertyComparer` generic parameter
+- `betweenResult`: Added documentation clarifying the `lastIndexOf` behavior for nested delimiters
+
+🧪 **Tests**
+- Added 16 test cases for `JsonUtils.isJson` including `allowEmpty` parameter coverage
+- Total test count: **2907 tests** (all passing)
+
+****
+## 0.5.8+Madrid
 
 ### Script Improvements
 

@@ -54,16 +54,21 @@ class JsonUtils {
   /// **Args:**
   /// - [value]: The string to check.
   /// - [testDecode]: If true, actually attempts to decode to verify.
+  /// - [allowEmpty]: If true, treats '{}' and '[]' as valid JSON.
+  ///   Defaults to false for backwards compatibility.
   ///
   /// **Returns:**
   /// True if the string appears to be valid JSON.
-  static bool isJson(String? value, {bool testDecode = false}) {
+  static bool isJson(String? value, {bool testDecode = false, bool allowEmpty = false}) {
     if (value == null || value.length < 2) return false;
     final String trimmed = value.trim();
     final bool isObject = trimmed.startsWith('{') && trimmed.endsWith('}');
     final bool isArray = trimmed.startsWith('[') && trimmed.endsWith(']');
     if (!isObject && !isArray) return false;
-    if (isObject && !value.contains(':')) return false;
+    if (isObject && !value.contains(':')) {
+      // Empty object '{}' is valid JSON if allowEmpty is true
+      if (!allowEmpty || trimmed != '{}') return false;
+    }
     if (!testDecode) return true;
     try {
       return dc.jsonDecode(value) != null;

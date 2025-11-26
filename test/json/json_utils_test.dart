@@ -2,6 +2,37 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/json/json_utils.dart';
 
 void main() {
+  group('JsonUtils.isJson', () {
+    test('1. Valid JSON object', () => expect(JsonUtils.isJson('{"a":1}'), isTrue));
+    test('2. Valid JSON array', () => expect(JsonUtils.isJson('[1,2,3]'), isTrue));
+    test('3. Null input', () => expect(JsonUtils.isJson(null), isFalse));
+    test('4. Empty string', () => expect(JsonUtils.isJson(''), isFalse));
+    test('5. Single char', () => expect(JsonUtils.isJson('a'), isFalse));
+    test('6. Plain text', () => expect(JsonUtils.isJson('not json'), isFalse));
+    test('7. Empty object without allowEmpty', () => expect(JsonUtils.isJson('{}'), isFalse));
+    test(
+      '8. Empty object with allowEmpty=true',
+      () => expect(JsonUtils.isJson('{}', allowEmpty: true), isTrue),
+    );
+    test('9. Empty array (valid - no colon check for arrays)', () {
+      expect(JsonUtils.isJson('[]'), isTrue);
+    });
+    test('10. Whitespace around object', () => expect(JsonUtils.isJson('  {"a":1}  '), isTrue));
+    test('11. Whitespace around empty object', () {
+      expect(JsonUtils.isJson('  {}  '), isFalse);
+      expect(JsonUtils.isJson('  {}  ', allowEmpty: true), isTrue);
+    });
+    test('12. Nested object', () => expect(JsonUtils.isJson('{"a":{"b":1}}'), isTrue));
+    test('13. Array of objects', () => expect(JsonUtils.isJson('[{"a":1},{"b":2}]'), isTrue));
+    test('14. testDecode with valid JSON', () {
+      expect(JsonUtils.isJson('{"a":1}', testDecode: true), isTrue);
+    });
+    test('15. testDecode with invalid JSON structure', () {
+      expect(JsonUtils.isJson('{a:1}', testDecode: true), isFalse);
+    });
+    test('16. Object missing colon', () => expect(JsonUtils.isJson('{abc}'), isFalse));
+  });
+
   group('JsonUtils.jsonDecodeSafe/jsonDecodeToMap', () {
     test('decode valid object', () {
       final dynamic d = JsonUtils.jsonDecodeSafe('{"a":1,"b":"x"}');
