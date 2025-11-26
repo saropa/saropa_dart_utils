@@ -7,7 +7,7 @@ extension UniqueIterableExtensions<T> on Iterable<T> {
       LinkedHashSet<T>.from(where((T? e) => !ignoreNulls || e != null)).toList();
 }
 
-extension UniqueListExtensionsUniqueBy<T, propertyComparer> on List<T> {
+extension UniqueListExtensionsUniqueBy<T> on List<T> {
   /// Returns a new list with unique elements based on the provided key extractor.
   /// When duplicates are found, the LAST element from the original list is kept.
   /// The relative order of the kept elements is preserved.

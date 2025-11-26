@@ -82,6 +82,8 @@ extension StringBetweenExtensions on String {
   /// Extracts content between [start] and [end] delimiters.
   ///
   /// Returns a tuple of (content between delimiters, remaining string after removal).
+  /// Uses `lastIndexOf` for the end delimiter to capture the outermost pair,
+  /// which correctly handles nested delimiters like `(a(test)b)` → `a(test)b`.
   (String, String?)? betweenResult(
     String start,
     String end, {

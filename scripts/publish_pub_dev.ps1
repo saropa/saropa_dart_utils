@@ -382,9 +382,13 @@ Write-Section "Creating GitHub Release"
 if ($DryRun) {
     Write-Host "[DRY RUN] Would run: gh release create $tagName" -ForegroundColor Yellow
 } else {
-    # Check if release already exists
+    # Check if release already exists (temporarily allow non-zero exit)
+    $ErrorActionPreference = 'SilentlyContinue'
     $releaseExists = gh release view $tagName 2>$null
-    if ($LASTEXITCODE -eq 0) {
+    $releaseCheckExitCode = $LASTEXITCODE
+    $ErrorActionPreference = 'Stop'
+
+    if ($releaseCheckExitCode -eq 0) {
         Write-Host "GitHub release $tagName already exists. Skipping release creation." -ForegroundColor Yellow
     } else {
         gh release create $tagName --title "Release $tagName" --notes "$releaseNotes"

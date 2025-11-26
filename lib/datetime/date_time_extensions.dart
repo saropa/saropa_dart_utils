@@ -5,16 +5,14 @@ import 'package:saropa_dart_utils/int/int_string_extensions.dart';
 
 /// Extensions on the [DateTime] class to provide additional functionality.
 extension DateTimeExtensions on DateTime {
-  /// Returns the date of the nth occurrence of a specific weekday in a given
-  ///  month and year.
+  /// Returns the date of the nth occurrence of a specific weekday within the
+  /// current instance's month and year.
   ///
   /// Args:
   ///   n (int): The desired occurrence (e.g., 1 for the 1st, 2 for the 2nd,
   ///  etc.).
   ///   dayOfWeek (int): The day of the week (e.g., DateTime.monday,
   ///  DateTime.tuesday, etc.).
-  ///   month (int): The month (1-12).
-  ///   year (int): The year.
   ///
   /// Returns:
   ///   DateTime?: The date of the nth occurrence, or null if it does not exist
@@ -496,8 +494,8 @@ extension DateTimeExtensions on DateTime {
   ///   offset (double): The offset to add, in hours.
   ///
   /// Returns:
-  ///   DateTime?: A new [DateTime] object with the added offset, or null if
-  ///   the offset is 0.
+  ///   DateTime?: A new [DateTime] object with the added offset, or the
+  ///   original instance if the offset is 0.
   DateTime? getUtcTimeFromLocal(double offset) {
     if (offset == 0) {
       return this;
