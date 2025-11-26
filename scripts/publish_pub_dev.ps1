@@ -353,13 +353,25 @@ if ($DryRun) {
     Write-Host "[DRY RUN] Would run: git tag -a $tagName -m 'Release $tagName'" -ForegroundColor Yellow
     Write-Host "[DRY RUN] Would run: git push origin $tagName" -ForegroundColor Yellow
 } else {
-    git tag -a $tagName -m "Release $tagName"
-    Exit-OnError "git tag creation failed"
+    # Check if tag already exists locally
+    $tagExists = git tag -l $tagName
+    if ($tagExists) {
+        Write-Host "Tag $tagName already exists locally. Skipping tag creation." -ForegroundColor Yellow
+    } else {
+        git tag -a $tagName -m "Release $tagName"
+        Exit-OnError "git tag creation failed"
+        Write-Host "Tag $tagName created." -ForegroundColor Green
+    }
 
-    git push origin $tagName
-    Exit-OnError "git push tag failed"
-
-    Write-Host "Tag $tagName created and pushed." -ForegroundColor Green
+    # Check if tag exists on remote, push if not
+    $remoteTagExists = git ls-remote --tags origin $tagName 2>$null
+    if ($remoteTagExists) {
+        Write-Host "Tag $tagName already exists on remote. Skipping push." -ForegroundColor Yellow
+    } else {
+        git push origin $tagName
+        Exit-OnError "git push tag failed"
+        Write-Host "Tag $tagName pushed to remote." -ForegroundColor Green
+    }
 }
 
 #------------------------------------------------------------------------------
@@ -370,10 +382,15 @@ Write-Section "Creating GitHub Release"
 if ($DryRun) {
     Write-Host "[DRY RUN] Would run: gh release create $tagName" -ForegroundColor Yellow
 } else {
-    gh release create $tagName --title "Release $tagName" --notes "$releaseNotes"
-    Exit-OnError "Failed to create GitHub release"
-
-    Write-Host "GitHub release created successfully." -ForegroundColor Green
+    # Check if release already exists
+    $releaseExists = gh release view $tagName 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "GitHub release $tagName already exists. Skipping release creation." -ForegroundColor Yellow
+    } else {
+        gh release create $tagName --title "Release $tagName" --notes "$releaseNotes"
+        Exit-OnError "Failed to create GitHub release"
+        Write-Host "GitHub release created successfully." -ForegroundColor Green
+    }
 }
 
 #------------------------------------------------------------------------------
