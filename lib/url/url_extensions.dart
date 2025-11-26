@@ -13,7 +13,8 @@ const Set<String> flutterImageExtensions = <String>{
 /// Extension methods for URI manipulation.
 extension UriExtensions on Uri {
   /// Removes query parameters and optionally the fragment from this URI.
-  Uri removeQuery({bool removeFragment = true}) => removeFragment ? replace(query: '', fragment: '') : replace(query: '');
+  Uri removeQuery({bool removeFragment = true}) =>
+      removeFragment ? replace(query: '', fragment: '') : replace(query: '');
 
   /// Returns true if this URI points to an image file.
   ///
@@ -56,14 +57,14 @@ extension UriExtensions on Uri {
   ///
   /// If [value] is null or empty, the parameter is removed instead.
   ///
-  /// Args:
-  ///   key (String): The query parameter key.
-  ///   value (String?): The query parameter value. If null/empty, removes the parameter.
+  /// **Args:**
+  /// - [key]: The query parameter key.
+  /// - [value]: The query parameter value. If null/empty, removes the parameter.
   ///
-  /// Returns:
-  ///   Uri: A new URI with the updated query parameters.
+  /// **Returns:**
+  /// A new URI with the updated query parameters.
   ///
-  /// Example:
+  /// **Example:**
   /// ```dart
   /// Uri.parse('https://example.com').addQueryParameter('page', '1');
   /// // Returns: https://example.com?page=1
@@ -83,13 +84,13 @@ extension UriExtensions on Uri {
 
   /// Returns true if this URI has a specific query parameter.
   ///
-  /// Args:
-  ///   key (String): The query parameter key to check.
+  /// **Args:**
+  /// - [key]: The query parameter key to check.
   ///
-  /// Returns:
-  ///   bool: True if the parameter exists, false otherwise.
+  /// **Returns:**
+  /// True if the parameter exists, false otherwise.
   ///
-  /// Example:
+  /// **Example:**
   /// ```dart
   /// Uri.parse('https://example.com?page=1').hasQueryParameter('page'); // true
   /// Uri.parse('https://example.com?page=1').hasQueryParameter('limit'); // false
@@ -98,13 +99,13 @@ extension UriExtensions on Uri {
 
   /// Gets the value of a specific query parameter.
   ///
-  /// Args:
-  ///   key (String): The query parameter key.
+  /// **Args:**
+  /// - [key]: The query parameter key.
   ///
-  /// Returns:
-  ///   String?: The parameter value, or null if not found.
+  /// **Returns:**
+  /// The parameter value, or null if not found.
   ///
-  /// Example:
+  /// **Example:**
   /// ```dart
   /// Uri.parse('https://example.com?page=1').getQueryParameter('page'); // '1'
   /// Uri.parse('https://example.com').getQueryParameter('page'); // null
@@ -113,13 +114,13 @@ extension UriExtensions on Uri {
 
   /// Returns a new URI with the host replaced.
   ///
-  /// Args:
-  ///   newHost (String): The new host to use.
+  /// **Args:**
+  /// - [newHost]: The new host to use.
   ///
-  /// Returns:
-  ///   Uri: A new URI with the replaced host, or this URI if newHost is empty.
+  /// **Returns:**
+  /// A new URI with the replaced host, or this URI if newHost is empty.
   ///
-  /// Example:
+  /// **Example:**
   /// ```dart
   /// Uri.parse('https://example.com/path').replaceHost('newdomain.com');
   /// // Returns: https://newdomain.com/path

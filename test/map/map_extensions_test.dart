@@ -450,6 +450,48 @@ void main() {
       final Map<String, List<int>> map = <String, List<int>>{'a': <int>[1], 'b': <int>[2]};
       expect(MapUtils.mapContainsValue(map, 'b', 2), isTrue);
     });
+    test('11. Missing input - empty map', () {
+      final Map<String, List<String>> testMap = <String, List<String>>{};
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value'), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', ''), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', null), false);
+      expect(MapUtils.mapContainsValue(testMap, null, 'value'), false);
+      expect(MapUtils.mapContainsValue(testMap, '', 'value'), false);
+    });
+    test('12. Invalid input - empty or null key/value', () {
+      final Map<String, List<String>> testMap = <String, List<String>>{};
+      MapUtils.mapAddValue(testMap, 'key', 'value');
+      expect(MapUtils.mapContainsValue(testMap, 'key', ''), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', null), false);
+      expect(MapUtils.mapContainsValue(testMap, '', 'value'), false);
+      expect(MapUtils.mapContainsValue(testMap, null, 'value'), false);
+    });
+    test('13. Valid input with mapAddValue', () {
+      final Map<String, List<String>> testMap = <String, List<String>>{};
+      MapUtils.mapAddValue(testMap, 'key', 'value1');
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), true);
+      MapUtils.mapAddValue(testMap, 'key', 'value2');
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), true);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), true);
+    });
+  });
+
+  group('MapUtils.mapRemoveValue', () {
+    test('1. Remove value from list', () {
+      final Map<String, List<String>> testMap = <String, List<String>>{};
+      MapUtils.mapAddValue(testMap, 'key', 'value1');
+      MapUtils.mapAddValue(testMap, 'key', 'value2');
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), true);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), true);
+
+      MapUtils.mapRemoveValue(testMap, 'key', 'value1');
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), true);
+
+      MapUtils.mapRemoveValue(testMap, 'key', 'value2');
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), false);
+    });
   });
 
   group('MapUtils.toMapStringDynamic', () {

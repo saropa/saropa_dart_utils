@@ -74,7 +74,7 @@ extension DateTimeExtensions on DateTime {
   /// Generates a list of [DateTime] objects for consecutive days.
   ///
   /// Starts from `this` and generates [days] number of dates.
-  /// 
+  ///
   /// NOTE: generates an empty list when [days] is 0
   List<DateTime> generateDayList(int days, {bool startOfDay = true}) {
     // if (days <= 0) {
@@ -805,11 +805,11 @@ extension DateTimeExtensions on DateTime {
 
   /// Returns the most recent occurrence of the specified weekday.
   ///
-  /// Args:
-  ///   weekdayTarget: The target weekday (1 = Monday, 7 = Sunday).
+  /// **Args:**
+  /// - [weekdayTarget]: The target weekday (1 = Monday, 7 = Sunday).
   ///
-  /// Returns:
-  ///   The most recent date that falls on the target weekday.
+  /// **Returns:**
+  /// The most recent date that falls on the target weekday.
   DateTime mostRecentWeekday(int weekdayTarget) =>
       DateTime(year, month, day - (weekday - weekdayTarget) % 7);
 
