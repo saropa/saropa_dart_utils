@@ -12,7 +12,8 @@
       "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Fix publish script to stage all changes\")",
       "Bash(git -C \"d:\\src\\saropa_dart_utils\" commit -m \"Fix flaky isBeforeNow test with race condition\")",
       "Bash(git -C \"d:\\src\\saropa_dart_utils\" push origin v0.5.7)",
-      "Bash(dart run:*)"
+      "Bash(dart run:*)",
+      "Bash(flutter analyze:*)"
     ],
     "deny": [],
     "ask": []

@@ -58,6 +58,9 @@ analyzer:
     # scripts for build & testing
     - "scripts/**"
 
+    # example app (demo code, not part of the library)
+    - "example/**"
+
     # === Test Specific ===
     - "test/.test_coverage.dart" # Exclude test coverage helper
 
