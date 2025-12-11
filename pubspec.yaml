@@ -1,6 +1,6 @@
 name: saropa_dart_utils
 description: "Boilerplate reduction tools and human-readable extension methods by Saropa"
-version: 0.5.9
+version: 0.5.10
 
 homepage: https://app.saropa.com
 repository: https://github.com/saropa/saropa_dart_utils

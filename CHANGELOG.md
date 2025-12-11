@@ -25,7 +25,28 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.9+Barcelona (Latest)
+## 0.5.10+Vienna (Latest)
+
+### Build & Tooling
+
+🔧 **Publish Script v1.5**
+- Added `-Version` parameter for CI/CD automation
+- Added `-Branch` parameter to specify target branch (defaults to current branch)
+- Added pre-publish validation step (`flutter pub publish --dry-run`)
+- Added `flutter analyze` step before publishing
+- Added working tree status check with user confirmation for uncommitted changes
+- Added remote sync check to prevent publishing when behind remote
+- Added early CHANGELOG version validation (fail fast if version not found)
+- Fixed step numbering (was skipping from 4 to 6)
+- Fixed `ErrorActionPreference` issue with try/catch for GitHub release check
+- Dynamic package name and repo URL extraction from pubspec.yaml and git remote
+
+🧹 **Analysis Options**
+- Excluded example folder from parent analysis (demo code uses relaxed rules)
+- Example folder now inherits from parent's flattened analysis options via relative path
+
+****
+## 0.5.9+Barcelona
 
 ### API Improvements
 
