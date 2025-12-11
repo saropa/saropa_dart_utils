@@ -1,3 +1,5 @@
+import 'package:saropa_dart_utils/string/string_extensions.dart';
+
 /// Extension methods for extracting content between delimiters.
 extension StringBetweenExtensions on String {
   /// Extracts content between bracket pairs.
@@ -92,17 +94,29 @@ extension StringBetweenExtensions on String {
   }) {
     if (isEmpty || start.isEmpty || end.isEmpty) return null;
     final int startIndex = indexOf(start);
-    if (startIndex == -1) return null;
-    final int endIndex = lastIndexOf(end);
-    if (endIndex == -1) return null;
-    if (startIndex >= endIndex || (startIndex + start.length) > endIndex) return null;
+    if (startIndex == -1) {
+      return null;
+    }
 
-    final String found = substring(startIndex + start.length, endIndex);
-    final String remaining = substring(0, startIndex) + substring(endIndex + end.length);
+    final int endIndex = lastIndexOf(end);
+    if (endIndex == -1) {
+      return null;
+    }
+
+    if (startIndex >= endIndex || (startIndex + start.length) > endIndex) {
+      return null;
+    }
+
+    final String found = substringSafe(startIndex + start.length, endIndex);
+
+    final String remaining = substringSafe(0, startIndex) + substringSafe(endIndex + end.length);
+
     final String finalFound = trim ? found.trim() : found;
+
     final String finalRemaining = trim
         ? remaining.replaceAll(RegExp(r'\s+'), ' ').trim()
         : remaining;
+
     return (finalFound, finalRemaining.isEmpty ? '' : finalRemaining);
   }
 
@@ -131,12 +145,12 @@ extension StringBetweenExtensions on String {
     final int endIndex = end.isEmpty ? -1 : indexOf(end, startIndex + start.length);
     if (endIndex == -1) {
       if (endOptional) {
-        final String content = substring(startIndex + start.length);
+        final String content = substringSafe(startIndex + start.length);
         return trim ? content.trim() : content;
       }
       return '';
     }
-    final String content = substring(startIndex + start.length, endIndex);
+    final String content = substringSafe(startIndex + start.length, endIndex);
     return trim ? content.trim() : content;
   }
 
@@ -150,12 +164,12 @@ extension StringBetweenExtensions on String {
     final int endIndex = end.isEmpty ? (endOptional ? length : -1) : lastIndexOf(end);
     if (endIndex == -1 || endIndex <= startIndex || (startIndex + start.length) > endIndex) {
       if (endOptional) {
-        final String content = substring(startIndex + start.length);
+        final String content = substringSafe(startIndex + start.length);
         return trim ? content.trim() : content;
       }
       return '';
     }
-    final String content = substring(startIndex + start.length, endIndex);
+    final String content = substringSafe(startIndex + start.length, endIndex);
     return trim ? content.trim() : content;
   }
 }

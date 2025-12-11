@@ -1,3 +1,4 @@
+import 'package:characters/characters.dart';
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 
 final RegExp _apostropheRegex = RegExp("['’]");
@@ -178,8 +179,9 @@ extension StringExtensions on String {
   /// Inserts a newline character before each opening parenthesis.
   String insertNewLineBeforeBrackets() => replaceAll('(', '\n(');
 
-  /// Truncates the string to [cutoff] and appends an ellipsis '…'.
+  /// Truncates the string to [cutoff] graphemes and appends an ellipsis '…'.
   ///
+  /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the original string if it's shorter than [cutoff].
   String truncateWithEllipsis(int? cutoff) {
     // Return original string if it's empty or cutoff is invalid
@@ -188,25 +190,27 @@ extension StringExtensions on String {
     }
 
     // Return original string if it's already shorter than the cutoff
-    if (length <= cutoff) {
+    // Use grapheme length for proper emoji support
+    if (characters.length <= cutoff) {
       return this;
     }
 
     // Simple truncation if not keeping words intact
-    return '${substring(0, cutoff)}$ellipsis';
-    // maxLength <= 0 || length <= maxLength ? this : '${substring(0, maxLength)}…';
+    return '${substringSafe(0, cutoff)}$ellipsis';
   }
 
-  /// Truncates the string to [cutoff] and appends an ellipsis '…'.
+  /// Truncates the string to [cutoff] graphemes and appends an ellipsis '…'.
   ///
   /// This method will not cut words in half. It will truncate at the last
   /// full word that fits within the [cutoff]. If the first word is longer than
   /// the cutoff, it falls back to simple truncation at the cutoff point to
   /// ensure some content is always returned.
   ///
+  /// Uses grapheme clusters for proper Unicode support, including emojis.
+  ///
   /// Args:
-  ///   cutoff (int?): The maximum length before truncation. If null, 0, or negative,
-  ///   returns the original string.
+  ///   cutoff (int?): The maximum grapheme length before truncation. If null, 0,
+  ///   or negative, returns the original string.
   ///
   /// Returns:
   ///   String: The truncated string with ellipsis, or the original string if it's
@@ -219,25 +223,26 @@ extension StringExtensions on String {
   /// 'Supercalifragilistic'.truncateWithEllipsisPreserveWords(5); // Returns 'Super…'
   /// ```
   String truncateWithEllipsisPreserveWords(int? cutoff) {
+    final int charLength = characters.length;
     // Return original string if it's empty, cutoff is invalid, or it's already short enough.
-    if (isEmpty || cutoff == null || cutoff <= 0 || length <= cutoff) {
+    if (isEmpty || cutoff == null || cutoff <= 0 || charLength <= cutoff) {
       return this;
     }
 
     // Find the last space within the allowed length (checking up to cutoff + 1 to include
     // a space right at the cutoff boundary)
-    final int searchLength = cutoff + 1 > length ? length : cutoff + 1;
-    final int lastSpaceIndex = substring(0, searchLength).lastIndexOf(' ');
+    final int searchLength = cutoff + 1 > charLength ? charLength : cutoff + 1;
+    final int lastSpaceIndex = substringSafe(0, searchLength).lastIndexOf(' ');
 
     // If no space is found (e.g., a single long word), fall back to simple truncation
     // at the cutoff point. This ensures we always return some meaningful content
     // rather than just an ellipsis.
     if (lastSpaceIndex == -1 || lastSpaceIndex == 0) {
-      return '${substring(0, cutoff)}$ellipsis';
+      return '${substringSafe(0, cutoff)}$ellipsis';
     }
 
     // Truncate at the last space found and remove any trailing space before adding the ellipsis.
-    return '${substring(0, lastSpaceIndex).trimRight()}$ellipsis';
+    return '${substringSafe(0, lastSpaceIndex).trimRight()}$ellipsis';
   }
 
   /// Reverses the characters in the string. Handles Unicode characters correctly.
@@ -270,7 +275,7 @@ extension StringExtensions on String {
     // Validate the insertion position.
     if (position < 0 || position > length) return this;
     // Construct the new string.
-    return substring(0, position) + newChar + substring(position);
+    return substringSafe(0, position) + newChar + substringSafe(position);
   }
 
   /// Removes the last occurrence of [target] from the string.
@@ -280,13 +285,13 @@ extension StringExtensions on String {
     // If the target is not found, return the original string.
     if (lastIndex == -1) return this;
     // Reconstruct the string without the last occurrence.
-    return substring(0, lastIndex) + substring(lastIndex + target.length);
+    return substringSafe(0, lastIndex) + substringSafe(lastIndex + target.length);
   }
 
   /// Removes the first and last characters if they are a matching pair of brackets.
   String removeMatchingWrappingBrackets() =>
       // Use isBracketWrapped to check, then remove the outer characters.
-      isBracketWrapped() ? substring(1, length - 1) : this;
+      isBracketWrapped() ? substringSafe(1, length - 1) : this;
 
   /// Removes the specified [char] from the beginning and/or end of the string.
   String removeWrappingChar(String char, {bool trimFirst = true}) {
@@ -296,12 +301,12 @@ extension StringExtensions on String {
     // Check and remove the prefix if it exists.
     if (str.startsWith(char)) {
       // FIX #2: Remove the full length of the char, not just 1.
-      str = str.substring(char.length);
+      str = str.substringSafe(char.length);
     }
     // Check and remove the suffix if it exists.
     if (str.endsWith(char)) {
       // FIX #2: Remove the full length of the char, not just 1.
-      str = str.substring(0, str.length - char.length);
+      str = str.substringSafe(0, str.length - char.length);
     }
     // Return the processed string.
     return str;
@@ -320,33 +325,33 @@ extension StringExtensions on String {
     }
     // Handle case-sensitive removal.
     if (isCaseSensitive) {
-      return startsWith(start) ? substring(start.length).nullIfEmpty() : this;
+      return startsWith(start) ? substringSafe(start.length).nullIfEmpty() : this;
     }
     // Handle case-insensitive removal.
     return toLowerCase().startsWith(start.toLowerCase())
-        ? substring(start.length).nullIfEmpty()
+        ? substringSafe(start.length).nullIfEmpty()
         : nullIfEmpty();
   }
 
   /// Removes [end] from the end of the string, if it exists.
   String removeEnd(String end) =>
       // Check if the string ends with the target and remove it if so.
-      endsWith(end) ? substring(0, length - end.length) : this;
+      endsWith(end) ? substringSafe(0, length - end.length) : this;
 
   /// Removes the first character from the string.
   String removeFirstChar() =>
-      // Return empty if too short, otherwise return the substring from the second character.
-      (length < 1) ? '' : substring(1);
+      // Return empty if too short, otherwise return the substringSafe from the second character.
+      (length < 1) ? '' : substringSafe(1);
 
   /// Removes the last character from the string.
   String removeLastChar() =>
-      // Return empty if too short, otherwise return the substring without the last character.
-      (length < 1) ? '' : substring(0, length - 1);
+      // Return empty if too short, otherwise return the substringSafe without the last character.
+      (length < 1) ? '' : substringSafe(0, length - 1);
 
   /// Removes both the first and the last character from the string.
   String removeFirstLastChar() =>
-      // Return empty if too short, otherwise return the inner substring.
-      (length < 2) ? '' : substring(1, length - 1);
+      // Return empty if too short, otherwise return the inner substringSafe.
+      (length < 2) ? '' : substringSafe(1, length - 1);
 
   /// Replaces different apostrophe characters (’ and ') with a standard single quote.
   String normalizeApostrophe() =>
@@ -453,25 +458,25 @@ extension StringExtensions on String {
         .toList();
   }
 
-  /// Returns the substring before the first occurrence of [find].
+  /// Returns the substringSafe before the first occurrence of [find].
   /// Returns the original string if [find] is not found.
   String getEverythingBefore(String find) {
     // Find the index of the target string.
     final int atIndex = indexOf(find);
-    // Return the substring before the index, or the original string if not found.
-    return atIndex == -1 ? this : substring(0, atIndex);
+    // Return the substringSafe before the index, or the original string if not found.
+    return atIndex == -1 ? this : substringSafe(0, atIndex);
   }
 
-  /// Returns the substring after the first occurrence of [find].
+  /// Returns the substringSafe after the first occurrence of [find].
   /// Returns the original string if [find] is not found.
   String getEverythingAfter(String find) {
     // Find the index of the target string.
     final int atIndex = indexOf(find);
-    // Return the substring after the index, or the original string if not found.
-    return atIndex == -1 ? this : substring(atIndex + find.length);
+    // Return the substringSafe after the index, or the original string if not found.
+    return atIndex == -1 ? this : substringSafe(atIndex + find.length);
   }
 
-  /// Returns the substring after the last occurrence of [find].
+  /// Returns the substringSafe after the last occurrence of [find].
   /// Returns the original string if [find] is not found.
   String getEverythingAfterLast(String find) {
     if (find.isEmpty) {
@@ -480,37 +485,55 @@ extension StringExtensions on String {
 
     // Find the last index of the target string.
     final int atIndex = lastIndexOf(find);
-    // Return the substring after the last index, or the original string if not found.
-    return atIndex == -1 ? this : substring(atIndex + find.length);
+    // Return the substringSafe after the last index, or the original string if not found.
+    return atIndex == -1 ? this : substringSafe(atIndex + find.length);
   }
 
   /// Safely gets a substring, preventing [RangeError].
   ///
+  /// Uses grapheme clusters (user-perceived characters) for proper Unicode
+  /// support, including emojis and other multi-code-unit characters.
+  ///
   /// Returns an empty string if [start] is out of bounds or parameters are invalid.
+  ///
+  /// **Note**: Indices refer to grapheme clusters, not code units. For example,
+  /// '👨‍👩‍👧‍👦' (family emoji) counts as 1 grapheme, not 7 code units.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// '🙂hello'.substringSafe(0, 1); // '🙂' (not broken emoji)
+  /// '👨‍👩‍👧‍👦abc'.substringSafe(1); // 'abc'
+  /// 'hello'.substringSafe(1, 3); // 'el'
+  /// ```
   String substringSafe(int start, [int? end]) {
+    final Characters chars = characters;
+    final int charLength = chars.length;
+
     // Validate the start index.
-    if (start < 0 || start > length) return '';
+    if (start < 0 || start > charLength) return '';
     // If an end index is provided, validate it.
     if (end != null) {
       // Ensure end is not before start.
       if (end < start) return '';
-      // Clamp the end index to the string length.
-      end = end > length ? length : end;
+      // Clamp the end index to the character length.
+      end = end > charLength ? charLength : end;
     }
-    // Return the substring with validated indices.
-    return substring(start, end);
+    // Return the substring using grapheme-aware getRange.
+    return chars.getRange(start, end ?? charLength).string;
   }
 
-  /// Get the last [n] characters of a string.
+  /// Get the last [n] graphemes (user-perceived characters) of a string.
   ///
+  /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the full string if its length is less than [n].
   String lastChars(int n) {
     // Handle invalid length.
     if (n <= 0) return '';
+    final int charLength = characters.length;
     // If requested length is greater than or equal to string length, return the whole string.
-    if (n >= length) return this;
+    if (n >= charLength) return this;
     // Return the last n characters.
-    return substring(length - n);
+    return substringSafe(charLength - n);
   }
 
   /// Splits the string into a list of words, using space (" ") as the delimiter.
@@ -575,7 +598,7 @@ extension StringExtensions on String {
   /// when [other] is `null`.
   ///
   /// Args:
-  ///   other (String?): The substring to search for. Returns `false` if null.
+  ///   other (String?): The substringSafe to search for. Returns `false` if null.
   ///
   /// Returns:
   ///   bool: `true` if this string contains [other] (case-insensitive), `false` if
@@ -712,7 +735,7 @@ extension StringExtensions on String {
   /// Replaces the last [n] characters with [replacementChar].
   String replaceLastNCharacters(int n, String replacementChar) {
     if (n <= 0 || n > length) return this;
-    return substring(0, length - n) + replacementChar * n;
+    return substringSafe(0, length - n) + replacementChar * n;
   }
 
   /// Replaces hyphens and spaces with non-breaking equivalents.
@@ -785,11 +808,11 @@ extension StringExtensions on String {
     if (isEmpty || find == null || find.isEmpty) return this;
     String value = trim ? this.trim() : this;
     while (value.startsWith(find)) {
-      value = value.substring(find.length);
+      value = value.substringSafe(find.length);
       if (trim) value = value.trim();
     }
     while (value.endsWith(find)) {
-      value = value.substring(0, value.length - find.length);
+      value = value.substringSafe(0, value.length - find.length);
       if (trim) value = value.trim();
     }
     return value.isEmpty ? null : value;
@@ -818,7 +841,7 @@ extension StringExtensions on String {
   /// `allowOverlap` parameter if overlapping occurrences are desired.
   ///
   /// **Args:**
-  /// - [find]: The substring to count. Returns 0 if empty.
+  /// - [find]: The substringSafe to count. Returns 0 if empty.
   ///
   /// **Returns:**
   /// The number of non-overlapping occurrences of [find].
@@ -1052,7 +1075,7 @@ extension StringExtensions on String {
         return '${this}es';
       case 'y':
         if (length > 2 && this[length - 2].isVowel()) return '${this}s';
-        return '${substring(0, length - 1)}ies';
+        return '${substringSafe(0, length - 1)}ies';
     }
 
     final String lastTwo = lastChars(2);
@@ -1094,9 +1117,9 @@ extension StringExtensions on String {
   String trimWithEllipsis({int minLength = 5}) {
     if (length < minLength) return ellipsis;
     if (length < (minLength * 2) + 2) {
-      return substring(0, minLength) + ellipsis;
+      return substringSafe(0, minLength) + ellipsis;
     }
-    return substring(0, minLength) + ellipsis + substring(length - minLength);
+    return substringSafe(0, minLength) + ellipsis + substringSafe(length - minLength);
   }
 
   /// Collapses a multiline string into a single line with optional truncation.
@@ -1105,12 +1128,12 @@ extension StringExtensions on String {
     final String collapsed = replaceAll(newLine, ' ').replaceAll('  ', ' ');
     if (collapsed.length <= cropLength) return collapsed.trim();
 
-    String cropped = collapsed.substring(0, cropLength + 1);
+    String cropped = collapsed.substringSafe(0, cropLength + 1);
     while (cropped.isNotEmpty && !cropped.endsWithAny(commonWordEndings)) {
-      cropped = cropped.substring(0, cropped.length - 1);
+      cropped = cropped.substringSafe(0, cropped.length - 1);
     }
     if (cropped.isNotEmpty) {
-      cropped = cropped.substring(0, cropped.length - 1).trim();
+      cropped = cropped.substringSafe(0, cropped.length - 1).trim();
     }
     return appendEllipsis ? cropped + ellipsis : cropped;
   }
