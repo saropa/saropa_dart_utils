@@ -14,7 +14,7 @@ environment:
 dependencies:
   # Provides grapheme (user-perceived character) cluster support for Dart strings.
   # https://pub.dev/packages/characters/changelog
-  characters: ^1.3.0
+  characters: ^1.4.0
 
   # Contains utility functions and classes in the style of dart:collection to make working with collections easier.
   # https://pub.dev/packages/collection/changelog

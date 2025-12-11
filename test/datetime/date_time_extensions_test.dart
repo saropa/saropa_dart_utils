@@ -1660,6 +1660,31 @@ void main() {
           final DateTime fromDate = DateTime(2024, 6, 15);
           expect(dob.calculateAgeFromDate(fromDate), 34);
         });
+
+        group('birthday boundary cases', () {
+          // Person born Nov 30, 1977 turns 48 on Nov 30, 2025
+          final DateTime dob = DateTime(1977, 11, 30);
+
+          test('day before birthday returns previous age', () {
+            expect(dob.calculateAgeFromDate(DateTime(2025, 11, 29)), 47);
+          });
+
+          test('on birthday returns new age', () {
+            expect(dob.calculateAgeFromDate(DateTime(2025, 11, 30)), 48);
+          });
+
+          test('day after birthday returns new age', () {
+            expect(dob.calculateAgeFromDate(DateTime(2025, 12, 1)), 48);
+          });
+
+          test('month before birthday returns previous age', () {
+            expect(dob.calculateAgeFromDate(DateTime(2025, 10, 30)), 47);
+          });
+
+          test('month after birthday returns new age', () {
+            expect(dob.calculateAgeFromDate(DateTime(2025, 12, 30)), 48);
+          });
+        });
       });
     });
 

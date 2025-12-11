@@ -123,7 +123,7 @@ extension StringCaseExtensions on String {
   /// 'lowercase'.lowerCaseFirstChar(); // Returns 'lowercase'
   /// ''.lowerCaseFirstChar();        // Returns ''
   /// ```
-  String lowerCaseFirstChar() => isEmpty ? '' : this[0].toLowerCase() + substring(1);
+  String lowerCaseFirstChar() => isEmpty ? '' : this[0].toLowerCase() + substringSafe(1);
 
   /// Converts the first character of the string to uppercase, leaving the rest of the string unchanged.
   ///
@@ -138,7 +138,7 @@ extension StringCaseExtensions on String {
   /// 'UPPERCASE'.upperCaseFirstChar(); // Returns 'UPPERCASE'
   /// ''.upperCaseFirstChar();        // Returns ''
   /// ```
-  String upperCaseFirstChar() => isEmpty ? '' : this[0].toUpperCase() + substring(1);
+  String upperCaseFirstChar() => isEmpty ? '' : this[0].toUpperCase() + substringSafe(1);
 
   /// Converts the string to title case, capitalizing the first letter and lowercasing the rest.
   ///
@@ -153,7 +153,7 @@ extension StringCaseExtensions on String {
   /// 'TITLE CASE'.titleCase(); // Returns 'Title case'
   /// ''.titleCase();           // Returns ''
   /// ```
-  String titleCase() => isEmpty ? '' : this[0].toUpperCase() + substring(1).toLowerCase();
+  String titleCase() => isEmpty ? '' : this[0].toUpperCase() + substringSafe(1).toLowerCase();
 
   /// Converts only the Latin alphabetic characters (a-z) in the string to uppercase, leaving
   /// other characters unchanged.
@@ -239,10 +239,10 @@ extension StringCaseExtensions on String {
 
     // https://stackoverflow.com/questions/29628989/how-to-capitalize-the-first-letter-of-a-string-in-dart
     if (lowerCaseRemaining) {
-      return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
+      return '${this[0].toUpperCase()}${substringSafe(1).toLowerCase()}';
     }
 
-    return '${this[0].toUpperCase()}${substring(1)}';
+    return '${this[0].toUpperCase()}${substringSafe(1)}';
   }
 
   /// Extracts and concatenates only the uppercase letters from the string.

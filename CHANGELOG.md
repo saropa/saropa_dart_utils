@@ -32,6 +32,13 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ✨ **JsonUtils**
 - `isJson`: Added `allowEmpty` parameter (default `false`) to optionally treat `{}` as valid JSON while maintaining backwards compatibility
 
+✨ **String Extensions - Grapheme-Aware Substring**
+- `substringSafe`: Now uses `characters.getRange()` instead of `substring()` for proper UTF-16/emoji support
+- `truncateWithEllipsis`: Updated to use grapheme cluster length for accurate emoji handling
+- `truncateWithEllipsisPreserveWords`: Updated to use grapheme cluster length for accurate emoji handling
+- `lastChars`: Updated to use grapheme cluster length for accurate emoji handling
+- **Breaking behavior change**: Indices now refer to grapheme clusters (user-perceived characters), not code units. For example, `'👨‍👩‍👧‍👦'` counts as 1 grapheme, not 7 code units.
+
 🐛 **Fixes**
 - `MakeListExtensions`: Changed extension from `T` to `T?` to properly support nullable types
 - `getUtcTimeFromLocal`: Fixed documentation (was incorrectly stating "returns null if offset is 0" when it returns the original instance)

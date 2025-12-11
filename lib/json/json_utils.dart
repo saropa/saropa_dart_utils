@@ -1,6 +1,7 @@
 import 'dart:convert' as dc;
 
 import 'package:saropa_dart_utils/map/map_extensions.dart';
+import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 final RegExp _jsonStringPattern = RegExp('^".*"\$');
 
@@ -83,7 +84,7 @@ class JsonUtils {
     final String clean = value.replaceAll(r'\"', '"');
     if (clean.isEmpty) return null;
     if (_jsonStringPattern.hasMatch(clean)) {
-      return clean.substring(1, clean.length - 1);
+      return clean.substringSafe(1, clean.length - 1);
     }
     return clean;
   }
@@ -228,7 +229,7 @@ class JsonUtils {
           .split(' ')
           .map((String w) {
             if (w.isEmpty) return w;
-            return w[0].toUpperCase() + w.substring(1).toLowerCase();
+            return w[0].toUpperCase() + w.substringSafe(1).toLowerCase();
           })
           .join(' ');
     }

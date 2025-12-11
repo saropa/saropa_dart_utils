@@ -19,6 +19,12 @@ The script exits immediately on any error to prevent partial releases.
 .PARAMETER DryRun
 If specified, performs all validation steps but skips actual publishing, commits, and releases.
 
+.PARAMETER Version
+Optional version number to publish. If not specified, reads from pubspec.yaml.
+
+.PARAMETER Branch
+Optional branch name to push to. If not specified, uses the current branch.
+
 .EXAMPLE
 .\publish_pub_dev.ps1
 Runs the full publish workflow interactively.
@@ -27,6 +33,10 @@ Runs the full publish workflow interactively.
 .\publish_pub_dev.ps1 -DryRun
 Validates the release process without making any changes.
 
+.EXAMPLE
+.\publish_pub_dev.ps1 -Version "1.2.3" -Branch "main"
+Publishes version 1.2.3 and pushes to the main branch.
+
 .PREREQUISITES
   - Flutter SDK installed and in PATH
   - Git installed and configured
@@ -34,15 +44,16 @@ Validates the release process without making any changes.
   - Working directory must be a Git repository
 
 .NOTES
-  Version:   1.4
+  Version:   1.5
   Author:    Saropa
-  Copyright: © 2024-present Saropa. All rights reserved.
   Website:   https://saropa.com
   Email:     dev.tools@saropa.com
 #>
 
 param(
-    [switch]$DryRun
+    [switch]$DryRun,
+    [string]$Version,
+    [string]$Branch
 )
 
 #==============================================================================
@@ -206,8 +217,60 @@ if (-not (Test-Path ".git")) {
     exit 1
 }
 
+# Determine branch to use
+if (-not $Branch) {
+    $Branch = git rev-parse --abbrev-ref HEAD
+    Exit-OnError "Failed to determine current branch"
+}
+Write-Host "Target branch: $Branch"
+
+# Extract package name from pubspec.yaml
+$packageName = (Get-Content pubspec.yaml | Select-String -Pattern "^name:\s*(.+)$").Matches.Groups[1].Value.Trim()
+if ([string]::IsNullOrWhiteSpace($packageName)) {
+    Write-Error "Could not extract package name from pubspec.yaml"
+    exit 1
+}
+Write-Host "Package name: $packageName"
+
 #------------------------------------------------------------------------------
-# Step 3: Run Tests
+# Step 3: Check Working Tree Status
+#------------------------------------------------------------------------------
+Write-Section "Checking Working Tree"
+
+$uncommittedChanges = git status --porcelain
+if ($uncommittedChanges) {
+    Write-Warning "You have uncommitted changes:"
+    Write-Host $uncommittedChanges -ForegroundColor Yellow
+    Write-Host ""
+    $continueWithChanges = Read-Host "These changes will be included in the release commit. Continue? (y/n)"
+    if ($continueWithChanges -ne 'y') {
+        Write-Host "Aborted by user. Commit or stash your changes first." -ForegroundColor Yellow
+        exit 0
+    }
+} else {
+    Write-Host "Working tree is clean." -ForegroundColor Green
+}
+
+#------------------------------------------------------------------------------
+# Step 4: Check Remote Sync Status
+#------------------------------------------------------------------------------
+Write-Section "Checking Remote Sync"
+
+# Fetch latest from remote
+git fetch origin $Branch 2>$null
+if ($LASTEXITCODE -eq 0) {
+    $behind = git rev-list --count "HEAD..origin/$Branch" 2>$null
+    if ($behind -and [int]$behind -gt 0) {
+        Write-Error "Local branch is behind remote by $behind commit(s). Pull changes first with: git pull origin $Branch"
+        exit 1
+    }
+    Write-Host "Local branch is up-to-date with remote." -ForegroundColor Green
+} else {
+    Write-Warning "Could not fetch from remote. Proceeding anyway (remote branch may not exist yet)."
+}
+
+#------------------------------------------------------------------------------
+# Step 5: Run Tests
 #------------------------------------------------------------------------------
 Write-Section "Running Tests"
 
@@ -217,29 +280,55 @@ Exit-OnError "Tests failed. Fix test failures before publishing."
 Write-Host "All tests passed." -ForegroundColor Green
 
 #------------------------------------------------------------------------------
-# Step 4: Read Release Version from pubspec.yaml
+# Step 6: Run Static Analysis
+#------------------------------------------------------------------------------
+Write-Section "Running Static Analysis"
+
+flutter analyze
+Exit-OnError "Static analysis found issues. Fix them before publishing."
+
+Write-Host "Static analysis passed." -ForegroundColor Green
+
+#------------------------------------------------------------------------------
+# Step 7: Determine Release Version
 #------------------------------------------------------------------------------
 Write-Section "Release Version"
 
-# Read version from pubspec.yaml (user should have already updated this)
-$releaseNumber = (Get-Content pubspec.yaml | Select-String -Pattern "^version:\s*(.+)$").Matches.Groups[1].Value
+# Use provided version or read from pubspec.yaml
+if ($Version) {
+    $releaseNumber = $Version
+    Write-Host "Using provided version: $releaseNumber"
+} else {
+    # Read version from pubspec.yaml (user should have already updated this)
+    $releaseNumber = (Get-Content pubspec.yaml | Select-String -Pattern "^version:\s*(.+)$").Matches.Groups[1].Value
+    Write-Host "Read version from pubspec.yaml: $releaseNumber"
+}
 
 # Validate semantic version format
 if (-not ($releaseNumber -match "^\d+\.\d+\.\d+$")) {
-    Write-Error "Invalid version format in pubspec.yaml. Use semantic versioning: MAJOR.MINOR.PATCH (e.g., 0.4.0)"
+    Write-Error "Invalid version format '$releaseNumber'. Use semantic versioning: MAJOR.MINOR.PATCH (e.g., 0.4.0)"
     exit 1
 }
 
 Write-Host "Version to publish: $releaseNumber" -ForegroundColor Green
 
 #------------------------------------------------------------------------------
-# Step 6: Extract Release Notes from CHANGELOG
+# Step 8: Validate and Extract Release Notes from CHANGELOG
 #------------------------------------------------------------------------------
-Write-Section "Extracting Release Notes"
+Write-Section "Validating CHANGELOG"
 
 $changelogContent = Get-Content "CHANGELOG.md" -Raw
 
-# Try to extract notes for this specific version
+# Check if the version exists in CHANGELOG at all (early validation)
+$versionHeaderPattern = "##\s*\[?$([regex]::Escape($releaseNumber))\]?"
+if (-not ($changelogContent -match $versionHeaderPattern)) {
+    Write-Error "Version $releaseNumber not found in CHANGELOG.md. Add release notes before publishing."
+    exit 1
+}
+
+Write-Host "Found version $releaseNumber in CHANGELOG.md" -ForegroundColor Green
+
+# Extract notes for this specific version
 # Pattern matches content between this version's header and the next version header
 $pattern = "(?s)##\s*\[?$([regex]::Escape($releaseNumber))\]?[^\n]*\n(.*?)(?=##\s*\[?\d+\.\d+\.\d+|$)"
 $match = [regex]::Match($changelogContent, $pattern)
@@ -251,10 +340,10 @@ if ($match.Success) {
 }
 
 if ([string]::IsNullOrWhiteSpace($releaseNotes)) {
-    Write-Warning "No release notes found for version $releaseNumber in CHANGELOG.md."
+    Write-Warning "Version header found but no release notes content for version $releaseNumber."
     $useGeneric = Read-Host "Use generic message 'Release $releaseNumber'? (y/n)"
     if ($useGeneric -ne 'y') {
-        Write-Error "Aborting. Please add release notes to CHANGELOG.md first."
+        Write-Error "Aborting. Please add release notes content to CHANGELOG.md first."
         exit 1
     }
     $releaseNotes = "Release $releaseNumber"
@@ -264,7 +353,7 @@ if ([string]::IsNullOrWhiteSpace($releaseNotes)) {
 }
 
 #------------------------------------------------------------------------------
-# Step 7: Generate Documentation
+# Step 9: Generate Documentation
 #------------------------------------------------------------------------------
 Write-Section "Generating Documentation"
 
@@ -278,14 +367,30 @@ if ($DryRun) {
 }
 
 #------------------------------------------------------------------------------
-# Step 8: Confirm and Publish
+# Step 10: Pre-publish Validation
+#------------------------------------------------------------------------------
+Write-Section "Pre-publish Validation"
+
+if ($DryRun) {
+    Write-Host "[DRY RUN] Would run: flutter pub publish --dry-run" -ForegroundColor Yellow
+} else {
+    Write-Host "Running pre-publish validation..."
+    flutter pub publish --dry-run
+    Exit-OnError "Pre-publish validation failed. Fix issues before publishing."
+    Write-Host "Pre-publish validation passed." -ForegroundColor Green
+}
+
+#------------------------------------------------------------------------------
+# Step 11: Confirm and Publish
 #------------------------------------------------------------------------------
 Write-Section "Publish Confirmation"
 
 Write-Host ""
 Write-Host "Ready to publish:" -ForegroundColor Cyan
+Write-Host "  Package:    $packageName"
 Write-Host "  Version:    $releaseNumber"
 Write-Host "  Tag:        v$releaseNumber"
+Write-Host "  Branch:     $Branch"
 Write-Host "  Repository: $(git remote get-url origin 2>$null)"
 Write-Host ""
 
@@ -296,7 +401,7 @@ if ($publish -ne 'y') {
 }
 
 #------------------------------------------------------------------------------
-# Step 9: Clean and Publish to pub.dev
+# Step 12: Clean and Publish to pub.dev
 #------------------------------------------------------------------------------
 Write-Section "Publishing to pub.dev"
 
@@ -315,7 +420,7 @@ if ($DryRun) {
 }
 
 #------------------------------------------------------------------------------
-# Step 10: Git Commit and Push
+# Step 13: Git Commit and Push
 #------------------------------------------------------------------------------
 Write-Section "Committing Changes"
 
@@ -324,7 +429,7 @@ $tagName = "v$releaseNumber"
 if ($DryRun) {
     Write-Host "[DRY RUN] Would run: git add -A" -ForegroundColor Yellow
     Write-Host "[DRY RUN] Would run: git commit -m 'Release $tagName'" -ForegroundColor Yellow
-    Write-Host "[DRY RUN] Would run: git push origin main" -ForegroundColor Yellow
+    Write-Host "[DRY RUN] Would run: git push origin $Branch" -ForegroundColor Yellow
 } else {
     git add -A
     Exit-OnError "git add failed"
@@ -335,17 +440,17 @@ if ($DryRun) {
         git commit -m "Release $tagName"
         Exit-OnError "git commit failed"
 
-        git push origin main
+        git push origin $Branch
         Exit-OnError "git push failed"
 
-        Write-Host "Changes committed and pushed." -ForegroundColor Green
+        Write-Host "Changes committed and pushed to $Branch." -ForegroundColor Green
     } else {
         Write-Host "No changes to commit. Skipping commit step." -ForegroundColor Yellow
     }
 }
 
 #------------------------------------------------------------------------------
-# Step 11: Create and Push Git Tag
+# Step 14: Create and Push Git Tag
 #------------------------------------------------------------------------------
 Write-Section "Creating Git Tag"
 
@@ -375,20 +480,26 @@ if ($DryRun) {
 }
 
 #------------------------------------------------------------------------------
-# Step 12: Create GitHub Release
+# Step 15: Create GitHub Release
 #------------------------------------------------------------------------------
 Write-Section "Creating GitHub Release"
 
 if ($DryRun) {
     Write-Host "[DRY RUN] Would run: gh release create $tagName" -ForegroundColor Yellow
 } else {
-    # Check if release already exists (temporarily allow non-zero exit)
-    $ErrorActionPreference = 'SilentlyContinue'
-    $releaseExists = gh release view $tagName 2>$null
-    $releaseCheckExitCode = $LASTEXITCODE
-    $ErrorActionPreference = 'Stop'
+    # Check if release already exists using try/catch to avoid ErrorActionPreference issues
+    $releaseExists = $false
+    try {
+        $null = gh release view $tagName 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            $releaseExists = $true
+        }
+    } catch {
+        # Release doesn't exist, which is expected
+        $releaseExists = $false
+    }
 
-    if ($releaseCheckExitCode -eq 0) {
+    if ($releaseExists) {
         Write-Host "GitHub release $tagName already exists. Skipping release creation." -ForegroundColor Yellow
     } else {
         gh release create $tagName --title "Release $tagName" --notes "$releaseNotes"
@@ -411,7 +522,11 @@ Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
 
 if (-not $DryRun) {
+    # Extract repo info from git remote
+    $repoUrl = git remote get-url origin 2>$null
+    $repoPath = if ($repoUrl -match "github\.com[:/](.+?)(?:\.git)?$") { $matches[1] } else { "owner/repo" }
+
     Write-Host "Next steps:"
-    Write-Host "  - Verify package at: https://pub.dev/packages/saropa_dart_utils"
-    Write-Host "  - Check release at:  https://github.com/saropa/saropa_dart_utils/releases/tag/$tagName"
+    Write-Host "  - Verify package at: https://pub.dev/packages/$packageName"
+    Write-Host "  - Check release at:  https://github.com/$repoPath/releases/tag/$tagName"
 }
