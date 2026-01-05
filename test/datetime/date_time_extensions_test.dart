@@ -1170,7 +1170,8 @@ void main() {
             minutes: ((offset - offset.floor()) * 60).round(),
           );
 
-          expect(result!.difference(utcDateTime), expectedDifference);
+          expect(result, isNotNull);
+          expect(result?.difference(utcDateTime), expectedDifference);
         });
 
         test('returns correct UTC time with negative offset', () {
@@ -1184,7 +1185,8 @@ void main() {
             minutes: ((offset - offset.floor()) * 60).round(),
           );
 
-          expect(result!.difference(utcDateTime), expectedDifference);
+          expect(result, isNotNull);
+          expect(result?.difference(utcDateTime), expectedDifference);
         });
 
         test('handles fractional positive offset', () {
@@ -1198,7 +1200,8 @@ void main() {
             minutes: ((offset - offset.floor()) * 60).round(),
           );
 
-          expect(result!.difference(utcDateTime), expectedDifference);
+          expect(result, isNotNull);
+          expect(result?.difference(utcDateTime), expectedDifference);
         });
 
         test('handles fractional negative offset', () {
@@ -1212,7 +1215,8 @@ void main() {
             minutes: ((offset - offset.floor()) * 60).round(),
           );
 
-          expect(result!.difference(utcDateTime), expectedDifference);
+          expect(result, isNotNull);
+          expect(result?.difference(utcDateTime), expectedDifference);
         });
       });
 

@@ -82,8 +82,8 @@ void main() {
     });
 
     group('monthNumbers', () {
-      test('1. First month is 1', () => expect(MonthUtils.monthNumbers.first, 1));
-      test('2. Last month is 12', () => expect(MonthUtils.monthNumbers.last, 12));
+      test('1. First month is 1', () => expect(MonthUtils.monthNumbers[0], 1));
+      test('2. Last month is 12', () => expect(MonthUtils.monthNumbers[11], 12));
       test('3. Has 12 entries', () => expect(MonthUtils.monthNumbers.length, 12));
       test('4. Contains June (6)', () => expect(MonthUtils.monthNumbers.contains(6), isTrue));
       test('5. Does not contain 0', () => expect(MonthUtils.monthNumbers.contains(0), isFalse));

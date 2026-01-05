@@ -52,7 +52,10 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNotNullZeroOrNegative; // Returns false
   /// num? n4 = -3; n4.isNotNullZeroOrNegative; // Returns false
   /// ```
-  bool get isNotNullZeroOrNegative => isNotNullOrZero && !this!.isNegative;
+  bool get isNotNullZeroOrNegative {
+    final value = this;
+    return value != null && value.isNotZeroOrNegative;
+  }
 
   /// Returns `true` if the nullable number is null, zero, or negative.
   ///
@@ -65,7 +68,10 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNullZeroOrNegative; // Returns true
   /// num? n4 = -3; n4.isNullZeroOrNegative; // Returns true
   /// ```
-  bool get isNullZeroOrNegative => isNullOrZero || this!.isNegative;
+  bool get isNullZeroOrNegative {
+    final value = this;
+    return value == null || value.isZeroOrNegative;
+  }
 
   /// Returns `true` if the nullable number is null or zero.
   ///
@@ -98,7 +104,10 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isGreaterThanZero; // Returns false
   /// num? n4 = -3; n4.isGreaterThanZero; // Returns false
   /// ```
-  bool get isGreaterThanZero => this != null && this! > 0;
+  bool get isGreaterThanZero {
+    final num? self = this;
+    return self != null && self > 0;
+  }
 
   /// Returns `true` if the nullable number is not null and greater than one.
   ///
@@ -110,7 +119,10 @@ extension NumberNullableExtensions on num? {
   /// num? n4 = 0; n4.isGreaterThanOne; // Returns false
   /// num? n5 = -3; n5.isGreaterThanOne; // Returns false
   /// ```
-  bool get isGreaterThanOne => this != null && this! > 1;
+  bool get isGreaterThanOne {
+    final num? self = this;
+    return self != null && self > 1;
+  }
 
   /// Converts this nullable num to a double, or returns null if null.
   double? toDoubleOrNull() => this?.toDouble();

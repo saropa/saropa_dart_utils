@@ -198,7 +198,7 @@ void main() {
         final List<int> list = List<int>.generate(100, (int i) => i);
         final int? result = list.randomElement();
         expect(result, isNotNull);
-        expect(result! >= 0 && result < 100, isTrue);
+        expect(result, allOf(greaterThanOrEqualTo(0), lessThan(100)));
       });
     });
 

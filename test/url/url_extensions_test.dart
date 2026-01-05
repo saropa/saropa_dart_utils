@@ -138,7 +138,7 @@ void main() {
       final String? result = Uri.parse('https://example.com/你好.txt').fileName;
       // Unicode may be URL-encoded
       expect(result, isNotNull);
-      expect(result!.endsWith('.txt'), isTrue);
+      expect(result?.endsWith('.txt'), isTrue);
     });
     test(
       '7. No extension',
@@ -268,23 +268,28 @@ void main() {
     test('4. Invalid URL', () => expect(UrlUtils.tryParse('not a url'), isNotNull));
     test('5. With path', () {
       final Uri? result = UrlUtils.tryParse('https://example.com/path');
-      expect(result!.path, '/path');
+      expect(result, isNotNull);
+      expect(result?.path, '/path');
     });
     test('6. With query', () {
       final Uri? result = UrlUtils.tryParse('https://example.com?a=1');
-      expect(result!.query, 'a=1');
+      expect(result, isNotNull);
+      expect(result?.query, 'a=1');
     });
     test('7. File URL', () {
       final Uri? result = UrlUtils.tryParse('file:///path/to/file');
-      expect(result!.scheme, 'file');
+      expect(result, isNotNull);
+      expect(result?.scheme, 'file');
     });
     test('8. HTTP URL', () {
       final Uri? result = UrlUtils.tryParse('http://example.com');
-      expect(result!.scheme, 'http');
+      expect(result, isNotNull);
+      expect(result?.scheme, 'http');
     });
     test('9. With port', () {
       final Uri? result = UrlUtils.tryParse('https://example.com:8080');
-      expect(result!.port, 8080);
+      expect(result, isNotNull);
+      expect(result?.port, 8080);
     });
     test('10. Unicode URL', () {
       final Uri? result = UrlUtils.tryParse('https://example.com/你好');

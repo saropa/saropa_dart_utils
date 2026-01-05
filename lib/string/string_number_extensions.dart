@@ -43,9 +43,9 @@ extension StringNumberExtensions on String {
     // Regular expression to match trailing digits
     final RegExp regex = _trailingIntRegex;
 
-    final RegExpMatch? match = regex.firstMatch(this);
+    final String? matchGroup = regex.firstMatch(this)?.group(0);
 
     // Return the parsed integer if a match is found, otherwise return null
-    return match == null ? null : int.tryParse(match.group(0)!);
+    return matchGroup == null ? null : int.tryParse(matchGroup);
   }
 }

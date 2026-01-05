@@ -110,6 +110,7 @@ extension StringMapExtensions on Map<String, dynamic> {
     if (removeKeysList == null || removeKeysList.isEmpty) return false;
     removeWhere((String key, _) => removeKeysList.contains(key));
     if (recurseChildValues) {
+      // ignore: require_future_error_handling
       updateAll((String _, dynamic value) {
         if (value is Map<String, dynamic>) value.removeKeys(removeKeysList);
         return value;
@@ -152,12 +153,14 @@ class MapUtils {
   /// Adds a value to a map of lists.
   static void mapAddValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
+    // ignore: require_future_error_handling
     map.update(key, (List<V> list) => list..add(value), ifAbsent: () => <V>[value]);
   }
 
   /// Removes a value from a map of lists.
   static void mapRemoveValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
+    // ignore: require_future_error_handling
     map.update(key, (List<V> list) => list..remove(value), ifAbsent: () => <V>[]);
   }
 
@@ -182,6 +185,7 @@ class MapUtils {
       if (ensureUniqueKey) {
         final Map<String, dynamic> result = <String, dynamic>{};
         json.forEach((dynamic key, dynamic value) {
+          // ignore: require_future_error_handling
           result.putIfAbsent(key.toString(), () => value);
         });
         return result;

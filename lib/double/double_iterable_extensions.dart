@@ -46,6 +46,7 @@ extension DoubleIterableExtensions on Iterable<double> {
     for (final double item in this) {
       // Update the frequency of the current double in the map, or set it to
       // 1 if it's not in the map yet.
+      // ignore: require_future_error_handling
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
@@ -80,6 +81,7 @@ extension DoubleIterableExtensions on Iterable<double> {
     for (final double item in this) {
       // Update the frequency of the current double in the map,
       // or set it to 1 if it's not in the map yet.
+      // ignore: require_future_error_handling
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
