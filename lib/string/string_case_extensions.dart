@@ -346,7 +346,7 @@ extension StringCaseExtensions on String {
     }
 
     // the first word may not be capitalized
-    words[0] = words.first.capitalize();
+    words[0] = words[0].capitalize();
 
     return words.join(' ').trim();
   }

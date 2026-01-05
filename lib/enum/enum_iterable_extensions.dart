@@ -26,17 +26,24 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
     for (final Enum item in this) {
       // Update the frequency of the current integer in the map, or set it
       // to 1 if it's not in the map yet.
+      // ignore: require_future_error_handling
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find and return the key with the highest value (frequency) in the map.
-    final MapEntry<Enum, int> mostCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<Enum, int> a, MapEntry<Enum, int> b) => a.value > b.value ? a : b,
-    );
+    // The map is guaranteed non-empty since we checked isEmpty above.
+    MapEntry<Enum, int>? mostCommonEntry;
+    for (final MapEntry<Enum, int> entry in frequencyMap.entries) {
+      if (mostCommonEntry == null || entry.value > mostCommonEntry.value) {
+        mostCommonEntry = entry;
+      }
+    }
 
     // Return a MapEntry with the most common value and its frequency.
-    // Return a MapEntry<Enum, int> to make it clear that you’re returning a
-    // key-value pair, and it’s more idiomatic in Dart.
+    // mostCommonEntry is guaranteed non-null since the list is non-empty.
+    if (mostCommonEntry == null) {
+      throw StateError('Unexpected null entry in non-empty frequency map');
+    }
     return mostCommonEntry;
   }
 

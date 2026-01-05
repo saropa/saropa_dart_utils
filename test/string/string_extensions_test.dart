@@ -1413,7 +1413,7 @@ void main() {
     test('2. Multiple matches', () {
       final List<String>? result = '{a} and {b}'.extractCurlyBraces();
       expect(result, isNotNull);
-      expect(result!.isNotEmpty, isTrue);
+      expect(result, isNotEmpty);
     });
     test('3. No matches', () => expect('hello world'.extractCurlyBraces(), null));
     test('4. Empty braces', () => expect('{}'.extractCurlyBraces(), null));

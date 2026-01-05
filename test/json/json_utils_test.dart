@@ -39,8 +39,8 @@ void main() {
       expect(d, isA<Map<String, dynamic>>());
       final Map<String, dynamic>? m = JsonUtils.jsonDecodeToMap('{"a":1,"b":"x"}');
       expect(m, isNotNull);
-      expect(m!['a'], 1);
-      expect(m['b'], 'x');
+      expect(m?['a'], 1);
+      expect(m?['b'], 'x');
     });
     test('decode invalid returns null', () {
       expect(JsonUtils.jsonDecodeSafe('not json'), isNull);
@@ -51,17 +51,20 @@ void main() {
     );
     test('5. Zero seconds', () {
       final DateTime? result = JsonUtils.toDateTimeEpochJson(0, JsonEpochScale.seconds);
+      expect(result, isNotNull);
       // In local time, epoch 0 can be 1969 or 1970 depending on timezone
-      expect(result!.year, anyOf(equals(1969), equals(1970)));
+      expect(result?.year, anyOf(equals(1969), equals(1970)));
     });
     test('6. Zero milliseconds', () {
       final DateTime? result = JsonUtils.toDateTimeEpochJson(0, JsonEpochScale.milliseconds);
+      expect(result, isNotNull);
       // In local time, epoch 0 can be 1969 or 1970 depending on timezone
-      expect(result!.year, anyOf(equals(1969), equals(1970)));
+      expect(result?.year, anyOf(equals(1969), equals(1970)));
     });
     test('7. Negative seconds', () {
       final DateTime? result = JsonUtils.toDateTimeEpochJson(-1, JsonEpochScale.seconds);
-      expect(result!.year, 1969);
+      expect(result, isNotNull);
+      expect(result?.year, 1969);
     });
     test('8. Large timestamp', () {
       final DateTime? result = JsonUtils.toDateTimeEpochJson(2000000000, JsonEpochScale.seconds);
@@ -72,14 +75,16 @@ void main() {
         1705276800123,
         JsonEpochScale.milliseconds,
       );
-      expect(result!.millisecond, 123);
+      expect(result, isNotNull);
+      expect(result?.millisecond, 123);
     });
     test('10. Microseconds precision', () {
       final DateTime? result = JsonUtils.toDateTimeEpochJson(
         1705276800000123,
         JsonEpochScale.microseconds,
       );
-      expect(result!.microsecond, 123);
+      expect(result, isNotNull);
+      expect(result?.microsecond, 123);
     });
   });
 
@@ -210,11 +215,13 @@ void main() {
         <int>[1, 2],
         <int>[3, 4],
       ]);
-      expect(result!.length, 2);
+      expect(result, isNotNull);
+      expect(result, hasLength(2));
     });
     test('8. Mixed types list', () {
       final List<dynamic>? result = JsonUtils.toListDynamic(<dynamic>[1, 'a', true]);
-      expect(result!.length, 3);
+      expect(result, isNotNull);
+      expect(result, hasLength(3));
     });
     test('9. Single item', () => expect(JsonUtils.toListDynamic(<dynamic>[42]), <dynamic>[42]));
     test(

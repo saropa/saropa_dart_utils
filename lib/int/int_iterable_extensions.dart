@@ -19,16 +19,22 @@ extension IntIterableExtensions on Iterable<int> {
     for (final int item in this) {
       // Update the frequency of the current integer in the map, or
       // set it to 1 if it's not in the map yet.
+      // ignore: require_future_error_handling
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
     // Find the key-value pair with the highest value (frequency) in the map.
-    final MapEntry<int, int> mostCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<int, int> a, MapEntry<int, int> b) => a.value > b.value ? a : b,
-    );
+    // The map is guaranteed non-empty since we checked isEmpty above.
+    MapEntry<int, int>? mostCommonEntry;
+    for (final MapEntry<int, int> entry in frequencyMap.entries) {
+      if (mostCommonEntry == null || entry.value > mostCommonEntry.value) {
+        mostCommonEntry = entry;
+      }
+    }
 
     // Return a tuple with the most common value and its frequency.
-    return (mostCommonEntry.key, mostCommonEntry.value);
+    // mostCommonEntry is guaranteed non-null since the list is non-empty.
+    return mostCommonEntry == null ? null : (mostCommonEntry.key, mostCommonEntry.value);
   }
 
   /// find the most common value in the list.
@@ -44,15 +50,21 @@ extension IntIterableExtensions on Iterable<int> {
     for (final int item in this) {
       // Update the frequency of the current integer in the map, or
       // set it to 1 if it's not in the map yet.
+      // ignore: require_future_error_handling
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
-    // Find the key-value pair with the highest value (frequency) in the map.
-    final MapEntry<int, int> mostCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<int, int> a, MapEntry<int, int> b) => a.value < b.value ? a : b,
-    );
+    // Find the key-value pair with the lowest value (frequency) in the map.
+    // The map is guaranteed non-empty since we checked isEmpty above.
+    MapEntry<int, int>? leastCommonEntry;
+    for (final MapEntry<int, int> entry in frequencyMap.entries) {
+      if (leastCommonEntry == null || entry.value < leastCommonEntry.value) {
+        leastCommonEntry = entry;
+      }
+    }
 
-    // Return a tuple with the most common value and its frequency.
-    return (mostCommonEntry.key, mostCommonEntry.value);
+    // Return a tuple with the least common value and its frequency.
+    // leastCommonEntry is guaranteed non-null since the list is non-empty.
+    return leastCommonEntry == null ? null : (leastCommonEntry.key, leastCommonEntry.value);
   }
 }

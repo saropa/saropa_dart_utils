@@ -2,6 +2,9 @@
 /// extension methods by Saropa.
 library;
 
+// Base64 utilities
+export 'base64/base64_utils.dart';
+
 // Bool extensions
 export 'bool/bool_iterable_extensions.dart';
 export 'bool/bool_string_extensions.dart';
@@ -16,6 +19,7 @@ export 'datetime/date_time_utils.dart';
 export 'datetime/time_emoji_utils.dart';
 
 // Double extensions
+export 'double/double_extensions.dart';
 export 'double/double_iterable_extensions.dart';
 
 // Enum extensions
@@ -26,6 +30,9 @@ export 'gesture/swipe_properties.dart';
 
 // Hex utilities
 export 'hex/hex_utils.dart';
+
+// HTML utilities
+export 'html/html_utils.dart';
 
 // Int extensions and utilities
 export 'int/int_extensions.dart';
@@ -74,3 +81,6 @@ export 'string/string_utils.dart';
 
 // URL extensions and utilities
 export 'url/url_extensions.dart';
+
+// UUID utilities
+export 'uuid/uuid_utils.dart';

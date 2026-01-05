@@ -20,7 +20,7 @@ extension UriExtensions on Uri {
   ///
   /// Checks if the file extension matches common image formats.
   bool get isImageUri {
-    final String filePath = path.split('/').last;
+    final String filePath = path.split('/').lastOrNull ?? '';
     if (filePath.isEmpty) return false;
     final int dotIndex = filePath.lastIndexOf('.');
     if (dotIndex == -1) return false;
@@ -31,7 +31,7 @@ extension UriExtensions on Uri {
   /// Gets the file name from this URI path.
   String? get fileName {
     if (path.isEmpty) return null;
-    final String lastSegment = path.split('/').last;
+    final String lastSegment = path.split('/').lastOrNull ?? '';
     return lastSegment.isEmpty ? null : lastSegment;
   }
 
@@ -134,10 +134,10 @@ extension UriExtensions on Uri {
 /// Extension methods for nullable URI.
 extension UriNullableExtensions on Uri? {
   /// Returns true if this URI is null or has an empty path.
-  bool get isUriNullOrEmpty => this == null || this!.path.isEmpty;
+  bool get isUriNullOrEmpty => this?.path.isEmpty ?? true;
 
   /// Returns true if this URI is not null and has a non-empty path.
-  bool get isNotUriNullOrEmpty => this != null && this!.path.isNotEmpty;
+  bool get isNotUriNullOrEmpty => this?.path.isNotEmpty ?? false;
 }
 
 /// Utility class for URL operations.

@@ -25,7 +25,59 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
 ****
-## 0.5.10+Vienna (Latest)
+## 0.5.12+Tokyo (Latest)
+
+### Linting Migration
+
+🔧 **Migrated to saropa_lints**
+- Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
+- Added `custom_lint: ^0.8.0` for custom lint rule support
+- Configured `recommended` tier (~150 rules)
+
+📋 **Identified Issues** (for future cleanup)
+- `avoid_unsafe_reduce` - Several reduce() calls on potentially empty collections
+- `avoid_unsafe_collection_methods` - Usage of .first/.last on potentially empty collections
+- `require_future_error_handling` - Future calls without explicit error handling
+- `avoid_null_assertion` - Null assertion operators in extension methods and tests
+- `avoid_hardcoded_credentials` - False positives in test string constants
+
+🧹 **Analysis Options Cleanup**
+- Simplified `analysis_options.yaml` from 255 lines to 69 lines
+- Removed manually flattened flutter_lints/recommended/core rules
+- Kept project-specific analyzer settings (strict mode, excludes, formatter)
+
+****
+## 0.5.11+Sydney
+
+### New Utility Classes
+
+✨ **Base64Utils** - Text compression and decompression
+- `compressText(String?)` - Compresses text using gzip and encodes as Base64
+- `decompressText(String?)` - Decompresses a Base64-encoded gzipped string
+
+✨ **UuidUtils** - UUID validation and manipulation
+- `isUUID(String?)` - Validates UUID format (with or without hyphens, versions 1-5)
+- `addHyphens(String?)` - Converts 32-char UUID to standard 36-char format
+- `removeHyphens(String?)` - Removes hyphens from UUID string
+
+✨ **HtmlUtils** - HTML text processing
+- `unescape(String?)` - Converts HTML entities to characters (named and numeric)
+- `removeHtmlTags(String?)` - Strips HTML tags, leaving only text content
+- `toPlainText(String?)` - Combines tag removal and entity unescaping
+
+✨ **DoubleExtensions** - Double formatting and manipulation
+- `hasDecimals` - Check if double has non-zero fractional part
+- `toPercentage({decimalPlaces, roundDown})` - Format as percentage string
+- `formatDouble(decimalPlaces, {showTrailingZeros})` - Format with decimal control
+- `forceBetween(from, to)` - Clamp value within range
+- `toPrecision(precision)` - Truncate to specified decimal places
+- `formatPrecision({precision})` - Smart formatting (removes .00 from whole numbers)
+
+🧪 **Tests**
+- Added 103 test cases covering all new utilities
+
+****
+## 0.5.10+Vienna
 
 ### Build & Tooling
 

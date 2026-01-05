@@ -429,7 +429,7 @@ extension StringExtensions on String {
     if (minLength > 1 && intermediateSplit.length > 1) {
       // Logic to merge short segments.
       final List<String> mergedResult = <String>[];
-      String currentBuffer = intermediateSplit.first;
+      String currentBuffer = intermediateSplit[0];
       // Loop through the segments to check for necessary merges.
       for (int i = 1; i < intermediateSplit.length; i++) {
         final String nextPart = intermediateSplit[i];

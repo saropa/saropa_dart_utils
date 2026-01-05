@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 /// Saropa extensions for [List]s of [bool]s
 ///
 extension BoolIterableExtensions on Iterable<bool> {
@@ -9,28 +7,18 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// frequency.
   /// If the list is empty, returns null.
   (bool, int)? mostOccurrences() {
-    // check if the list is empty before calling reduce
     if (isEmpty) {
       return null;
     }
 
-    // Create a new HashMap to store each boolean and its frequency.
-    final HashMap<bool, int> frequencyMap = HashMap<bool, int>();
+    final int trueCount = countTrue;
+    final int falseCount = length - trueCount;
 
-    // Iterate over each boolean in the list.
-    for (final bool item in this) {
-      // Update the frequency of the current boolean in the map, or
-      // set it to 1 if it's not in the map yet.
-      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
+    // When counts are equal, true is returned (consistent behavior)
+    if (trueCount >= falseCount) {
+      return (true, trueCount);
     }
-
-    // Find the key-value pair with the highest value (frequency) in the map.
-    final MapEntry<bool, int> mostCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<bool, int> a, MapEntry<bool, int> b) => a.value > b.value ? a : b,
-    );
-
-    // Return a tuple with the most common value and its frequency.
-    return (mostCommonEntry.key, mostCommonEntry.value);
+    return (false, falseCount);
   }
 
   /// Finds the least common value in the list.
@@ -39,27 +27,18 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// frequency.
   /// If the list is empty, returns null.
   (bool, int)? leastOccurrences() {
-    // check if the list is empty before calling reduce
     if (isEmpty) {
       return null;
     }
 
-    // Create a new HashMap to store each boolean and its frequency.
-    final HashMap<bool, int> frequencyMap = HashMap<bool, int>();
-    // Iterate over each boolean in the list.
-    for (final bool item in this) {
-      // Update the frequency of the current boolean in the map, or
-      // set it to 1 if it's not in the map yet.
-      frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
+    final int trueCount = countTrue;
+    final int falseCount = length - trueCount;
+
+    // When counts are equal, false is returned (consistent behavior)
+    if (falseCount <= trueCount) {
+      return (false, falseCount);
     }
-
-    // Find the key-value pair with the lowest value (frequency) in the map.
-    final MapEntry<bool, int> leastCommonEntry = frequencyMap.entries.reduce(
-      (MapEntry<bool, int> a, MapEntry<bool, int> b) => a.value < b.value ? a : b,
-    );
-
-    // Return a tuple with the least common value and its frequency.
-    return (leastCommonEntry.key, leastCommonEntry.value);
+    return (true, trueCount);
   }
 
   /// Checks if any element in the iterable is `true`.

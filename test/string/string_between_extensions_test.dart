@@ -7,29 +7,29 @@ void main() {
     test('1. Parentheses', () {
       final (String, String?)? result = 'hello (world) test'.betweenBracketsResult();
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
-      expect(result.$2, 'hello test');
+      expect(result?.$1, 'world');
+      expect(result?.$2, 'hello test');
     });
     test('2. Square brackets', () {
       final (String, String?)? result = 'hello [world] test'.betweenBracketsResult();
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
+      expect(result?.$1, 'world');
     });
     test('3. Angle brackets', () {
       final (String, String?)? result = 'hello <world> test'.betweenBracketsResult();
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
+      expect(result?.$1, 'world');
     });
     test('4. Curly braces', () {
       final (String, String?)? result = 'hello {world} test'.betweenBracketsResult();
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
+      expect(result?.$1, 'world');
     });
     test('5. No brackets', () => expect('hello world'.betweenBracketsResult(), isNull));
     test('6. Empty string', () => expect(''.betweenBracketsResult(), isNull));
     test('7. Priority order - parentheses first', () {
       final (String, String?)? result = '(first) [second]'.betweenBracketsResult();
-      expect(result!.$1, 'first');
+      expect(result?.$1, 'first');
     });
     test('8. Empty brackets', () {
       final (String, String?)? result = 'hello () test'.betweenBracketsResult();
@@ -38,11 +38,11 @@ void main() {
     });
     test('9. Nested content', () {
       final (String, String?)? result = 'outer (inner content) end'.betweenBracketsResult();
-      expect(result!.$1, 'inner content');
+      expect(result?.$1, 'inner content');
     });
     test('10. Unicode content', () {
       final (String, String?)? result = 'hello (你好) test'.betweenBracketsResult();
-      expect(result!.$1, '你好');
+      expect(result?.$1, '你好');
     });
   });
 
@@ -50,35 +50,35 @@ void main() {
     test('1. Single brackets from end', () {
       final (String, String?)? result = 'hello (world) test'.betweenBracketsResultLast();
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
+      expect(result?.$1, 'world');
     });
     test('2. Multiple brackets - gets last', () {
       final (String, String?)? result = '(first) middle (last)'.betweenBracketsResultLast();
-      expect(result!.$1, 'last');
+      expect(result?.$1, 'last');
     });
     test('3. No brackets', () => expect('hello world'.betweenBracketsResultLast(), isNull));
     test('4. Empty string', () => expect(''.betweenBracketsResultLast(), isNull));
     test('5. Square brackets last', () {
       final (String, String?)? result = '(first) [last]'.betweenBracketsResultLast();
-      expect(result!.$1, 'first');
+      expect(result?.$1, 'first');
     });
     test('6. Curly braces', () {
       final (String, String?)? result = 'test {content}'.betweenBracketsResultLast();
-      expect(result!.$1, 'content');
+      expect(result?.$1, 'content');
     });
     test('7. Angle brackets', () {
       final (String, String?)? result = 'test <content>'.betweenBracketsResultLast();
-      expect(result!.$1, 'content');
+      expect(result?.$1, 'content');
     });
     test('8. Empty brackets', () => expect('test ()'.betweenBracketsResultLast(), isNull));
     test('9. Remaining string', () {
       final (String, String?)? result = 'prefix (content) suffix'.betweenBracketsResultLast();
-      expect(result!.$2, 'prefix suffix');
+      expect(result?.$2, 'prefix suffix');
     });
     test('10. Only brackets', () {
       final (String, String?)? result = '(content)'.betweenBracketsResultLast();
-      expect(result!.$1, 'content');
-      expect(result.$2, '');
+      expect(result?.$1, 'content');
+      expect(result?.$2, '');
     });
   });
 
@@ -125,7 +125,7 @@ void main() {
     test('2. Multiple occurrences', () {
       final List<String>? result = '(a) and (b) and (c)'.betweenSplit('(', ')');
       expect(result, isNotNull);
-      expect(result!.isNotEmpty, isTrue);
+      expect(result?.isNotEmpty, isTrue);
     });
     test('3. No occurrences', () => expect('hello world'.betweenSplit('(', ')'), isNull));
     test('4. Empty string', () => expect(''.betweenSplit('(', ')'), isNull));
@@ -156,8 +156,8 @@ void main() {
     test('1. Basic extraction', () {
       final (String, String?)? result = 'hello (world) test'.betweenResult('(', ')');
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
-      expect(result.$2, 'hello test');
+      expect(result?.$1, 'world');
+      expect(result?.$2, 'hello test');
     });
     test('2. No start delimiter', () => expect('hello world'.betweenResult('(', ')'), isNull));
     test('3. No end delimiter', () => expect('hello (world'.betweenResult('(', ')'), isNull));
@@ -166,19 +166,19 @@ void main() {
     test('6. Empty end', () => expect('hello'.betweenResult('(', ''), isNull));
     test('7. Multiple delimiters', () {
       final (String, String?)? result = '(first) (second)'.betweenResult('(', ')');
-      expect(result!.$1, 'first) (second');
+      expect(result?.$1, 'first) (second');
     });
     test('8. With whitespace', () {
       final (String, String?)? result = 'hello ( world ) test'.betweenResult('(', ')');
-      expect(result!.$1, 'world');
+      expect(result?.$1, 'world');
     });
     test('9. No trim', () {
       final (String, String?)? result = 'hello ( world ) test'.betweenResult('(', ')', trim: false);
-      expect(result!.$1, ' world ');
+      expect(result?.$1, ' world ');
     });
     test('10. Unicode', () {
       final (String, String?)? result = '你好 (世界) 测试'.betweenResult('(', ')');
-      expect(result!.$1, '世界');
+      expect(result?.$1, '世界');
     });
   });
 
@@ -186,37 +186,38 @@ void main() {
     test('1. Basic extraction from end', () {
       final (String, String?)? result = 'hello (world) test'.betweenResultLast('(', ')');
       expect(result, isNotNull);
-      expect(result!.$1, 'world');
+      expect(result?.$1, 'world');
     });
     test('2. Multiple occurrences - gets last', () {
       final (String, String?)? result = '(first) (last)'.betweenResultLast('(', ')');
-      expect(result!.$1, 'last');
+      expect(result?.$1, 'last');
     });
     test('3. No match', () => expect('hello world'.betweenResultLast('(', ')'), isNull));
     test('4. Empty string', () => expect(''.betweenResultLast('(', ')'), isNull));
     test('5. Remaining string', () {
       final (String, String?)? result = 'prefix (middle) suffix'.betweenResultLast('(', ')');
-      expect(result!.$2, 'prefix suffix');
+      expect(result, isNotNull);
+      expect(result?.$2, 'prefix suffix');
     });
     test('6. Only brackets', () {
       final (String, String?)? result = '(content)'.betweenResultLast('(', ')');
-      expect(result!.$1, 'content');
+      expect(result?.$1, 'content');
     });
     test('7. With whitespace trimmed', () {
       final (String, String?)? result = '( content )'.betweenResultLast('(', ')');
-      expect(result!.$1, 'content');
+      expect(result?.$1, 'content');
     });
     test('8. Custom delimiters', () {
       final (String, String?)? result = '<<first>> <<last>>'.betweenResultLast('<<', '>>');
-      expect(result!.$1, 'last');
+      expect(result?.$1, 'last');
     });
     test('9. Unicode', () {
       final (String, String?)? result = '(你好) (世界)'.betweenResultLast('(', ')');
-      expect(result!.$1, '世界');
+      expect(result?.$1, '世界');
     });
     test('10. End optional true', () {
       final (String, String?)? result = '(content'.betweenResultLast('(', ')', endOptional: true);
-      expect(result!.$1, 'content');
+      expect(result?.$1, 'content');
     });
   });
 
