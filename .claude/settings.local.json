@@ -25,7 +25,8 @@
       "Bash(powershell -ExecutionPolicy Bypass -File \"scripts\\\\publish_pub_dev.ps1\")",
       "Bash(pwsh -ExecutionPolicy Bypass -File \"scripts\\\\publish_pub_dev.ps1\")",
       "Bash(git -C \"d:\\\\src\\\\saropa_dart_utils\" commit -m \"$\\(cat <<''EOF''\nRelease v0.5.12+Tokyo - Migrate to saropa_lints + new utilities\n\n## Linting Migration\n- Replaced manually flattened lint rules with saropa_lints ^1.1.12\n- Added custom_lint ^0.8.0 for 500+ custom lint rules\n- Configured recommended tier \\(~150 rules\\)\n- Simplified analysis_options.yaml from 255 to 69 lines\n\n## New Utility Classes\n- Base64Utils: Text compression/decompression with gzip+Base64\n- UuidUtils: UUID validation, hyphen add/remove\n- HtmlUtils: HTML entity unescaping, tag removal, plain text conversion\n- DoubleExtensions: Formatting, precision control, percentage conversion\n\n## Identified Issues \\(for future cleanup\\)\n- avoid_unsafe_reduce: reduce\\(\\) on potentially empty collections\n- avoid_unsafe_collection_methods: .first/.last on empty collections\n- require_future_error_handling: Futures without error handling\n- avoid_null_assertion: Null assertions in extensions and tests\n\n## Test Coverage\n- Added 103 test cases for new utilities\n- Updated existing tests for compatibility\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git -C \"d:\\\\src\\\\saropa_dart_utils\" status)"
+      "Bash(git -C \"d:\\\\src\\\\saropa_dart_utils\" status)",
+      "Bash(flutter pub publish:*)"
     ],
     "deny": [],
     "ask": []
