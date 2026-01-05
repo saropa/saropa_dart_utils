@@ -75,3 +75,5 @@ app.*.map.json
 .fvm/fvm_config.json
 dartdoc-log.txt
 nul
+# Claude Code config
+.claude/
