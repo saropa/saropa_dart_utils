@@ -1,0 +1,42 @@
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (validate only, do not publish)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC authentication with pub.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Format check
+        run: dart format --set-exit-if-changed .
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Dry run
+        run: flutter pub publish --dry-run
+
+      - name: Publish to pub.dev
+        if: ${{ inputs.dry_run != true }}
+        run: flutter pub publish --force
