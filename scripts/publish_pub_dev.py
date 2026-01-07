@@ -418,10 +418,11 @@ def main() -> None:
     write_section("Pre-publish Validation")
 
     if dry_run:
-        print(f"{YELLOW}[DRY RUN] Would run: flutter pub publish --dry-run{RESET}")
+        print(f"{YELLOW}[DRY RUN] Would run: dart pub publish --dry-run{RESET}")
     else:
         print("Running pre-publish validation...")
-        result = run_command(["flutter", "pub", "publish", "--dry-run"], check=False)
+        # Use 'dart pub' instead of 'flutter pub' to avoid Windows 'nul' path bug
+        result = run_command(["dart", "pub", "publish", "--dry-run"], check=False)
         exit_on_error(
             result, "Pre-publish validation failed. Fix issues before publishing."
         )
@@ -460,13 +461,14 @@ def main() -> None:
 
     if dry_run:
         print(f"{YELLOW}[DRY RUN] Would run: flutter clean{RESET}")
-        print(f"{YELLOW}[DRY RUN] Would run: flutter pub publish --force{RESET}")
+        print(f"{YELLOW}[DRY RUN] Would run: dart pub publish --force{RESET}")
     else:
         result = run_command(["flutter", "clean"], check=False)
         exit_on_error(result, "flutter clean failed")
 
         print(f"Publishing version {release_number} to pub.dev...")
-        result = run_command(["flutter", "pub", "publish", "--force"], check=False)
+        # Use 'dart pub' instead of 'flutter pub' to avoid Windows 'nul' path bug
+        result = run_command(["dart", "pub", "publish", "--force"], check=False)
         exit_on_error(result, "Failed to publish package to pub.dev")
 
         write_success("Package published to pub.dev successfully.")
