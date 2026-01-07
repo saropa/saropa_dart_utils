@@ -136,8 +136,6 @@ extension DoubleExtensions on double {
   /// 15.123.formatPrecision(); // '15.12'
   /// ```
   String formatPrecision({int precision = 2}) {
-    return toStringAsFixed(2).endsWith('.00')
-        ? toStringAsFixed(0)
-        : toStringAsFixed(precision);
+    return toStringAsFixed(2).endsWith('.00') ? toStringAsFixed(0) : toStringAsFixed(precision);
   }
 }

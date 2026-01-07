@@ -18,8 +18,9 @@ extension MapExtensions<K, V> on Map<K, V> {
     required List<K>? ignoreList,
   }) {
     final List<K> ignore = ignoreList ?? <K>[];
-    final List<MapEntry<K, V>> available =
-        entries.where((MapEntry<K, V> e) => !ignore.contains(e.key)).toList();
+    final List<MapEntry<K, V>> available = entries
+        .where((MapEntry<K, V> e) => !ignore.contains(e.key))
+        .toList();
     if (available.isEmpty) return null;
     available.shuffle(Random());
     return available.take(count).toList();
@@ -88,8 +89,7 @@ extension StringMapExtensions on Map<String, dynamic> {
     String childKey,
     String grandChildKey,
     String greatGrandChildKey,
-  ) =>
-      getGreatGrandchild(childKey, grandChildKey, greatGrandChildKey) as String?;
+  ) => getGreatGrandchild(childKey, grandChildKey, greatGrandChildKey) as String?;
 
   /// Gets a child as Map`<String, dynamic>`.
   Map<String, dynamic>? getValue(String? key) {
@@ -121,12 +121,10 @@ extension StringMapExtensions on Map<String, dynamic> {
 
   /// Returns a new map with keys sorted alphabetically.
   Map<String, dynamic> toKeySorted() => Map<String, dynamic>.fromEntries(
-      entries.toList()
-        ..sort(
-          (MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) =>
-              a.key.compareTo(b.key),
-        ),
-    );
+    entries.toList()..sort(
+      (MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) => a.key.compareTo(b.key),
+    ),
+  );
 }
 
 /// Utility class for map operations.
@@ -134,7 +132,8 @@ class MapUtils {
   const MapUtils._();
 
   /// Counts total items across all iterable values in a map.
-  static int countItems<K, V>(Map<K, Iterable<V>> inputMap) => inputMap.values.fold<int>(0, (int sum, Iterable<V> iter) => sum + iter.length);
+  static int countItems<K, V>(Map<K, Iterable<V>> inputMap) =>
+      inputMap.values.fold<int>(0, (int sum, Iterable<V> iter) => sum + iter.length);
 
   /// Toggles a value in a map of lists.
   ///

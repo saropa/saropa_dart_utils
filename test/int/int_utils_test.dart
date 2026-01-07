@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/int/int_utils.dart';
 
 void main() {
-  
   group('findGreatestCommonDenominator', () {
     test('returns null when a or b is negative', () {
       expect(IntUtils.findGreatestCommonDenominator(-1, 1), isNull);
@@ -33,5 +32,4 @@ void main() {
 
     // Add more test cases here...
   });
-
 }

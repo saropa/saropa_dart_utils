@@ -698,7 +698,7 @@ extension StringExtensions on String {
     return this[index];
   }
 
-// cspell: ignore abcabcabc 
+  // cspell: ignore abcabcabc
   /// Repeats this string [count] times.
   ///
   /// Uses a [StringBuffer] for efficient concatenation. Returns an empty string
@@ -878,7 +878,7 @@ extension StringExtensions on String {
     return replaceAll(RegExp(r'[^A-Za-z]'), '');
   }
 
-// cspell: ignore elloorld 
+  // cspell: ignore elloorld
   /// Extracts only ASCII lowercase letter characters (a-z) from this string.
   ///
   /// Removes all characters that are not lowercase ASCII letters using a regex.
