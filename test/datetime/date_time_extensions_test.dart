@@ -491,8 +491,9 @@ void main() {
         });
 
         test('returns false if date is now', () {
+          // Use same DateTime instance to avoid race condition
           final DateTime date = DateTime.now();
-          expect(date.isBeforeNow(), isFalse);
+          expect(date.isBeforeNow(date), isFalse);
         });
 
         test('returns false if date is in the future', () {
