@@ -26,13 +26,13 @@ extension StringDiacriticsExtensions on String {
   ///
   /// Returns `true` if a known diacritic character is found, `false` otherwise.
   bool containsDiacritics() {
-      // An empty string cannot contain diacritics.
-      if (isEmpty) {
-        return false;
-      }
-      // Check if any character in the string exists as a key in our map of diacritics.
-      // This is more accurate than the previous regex approach.
-      return split('').any((String char) => _reverseAccentsMap.containsKey(char));
+    // An empty string cannot contain diacritics.
+    if (isEmpty) {
+      return false;
+    }
+    // Check if any character in the string exists as a key in our map of diacritics.
+    // This is more accurate than the previous regex approach.
+    return split('').any((String char) => _reverseAccentsMap.containsKey(char));
   }
 
   /// Removes diacritical marks from the string, replacing them with their
@@ -40,15 +40,15 @@ extension StringDiacriticsExtensions on String {
   ///
   /// This method is optimized to perform well by using a pre-computed map.
   String removeDiacritics() {
-      // If the string is empty, return an empty string immediately.
-      if (isEmpty) {
-        return '';
-      }
+    // If the string is empty, return an empty string immediately.
+    if (isEmpty) {
+      return '';
+    }
 
-      // Use the pre-computed reversed map for an efficient lookup.
-      // We map each character: if it's in our map, we replace it; otherwise,
-      // we keep the original. Then we join the characters back into a string.
-      return split('').map((String char) => _reverseAccentsMap[char] ?? char).join('');
+    // Use the pre-computed reversed map for an efficient lookup.
+    // We map each character: if it's in our map, we replace it; otherwise,
+    // we keep the original. Then we join the characters back into a string.
+    return split('').map((String char) => _reverseAccentsMap[char] ?? char).join('');
   }
 
   // --- Private Static Members ---

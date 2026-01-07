@@ -52,6 +52,4 @@ class IntUtils {
     // [a] divided by [b].
     return findGreatestCommonDenominator(b, a % b, depth: depth + 1, maxDepth: maxDepth);
   }
-
-  
 }

@@ -33,4 +33,3 @@ Random CommonRandom([int? seed]) =>
     //    sequence, which is useful for testing or when reproducible "randomness" is needed.
     // 4. Create and return a `Random` instance with the determined seed.
     Random(seed ?? DateTime.now().millisecondsSinceEpoch);
-

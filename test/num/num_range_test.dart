@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/num/num_range_extensions.dart';
 
-
 void main() {
-
   group('isBetween', () {
     test('Result should be true', () {
       // valid data
@@ -45,5 +43,4 @@ void main() {
       expect(10.isNotBetween(1, 9), true);
     });
   });
-
-  }
+}

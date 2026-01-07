@@ -65,8 +65,7 @@ class MonthUtils {
   static String? getMonthLongName(int month) => monthLongNames[month];
 
   /// Gets the abbreviated name of a month.
-  static String? getMonthShortName(int? month) =>
-      month == null ? null : monthShortNames[month];
+  static String? getMonthShortName(int? month) => month == null ? null : monthShortNames[month];
 }
 
 /// Utility class for weekday name operations.

@@ -36,8 +36,14 @@ void main() {
     test('11. Symbol first', () => expect('@test'.firstCharacter(), '@'));
     test('12. Tab character no trim', () => expect('\thello'.firstCharacter(trim: false), '\t'));
     test('13. Newline first no trim', () => expect('\nhello'.firstCharacter(trim: false), '\n'));
-    test('14. Without grapheme support', () => expect('hello'.firstCharacter(supportGraphemes: false), 'h'));
-    test('15. Unicode without grapheme', () => expect('你好'.firstCharacter(supportGraphemes: false), '你'));
+    test(
+      '14. Without grapheme support',
+      () => expect('hello'.firstCharacter(supportGraphemes: false), 'h'),
+    );
+    test(
+      '15. Unicode without grapheme',
+      () => expect('你好'.firstCharacter(supportGraphemes: false), '你'),
+    );
   });
 
   group('secondCharacter', () {
@@ -47,15 +53,24 @@ void main() {
     test('4. Unicode string', () => expect('你好'.secondCharacter(), '好'));
     test('5. Emoji string', () => expect('🚀👍test'.secondCharacter(), '👍'));
     test('6. With leading space and trim', () => expect('  hello'.secondCharacter(), 'e'));
-    test('7. With leading space no trim', () => expect('  hello'.secondCharacter(trim: false), ' '));
+    test(
+      '7. With leading space no trim',
+      () => expect('  hello'.secondCharacter(trim: false), ' '),
+    );
     test('8. Only whitespace with trim', () => expect('   '.secondCharacter(), ''));
     test('9. Only whitespace no trim', () => expect('   '.secondCharacter(trim: false), ' '));
     test('10. Two characters', () => expect('ab'.secondCharacter(), 'b'));
     test('11. Number second', () => expect('a1bc'.secondCharacter(), '1'));
     test('12. Symbol second', () => expect('a@bc'.secondCharacter(), '@'));
     test('13. Tab as second no trim', () => expect('a\tb'.secondCharacter(trim: false), '\t'));
-    test('14. Without grapheme support', () => expect('hello'.secondCharacter(supportGraphemes: false), 'e'));
-    test('15. Unicode without grapheme', () => expect('你好世'.secondCharacter(supportGraphemes: false), '好'));
+    test(
+      '14. Without grapheme support',
+      () => expect('hello'.secondCharacter(supportGraphemes: false), 'e'),
+    );
+    test(
+      '15. Unicode without grapheme',
+      () => expect('你好世'.secondCharacter(supportGraphemes: false), '好'),
+    );
   });
 
   group('graphemeLength', () {

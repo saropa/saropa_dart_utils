@@ -98,8 +98,17 @@ void main() {
   });
 
   group('removeBetweenAll', () {
-    test('1. Remove with brackets inclusive', () => expect('hello (world) test'.removeBetweenAll('(', ')'), 'hello  test'));
-    test('2. Remove content only', () => expect('hello (world) test'.removeBetweenAll('(', ')', inclusive: false), 'hello () test'));
+    test(
+      '1. Remove with brackets inclusive',
+      () => expect('hello (world) test'.removeBetweenAll('(', ')'), 'hello  test'),
+    );
+    test(
+      '2. Remove content only',
+      () => expect(
+        'hello (world) test'.removeBetweenAll('(', ')', inclusive: false),
+        'hello () test',
+      ),
+    );
     test('3. Multiple occurrences', () {
       final String result = '(a) and (b)'.removeBetweenAll('(', ')');
       expect(result, contains('and'));
@@ -121,7 +130,10 @@ void main() {
   });
 
   group('betweenSplit', () {
-    test('1. Single occurrence', () => expect('hello (world) test'.betweenSplit('(', ')'), <String>['world']));
+    test(
+      '1. Single occurrence',
+      () => expect('hello (world) test'.betweenSplit('(', ')'), <String>['world']),
+    );
     test('2. Multiple occurrences', () {
       final List<String>? result = '(a) and (b) and (c)'.betweenSplit('(', ')');
       expect(result, isNotNull);
@@ -224,8 +236,14 @@ void main() {
   group('between', () {
     test('1. Basic extraction', () => expect('hello (world) test'.between('(', ')'), 'world'));
     test('2. No start delimiter', () => expect('hello world'.between('(', ')'), ''));
-    test('3. No end delimiter with endOptional', () => expect('hello (world'.between('(', ')'), 'world'));
-    test('4. No end delimiter without endOptional', () => expect('hello (world'.between('(', ')', endOptional: false), ''));
+    test(
+      '3. No end delimiter with endOptional',
+      () => expect('hello (world'.between('(', ')'), 'world'),
+    );
+    test(
+      '4. No end delimiter without endOptional',
+      () => expect('hello (world'.between('(', ')', endOptional: false), ''),
+    );
     test('5. Empty string', () => expect(''.between('(', ')'), ''));
     test('6. Empty start', () => expect('hello'.between('', ')'), ''));
     test('7. At start', () => expect('(hello) world'.between('(', ')'), 'hello'));
@@ -235,21 +253,33 @@ void main() {
     test('11. Unicode', () => expect('(你好)'.between('(', ')'), '你好'));
     test('12. Custom delimiters', () => expect('<<hello>>'.between('<<', '>>'), 'hello'));
     test('13. Multiple words', () => expect('(hello world)'.between('(', ')'), 'hello world'));
-    test('14. Nested delimiters', () => expect('((inner))'.between('(', ')'), '(inner')); // Finds first )
+    test(
+      '14. Nested delimiters',
+      () => expect('((inner))'.between('(', ')'), '(inner'),
+    ); // Finds first )
   });
 
   group('betweenLast', () {
     test('1. Basic extraction', () => expect('hello (world) test'.betweenLast('(', ')'), 'world'));
     test('2. Multiple occurrences', () => expect('(first) (last)'.betweenLast('(', ')'), 'last'));
     test('3. No start delimiter', () => expect('hello world'.betweenLast('(', ')'), ''));
-    test('4. No end delimiter with endOptional', () => expect('hello (world'.betweenLast('(', ')'), 'world'));
-    test('5. No end delimiter without endOptional', () => expect('hello (world'.betweenLast('(', ')', endOptional: false), ''));
+    test(
+      '4. No end delimiter with endOptional',
+      () => expect('hello (world'.betweenLast('(', ')'), 'world'),
+    );
+    test(
+      '5. No end delimiter without endOptional',
+      () => expect('hello (world'.betweenLast('(', ')', endOptional: false), ''),
+    );
     test('6. Empty string', () => expect(''.betweenLast('(', ')'), ''));
     test('7. Empty start', () => expect('hello'.betweenLast('', ')'), ''));
     test('8. With whitespace', () => expect('( hello )'.betweenLast('(', ')'), 'hello'));
     test('9. No trim', () => expect('( hello )'.betweenLast('(', ')', trim: false), ' hello '));
     test('10. Unicode', () => expect('(first) (你好)'.betweenLast('(', ')'), '你好'));
-    test('11. Custom delimiters', () => expect('<<first>> <<last>>'.betweenLast('<<', '>>'), 'last'));
+    test(
+      '11. Custom delimiters',
+      () => expect('<<first>> <<last>>'.betweenLast('<<', '>>'), 'last'),
+    );
     test('12. Single occurrence', () => expect('(only)'.betweenLast('(', ')'), 'only'));
   });
 }

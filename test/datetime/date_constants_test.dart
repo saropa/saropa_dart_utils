@@ -126,7 +126,10 @@ void main() {
     group('dayLongNames', () {
       test('1. Monday', () => expect(WeekdayUtils.dayLongNames[DateTime.monday], 'Monday'));
       test('2. Tuesday', () => expect(WeekdayUtils.dayLongNames[DateTime.tuesday], 'Tuesday'));
-      test('3. Wednesday', () => expect(WeekdayUtils.dayLongNames[DateTime.wednesday], 'Wednesday'));
+      test(
+        '3. Wednesday',
+        () => expect(WeekdayUtils.dayLongNames[DateTime.wednesday], 'Wednesday'),
+      );
       test('4. Thursday', () => expect(WeekdayUtils.dayLongNames[DateTime.thursday], 'Thursday'));
       test('5. Friday', () => expect(WeekdayUtils.dayLongNames[DateTime.friday], 'Friday'));
       test('6. Saturday', () => expect(WeekdayUtils.dayLongNames[DateTime.saturday], 'Saturday'));
@@ -156,7 +159,10 @@ void main() {
       test('4. Invalid day 0', () => expect(WeekdayUtils.getDayLongName(0), isNull));
       test('5. Invalid day 8', () => expect(WeekdayUtils.getDayLongName(8), isNull));
       test('6. Null input', () => expect(WeekdayUtils.getDayLongName(null), isNull));
-      test('7. Wednesday', () => expect(WeekdayUtils.getDayLongName(DateTime.wednesday), 'Wednesday'));
+      test(
+        '7. Wednesday',
+        () => expect(WeekdayUtils.getDayLongName(DateTime.wednesday), 'Wednesday'),
+      );
       test('8. Negative day', () => expect(WeekdayUtils.getDayLongName(-1), isNull));
       test('9. Saturday', () => expect(WeekdayUtils.getDayLongName(DateTime.saturday), 'Saturday'));
       test('10. Tuesday', () => expect(WeekdayUtils.getDayLongName(DateTime.tuesday), 'Tuesday'));
@@ -182,7 +188,10 @@ void main() {
         expect(SerialDateUtils.serialToDateTime('2023-06-15'), DateTime(2023, 6, 15));
       });
       test('2. Valid ISO datetime', () {
-        expect(SerialDateUtils.serialToDateTime('2023-06-15T12:30:45'), DateTime(2023, 6, 15, 12, 30, 45));
+        expect(
+          SerialDateUtils.serialToDateTime('2023-06-15T12:30:45'),
+          DateTime(2023, 6, 15, 12, 30, 45),
+        );
       });
       test('3. Null input', () {
         expect(SerialDateUtils.serialToDateTime(null), isNull);
@@ -197,13 +206,19 @@ void main() {
         expect(SerialDateUtils.serialToDateTime('20230615'), DateTime(2023, 6, 15));
       });
       test('7. Compact datetime format', () {
-        expect(SerialDateUtils.serialToDateTime('20230615T123045'), DateTime(2023, 6, 15, 12, 30, 45));
+        expect(
+          SerialDateUtils.serialToDateTime('20230615T123045'),
+          DateTime(2023, 6, 15, 12, 30, 45),
+        );
       });
       test('8. Midnight', () {
         expect(SerialDateUtils.serialToDateTime('2023-06-15T00:00:00'), DateTime(2023, 6, 15));
       });
       test('9. End of day', () {
-        expect(SerialDateUtils.serialToDateTime('2023-06-15T23:59:59'), DateTime(2023, 6, 15, 23, 59, 59));
+        expect(
+          SerialDateUtils.serialToDateTime('2023-06-15T23:59:59'),
+          DateTime(2023, 6, 15, 23, 59, 59),
+        );
       });
       test('10. Leap year date', () {
         expect(SerialDateUtils.serialToDateTime('2024-02-29'), DateTime(2024, 2, 29));
