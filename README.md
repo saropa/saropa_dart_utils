@@ -3,8 +3,11 @@
 Boilerplate reduction tools and human-readable extension methods for Flutter/Dart.
 
 [![pub.dev](https://img.shields.io/pub/v/saropa_dart_utils.svg)](https://pub.dev/packages/saropa_dart_utils)
+[![pub points](https://img.shields.io/pub/points/saropa_dart_utils)](https://pub.dev/packages/saropa_dart_utils/score)
+[![coverage](assets/badges/coverage_badge.svg)](https://github.com/saropa/saropa_dart_utils)
+[![methods](https://img.shields.io/badge/methods-480%2B-blue)](https://pub.dev/documentation/saropa_dart_utils/latest/)
 [![style: saropa lints](https://img.shields.io/badge/style-saropa__lints-4B0082.svg)](https://pub.dev/packages/saropa_lints)
-[![license: GPL](https://img.shields.io/badge/license-GPL-purple.svg)](https://opensource.org/licenses/GPL)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
 
