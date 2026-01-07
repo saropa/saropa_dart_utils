@@ -1,3 +1,5 @@
+![saropa_dart_utils banner](https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/assets/banner.png)
+
 # Saropa Dart Utils
 
 Boilerplate reduction tools and human-readable extension methods for Flutter/Dart.
