@@ -122,11 +122,14 @@ def run_command(
 ) -> subprocess.CompletedProcess:
     """Runs a command and returns the result."""
     stderr = subprocess.DEVNULL if suppress_stderr else None
+    # On Windows, use shell=True to find batch files like flutter.bat, git.exe, etc.
+    use_shell = sys.platform == "win32"
     return subprocess.run(
         args,
         capture_output=capture_output,
         text=True,
         check=check,
+        shell=use_shell,
         stderr=stderr if not capture_output else None,
     )
 
