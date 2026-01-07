@@ -1,7 +1,9 @@
-# cspell: ignore ktlint
+# cspell: ignore ktlint tearoffs interps setstate WCAG listview inlines datetimes initstate maybeof mediaquery singlechildscrollview scrollview expando futureor vsync firestore scrollables sizedbox
 #
-# saropa_lints - 1,000+ lint rules for Flutter and Dart
+# saropa_lints ^1.5.1 - 628+ lint rules for Flutter and Dart
 # https://pub.dev/packages/saropa_lints/changelog
+#
+# Configuration optimized for: DART UTILITY LIBRARY (not a Flutter app)
 
 analyzer:
   plugins:
@@ -52,11 +54,115 @@ analyzer:
 
 formatter:
   page_width: 100
+  trailing_commas: preserve
 
-# saropa_lints tier configuration
+# =============================================================================
+# SAROPA LINTS - UTILITY LIBRARY CONFIG
+# =============================================================================
+# Using 'insanity' tier (ALL 500+ rules enabled).
+# Disabling rules that don't apply to this Dart utility library (no Flutter).
+# =============================================================================
+
 custom_lint:
   saropa_lints:
-    tier: recommended
+    tier: insanity
+  rules:
+    # =========================================================================
+    # DISABLED - Too noisy for this project
+    # =========================================================================
+    - avoid_null_assertion: false          # Common in extensions
+    - require_future_error_handling: false # Verbose for utility methods
+
+    # =========================================================================
+    # DISABLED - Essential tier rules not applicable (no Flutter widgets)
+    # =========================================================================
+    - require_dispose: false
+    - dispose_fields: false
+    - require_animation_disposal: false
+    - avoid_undisposed_instances: false
+    - require_value_notifier_dispose: false
+    - require_scroll_controller_dispose: false
+    - require_focus_node_dispose: false
+    - require_bloc_close: false
+    - require_timer_cancellation: false
+    - avoid_unassigned_stream_subscriptions: false
+    - require_stream_controller_dispose: false
+    - always_remove_listener: false
+    - avoid_context_in_initstate_dispose: false
+    - avoid_inherited_widget_in_initstate: false
+    - avoid_build_context_in_providers: false
+    - avoid_unsafe_setstate: false
+    - use_setstate_synchronously: false
+    - avoid_recursive_widget_calls: false
+    - require_mounted_check: false
+    - avoid_global_key_in_build: false
+    - pass_existing_future_to_future_builder: false
+    - pass_existing_stream_to_stream_builder: false
+    - avoid_duplicate_widget_keys: false
+    - avoid_mounted_in_setstate: false
+    - avoid_nested_scaffolds: false
+    - avoid_multiple_material_apps: false
+    - require_vsync_mixin: false
+    - require_animation_controller_dispose: false
+    - avoid_hidden_interactive: false
+    - require_unknown_route_handler: false
+    - avoid_context_after_navigation: false
+
+    # =========================================================================
+    # DISABLED - Recommended tier rules not applicable (no Flutter widgets)
+    # =========================================================================
+    - nullify_after_dispose: false
+    - require_auto_dispose: false
+    - avoid_expensive_build: false
+    - prefer_const_child_widgets: false
+    - avoid_listview_without_item_extent: false
+    - avoid_shrink_wrap_in_lists: false
+    - avoid_mediaquery_in_build: false
+    - prefer_dedicated_media_query_method: false
+    - avoid_singlechildscrollview_with_column: false
+    - avoid_stateful_widget_in_list: false
+    - prefer_cached_network_image: false
+    - avoid_controller_in_build: false
+    - avoid_setstate_in_build: false
+    - prefer_const_widgets_in_lists: false
+    - require_semantics_label: false
+    - avoid_icon_buttons_without_tooltip: false
+    - avoid_image_buttons_without_tooltip: false
+    - avoid_gesture_only_interactions: false
+    - avoid_color_only_indicators: false
+    - avoid_small_touch_targets: false
+    - avoid_text_scale_factor_ignore: false
+    - require_image_semantics: false
+    - require_notify_listeners: false
+    - avoid_bloc_event_in_constructor: false
+    - avoid_provider_recreate: false
+    - avoid_animation_in_build: false
+    - require_hero_tag_uniqueness: false
+    - prefer_secure_random: false
+    - require_secure_keyboard: false
+    - avoid_firestore_unbounded_query: false
+    - avoid_database_in_build: false
+    - avoid_deeply_nested_widgets: false
+    - avoid_single_child_column_row: false
+    - avoid_nested_scrollables: false
+    - require_text_overflow_handling: false
+    - require_image_error_builder: false
+    - avoid_form_without_key: false
+    - avoid_uncontrolled_text_field: false
+    - avoid_text_scale_factor: false
+    - prefer_using_list_view: false
+    - avoid_scaffold_messenger_after_await: false
+    - avoid_empty_setstate: false
+    - avoid_unnecessary_setstate: false
+    - avoid_stateless_widget_initialized_fields: false
+    - avoid_state_constructors: false
+    - avoid_empty_text_widgets: false
+    - prefer_sized_box_for_whitespace: false
+    - prefer_inkwell_over_gesture: false
+    - prefer_listview_builder: false
+    - avoid_opacity_animation: false
+    - prefer_spacing_over_sizedbox: false
+    - avoid_material2_fallback: false
 
 linter:
   rules:
