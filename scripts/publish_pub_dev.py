@@ -520,9 +520,44 @@ def check_remote_sync(project_dir: Path, branch: str) -> bool:
     return True
 
 
+def format_code(project_dir: Path) -> bool:
+    """Format code with dart format."""
+    print_header("STEP 4: FORMATTING CODE")
+
+    result = run_command(
+        ["dart", "format", "."], project_dir, "Formatting code", capture_output=True
+    )
+
+    if result.returncode != 0:
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+        return False
+
+    # Check if any files were changed
+    use_shell = get_shell_mode()
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        shell=use_shell,
+        encoding="utf-8",
+        errors="replace",
+    )
+
+    if status.stdout.strip():
+        print_info("Files were formatted - will be included in commit")
+    else:
+        print_success("All files already formatted")
+
+    return True
+
+
 def run_tests(project_dir: Path) -> bool:
     """Run flutter test."""
-    print_header("STEP 4: RUNNING TESTS")
+    print_header("STEP 5: RUNNING TESTS")
 
     # Run standard flutter tests if test directory exists
     test_dir = project_dir / "test"
@@ -545,7 +580,7 @@ def run_tests(project_dir: Path) -> bool:
 
 def run_analysis(project_dir: Path) -> bool:
     """Run flutter analyze."""
-    print_header("STEP 5: RUNNING STATIC ANALYSIS")
+    print_header("STEP 6: RUNNING STATIC ANALYSIS")
 
     result = run_command(["flutter", "analyze"], project_dir, "Analyzing code")
 
@@ -554,7 +589,7 @@ def run_analysis(project_dir: Path) -> bool:
 
 def validate_changelog(project_dir: Path, version: str) -> tuple[bool, str]:
     """Validate version exists in CHANGELOG and get release notes."""
-    print_header("STEP 6: VALIDATING CHANGELOG")
+    print_header("STEP 7: VALIDATING CHANGELOG")
 
     release_notes = validate_changelog_version(project_dir, version)
 
@@ -585,7 +620,7 @@ def validate_changelog(project_dir: Path, version: str) -> tuple[bool, str]:
 
 def generate_docs(project_dir: Path) -> bool:
     """Generate documentation with dart doc."""
-    print_header("STEP 7: GENERATING DOCUMENTATION")
+    print_header("STEP 8: GENERATING DOCUMENTATION")
 
     result = run_command(
         ["dart", "doc"], project_dir, "Generating documentation", capture_output=True
@@ -596,7 +631,7 @@ def generate_docs(project_dir: Path) -> bool:
 
 def pre_publish_validation(project_dir: Path) -> bool:
     """Run flutter pub publish --dry-run silently, only showing output on failure."""
-    print_header("STEP 8: PRE-PUBLISH VALIDATION")
+    print_header("STEP 9: PRE-PUBLISH VALIDATION")
 
     # Skip dry-run on Windows due to known Flutter SDK 'nul' path bug
     # The actual publish step will perform validation anyway
@@ -660,75 +695,53 @@ def get_pub_account() -> str | None:
 
 
 def publish_to_pubdev(project_dir: Path) -> bool:
-    """Publish to pub.dev."""
-    print_header("STEP 9: PUBLISHING TO PUB.DEV")
+    """Publish to pub.dev via GitHub Actions."""
+    print_header("STEP 12: PUBLISHING TO PUB.DEV VIA GITHUB ACTIONS")
 
-    # Show which account will be used
-    account = get_pub_account()
+    use_shell = get_shell_mode()
 
-    # Check if it's the safe account (no prompt needed)
-    if account and account.lower() == SAFE_PUBLISHER_EMAIL.lower():
-        print_success(f"Publishing as: {account} (verified safe account)")
-    else:
-        # Warn and prompt for unknown/different accounts
-        print()
-        print_colored("  " + "=" * 50, Color.YELLOW)
-        print_colored("  WARNING: CHECK YOUR PUBLISHING ACCOUNT", Color.YELLOW)
-        print_colored("  " + "=" * 50, Color.YELLOW)
-        print()
-        if account:
-            print_colored(f"  Publishing as: {account}", Color.CYAN)
-        else:
-            print_colored(
-                "  Could not detect account. Run 'dart pub token list' to check.",
-                Color.YELLOW,
-            )
-        print()
-        print_colored(
-            "  This email will be PERMANENTLY visible on pub.dev!", Color.RED
-        )
-        print()
+    # Trigger GitHub Actions workflow
+    print_info("Triggering GitHub Actions publish workflow...")
+    print_colored("      $ gh workflow run publish.yml", Color.WHITE)
 
-        response = input("  Is this the correct account? [y/N] ").strip().lower()
-        if not response.startswith("y"):
-            print_warning("Publish cancelled. To switch accounts:")
-            print_colored("      dart pub logout", Color.WHITE)
-            print_colored("      dart pub login", Color.WHITE)
-            return False
+    result = subprocess.run(
+        ["gh", "workflow", "run", "publish.yml"],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        shell=use_shell,
+        encoding="utf-8",
+        errors="replace",
+    )
 
-    # Clean first
-    run_command(["flutter", "clean"], project_dir, "Cleaning project")
+    if result.returncode != 0:
+        print_error("Failed to trigger GitHub Actions workflow")
+        if result.stderr:
+            print(result.stderr)
+        print_info("Make sure you have 'gh' CLI installed and authenticated.")
+        print_info("Run: gh auth login")
+        return False
 
-    # Publish - use PowerShell on Windows to avoid 'nul' path bug
-    print_info("Publishing to pub.dev...")
-    if is_windows():
-        print_colored("      $ powershell flutter pub publish --force", Color.WHITE)
-        result = run_via_powershell(
-            ["flutter", "pub", "publish", "--force"],
-            project_dir,
-            capture_output=False,
-        )
-    else:
-        print_colored("      $ flutter pub publish --force", Color.WHITE)
-        result = subprocess.run(
-            ["flutter", "pub", "publish", "--force"],
-            cwd=project_dir,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
+    print_success("GitHub Actions publish workflow triggered!")
+    print()
+    print_colored("  The publish is now running on GitHub Actions.", Color.CYAN)
+    print_colored("  No personal email will be shown on pub.dev.", Color.GREEN)
+    print()
 
-    if result.returncode == 0:
-        print_success("Publishing to pub.dev completed")
-    else:
-        print_error(f"Publishing to pub.dev failed (exit code {result.returncode})")
+    # Get repo URL for the actions page
+    remote_url = get_remote_url(project_dir)
+    repo_path = extract_repo_path(remote_url)
+    print_colored(
+        f"  Monitor progress at: https://github.com/{repo_path}/actions", Color.CYAN
+    )
+    print()
 
-    return result.returncode == 0
+    return True
 
 
 def git_commit_and_push(project_dir: Path, version: str, branch: str) -> bool:
     """Commit changes and push to remote."""
-    print_header("STEP 10: COMMITTING CHANGES")
+    print_header("STEP 10: COMMITTING AND PUSHING CHANGES")
 
     tag_name = f"v{version}"
     use_shell = get_shell_mode()
@@ -835,7 +848,7 @@ def create_github_release(
         (success, error_message) - success is True if release was created or already exists,
         error_message is None on success or contains the error description on failure.
     """
-    print_header("STEP 12: CREATING GITHUB RELEASE")
+    print_header("STEP 13: CREATING GITHUB RELEASE")
 
     tag_name = f"v{version}"
     use_shell = get_shell_mode()
@@ -1030,41 +1043,41 @@ def main() -> int:
     if not check_remote_sync(project_dir, branch):
         exit_with_error("Remote sync check failed", ExitCode.WORKING_TREE_FAILED)
 
-    # Step 4: Tests
+    # Step 4: Format code
+    if not format_code(project_dir):
+        exit_with_error("Code formatting failed", ExitCode.VALIDATION_FAILED)
+
+    # Step 5: Tests
     if not run_tests(project_dir):
         exit_with_error(
             "Tests failed. Fix test failures before publishing.", ExitCode.TEST_FAILED
         )
 
-    # Step 5: Analysis
+    # Step 6: Analysis
     if not run_analysis(project_dir):
         exit_with_error(
             "Static analysis failed. Fix issues before publishing.",
             ExitCode.ANALYSIS_FAILED,
         )
 
-    # Step 6: Validate changelog
+    # Step 7: Validate changelog
     ok, release_notes = validate_changelog(project_dir, version)
     if not ok:
         exit_with_error("CHANGELOG validation failed", ExitCode.CHANGELOG_FAILED)
 
-    # Step 7: Generate docs
+    # Step 8: Generate docs
     if not generate_docs(project_dir):
         exit_with_error("Documentation generation failed", ExitCode.VALIDATION_FAILED)
 
-    # Step 8: Pre-publish validation
+    # Step 9: Pre-publish validation
     if not pre_publish_validation(project_dir):
         exit_with_error("Pre-publish validation failed", ExitCode.VALIDATION_FAILED)
 
     # =========================================================================
-    # PUBLISH AND RELEASE
+    # COMMIT, TAG, AND PUBLISH VIA GITHUB ACTIONS
     # =========================================================================
 
-    # Step 9: Publish to pub.dev FIRST
-    if not publish_to_pubdev(project_dir):
-        exit_with_error("Publishing to pub.dev failed", ExitCode.PUBLISH_FAILED)
-
-    # Step 10: Git commit and push (AFTER publish succeeds)
+    # Step 10: Git commit and push (BEFORE GitHub Actions - it needs the code)
     if not git_commit_and_push(project_dir, version, branch):
         exit_with_error("Git operations failed", ExitCode.GIT_FAILED)
 
@@ -1072,7 +1085,11 @@ def main() -> int:
     if not create_git_tag(project_dir, version):
         exit_with_error("Git tag creation failed", ExitCode.GIT_FAILED)
 
-    # Step 12: Create GitHub release (non-blocking - publish already succeeded)
+    # Step 12: Trigger GitHub Actions to publish to pub.dev
+    if not publish_to_pubdev(project_dir):
+        exit_with_error("Failed to trigger GitHub Actions publish", ExitCode.PUBLISH_FAILED)
+
+    # Step 13: Create GitHub release
     gh_success, gh_error = create_github_release(project_dir, version, release_notes)
 
     # =========================================================================
@@ -1081,19 +1098,25 @@ def main() -> int:
 
     print()
     print_colored("=" * 70, Color.GREEN)
-    print_colored(f"  PUBLISHED {package_name} v{version} TO PUB.DEV!", Color.GREEN)
+    print_colored(f"  RELEASE v{version} TRIGGERED!", Color.GREEN)
     print_colored("=" * 70, Color.GREEN)
     print()
 
     repo_path = extract_repo_path(remote_url)
-    print_colored("  Next steps:", Color.WHITE)
+    print_colored("  Publishing is running on GitHub Actions.", Color.CYAN)
+    print_colored("  No personal email will be shown on pub.dev.", Color.GREEN)
+    print()
+    print_colored("  Monitor progress:", Color.WHITE)
     print_colored(
-        f"      Verify package at: https://pub.dev/packages/{package_name}", Color.CYAN
+        f"      GitHub Actions: https://github.com/{repo_path}/actions", Color.CYAN
+    )
+    print_colored(
+        f"      Package:        https://pub.dev/packages/{package_name}", Color.CYAN
     )
 
     if gh_success:
         print_colored(
-            f"      Check release at:  https://github.com/{repo_path}/releases/tag/v{version}",
+            f"      Release:        https://github.com/{repo_path}/releases/tag/v{version}",
             Color.CYAN,
         )
     else:
@@ -1107,9 +1130,9 @@ def main() -> int:
         )
     print()
 
-    # Open pub.dev in browser
+    # Open GitHub Actions in browser to monitor
     try:
-        webbrowser.open(f"https://pub.dev/packages/{package_name}")
+        webbrowser.open(f"https://github.com/{repo_path}/actions")
     except Exception:
         pass
 
