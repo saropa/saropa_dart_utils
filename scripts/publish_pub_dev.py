@@ -695,36 +695,12 @@ def get_pub_account() -> str | None:
 
 
 def publish_to_pubdev(project_dir: Path) -> bool:
-    """Publish to pub.dev via GitHub Actions."""
+    """Notify that publishing happens automatically via GitHub Actions tag trigger."""
     print_header("STEP 12: PUBLISHING TO PUB.DEV VIA GITHUB ACTIONS")
 
-    use_shell = get_shell_mode()
-
-    # Trigger GitHub Actions workflow
-    print_info("Triggering GitHub Actions publish workflow...")
-    print_colored("      $ gh workflow run publish.yml", Color.WHITE)
-
-    result = subprocess.run(
-        ["gh", "workflow", "run", "publish.yml"],
-        cwd=project_dir,
-        capture_output=True,
-        text=True,
-        shell=use_shell,
-        encoding="utf-8",
-        errors="replace",
-    )
-
-    if result.returncode != 0:
-        print_error("Failed to trigger GitHub Actions workflow")
-        if result.stderr:
-            print(result.stderr)
-        print_info("Make sure you have 'gh' CLI installed and authenticated.")
-        print_info("Run: gh auth login")
-        return False
-
-    print_success("GitHub Actions publish workflow triggered!")
+    print_success("Tag push triggered GitHub Actions publish workflow!")
     print()
-    print_colored("  The publish is now running on GitHub Actions.", Color.CYAN)
+    print_colored("  Publishing is now running automatically on GitHub Actions.", Color.CYAN)
     print_colored("  No personal email will be shown on pub.dev.", Color.GREEN)
     print()
 
