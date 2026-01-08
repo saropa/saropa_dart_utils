@@ -106,8 +106,9 @@ void main() {
       });
 
       test('This date is the same as other date but different instances (not null)', () {
-        final DateTime dt1 = DateTime.now();
-        final DateTime dt2 = DateTime.now();
+        // Use fixed dates to avoid race condition with DateTime.now()
+        final DateTime dt1 = DateTime(2024, 6, 15, 12, 30, 0);
+        final DateTime dt2 = DateTime(2024, 6, 15, 12, 30, 0);
         expect(dt1.compareDateTimeNullable(dt2), 0);
       });
 
