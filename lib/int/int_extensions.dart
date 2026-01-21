@@ -1,3 +1,6 @@
+/// Base for decimal number system (base 10).
+const int _base10 = 10;
+
 /// `IntExtensions` is an extension on the `int` class in Dart. It provides
 /// additional methods for performing operations on integers.
 ///
@@ -43,7 +46,7 @@ extension IntExtensions on int {
     // Repeat until the number becomes 0
     while (number != 0) {
       // Divide the number by 10
-      number ~/= 10;
+      number ~/= _base10;
 
       // Increment the counter
       count++;

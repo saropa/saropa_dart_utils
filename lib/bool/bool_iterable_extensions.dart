@@ -52,7 +52,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// - `true` if at least one element in the iterable is `true`.
   /// - `false` if no elements in the iterable are `true` or the iterable
   ///  is empty.
-  bool get anyTrue => where((bool e) => e).isNotEmpty;
+  bool get anyTrue => any((bool e) => e);
 
   /// Checks if any element in the iterable is `false`.
   ///
@@ -65,7 +65,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// - `true` if at least one element in the iterable is `false`.
   /// - `false` if no elements in the iterable are `false` or the iterable is
   ///  empty.
-  bool get anyFalse => where((bool e) => !e).isNotEmpty;
+  bool get anyFalse => any((bool e) => !e);
 
   /// Counts the number of `true` values in the iterable.
   ///

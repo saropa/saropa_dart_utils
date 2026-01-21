@@ -1,5 +1,11 @@
 import 'dart:math';
 
+/// Multiplier to convert decimal to percentage (0.5 * 100 = 50%).
+const int _percentageMultiplier = 100;
+
+/// Base for decimal number system and power-of-10 calculations.
+const int _base10 = 10;
+
 // Matches trailing zeros after a decimal point (e.g., "15.50" -> "15.5", "15.00" -> "15")
 final RegExp _trailingZerosRegex = RegExp(r'0+$');
 final RegExp _trailingDecimalPointRegex = RegExp(r'\.$');
@@ -34,15 +40,15 @@ extension DoubleExtensions on double {
   /// ```
   String toPercentage({int decimalPlaces = 0, bool roundDown = true}) {
     if (!roundDown) {
-      return '${(this * 100).formatDouble(decimalPlaces, showTrailingZeros: false)}%';
+      return '${(this * _percentageMultiplier).formatDouble(decimalPlaces, showTrailingZeros: false)}%';
     }
 
     // Calculate the multiplier for the specified number of decimal places
-    final num multiplier = pow(10, decimalPlaces);
+    final num multiplier = pow(_base10, decimalPlaces);
 
     // Multiply by 100 to convert to percentage and by multiplier to shift decimal
     // Then use floor to round down to the nearest integer value
-    final double roundedValue = (this * 100 * multiplier).floor() / multiplier;
+    final double roundedValue = (this * _percentageMultiplier * multiplier).floor() / multiplier;
 
     return '${roundedValue.formatDouble(decimalPlaces, showTrailingZeros: false)}%';
   }
@@ -116,7 +122,7 @@ extension DoubleExtensions on double {
   /// (-3.149).toPrecision(2); // -3.14
   /// ```
   double toPrecision(int precision) {
-    final num multiplier = pow(10, precision);
+    final num multiplier = pow(_base10, precision);
 
     return (this * multiplier).truncate() / multiplier;
   }

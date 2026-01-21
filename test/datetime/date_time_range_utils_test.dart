@@ -281,7 +281,7 @@ void main() {
         end: DateTime(2024, 1, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, inclusive: false),
+        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, isInclusive: false),
         isFalse,
       );
     });
@@ -292,7 +292,7 @@ void main() {
         end: DateTime(2024, 1, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, inclusive: true),
+        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, isInclusive: true),
         isTrue,
       );
     });

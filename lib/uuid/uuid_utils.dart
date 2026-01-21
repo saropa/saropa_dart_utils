@@ -1,3 +1,15 @@
+/// Length of a UUID string without hyphens (32 hex characters).
+const int _uuidLengthWithoutHyphens = 32;
+
+/// Length of a UUID string with hyphens (36 characters: 8-4-4-4-12).
+const int _uuidLengthWithHyphens = 36;
+
+/// Position indices for UUID segments (8-4-4-4-12 format).
+const int _segment1End = 8;
+const int _segment2End = 12;
+const int _segment3End = 16;
+const int _segment4End = 20;
+
 // UUID with hyphens: 36 characters (8-4-4-4-12)
 // Validates UUID versions 1-5 with proper variant bits
 final RegExp _uuidWithHyphensRegex = RegExp(
@@ -57,12 +69,13 @@ class UuidUtils {
     }
 
     // Check length: must be 32 (no hyphens) or 36 (with hyphens)
-    if (uuid.length != 32 && uuid.length != 36) {
+    if (uuid.length != _uuidLengthWithoutHyphens &&
+        uuid.length != _uuidLengthWithHyphens) {
       return false;
     }
 
     // Use appropriate regex based on length
-    if (uuid.length == 36) {
+    if (uuid.length == _uuidLengthWithHyphens) {
       return _uuidWithHyphensRegex.hasMatch(uuid);
     }
 
@@ -100,20 +113,20 @@ class UuidUtils {
     }
 
     // Must be exactly 32 characters
-    if (uuid.length != 32) {
+    if (uuid.length != _uuidLengthWithoutHyphens) {
       return null;
     }
 
     final StringBuffer sb = StringBuffer()
-      ..write(uuid.substring(0, 8))
+      ..write(uuid.substring(0, _segment1End))
       ..write('-')
-      ..write(uuid.substring(8, 12))
+      ..write(uuid.substring(_segment1End, _segment2End))
       ..write('-')
-      ..write(uuid.substring(12, 16))
+      ..write(uuid.substring(_segment2End, _segment3End))
       ..write('-')
-      ..write(uuid.substring(16, 20))
+      ..write(uuid.substring(_segment3End, _segment4End))
       ..write('-')
-      ..write(uuid.substring(20));
+      ..write(uuid.substring(_segment4End));
 
     return sb.toString();
   }

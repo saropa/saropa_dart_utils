@@ -3,6 +3,12 @@
 // These methods are designed to provide additional functionality for
 // working with strings, such as splitting, extracting, and appending.
 
+/// Minimum position in the Latin alphabet (1 = A/a).
+const int _minAlphabetPosition = 1;
+
+/// Maximum position in the Latin alphabet (26 = Z/z).
+const int _maxAlphabetPosition = 26;
+
 /// `StringUtils` is a utility class in Dart that provides static methods
 /// for manipulating and analyzing strings. This class cannot be instantiated.
 ///
@@ -32,7 +38,7 @@ class StringUtils {
   ///
   static String? getNthLatinLetterUpper(int n) {
     // Check if n is within the valid range.
-    if (n < 1 || n > 26) {
+    if (n < _minAlphabetPosition || n > _maxAlphabetPosition) {
       // If n is not within the valid range, return null.
       return null;
     }
@@ -54,7 +60,7 @@ class StringUtils {
   ///
   static String? getNthLatinLetterLower(int n) {
     // Check if n is within the valid range.
-    if (n < 1 || n > 26) {
+    if (n < _minAlphabetPosition || n > _maxAlphabetPosition) {
       // If n is not within the valid range, return null.
       return null;
     }

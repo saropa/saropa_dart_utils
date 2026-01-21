@@ -76,4 +76,11 @@ app.*.map.json
 dartdoc-log.txt
 nul
 # Claude Code config
-.claude/
+# Keep structure committed, but ignore personal settings
+.claude/settings.local.json
+CLAUDE.local.md
+/.claude
+CLAUDE.md
+CLAUDE_SETUP.md
+CODE_INDEX.md
+CODEBASE_INDEX.md

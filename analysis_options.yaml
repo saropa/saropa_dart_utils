@@ -64,13 +64,33 @@ formatter:
 # =============================================================================
 
 custom_lint:
-  saropa_lints:
-    tier: insanity
+  enable_all_lint_rules: true # Enable all saropa_lints rules (insanity tier)
   rules:
+    - always_fail_test_case: false # Is used only for testing
+    - prefer_double_quotes: false # opinionated: we want Single quote style
+
+    - prefer_trailing_comma_always: false # opinionated
+    - prefer_flat_imports: false # opinionated
+    - prefer_single_exit_point: false # opinionated
+    - prefer_blank_line_after_declarations: false # opinionated
+    - prefer_sentence_case_comments: false # opinionated
+    - prefer_named_imports: false # opinionated
+    - prefer_relative_imports: false # opinionated
+    - prefer_var_over_explicit_type: false # opinionated
+    - prefer_compact_class_members: false # opinionated
+    - prefer_no_blank_line_before_return: false # opinionated
+    - prefer_compact_declarations: false # opinionated
+    - prefer_explicit_null_assignment: false # opinionated
+
+    # =========================================================================
+    # DISABLED - Conflicting rules
+    # =========================================================================
+    - avoid_inferrable_type_arguments: false # Conflicts with prefer_explicit_type_arguments
+
     # =========================================================================
     # DISABLED - Too noisy for this project
     # =========================================================================
-    - avoid_null_assertion: false          # Common in extensions
+    - avoid_null_assertion: false # Common in extensions
     - require_future_error_handling: false # Verbose for utility methods
 
     # =========================================================================

@@ -91,7 +91,7 @@ extension StringCaseExtensions on String {
   /// 'mixed CASE words'.capitalizeWords(lowerCaseRemaining: true); // Returns 'Mixed Case Words'
   /// ''.capitalizeWords(); // Returns ''
   /// ```
-  String capitalizeWords({bool lowerCaseRemaining = false}) {
+  String capitalizeWords({bool makeLowerCaseRemaining = false}) {
     if (isEmpty) {
       // failed null or empty check
       return this;
@@ -102,7 +102,7 @@ extension StringCaseExtensions on String {
     // The original code was using words() which effectively removed extra spaces.
     final List<String> capitalizedWords = originalWords.map((String word) {
       if (word.isNotEmpty) {
-        return word.capitalize(lowerCaseRemaining: lowerCaseRemaining);
+        return word.capitalize(makeLowerCaseRemaining: makeLowerCaseRemaining);
       }
       return word; // Keep empty strings (for multiple spaces)
     }).toList();
@@ -231,14 +231,14 @@ extension StringCaseExtensions on String {
   /// 'mIxEd'.capitalize(lowerCaseRemaining: true); // Returns 'Mixed'
   /// ''.capitalize();        // Returns ''
   /// ```
-  String capitalize({bool lowerCaseRemaining = false}) {
+  String capitalize({bool makeLowerCaseRemaining = false}) {
     if (isEmpty) {
       // failed null or empty check
       return this;
     }
 
     // https://stackoverflow.com/questions/29628989/how-to-capitalize-the-first-letter-of-a-string-in-dart
-    if (lowerCaseRemaining) {
+    if (makeLowerCaseRemaining) {
       return '${this[0].toUpperCase()}${substringSafe(1).toLowerCase()}';
     }
 

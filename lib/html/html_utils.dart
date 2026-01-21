@@ -1,3 +1,9 @@
+/// Radix for hexadecimal number system (base 16) used in hex HTML entities.
+const int _hexRadix = 16;
+
+/// Maximum valid Unicode code point (U+10FFFF).
+const int _maxUnicodeCodePoint = 0x10FFFF;
+
 /// Common HTML entity mappings for unescaping.
 const Map<String, String> _htmlEntities = <String, String>{
   '&amp;': '&',
@@ -103,10 +109,10 @@ class HtmlUtils {
       if (decimal != null) {
         codePoint = int.tryParse(decimal);
       } else if (hex != null) {
-        codePoint = int.tryParse(hex, radix: 16);
+        codePoint = int.tryParse(hex, radix: _hexRadix);
       }
 
-      if (codePoint != null && codePoint > 0 && codePoint <= 0x10FFFF) {
+      if (codePoint != null && codePoint > 0 && codePoint <= _maxUnicodeCodePoint) {
         return String.fromCharCode(codePoint);
       }
       return match.group(0) ?? ''; // Return original if invalid

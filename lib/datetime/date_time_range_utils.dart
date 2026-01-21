@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
 /// Extension on [DateTimeRange] to provide additional functionality
@@ -32,9 +33,9 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// // Check if 2nd Monday of January falls in range
   /// range.isNthDayOfMonthInRange(2, DateTime.monday, 1); // true (Jan 2024)
   /// ```
-  bool isNthDayOfMonthInRange(int n, int dayOfWeek, int month, {bool inclusive = true}) {
+  bool isNthDayOfMonthInRange(int n, int dayOfWeek, int month, {bool isInclusive = true}) {
     // Validate month parameter
-    if (month < 1 || month > 12) {
+    if (month < minMonth || month > maxMonth) {
       return false;
     }
 
@@ -64,7 +65,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
       }
 
       // Check if the nth occurrence is in range using isBetween for consistency
-      if (nthOccurrence.isBetween(start, end, inclusive: inclusive)) {
+      if (nthOccurrence.isBetween(start, end, inclusive: isInclusive)) {
         return true;
       }
     }

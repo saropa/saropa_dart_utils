@@ -64,7 +64,7 @@ void main() {
 
     test('Test case 2: Case-insensitive match', () {
       const List<EnumListTestEnum> list = EnumListTestEnum.values;
-      final EnumListTestEnum? result = list.byNameTry('VALUE2', caseSensitive: false);
+      final EnumListTestEnum? result = list.byNameTry('VALUE2', isCaseSensitive: false);
       expect(result, EnumListTestEnum.value2);
     });
 

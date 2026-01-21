@@ -1,3 +1,5 @@
+import 'package:saropa_dart_utils/datetime/date_constants.dart';
+
 /// Utility class for handling time-related emojis, specifically for day/night representation.
 class TimeEmojiUtils {
   /// Emoji representing the sun (☀️).
@@ -22,7 +24,7 @@ class TimeEmojiUtils {
       return null;
     }
 
-    return tzHour > 7 && tzHour < 18
+    return tzHour > dayStartHour && tzHour < dayEndHour
         // sun emoji for hours between 8am and 5pm (exclusive of 7am and 6pm)
         ? sunEmoji
         // moon emoji for hours outside the 8am-5pm range

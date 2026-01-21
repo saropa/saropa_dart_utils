@@ -15,7 +15,7 @@ void main() {
     );
     test(
       '3. Match found case insensitive',
-      () => expect('Hello'.isEqualsAny(<String>['hello'], caseSensitive: false), isTrue),
+      () => expect('Hello'.isEqualsAny(<String>['hello'], isCaseSensitive: false), isTrue),
     );
     test('4. Empty list', () => expect('hello'.isEqualsAny(<String>[]), isFalse));
     test('5. Null list', () => expect('hello'.isEqualsAny(null), isFalse));
@@ -26,7 +26,7 @@ void main() {
     );
     test(
       '8. Case insensitive multiple',
-      () => expect('TEST'.isEqualsAny(<String>['test'], caseSensitive: false), isTrue),
+      () => expect('TEST'.isEqualsAny(<String>['test'], isCaseSensitive: false), isTrue),
     );
     test('9. Unicode match', () => expect('你好'.isEqualsAny(<String>['hello', '你好']), isTrue));
     test(
@@ -65,7 +65,7 @@ void main() {
     );
     test(
       '4. Case insensitive match',
-      () => expect('Hello'.isContainsAnyInList(<String>['hello'], caseSensitive: false), isTrue),
+      () => expect('Hello'.isContainsAnyInList(<String>['hello'], isCaseSensitive: false), isTrue),
     );
     test('5. Empty list', () => expect('hello'.isContainsAnyInList(<String>[]), isFalse));
     test('6. Null list', () => expect('hello'.isContainsAnyInList(null), isFalse));
@@ -78,7 +78,7 @@ void main() {
     test('10. Unicode content', () => expect('你好世界'.isContainsAnyInList(<String>['世界']), isTrue));
     test(
       '11. Case insensitive unicode',
-      () => expect('HELLO'.isContainsAnyInList(<String>['hello'], caseSensitive: false), isTrue),
+      () => expect('HELLO'.isContainsAnyInList(<String>['hello'], isCaseSensitive: false), isTrue),
     );
     test('12. Single item list', () => expect('abc'.isContainsAnyInList(<String>['b']), isTrue));
   });
@@ -98,7 +98,7 @@ void main() {
     );
     test(
       '4. Case insensitive match',
-      () => expect('Test'.isContainedInAny(<String>['testing'], caseSensitive: false), isTrue),
+      () => expect('Test'.isContainedInAny(<String>['testing'], isCaseSensitive: false), isTrue),
     );
     test('5. Empty list', () => expect('hello'.isContainedInAny(<String>[]), isFalse));
     test('6. Null list', () => expect('hello'.isContainedInAny(null), isFalse));
@@ -142,7 +142,7 @@ void main() {
     test('3. Case sensitive no match', () => expect('Hello'.isContainsNullable('HELLO'), isFalse));
     test(
       '4. Case insensitive match',
-      () => expect('Hello'.isContainsNullable('HELLO', caseSensitive: false), isTrue),
+      () => expect('Hello'.isContainsNullable('HELLO', isCaseSensitive: false), isTrue),
     );
     test('5. Null find', () => expect('Hello'.isContainsNullable(null), isFalse));
     test('6. Empty find', () => expect('Hello'.isContainsNullable(''), isFalse));
@@ -150,7 +150,7 @@ void main() {
     test('8. Partial match', () => expect('testing'.isContainsNullable('est'), isTrue));
     test(
       '9. Case insensitive partial',
-      () => expect('Testing'.isContainsNullable('EST', caseSensitive: false), isTrue),
+      () => expect('Testing'.isContainsNullable('EST', isCaseSensitive: false), isTrue),
     );
     test('10. Unicode content', () => expect('你好世界'.isContainsNullable('世界'), isTrue));
   });
@@ -188,7 +188,7 @@ void main() {
     );
     test(
       '7. Case insensitive contains',
-      () => expect('Hello'.isMatchAny(<String>['HELLO'], caseSensitive: false), isTrue),
+      () => expect('Hello'.isMatchAny(<String>['HELLO'], isCaseSensitive: false), isTrue),
     );
     test('8. Empty list', () => expect('hello'.isMatchAny(<String>[]), isFalse));
     test('9. Null list', () => expect('hello'.isMatchAny(null), isFalse));
@@ -210,7 +210,7 @@ void main() {
     );
     test(
       '4. Case insensitive match',
-      () => expect('Hello'.isStartsWithAny(<String>['hello'], caseSensitive: false), isTrue),
+      () => expect('Hello'.isStartsWithAny(<String>['hello'], isCaseSensitive: false), isTrue),
     );
     test('5. Empty list', () => expect('hello'.isStartsWithAny(<String>[]), isFalse));
     test('6. Null list', () => expect('hello'.isStartsWithAny(null), isFalse));
@@ -310,13 +310,17 @@ void main() {
     test('7. Empty string', () => expect(''.isContainsAnyWord(<String>['a']), isFalse));
     test(
       '8. Case sensitive',
-      () =>
-          expect('Hello World'.isContainsAnyWord(<String>['WORLD'], caseSensitive: true), isFalse),
+      () => expect(
+        'Hello World'.isContainsAnyWord(<String>['WORLD'], isCaseSensitive: true),
+        isFalse,
+      ),
     );
     test(
       '9. Case insensitive',
-      () =>
-          expect('Hello World'.isContainsAnyWord(<String>['WORLD'], caseSensitive: false), isTrue),
+      () => expect(
+        'Hello World'.isContainsAnyWord(<String>['WORLD'], isCaseSensitive: false),
+        isTrue,
+      ),
     );
     test(
       '10. Word at start',
@@ -345,11 +349,11 @@ void main() {
     test('7. Empty string', () => expect(''.isContainsWord('a'), isFalse));
     test(
       '8. Case sensitive no match',
-      () => expect('Hello World'.isContainsWord('WORLD', caseSensitive: true), isFalse),
+      () => expect('Hello World'.isContainsWord('WORLD', isCaseSensitive: true), isFalse),
     );
     test(
       '9. Case insensitive match',
-      () => expect('Hello World'.isContainsWord('WORLD', caseSensitive: false), isTrue),
+      () => expect('Hello World'.isContainsWord('WORLD', isCaseSensitive: false), isTrue),
     );
     test(
       '10. Word with hyphen',

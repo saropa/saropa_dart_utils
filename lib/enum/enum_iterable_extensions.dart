@@ -50,27 +50,27 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   /// Finds and returns the first enum value in this list whose [name] property
   /// matches the given [name], or `null` if no such value is found.
   ///
-  /// If [caseSensitive] is `true`, the comparison between the [name] property
+  /// If [isCaseSensitive] is `true`, the comparison between the [name] property
   /// of each enum value and the given [name] is case-sensitive. Otherwise,
   /// the comparison is case-insensitive.
   ///
   /// - Parameters:
   ///   - name: The name to search for among the enum values.
-  ///   - caseSensitive: Whether the comparison should be case-sensitive.
+  ///   - isCaseSensitive: Whether the comparison should be case-sensitive.
   ///
   /// - Returns: The first enum value whose [name] matches the given [name],
   ///  or `null` if no such value is found.
-  T? byNameTry(String? name, {bool caseSensitive = true}) {
+  T? byNameTry(String? name, {bool isCaseSensitive = true}) {
     if (name == null || name.isEmpty) {
       return null;
     }
 
     // Use a local variable to store the name for comparison
-    final String comparisonName = caseSensitive ? name : name.toLowerCase();
+    final String comparisonName = isCaseSensitive ? name : name.toLowerCase();
 
     // Find the first enum value whose name matches the provided name
     return firstWhereOrNull(
-      (T e) => caseSensitive ? e.name == comparisonName : e.name.toLowerCase() == comparisonName,
+      (T e) => isCaseSensitive ? e.name == comparisonName : e.name.toLowerCase() == comparisonName,
     );
   }
 
