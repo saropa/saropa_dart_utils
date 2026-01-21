@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io' as io;
-import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 
 /// Utility class for Base64 encoding/decoding and text compression.
 ///
@@ -43,7 +44,9 @@ class Base64Utils {
       final List<int> gzipJson = io.gzip.encode(encodedJson);
 
       return base64.encode(gzipJson);
-    } on Exception {
+    } on Object catch (e, stackTrace) {
+      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      debugPrint('Base64Utils.compressText failed: $e\n$stackTrace');
       return null;
     }
   }
@@ -78,10 +81,9 @@ class Base64Utils {
       final List<int> decodedGzip = io.gzip.decode(decodedBase64);
 
       return utf8.decode(decodedGzip);
-    } on FormatException {
-      // Invalid Base64 format
-      return null;
-    } on Exception {
+    } on Object catch (e, stackTrace) {
+      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      debugPrint('Base64Utils.decompressText failed: $e\n$stackTrace');
       return null;
     }
   }

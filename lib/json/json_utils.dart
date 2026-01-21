@@ -1,5 +1,6 @@
 import 'dart:convert' as dc;
 
+import 'package:flutter/foundation.dart';
 import 'package:saropa_dart_utils/map/map_extensions.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
@@ -45,7 +46,9 @@ class JsonUtils {
     if (!isJson(jsonString)) return null;
     try {
       return dc.jsonDecode(jsonString);
-    } on FormatException {
+    } on Object catch (e, stackTrace) {
+      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      debugPrint('JsonUtils.jsonDecodeSafe failed: $e\n$stackTrace');
       return null;
     }
   }
@@ -73,7 +76,9 @@ class JsonUtils {
     if (!testDecode) return true;
     try {
       return dc.jsonDecode(value) != null;
-    } on FormatException {
+    } on Object catch (e, stackTrace) {
+      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      debugPrint('JsonUtils.isJson testDecode failed: $e\n$stackTrace');
       return false;
     }
   }
@@ -108,7 +113,9 @@ class JsonUtils {
       if (data is! List || data.isEmpty || data[0] is! Map<String, dynamic>) return null;
       if (!data.every((dynamic e) => e is Map<String, dynamic>)) return null;
       return List<Map<String, dynamic>>.from(data);
-    } on FormatException {
+    } on Object catch (e, stackTrace) {
+      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      debugPrint('JsonUtils.tryJsonDecodeListMap failed: $e\n$stackTrace');
       return null;
     }
   }
@@ -121,7 +128,9 @@ class JsonUtils {
       if (data is! List || data.isEmpty) return null;
       if (!data.every((dynamic e) => e is String)) return null;
       return List<String>.from(data);
-    } on FormatException {
+    } on Object catch (e, stackTrace) {
+      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      debugPrint('JsonUtils.tryJsonDecodeList failed: $e\n$stackTrace');
       return null;
     }
   }

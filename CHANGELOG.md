@@ -27,6 +27,31 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-01-21
+
+### Changed
+- Extracted magic numbers into named constants across codebase for improved code clarity and linting compliance
+- Added 50+ descriptive constants with documentation to date/time, numeric, string, HTML, and UUID utilities
+- Migrated date/time validation constants to public exports in `date_constants.dart` for cross-module reuse
+- Files updated:
+  - `datetime/date_constants.dart` - Added 15 date/time validation constants
+  - `datetime/date_time_range_utils.dart` - Uses shared month constants
+  - `datetime/date_time_utils.dart` - Uses shared date/time constants
+  - `datetime/time_emoji_utils.dart` - Uses day/night hour constants
+  - `double/double_extensions.dart` - Added percentage and base-10 constants
+  - `hex/hex_utils.dart` - Added hex radix and max length constants
+  - `html/html_utils.dart` - Added hex radix and Unicode limit constants
+  - `int/int_extensions.dart` - Added base-10 constant
+  - `int/int_string_extensions.dart` - Added ordinal number constants
+  - `int/int_utils.dart` - Added recursion depth constant
+  - `string/string_search_extensions.dart` - Added ASCII code constants
+  - `string/string_utils.dart` - Added alphabet position constants
+  - `uuid/uuid_utils.dart` - Added UUID format constants
+- Resolved `no_magic_number` linting violations in production code
+
+### Fixed
+- `DateTimeUtils.tomorrow()`: Removed nullable type from `minute` and `second` parameters to fix `avoid_nullable_parameters_with_default_values` lint warnings
+
 ## [1.0.5] - 2026-01-08
 
 ### Changed

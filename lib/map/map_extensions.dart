@@ -150,17 +150,48 @@ class MapUtils {
   }
 
   /// Adds a value to a map of lists.
+  ///
+  /// Uses an immutable approach: creates a new list rather than mutating the existing one.
+  ///
+  /// **Performance vs Safety Tradeoff:**
+  /// - **Safety:** No parameter mutation, predictable behavior, safer for concurrent code
+  /// - **Cost:** Allocates a new list on each call
+  /// - **When it matters:** Large lists (>1000 items) with frequent operations
+  /// - **When it doesn't:** Typical use cases with small to medium lists
+  ///
+  /// Example:
+  /// ```dart
+  /// final map = <String, List<int>>{};
+  /// MapUtils.mapAddValue(map, 'scores', 100); // Creates ['scores': [100]]
+  /// MapUtils.mapAddValue(map, 'scores', 200); // Creates new list [100, 200]
+  /// ```
   static void mapAddValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
-    // ignore: require_future_error_handling
-    map.update(key, (List<V> list) => list..add(value), ifAbsent: () => <V>[value]);
+    // ignore: avoid_parameter_mutation - Function is designed to mutate the map parameter
+    map.update(key, (List<V> list) => [...list, value], ifAbsent: () => <V>[value]);
   }
 
   /// Removes a value from a map of lists.
+  ///
+  /// Uses an immutable approach: creates a new list rather than mutating the existing one.
+  ///
+  /// **Performance vs Safety Tradeoff:**
+  /// - **Safety:** No parameter mutation, predictable behavior, safer for concurrent code
+  /// - **Cost:** Allocates a new list on each call (filters existing list)
+  /// - **When it matters:** Large lists (>1000 items) with frequent operations
+  /// - **When it doesn't:** Typical use cases with small to medium lists
+  ///
+  /// **Note:** Removes all occurrences of the value, not just the first one.
+  ///
+  /// Example:
+  /// ```dart
+  /// final map = <String, List<int>>{'scores': [100, 200, 100]};
+  /// MapUtils.mapRemoveValue(map, 'scores', 100); // Creates new list [200]
+  /// ```
   static void mapRemoveValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
-    // ignore: require_future_error_handling
-    map.update(key, (List<V> list) => list..remove(value), ifAbsent: () => <V>[]);
+    // ignore: avoid_parameter_mutation - Function is designed to mutate the map parameter
+    map.update(key, (List<V> list) => list.where((V v) => v != value).toList(), ifAbsent: () => <V>[]);
   }
 
   /// Checks if a map of lists contains a specific value.

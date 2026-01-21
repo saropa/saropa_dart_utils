@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
 final RegExp _yearRegex = RegExp(r'\b\d{4}\b');
@@ -79,7 +80,7 @@ class DateTimeUtils {
   ///
   /// Returns:
   ///   DateTime: The date for tomorrow at the specified time.
-  static DateTime tomorrow({DateTime? now, int? hour, int? minute = 0, int? second = 0}) {
+  static DateTime tomorrow({DateTime? now, int? hour, int minute = 0, int second = 0}) {
     // Get the current date and time
     now ??= DateTime.now();
 
@@ -88,8 +89,8 @@ class DateTimeUtils {
 
     return tomorrowAtSpecifiedTime.copyWith(
       hour: hour ?? 0,
-      minute: minute ?? 0,
-      second: second ?? 0,
+      minute: minute,
+      second: second,
       microsecond: 0,
     );
   }
@@ -250,13 +251,13 @@ class DateTimeUtils {
   static DateTime? firstDayNextMonth({required int month, required int year}) {
     // ref: https://stackoverflow.com/questions/61881850/sort-list-based-on-boolean
     // ref: https://stackoverflow.com/questions/67144785/flutter-dart-datetime-max-min-value
-    if (month < 1 || month > 12) {
+    if (month < minMonth || month > maxMonth) {
       // invalid
       return null;
     }
 
     // there are ALWAYS 28 days in any month
-    final DateTime someDayNextMonth = DateTime(year, month, 28).addDays(4);
+    final DateTime someDayNextMonth = DateTime(year, month, minDaysInAnyMonth).addDays(daysToAddToGetNextMonth);
 
     return DateTime(someDayNextMonth.year, someDayNextMonth.month);
   }
@@ -288,26 +289,26 @@ class DateTimeUtils {
   /// Returns true if the year is a leap year, false otherwise.
   static bool isLeapYear({required int year}) =>
       // A year is a leap year if it is divisible by 4
-      year % 4 == 0
+      year % leapYearModulo4 == 0
       // A year is not a leap year if it is divisible by 100
       &&
-      (year % 100 != 0
+      (year % leapYearModulo100 != 0
           // unless it is also divisible by 400
           ||
-          year % 400 == 0);
+          year % leapYearModulo400 == 0);
 
   /// Returns the number of days in the given month and year.
   ///
   /// Takes into account leap years for February.
   static int monthDayCount({required int year, required int month}) {
-    if (month < 1 || month > 12) {
+    if (month < minMonth || month > maxMonth) {
       throw ArgumentError('Month must be between 1 and 12');
     }
 
     const List<int> daysInMonth = <int>[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
     if (month == 2 && isLeapYear(year: year)) {
-      return 29;
+      return daysInFebLeapYear;
     }
 
     return daysInMonth[month - 1];
@@ -336,18 +337,18 @@ class DateTimeUtils {
     int? millisecond,
     int? microsecond,
   }) {
-    if (year != null && (year < 0 || year > 9999)) return false;
-    if (month != null && (month < 1 || month > 12)) return false;
+    if (year != null && (year < 0 || year > maxYear)) return false;
+    if (month != null && (month < minMonth || month > maxMonth)) return false;
     if (day != null) {
       if (month == null) return false;
-      final int maxDay = monthDayCount(year: year ?? 2000, month: month);
+      final int maxDay = monthDayCount(year: year ?? defaultLeapYearCheckYear, month: month);
       if (day < 1 || day > maxDay) return false;
     }
-    if (hour != null && (hour < 0 || hour > 23)) return false;
-    if (minute != null && (minute < 0 || minute > 59)) return false;
-    if (second != null && (second < 0 || second > 59)) return false;
-    if (millisecond != null && (millisecond < 0 || millisecond > 999)) return false;
-    if (microsecond != null && (microsecond < 0 || microsecond > 999)) return false;
+    if (hour != null && (hour < 0 || hour > maxHour)) return false;
+    if (minute != null && (minute < 0 || minute > maxMinuteOrSecond)) return false;
+    if (second != null && (second < 0 || second > maxMinuteOrSecond)) return false;
+    if (millisecond != null && (millisecond < 0 || millisecond > maxMillisecondOrMicrosecond)) return false;
+    if (microsecond != null && (microsecond < 0 || microsecond > maxMillisecondOrMicrosecond)) return false;
     return true;
   }
 }

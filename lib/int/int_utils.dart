@@ -1,3 +1,6 @@
+/// Default maximum recursion depth for GCD calculation to prevent stack overflow.
+const int _defaultMaxRecursionDepth = 500;
+
 /// `IntUtils` is a utility class in Dart that provides static methods
 /// for performing operations on integers. This class cannot be instantiated.
 ///
@@ -25,7 +28,7 @@ class IntUtils {
   ///
   /// Both [a] and [b] must be non-negative.
   ///
-  static int? findGreatestCommonDenominator(int a, int b, {int depth = 0, int maxDepth = 500}) {
+  static int? findGreatestCommonDenominator(int a, int b, {int depth = 0, int maxDepth = _defaultMaxRecursionDepth}) {
     // Both numbers must be non-negative.
     if (a < 0 || b < 0) {
       return null;

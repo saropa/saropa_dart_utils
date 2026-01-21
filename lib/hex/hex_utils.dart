@@ -1,3 +1,9 @@
+/// Radix for hexadecimal number system (base 16).
+const int _hexRadix = 16;
+
+/// Maximum length of a hex string for a 64-bit integer (16 hex digits).
+const int _maxHexLength = 16;
+
 final RegExp _hexRegex = RegExp(r'^[0-9a-fA-F]+$');
 
 /// Extension methods for [String] to facilitate hexadecimal conversions.
@@ -47,12 +53,12 @@ extension HexExtensions on String {
     // Normalize to uppercase for consistent comparison since the input can be
     // mixed case (e.g., '7fffffffffffffff' should equal '7FFFFFFFFFFFFFFF').
     final String upperHex = toUpperCase();
-    if (length > 16 || (length == 16 && upperHex.compareTo(_maxInt64Hex) > 0)) {
+    if (length > _maxHexLength || (length == _maxHexLength && upperHex.compareTo(_maxInt64Hex) > 0)) {
       return null;
     }
 
     // Convert the hexadecimal string to an int and return it.
-    return int.parse(this, radix: 16);
+    return int.tryParse(this, radix: _hexRadix);
   }
 }
 
@@ -71,5 +77,5 @@ extension HexIntExtensions on int {
   /// 6719.intToHex(); // Returns '1a3f'
   /// 0.intToHex(); // Returns '0'
   /// ```
-  String? intToHex() => toRadixString(16);
+  String? intToHex() => toRadixString(_hexRadix);
 }
