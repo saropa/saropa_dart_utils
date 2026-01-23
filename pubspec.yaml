@@ -43,7 +43,7 @@ dev_dependencies:
 
   # 1,000+ lint rules for Flutter and Dart. Free. Open source.
   # https://pub.dev/packages/saropa_lints/changelog
-  saropa_lints: ^4.4.0
+  saropa_lints: ^4.5.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

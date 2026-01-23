@@ -95,25 +95,6 @@ class DateTimeUtils {
     );
   }
 
-  // /// Method to check if the device date format is month first.
-  // ///
-  // /// The method uses the `DateFormat` class from the `intl` package to format a
-  // /// test date, and then checks if the month appears before the day in the
-  // /// resulting string.
-  // ///
-  // /// Note: This method assumes that the device's locale has been properly set.
-  // /// If the locale is not set, the method may not return accurate results.
-  // static bool isDeviceDateMonthFirst() {
-  //   // Create a test date (2nd of January 2023) with a KNOWN month and day
-  //   final DateTime testDate = DateTime(2023, 2);
-
-  //   // Format the test date using the device's locale
-  //   final String formattedDate = DateFormat.yMd().format(testDate);
-
-  //   // Check if the month (2) appears before the day (1) in the formatted string
-  //   return formattedDate.indexOf('2') < formattedDate.indexOf('1');
-  // }
-
   /// Method to check if the device date format is month first.
   ///
   /// This method directly checks the device's locale to determine if the
