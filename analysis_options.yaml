@@ -10,10 +10,9 @@ analyzer:
     - custom_lint
 
   exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
-    - "lib/generated_plugin_registrant.dart"
     - "**/*.bak"
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
     - "**/*.old"
     - ".crashlytics/**"
     - ".dart_tool/**"
@@ -22,16 +21,17 @@ analyzer:
     - ".idea/**"
     - ".vs/**"
     - ".vscode/**"
+    - "android/**"
+    - "assets/**"
     - "bin/cache/**"
     - "build/**"
-    - "scripts/**"
-    - "example/**"
-    - "test/.test_coverage.dart"
-    - "android/**"
-    - "ios/**"
     - "dependency_overrides/**"
-    - "assets/**"
+    - "example/**"
+    - "ios/**"
     - "ktlint"
+    - "lib/generated_plugin_registrant.dart"
+    - "scripts/**"
+    - "test/.test_coverage.dart"
 
   language:
     strict-casts: true
