@@ -149,6 +149,12 @@ void main() {
         expect(15.123.formatPrecision(precision: 3), equals('15.123'));
       });
 
+      test('whole number with custom precision shows no decimals', () {
+        expect(15.0.formatPrecision(precision: 3), equals('15'));
+        expect(15.0.formatPrecision(precision: 4), equals('15'));
+        expect((-7.0).formatPrecision(precision: 3), equals('-7'));
+      });
+
       test('handles negative numbers', () {
         expect((-15.0).formatPrecision(), equals('-15'));
         expect((-15.5).formatPrecision(), equals('-15.50'));

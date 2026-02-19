@@ -27,6 +27,56 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-02-19
+
+### Fixed (32 bugs resolved — full audit)
+
+#### Critical / Logic Errors
+- **`getUtcTimeFromLocal`**: was adding offset instead of subtracting; used `floor()` instead of `truncate()` for negative fractional offsets (e.g. UTC-5:30). Return type narrowed from `DateTime?` to `DateTime` (never null).
+- **`isDateAfterToday`**: was an instance method that ignored `this` entirely, only checking the `dateToCheck` parameter. Removed the parameter — now correctly checks the receiver against today. Added injectable `{DateTime? now}` for testability.
+- **`randomElement`**: was using `DateTime.now().microsecondsSinceEpoch % length` (deterministic, biased). Now uses a module-level `Random` instance with `nextInt()`.
+- **`isBetween`**: inclusive mode was using `==` instead of `isAtSameMomentAs` for boundary equality — boundary values were excluded.
+- **`removeStart`**: case-insensitive path was calling `nullIfEmpty()` on the trimmed match, returning `null` instead of the original string on non-match.
+- **`last()`**: was using rune-based indexing, splitting multi-codepoint emoji. Now uses `characters` package grapheme clusters. Also optimised: replaces `toList()` + `sublist()` with `chars.skip()` to avoid full list allocation.
+- **`toDateInYear`**: was crashing with `ArgumentError` for Feb 29 → non-leap year. Now returns `null`.
+- **`cleanJsonResponse`**: was unescaping `\"` before detecting outer quotes, corrupting strings like `"hello \"world\""`. Now detects outer quotes first.
+
+#### Medium
+- **`betweenResult`**: `endOptional` parameter was declared but never consulted — end-not-found always returned `null`. Now correctly returns the tail when `endOptional: true` is passed. Default changed to `false` to preserve backward compatibility.
+- **`isSameDateOrAfter` / `isSameDateOrBefore`**: replaced fragile cascaded year/month/day if-chains with clean `toDateOnly()` + `!isBefore` / `!isAfter`.
+- **`isJson('[]')`**: empty array was returning `true` without `allowEmpty: true`, inconsistent with empty object `{}` behaviour. Now requires `allowEmpty: true` for both.
+- **`isJson` colon check**: was checking `value.contains(':')` (untrimmed) instead of `trimmed.contains(':')`.
+- **`formatDouble`**: no guard for negative `decimalPlaces` — `toStringAsFixed` would throw `RangeError`. Now clamps to 0–20.
+- **`hasDecimals` / `formatDouble`**: did not guard against `NaN` / `Infinity` — `NaN % 1` returns `NaN` (not `0`). Now returns `false` / `'NaN'` / `'∞'` respectively.
+- **`unescape` (HTML)**: `&nbsp;` was mapped to regular space (U+0020) instead of non-breaking space (U+00A0). Fixed.
+- **`unescape` (HTML)**: numeric entity handler allowed surrogate codepoints (U+D800–U+DFFF) which crash `jsonEncode`. Now rejected with named constants `_surrogateMin` / `_surrogateMax`.
+- **`addHyphens`**: accepted any 32-char string without validating hex content. Now validates with `_hexOnly32Regex`.
+- **`exclude` / `containsAny`**: O(n×m) — converted to `Set` for O(n) lookup.
+- **`toFlattenedList`**: returned `null` for empty outer but `[]` for all-empty inners. Now returns `null` consistently for empty results.
+
+#### Low / Documentation
+- **`isYearCurrent`**: hardcoded `DateTime.now()` made it untestable. Converted from getter to method with `{DateTime? now}` injectable parameter.
+- **`isDateAfterToday`** / **`isToday`** etc.: same injectable `now` pattern applied for testability.
+- **`weekOfYear`**: added warning in docs that value can be 0 or 53 at year boundaries; recommend `weekNumber()` for ISO 8601 compliance.
+- **`isMidnight`**: now checks all time components including milliseconds and microseconds.
+- **`leastOccurrences`**: corrected copy-paste doc comment that said "highest" instead of "lowest".
+- **`formatPrecision`**: hardcoded `toStringAsFixed(2)` whole-number check now uses the actual `precision` parameter.
+- **`betweenResult`**: improved doc to explain intentional `lastIndexOf` ("outermost match") design.
+- **`between`**: documented special case where empty `end` returns the tail from `start`.
+- **`takeSafe(0)`**: documented that `count == 0` returns the original list (unlike `take(0)`).
+- **`weekOfYear`** / **`weekNumber()`**: documented ISO 8601 edge cases at year boundaries.
+- **`num.length()`**: documented scientific notation behaviour for values ≥ 1e21.
+- **`pluralize`**: removed `length == 1` guard that incorrectly skipped single-character strings.
+- **`forceBetween`**: corrected misleading dartdoc ("NOT greater than" → correctly describes clamping).
+- **`truncateWithEllipsisPreserveWords`**: fixed grapheme-unsafe fallback that could split multi-codepoint emoji; now uses `characters.take()` for the search window.
+- **`toMapStringDynamic`**: documented silent key collision behaviour when `ensureUniqueKey: false`.
+- **`timeToEmoji`**: boundary was `>` instead of `>=` — 7:00am showed moon emoji instead of sun.
+
+### Tests
+- 3,022 tests passing (added ~40 new tests covering all fixed bugs)
+- Fixed 8 pre-existing tests with incorrect expectations or wrong test names
+- Removed duplicate test cases in `date_time_range_utils_test.dart`
+
 ## [1.0.6] - 2026-01-21
 
 ### Changed

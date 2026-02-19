@@ -452,6 +452,10 @@ void main() {
       () => expect('  Hello'.removeStart('World', trimFirst: true), 'Hello'),
     );
     test('10. Null start string', () => expect('Hello'.removeStart(null), 'Hello'));
+    test(
+      '11. Case insensitive no match returns original string (not null)',
+      () => expect('HelloWorld'.removeStart('xyz', isCaseSensitive: false), 'HelloWorld'),
+    );
   });
 
   group('removeEnd', () {
@@ -1525,7 +1529,7 @@ void main() {
     test('9. Ends with ch', () => expect('watch'.pluralize(2), 'watches'));
     test('10. Simple mode', () => expect('cat'.pluralize(2, simple: true), 'cats'));
     test('11. Empty string', () => expect(''.pluralize(2), ''));
-    test('12. Single char', () => expect('a'.pluralize(2), 'a'));
+    test('12. Single char pluralizes normally', () => expect('a'.pluralize(2), 'as'));
     test('13. Count null', () => expect('cat'.pluralize(null), 'cats'));
     test('14. Count zero', () => expect('cat'.pluralize(0), 'cats'));
   });

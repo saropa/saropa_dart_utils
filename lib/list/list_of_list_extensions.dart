@@ -24,8 +24,9 @@ extension ListOfListExtension<T> on List<List<T>> {
     return toFlattenedList()?.length ?? 0;
   }
 
-  /// Extension method that returns a flattened set of type T
+  /// Extension method that returns a flattened list of unique elements of type T.
   ///
+  /// Returns `null` if this list is empty or all inner lists are empty.
   List<T>? toFlattenedList({bool ignoreNulls = true}) {
     if (isEmpty) {
       return null;
@@ -33,7 +34,8 @@ extension ListOfListExtension<T> on List<List<T>> {
 
     // Use expand() method to flatten the 2D list and create a
     // new set with the same elements as this iterable
-    return expand((List<T> e) => e).toUnique(ignoreNulls: ignoreNulls);
+    final List<T>? result = expand((List<T> e) => e).toUnique(ignoreNulls: ignoreNulls);
+    return (result == null || result.isEmpty) ? null : result;
   }
 
   /// Returns a list containing the lengths of the child lists in parentList.

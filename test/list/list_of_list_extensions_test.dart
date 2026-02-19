@@ -172,9 +172,9 @@ void main() {
         expect(list.toFlattenedList(), null);
       });
 
-      test('List of empty lists returns an empty list', () {
+      test('List of empty lists returns null', () {
         final List<List<int>> list = <List<int>>[<int>[], <int>[]];
-        expect(list.toFlattenedList(), <int>[]);
+        expect(list.toFlattenedList(), isNull);
       });
 
       test('List with all unique elements', () {

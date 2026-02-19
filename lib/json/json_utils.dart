@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:saropa_dart_utils/map/map_extensions.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
-final RegExp _jsonStringPattern = RegExp('^".*"\$');
-
 /// Scale for epoch timestamp parsing.
 enum JsonEpochScale {
   /// Seconds since Unix epoch.
@@ -69,9 +67,13 @@ class JsonUtils {
     final bool isObject = trimmed.startsWith('{') && trimmed.endsWith('}');
     final bool isArray = trimmed.startsWith('[') && trimmed.endsWith(']');
     if (!isObject && !isArray) return false;
-    if (isObject && !value.contains(':')) {
-      // Empty object '{}' is valid JSON if allowEmpty is true
+    if (isObject && !trimmed.contains(':')) {
+      // Empty object '{}' is valid JSON only if allowEmpty is true
       if (!allowEmpty || trimmed != '{}') return false;
+    }
+    if (isArray && trimmed == '[]') {
+      // Empty array '[]' is valid JSON only if allowEmpty is true
+      if (!allowEmpty) return false;
     }
     if (!testDecode) return true;
     try {
@@ -83,15 +85,24 @@ class JsonUtils {
     }
   }
 
-  /// Cleans a JSON response string by removing escaped quotes and outer quotes.
+  /// Cleans a JSON response string by stripping outer double-quotes and
+  /// unescaping any inner escaped quotes (`\"`).
+  ///
+  /// Correctly handles strings that contain escaped inner quotes, e.g.:
+  /// `'"hello \"world\""'` → `'hello "world"'`.
   static String? cleanJsonResponse(String? value) {
     if (value == null || value.isEmpty) return null;
-    final String clean = value.replaceAll(r'\"', '"');
-    if (clean.isEmpty) return null;
-    if (_jsonStringPattern.hasMatch(clean)) {
-      return clean.substringSafe(1, clean.length - 1);
+    final String trimmed = value.trim();
+    if (trimmed.isEmpty) return null;
+
+    // Detect outer quotes BEFORE unescaping inner ones.
+    if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2) {
+      final String inner = trimmed.substring(1, trimmed.length - 1);
+      return inner.replaceAll(r'\"', '"').nullIfEmpty();
     }
-    return clean;
+
+    // No outer quotes — just unescape any escaped quotes present.
+    return trimmed.replaceAll(r'\"', '"').nullIfEmpty();
   }
 
   /// Attempts to decode a JSON string to a Map.

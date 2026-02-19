@@ -199,17 +199,37 @@ extension DateTimeExtensions on DateTime {
     return isAfter(other);
   }
 
-  /// Checks if the current time is midnight (00:00:00).
+  /// Checks if the current time is exactly midnight (00:00:00.000000).
+  ///
+  /// All time components — including milliseconds and microseconds — must be
+  /// zero. A time of 00:00:00.001 is not considered midnight.
   ///
   /// Returns:
-  ///   bool: True if the time is midnight, false otherwise.
-  bool get isMidnight => hour == 0 && minute == 0 && second == 0;
+  ///   bool: True if the time is exactly midnight, false otherwise.
+  bool get isMidnight =>
+      hour == 0 &&
+      minute == 0 &&
+      second == 0 &&
+      millisecond == 0 &&
+      microsecond == 0;
 
   /// Ignores the year of the current [DateTime] and returns a new [DateTime]
   /// with the specified [setYear].
   ///
   /// Requires [month] and [day] to be set in the current [DateTime].
-  DateTime? toDateInYear(int setYear) => DateTime(setYear, month, day);
+  ///
+  /// Returns null if the date is invalid in [setYear] — for example, when
+  /// this is February 29 (a leap day) and [setYear] is not a leap year.
+  DateTime? toDateInYear(int setYear) {
+    // Guard: Feb 29 only exists in leap years.
+    if (month == DateTime.february && day == 29) {
+      final bool targetIsLeap = setYear % 4 == 0 &&
+          (setYear % 100 != 0 || setYear % 400 == 0);
+      if (!targetIsLeap) return null;
+    }
+    return DateTime(setYear, month, day, hour, minute, second,
+        millisecond, microsecond);
+  }
 
   /// Returns the ordinal representation of the day of the month.
   ///
@@ -426,85 +446,64 @@ extension DateTimeExtensions on DateTime {
 
   /// Checks if the date is in the current calendar year.
   ///
+  /// Pass [now] to override the current time (useful for testing).
+  ///
   /// Returns:
   ///   bool: True if the date is in the current year, false otherwise.
   // https://stackoverflow.com/questions/56427418/how-to-extract-only-the-time-from-datetime-now
-  bool get isYearCurrent => year == DateTime.now().year;
+  bool isYearCurrent({DateTime? now}) => year == (now ?? DateTime.now()).year;
 
-  /// Returns true if this date is the same as or after [other] date.
+  /// Returns true if this date (date-only) is the same as or after [other].
   ///
-  /// This method compares the year, month, and day of the current [DateTime]
-  /// with another [DateTime] object.
+  /// Compares only year/month/day — time components are ignored.
   bool isSameDateOrAfter(DateTime other) {
-    // Check if the year of this date is greater than the year of the other
-    // date
-    if (year > other.year) {
-      return true;
-    }
-
-    // If the years are equal, check if the month of this date is greater
-    // than the month of the other date
-    if (year == other.year && month > other.month) {
-      return true;
-    }
-
-    // If the years and months are equal, check if the day of this date is
-    // greater than or equal to the day of the other date
-    if (year == other.year && month == other.month && day >= other.day) {
-      return true;
-    }
-
-    // If none of the above conditions are met, return false
-    return false;
+    final DateTime selfDate = toDateOnly();
+    final DateTime otherDate = other.toDateOnly();
+    return !selfDate.isBefore(otherDate);
   }
 
-  /// Returns true if this date is the same as or before [other] date.
+  /// Returns true if this date (date-only) is the same as or before [other].
   ///
-  /// This method compares the year, month, and day of the current [DateTime]
-  /// with another [DateTime] object.
+  /// Compares only year/month/day — time components are ignored.
   bool isSameDateOrBefore(DateTime other) {
-    // Check if the year of this date is less than the year of the other date
-    if (year < other.year) {
-      return true;
-    }
-
-    // If the years are equal, check if the month of this date is less than
-    // the month of the other date
-    if (year == other.year && month < other.month) {
-      return true;
-    }
-
-    // If the years and months are equal, check if the day of this date is
-    // less than or equal to the day of the other date
-    if (year == other.year && month == other.month && day <= other.day) {
-      return true;
-    }
-
-    // If none of the above conditions are met, return false
-    return false;
+    final DateTime selfDate = toDateOnly();
+    final DateTime otherDate = other.toDateOnly();
+    return !selfDate.isAfter(otherDate);
   }
 
   /// Removes the time component from the [DateTime] object, returning only
   /// the date part (year, month, and day).
   DateTime toDateOnly() => DateTime(year, month, day);
 
-  /// Converts the current [DateTime] to UTC and adds the specified offset.
+  /// Converts this local [DateTime] to UTC using the given timezone [offset].
   ///
-  /// Args:
-  ///   offset (double): The offset to add, in hours.
+  /// [offset] is the hours-ahead-of-UTC value for this DateTime's timezone.
+  /// Positive for timezones east of UTC (e.g., `2.0` for UTC+2),
+  /// negative for timezones west of UTC (e.g., `-5.0` for UTC-5).
+  /// Fractional values represent partial hours (e.g., `5.5` for UTC+5:30).
   ///
-  /// Returns:
-  ///   DateTime?: A new [DateTime] object with the added offset, or the
-  ///   original instance if the offset is 0.
-  DateTime? getUtcTimeFromLocal(double offset) {
+  /// Always returns a non-null [DateTime]. Returns the original instance if [offset] is 0.
+  ///
+  /// Example:
+  /// ```dart
+  /// // 15:00 local in UTC+2 → 13:00 UTC
+  /// DateTime(2024, 6, 15, 15, 0).getUtcTimeFromLocal(2.0); // 13:00
+  /// // 10:00 local in UTC-5 → 15:00 UTC
+  /// DateTime(2024, 1, 15, 10, 0).getUtcTimeFromLocal(-5.0); // 15:00
+  /// // 10:30 local in UTC+5:30 → 05:00 UTC
+  /// DateTime(2024, 1, 15, 10, 30).getUtcTimeFromLocal(5.5); // 05:00
+  /// ```
+  DateTime getUtcTimeFromLocal(double offset) {
     if (offset == 0) {
       return this;
     }
 
-    final int hours = offset.floor();
+    // Use truncate (not floor) so -5.5 → hours=-5, fraction=-0.5 (correct sign)
+    final int hours = offset.truncate();
     final int minutes = ((offset - hours) * 60).round();
 
-    return toUtc().add(Duration(hours: hours, minutes: minutes));
+    // Subtract offset: UTC = local − offset
+    return subtract(Duration(hours: hours, minutes: minutes));
   }
 
   /// Checks if the current [DateTime] is within the specified range,
@@ -613,35 +612,31 @@ extension DateTimeExtensions on DateTime {
   ///   false otherwise.
   bool isBetween(DateTime start, DateTime end, {bool inclusive = true}) {
     if (inclusive) {
-      return (this == start || isAfter(start)) && (this == end || isBefore(end));
+      return (isAfter(start) || isAtSameMomentAs(start)) &&
+          (isBefore(end) || isAtSameMomentAs(end));
     }
 
     return isAfter(start) && isBefore(end);
   }
 
-  /// Checks if a given date is after today.
+  /// Returns true if this date is strictly after today (i.e., tomorrow or later).
   ///
-  /// This method takes a [DateTime] object as an argument and returns `true` if
-  /// the date is after today, and `false` otherwise.
+  /// Pass [now] to override the current time (useful for testing).
   ///
   /// Example:
   /// ```dart
-  /// DateTime dateToCheck = ... // the date you want to check
-  /// if (isDateAfterToday(dateToCheck)) {
-  ///   // dateToCheck is after today
-  /// }
+  /// DateTime.now().add(Duration(days: 1)).isDateAfterToday(); // true
+  /// DateTime.now().isDateAfterToday(); // false
   /// ```
-  bool isDateAfterToday(DateTime dateToCheck) {
-    // Get the current date and time
-    final DateTime now = DateTime.now();
+  bool isDateAfterToday({DateTime? now}) {
+    final DateTime currentNow = now ?? DateTime.now();
 
-    // Create a new DateTime object representing today at midnight
-    final DateTime endOfToday = DateTime(now.year, now.month, now.day)
+    // End of today = start of tomorrow minus one microsecond
+    final DateTime endOfToday = DateTime(currentNow.year, currentNow.month, currentNow.day)
         .add(const Duration(days: 1))
-        .subtract(const Duration(microseconds: 1)); // Just before midnight
+        .subtract(const Duration(microseconds: 1));
 
-    // Check if the given date is after today and return the result
-    return dateToCheck.isAfter(endOfToday);
+    return isAfter(endOfToday);
   }
 
   /// Checks if the current [DateTime] matches the current date (today).
@@ -817,7 +812,12 @@ extension DateTimeExtensions on DateTime {
     return difference(jan1).inDays + 1;
   }
 
-  /// Returns the ISO week number of the year.
+  /// Returns a raw week-of-year value used internally.
+  ///
+  /// **Warning:** this value can be 0 for dates in early January that belong
+  /// to the last ISO week of the previous year, or 53 for dates in late
+  /// December that belong to week 1 of the next year. Use [weekNumber] for
+  /// fully ISO 8601-compliant results.
   int get weekOfYear => ((dayOfYear - weekday + 10) / 7).floor();
 
   /// Returns the number of ISO weeks in the specified year.
@@ -828,10 +828,14 @@ extension DateTimeExtensions on DateTime {
     return ((dayOfDec28 - dec28.weekday + 10) / 7).floor();
   }
 
-  /// Returns the ISO week number, handling year boundaries correctly.
+  /// Returns the ISO 8601 week number, correctly handling year boundaries.
   ///
-  /// If the week number is less than 1, returns the last week of the previous year.
-  /// If the week number exceeds the number of weeks in the year, returns 1.
+  /// Dates in early January that belong to the last week of the previous year
+  /// return that year's final week number. Dates in late December that belong
+  /// to week 1 of the next year return 1.
+  ///
+  /// Prefer this over [weekOfYear] for any user-facing or standards-compliant
+  /// week calculations.
   int weekNumber() {
     if (weekOfYear < 1) return numOfWeeks(year - 1);
     if (weekOfYear > numOfWeeks(year)) return 1;

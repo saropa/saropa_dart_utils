@@ -20,7 +20,10 @@ extension DoubleExtensions on double {
   /// 15.0.hasDecimals; // false
   /// 15.00.hasDecimals; // false
   /// ```
-  bool get hasDecimals => this % 1 != 0;
+  bool get hasDecimals {
+    if (isNaN || isInfinite) return false;
+    return this % 1 != 0;
+  }
 
   /// Formats this double value as a percentage string.
   ///
@@ -74,9 +77,13 @@ extension DoubleExtensions on double {
   /// 15.05.formatDouble(2, showTrailingZeros: false); // '15.05'
   /// ```
   String formatDouble(int decimalPlaces, {bool showTrailingZeros = true}) {
-    final String result = toStringAsFixed(decimalPlaces);
+    if (isNaN) return 'NaN';
+    if (isInfinite) return isNegative ? '-∞' : '∞';
+    // toStringAsFixed throws RangeError for decimalPlaces < 0 or > 20
+    final int clampedPlaces = decimalPlaces.clamp(0, 20);
+    final String result = toStringAsFixed(clampedPlaces);
 
-    if (showTrailingZeros || decimalPlaces == 0) {
+    if (showTrailingZeros || clampedPlaces == 0) {
       return result;
     }
 
@@ -142,6 +149,6 @@ extension DoubleExtensions on double {
   /// 15.123.formatPrecision(); // '15.12'
   /// ```
   String formatPrecision({int precision = 2}) {
-    return toStringAsFixed(2).endsWith('.00') ? toStringAsFixed(0) : toStringAsFixed(precision);
+    return hasDecimals ? toStringAsFixed(precision) : toStringAsFixed(0);
   }
 }

@@ -229,20 +229,19 @@ extension StringExtensions on String {
       return this;
     }
 
-    // Find the last space within the allowed length (checking up to cutoff + 1 to include
-    // a space right at the cutoff boundary)
+    // Work in grapheme-cluster space to avoid splitting multi-codepoint emoji.
     final int searchLength = cutoff + 1 > charLength ? charLength : cutoff + 1;
-    final int lastSpaceIndex = substringSafe(0, searchLength).lastIndexOf(' ');
+    final String searchWindow = characters.take(searchLength).toString();
+    final int lastSpaceIndex = searchWindow.lastIndexOf(' ');
 
     // If no space is found (e.g., a single long word), fall back to simple truncation
-    // at the cutoff point. This ensures we always return some meaningful content
-    // rather than just an ellipsis.
+    // at the cutoff point using grapheme clusters.
     if (lastSpaceIndex == -1 || lastSpaceIndex == 0) {
-      return '${substringSafe(0, cutoff)}$ellipsis';
+      return '${characters.take(cutoff).toString()}$ellipsis';
     }
 
     // Truncate at the last space found and remove any trailing space before adding the ellipsis.
-    return '${substringSafe(0, lastSpaceIndex).trimRight()}$ellipsis';
+    return '${searchWindow.substring(0, lastSpaceIndex).trimRight()}$ellipsis';
   }
 
   /// Reverses the characters in the string. Handles Unicode characters correctly.
@@ -330,7 +329,7 @@ extension StringExtensions on String {
     // Handle case-insensitive removal.
     return toLowerCase().startsWith(start.toLowerCase())
         ? substringSafe(start.length).nullIfEmpty()
-        : nullIfEmpty();
+        : this;
   }
 
   /// Removes [end] from the end of the string, if it exists.
@@ -681,14 +680,19 @@ extension StringExtensions on String {
   /// Returns true if this string contains any digit characters.
   bool hasAnyDigits() => contains(_anyDigitsRegex);
 
-  /// Gets the last [len] characters of this string, handling Unicode correctly.
+  /// Gets the last [len] grapheme clusters of this string.
   ///
-  /// Returns the full string if [len] is greater than the string length.
+  /// Uses the [characters] package to correctly handle multi-codepoint
+  /// sequences such as emoji with skin-tone modifiers or ZWJ sequences.
+  ///
+  /// Returns the full string if [len] is greater than the grapheme length.
   String last(int len) {
     if (isEmpty || len <= 0) return '';
-    if (len >= runes.length) return this;
-    final List<int> runeList = runes.toList().sublist(runes.length - len);
-    return String.fromCharCodes(runeList);
+    final Characters chars = characters;
+    final int charLength = chars.length;
+    if (len >= charLength) return this;
+    // skip() avoids allocating a full List<String> for large strings
+    return chars.skip(charLength - len).string;
   }
 
   /// Returns a random character from this string.
@@ -1064,7 +1068,7 @@ extension StringExtensions on String {
 
   /// Returns the plural form of this string.
   String pluralize(num? count, {bool simple = false}) {
-    if (isEmpty || count == 1 || length == 1) return this;
+    if (isEmpty || count == 1) return this;
     if (simple) return '${this}s';
 
     final String lastChar = lastChars(1);

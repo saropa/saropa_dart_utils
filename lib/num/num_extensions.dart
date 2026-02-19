@@ -23,10 +23,17 @@ extension NumberExtensions on num {
   /// ```
   bool get isZeroOrNegative => this == 0 || isNegative;
 
-  /// Returns the number of digits in the string representation of the number.
+  /// Returns the number of characters in the string representation of this number.
   ///
-  /// For negative numbers, it includes the negative sign in the length.
-  /// For decimal numbers, it includes the decimal point in the length.
+  /// For negative numbers, the leading `'-'` is included. For decimal numbers,
+  /// the `'.'` is included.
+  ///
+  /// **Note:** numbers whose absolute value is ≥ 1e21 are represented in
+  /// scientific notation by Dart's `toString()` (e.g. `1000000000000000000000`
+  /// becomes `"1e+21"`). For such values this method counts the characters of
+  /// the scientific notation string, not the full decimal digit count. Use
+  /// `BigInt.from(n).toString().length` if you need the true digit count for
+  /// large integers.
   ///
   /// Example:
   /// ```dart

@@ -12,8 +12,8 @@ void main() {
         expect(TimeEmojiUtils.getEmojiDayOrNight(6), TimeEmojiUtils.moonEmoji);
       });
 
-      test('Hour 7 (7am) returns moonEmoji', () {
-        expect(TimeEmojiUtils.getEmojiDayOrNight(7), TimeEmojiUtils.moonEmoji);
+      test('Hour 7 (7am) returns sunEmoji', () {
+        expect(TimeEmojiUtils.getEmojiDayOrNight(7), TimeEmojiUtils.sunEmoji);
       });
 
       test('Hour 8 (8am) returns sunEmoji', () {
@@ -63,9 +63,9 @@ void main() {
         expect(dateTime.emojiDayOrNight, TimeEmojiUtils.moonEmoji);
       });
 
-      test('DateTime with hour 7 (7am) returns moonEmoji', () {
+      test('DateTime with hour 7 (7am) returns sunEmoji', () {
         final DateTime dateTime = DateTime(2024, 1, 1, 7);
-        expect(dateTime.emojiDayOrNight, TimeEmojiUtils.moonEmoji);
+        expect(dateTime.emojiDayOrNight, TimeEmojiUtils.sunEmoji);
       });
 
       test('DateTime with hour 17 (5pm) returns sunEmoji', () {

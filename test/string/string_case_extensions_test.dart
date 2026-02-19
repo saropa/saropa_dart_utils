@@ -40,7 +40,7 @@ void main() {
       expect('привет'.isAllLetterLowerCase, true);
     });
 
-    test('String with mixed lowercase and unicode letters returns false', () {
+    test('String with mixed lowercase and unicode letters returns true', () {
       expect('lowerприветcase'.isAllLetterLowerCase, true);
     });
   });

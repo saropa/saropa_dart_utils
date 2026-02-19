@@ -4,6 +4,10 @@ const int _hexRadix = 16;
 /// Maximum valid Unicode code point (U+10FFFF).
 const int _maxUnicodeCodePoint = 0x10FFFF;
 
+/// Surrogate codepoint range (U+D800–U+DFFF) — not valid scalar values.
+const int _surrogateMin = 0xD800;
+const int _surrogateMax = 0xDFFF;
+
 /// Common HTML entity mappings for unescaping.
 const Map<String, String> _htmlEntities = <String, String>{
   '&amp;': '&',
@@ -12,7 +16,7 @@ const Map<String, String> _htmlEntities = <String, String>{
   '&quot;': '"',
   '&#39;': "'",
   '&apos;': "'",
-  '&nbsp;': ' ',
+  '&nbsp;': '\u00A0',
   '&copy;': '\u00A9',
   '&reg;': '\u00AE',
   '&trade;': '\u2122',
@@ -112,7 +116,10 @@ class HtmlUtils {
         codePoint = int.tryParse(hex, radix: _hexRadix);
       }
 
-      if (codePoint != null && codePoint > 0 && codePoint <= _maxUnicodeCodePoint) {
+      if (codePoint != null &&
+          codePoint > 0 &&
+          codePoint <= _maxUnicodeCodePoint &&
+          !(codePoint >= _surrogateMin && codePoint <= _surrogateMax)) {
         return String.fromCharCode(codePoint);
       }
       return match.group(0) ?? ''; // Return original if invalid

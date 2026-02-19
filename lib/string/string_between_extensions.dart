@@ -83,13 +83,21 @@ extension StringBetweenExtensions on String {
 
   /// Extracts content between [start] and [end] delimiters.
   ///
-  /// Returns a tuple of (content between delimiters, remaining string after removal).
-  /// Uses `lastIndexOf` for the end delimiter to capture the outermost pair,
-  /// which correctly handles nested delimiters like `(a(test)b)` → `a(test)b`.
+  /// Returns a tuple of (content between delimiters, remaining string after
+  /// the closing delimiter). The second element is an empty string if nothing
+  /// follows the closing delimiter.
+  ///
+  /// **Design:** uses `indexOf` for [start] (first occurrence) and
+  /// `lastIndexOf` for [end] (last occurrence). This intentionally returns
+  /// the **outermost** match, so nested delimiters are included in the
+  /// content: `'(a(test)b)'.betweenResult('(',')')` → `('a(test)b', '')`.
+  ///
+  /// If you need the **first balanced pair** instead, use `between()` which
+  /// uses `indexOf` for both delimiters.
   (String, String?)? betweenResult(
     String start,
     String end, {
-    bool endOptional = true,
+    bool endOptional = false,
     bool trim = true,
   }) {
     if (isEmpty || start.isEmpty || end.isEmpty) return null;
@@ -100,6 +108,12 @@ extension StringBetweenExtensions on String {
 
     final int endIndex = lastIndexOf(end);
     if (endIndex == -1) {
+      // If end is not found and it's optional, return the tail after start.
+      if (endOptional) {
+        final String content = substringSafe(startIndex + start.length);
+        final String finalContent = trim ? content.trim() : content;
+        return finalContent.isEmpty ? null : (finalContent, null);
+      }
       return null;
     }
 
@@ -138,6 +152,10 @@ extension StringBetweenExtensions on String {
   /// Extracts content between first occurrence of [start] and [end].
   ///
   /// If [endOptional] is true and [end] is not found, returns content after [start].
+  ///
+  /// **Special case:** if [end] is empty, it is treated as "not found", so
+  /// with `endOptional: true` (default) the entire tail after [start] is
+  /// returned, and with `endOptional: false` an empty string is returned.
   String between(String start, String end, {bool endOptional = true, bool trim = true}) {
     if (isEmpty || start.isEmpty) return '';
     final int startIndex = indexOf(start);
