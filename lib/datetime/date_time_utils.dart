@@ -238,7 +238,11 @@ class DateTimeUtils {
     }
 
     // there are ALWAYS 28 days in any month
-    final DateTime someDayNextMonth = DateTime(year, month, minDaysInAnyMonth).addDays(daysToAddToGetNextMonth);
+    final DateTime someDayNextMonth = DateTime(
+      year,
+      month,
+      minDaysInAnyMonth,
+    ).addDays(daysToAddToGetNextMonth);
 
     return DateTime(someDayNextMonth.year, someDayNextMonth.month);
   }
@@ -328,8 +332,10 @@ class DateTimeUtils {
     if (hour != null && (hour < 0 || hour > maxHour)) return false;
     if (minute != null && (minute < 0 || minute > maxMinuteOrSecond)) return false;
     if (second != null && (second < 0 || second > maxMinuteOrSecond)) return false;
-    if (millisecond != null && (millisecond < 0 || millisecond > maxMillisecondOrMicrosecond)) return false;
-    if (microsecond != null && (microsecond < 0 || microsecond > maxMillisecondOrMicrosecond)) return false;
+    if (millisecond != null && (millisecond < 0 || millisecond > maxMillisecondOrMicrosecond))
+      return false;
+    if (microsecond != null && (microsecond < 0 || microsecond > maxMillisecondOrMicrosecond))
+      return false;
     return true;
   }
 }

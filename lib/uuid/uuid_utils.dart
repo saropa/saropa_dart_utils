@@ -72,8 +72,7 @@ class UuidUtils {
     }
 
     // Check length: must be 32 (no hyphens) or 36 (with hyphens)
-    if (uuid.length != _uuidLengthWithoutHyphens &&
-        uuid.length != _uuidLengthWithHyphens) {
+    if (uuid.length != _uuidLengthWithoutHyphens && uuid.length != _uuidLengthWithHyphens) {
       return false;
     }
 

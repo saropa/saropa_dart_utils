@@ -191,7 +191,11 @@ class MapUtils {
   static void mapRemoveValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
     // ignore: avoid_parameter_mutation - Function is designed to mutate the map parameter
-    map.update(key, (List<V> list) => list.where((V v) => v != value).toList(), ifAbsent: () => <V>[]);
+    map.update(
+      key,
+      (List<V> list) => list.where((V v) => v != value).toList(),
+      ifAbsent: () => <V>[],
+    );
   }
 
   /// Checks if a map of lists contains a specific value.

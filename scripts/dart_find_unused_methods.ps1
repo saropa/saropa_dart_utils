@@ -29,7 +29,7 @@ $([char]0x1b)[38;5;208m                       `-+shdmNMMMMNmdhs+-$([char]0x1b)[0
 $([char]0x1b)[38;5;209m                    -odMMMNyo/-..````.++:+o+/-$([char]0x1b)[0m
 $([char]0x1b)[38;5;215m                 `/dMMMMMM/`               ``````````$([char]0x1b)[0m
 $([char]0x1b)[38;5;220m                `dMMMMMMMMNdhhhdddmmmNmmddhs+-$([char]0x1b)[0m
-$([char]0x1b)[38;5;226m                /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/$([char]0x1b)[0m
+$([char]0x1b)[38;5;226m                /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh\$([char]0x1b)[0m
 $([char]0x1b)[38;5;190m              . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+$([char]0x1b)[0m
 $([char]0x1b)[38;5;154m              o     `..~~~::~+==+~:/+sdNMMMMMMMMMMMo$([char]0x1b)[0m
 $([char]0x1b)[38;5;118m              m                        .+NMMMMMMMMMN$([char]0x1b)[0m
@@ -64,7 +64,7 @@ function Get-SaropaLogoUncolored {
                   -odMMMNyo/-..````.++:+o+/-
                `/dMMMMMM/`               ``````````
               `dMMMMMMMMNdhhhdddmmmNmmddhs+-
-              /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/
+              /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh\
             . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+
             o     `..~~~::~+==+~:/+sdNMMMMMMMMMMMo
             m                        .+NMMMMMMMMMN

@@ -17,7 +17,7 @@ This script automates the complete release workflow for a Dart/Flutter package:
   12. Creates and pushes git tag
   13. Creates GitHub release with release notes
 
-Version:   2.0
+Version:   2.2
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
@@ -67,10 +67,7 @@ from pathlib import Path
 from typing import NoReturn
 
 
-SCRIPT_VERSION = "2.0"
-
-# Safe publishing account - no confirmation prompt needed for this email
-SAFE_PUBLISHER_EMAIL = "saropa.packages@gmail.com"
+SCRIPT_VERSION = "2.2"
 
 
 # =============================================================================
@@ -147,7 +144,7 @@ def show_saropa_logo() -> None:
 \033[38;5;209m                    -odMMMNyo/-..````.++:+o+/-\033[0m
 \033[38;5;215m                 `/dMMMMMM/`           ``````````\033[0m
 \033[38;5;220m                `dMMMMMMMMNdhhhdddmmmNmmddhs+-\033[0m
-\033[38;5;226m                /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/\033[0m
+\033[38;5;226m                /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh\\\033[0m
 \033[38;5;190m              . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+\033[0m
 \033[38;5;154m              o     `..~~~::~+==+~:/+sdNMMMMMMMMMMMo\033[0m
 \033[38;5;118m              m                        .+NMMMMMMMMMN\033[0m
@@ -306,6 +303,12 @@ def command_exists(cmd: str) -> bool:
 # =============================================================================
 
 
+def parse_version(version: str) -> tuple[int, int, int]:
+    """Parse a version string into (major, minor, patch) tuple."""
+    parts = version.split(".")
+    return int(parts[0]), int(parts[1]), int(parts[2])
+
+
 def get_version_from_pubspec(pubspec_path: Path) -> str:
     """Read version string from pubspec.yaml."""
     content = pubspec_path.read_text(encoding="utf-8")
@@ -313,6 +316,19 @@ def get_version_from_pubspec(pubspec_path: Path) -> str:
     if not match:
         raise ValueError("Could not find version in pubspec.yaml")
     return match.group(1)
+
+
+def update_pubspec_version(pubspec_path: Path, new_version: str) -> None:
+    """Update the version in pubspec.yaml."""
+    content = pubspec_path.read_text(encoding="utf-8")
+    updated = re.sub(
+        r"^(version:\s*)\d+\.\d+\.\d+",
+        rf"\g<1>{new_version}",
+        content,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    pubspec_path.write_text(updated, encoding="utf-8")
 
 
 def get_package_name(pubspec_path: Path) -> str:
@@ -398,8 +414,8 @@ def display_changelog(project_dir: Path) -> str | None:
 # =============================================================================
 
 
-def check_prerequisites() -> bool:
-    """Check that required tools are available."""
+def check_prerequisites(project_dir: Path) -> bool:
+    """Check that required tools are available and authenticated."""
     print_header("STEP 1: CHECKING PREREQUISITES")
 
     tools = [
@@ -416,7 +432,51 @@ def check_prerequisites() -> bool:
             print_error(f"{tool} not found. {hint}")
             all_found = False
 
-    return all_found
+    if not all_found:
+        return False
+
+    # Verify gh is authenticated (catches auth errors before doing heavy work)
+    use_shell = get_shell_mode()
+    result = subprocess.run(
+        ["gh", "auth", "status"],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        shell=use_shell,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if result.returncode != 0:
+        print_error("GitHub CLI is not authenticated.")
+        print_info("Run 'gh auth login' to authenticate.")
+        error_output = (result.stderr or "") + (result.stdout or "")
+        if "GITHUB_TOKEN" in error_output:
+            print_info(
+                "If GITHUB_TOKEN env var is set but invalid, clear it first:\n"
+                '      PowerShell: $env:GITHUB_TOKEN = ""\n'
+                "      Bash: unset GITHUB_TOKEN"
+            )
+        return False
+    print_success("gh authenticated")
+
+    # Verify GitHub Actions publish workflow exists
+    workflow_path = project_dir / ".github" / "workflows" / "publish.yml"
+    if not workflow_path.exists():
+        # Also check .yaml extension
+        workflow_path = project_dir / ".github" / "workflows" / "publish.yaml"
+    if workflow_path.exists():
+        print_success(f"Publish workflow found ({workflow_path.name})")
+    else:
+        print_error(
+            "No publish workflow found at .github/workflows/publish.yml"
+        )
+        print_info(
+            "Publishing relies on GitHub Actions. "
+            "Add a publish workflow before releasing."
+        )
+        return False
+
+    return True
 
 
 def check_working_tree(project_dir: Path) -> tuple[bool, bool]:
@@ -667,31 +727,6 @@ def pre_publish_validation(project_dir: Path) -> bool:
     if result.stderr:
         print(result.stderr)
     return False
-
-
-def get_pub_account() -> str | None:
-    """Get the currently authenticated pub.dev account email."""
-    use_shell = get_shell_mode()
-
-    # Run 'dart pub login' which tells us if we're already logged in
-    result = subprocess.run(
-        ["dart", "pub", "login"],
-        capture_output=True,
-        text=True,
-        shell=use_shell,
-        encoding="utf-8",
-        errors="replace",
-        input="n\n",  # Say no if it prompts to open browser
-    )
-
-    output = result.stdout + result.stderr
-
-    # Look for "You are already logged in as <email>"
-    match = re.search(r"logged in as <([^>]+)>", output)
-    if match:
-        return match.group(1)
-
-    return None
 
 
 def publish_to_pubdev(project_dir: Path) -> bool:
@@ -978,11 +1013,48 @@ def main() -> int:
         )
 
     if version != changelog_version:
+        pubspec_ver = parse_version(version)
+        changelog_ver = parse_version(changelog_version)
+
+        if changelog_ver > pubspec_ver:
+            # Changelog is ahead — auto-fix pubspec to match
+            print_warning(
+                f"Version mismatch: pubspec.yaml has {version}, "
+                f"but CHANGELOG.md latest is {changelog_version}."
+            )
+            print_info(
+                f"Updating pubspec.yaml version from {version} to "
+                f"{changelog_version} to match CHANGELOG.md."
+            )
+            update_pubspec_version(pubspec_path, changelog_version)
+            version = changelog_version
+            print_success(f"pubspec.yaml updated to {version}")
+        else:
+            # Pubspec is ahead of changelog — user must add changelog entry
+            exit_with_error(
+                f"Version mismatch: pubspec.yaml has {version}, "
+                f"but CHANGELOG.md latest is {changelog_version}. "
+                "Add a CHANGELOG.md entry for the new version before publishing.",
+                ExitCode.CHANGELOG_FAILED,
+            )
+
+    # Early check: abort if this version is already tagged on remote
+    tag_name = f"v{version}"
+    use_shell = get_shell_mode()
+    result = subprocess.run(
+        ["git", "ls-remote", "--tags", "origin", f"refs/tags/{tag_name}"],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        shell=use_shell,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if result.returncode == 0 and result.stdout.strip():
         exit_with_error(
-            f"Version mismatch: pubspec.yaml has {version}, "
-            f"but CHANGELOG.md latest is {changelog_version}. "
-            "Update one to match the other before publishing.",
-            ExitCode.CHANGELOG_FAILED,
+            f"Tag {tag_name} already exists on remote. "
+            "This version has already been released.",
+            ExitCode.VALIDATION_FAILED,
         )
 
     print_header("SAROPA DART UTILS PUBLISHER")
@@ -1004,7 +1076,7 @@ def main() -> int:
     # =========================================================================
 
     # Step 1: Prerequisites
-    if not check_prerequisites():
+    if not check_prerequisites(project_dir):
         exit_with_error("Prerequisites check failed", ExitCode.PREREQUISITES_FAILED)
 
     # Step 2: Working tree
