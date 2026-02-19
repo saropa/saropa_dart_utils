@@ -1,6 +1,6 @@
 name: saropa_dart_utils
 description: "280+ extension methods and utilities for Flutter/Dart. Null-safe string, DateTime, List, Map, and number operations that eliminate boilerplate."
-version: 1.0.5
+version: 1.0.6
 
 homepage: https://app.saropa.com
 repository: https://github.com/saropa/saropa_dart_utils

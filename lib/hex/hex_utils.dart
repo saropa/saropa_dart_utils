@@ -53,7 +53,8 @@ extension HexExtensions on String {
     // Normalize to uppercase for consistent comparison since the input can be
     // mixed case (e.g., '7fffffffffffffff' should equal '7FFFFFFFFFFFFFFF').
     final String upperHex = toUpperCase();
-    if (length > _maxHexLength || (length == _maxHexLength && upperHex.compareTo(_maxInt64Hex) > 0)) {
+    if (length > _maxHexLength ||
+        (length == _maxHexLength && upperHex.compareTo(_maxInt64Hex) > 0)) {
       return null;
     }
 

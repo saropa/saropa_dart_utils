@@ -207,11 +207,7 @@ extension DateTimeExtensions on DateTime {
   /// Returns:
   ///   bool: True if the time is exactly midnight, false otherwise.
   bool get isMidnight =>
-      hour == 0 &&
-      minute == 0 &&
-      second == 0 &&
-      millisecond == 0 &&
-      microsecond == 0;
+      hour == 0 && minute == 0 && second == 0 && millisecond == 0 && microsecond == 0;
 
   /// Ignores the year of the current [DateTime] and returns a new [DateTime]
   /// with the specified [setYear].
@@ -223,12 +219,10 @@ extension DateTimeExtensions on DateTime {
   DateTime? toDateInYear(int setYear) {
     // Guard: Feb 29 only exists in leap years.
     if (month == DateTime.february && day == 29) {
-      final bool targetIsLeap = setYear % 4 == 0 &&
-          (setYear % 100 != 0 || setYear % 400 == 0);
+      final bool targetIsLeap = setYear % 4 == 0 && (setYear % 100 != 0 || setYear % 400 == 0);
       if (!targetIsLeap) return null;
     }
-    return DateTime(setYear, month, day, hour, minute, second,
-        millisecond, microsecond);
+    return DateTime(setYear, month, day, hour, minute, second, millisecond, microsecond);
   }
 
   /// Returns the ordinal representation of the day of the month.
@@ -632,9 +626,11 @@ extension DateTimeExtensions on DateTime {
     final DateTime currentNow = now ?? DateTime.now();
 
     // End of today = start of tomorrow minus one microsecond
-    final DateTime endOfToday = DateTime(currentNow.year, currentNow.month, currentNow.day)
-        .add(const Duration(days: 1))
-        .subtract(const Duration(microseconds: 1));
+    final DateTime endOfToday = DateTime(
+      currentNow.year,
+      currentNow.month,
+      currentNow.day,
+    ).add(const Duration(days: 1)).subtract(const Duration(microseconds: 1));
 
     return isAfter(endOfToday);
   }

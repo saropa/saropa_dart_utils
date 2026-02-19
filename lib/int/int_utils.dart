@@ -28,7 +28,12 @@ class IntUtils {
   ///
   /// Both [a] and [b] must be non-negative.
   ///
-  static int? findGreatestCommonDenominator(int a, int b, {int depth = 0, int maxDepth = _defaultMaxRecursionDepth}) {
+  static int? findGreatestCommonDenominator(
+    int a,
+    int b, {
+    int depth = 0,
+    int maxDepth = _defaultMaxRecursionDepth,
+  }) {
     // Both numbers must be non-negative.
     if (a < 0 || b < 0) {
       return null;

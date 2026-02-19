@@ -29,9 +29,7 @@ class TimeEmojiUtils {
       return null;
     }
 
-    return tzHour >= dayStartHour && tzHour < dayEndHour
-        ? sunEmoji
-        : moonEmoji;
+    return tzHour >= dayStartHour && tzHour < dayEndHour ? sunEmoji : moonEmoji;
   }
 }
 
