@@ -56,8 +56,19 @@ extension IntExtensions on int {
     return count;
   }
 
-  /// Ensure NOT this greater than
-  /// or equal to [from] and less than or equal to [to]?
+  /// Clamps this integer to be within the inclusive range [[from], [to]].
+  ///
+  /// Returns [from] if this is less than [from], [to] if this is greater than
+  /// [to], or this unchanged if already within range.
+  ///
+  /// If [from] > [to] (invalid range), returns this unchanged.
+  ///
+  /// Example:
+  /// ```dart
+  /// 5.forceBetween(1, 10);  // 5 (within range)
+  /// 0.forceBetween(1, 10);  // 1 (clamped to min)
+  /// 15.forceBetween(1, 10); // 10 (clamped to max)
+  /// ```
   int forceBetween(int from, final int to) {
     if (from > to) {
       return this;

@@ -106,7 +106,7 @@ void main() {
       expect(range.isNthDayOfMonthInRange(5, DateTime.wednesday, 5), true);
     });
 
-    test('returns false for 5th Wednesday of May 2024', () {
+    test('returns true for 5th Wednesday of May 2024', () {
       final DateTimeRange<DateTime> range = DateTimeRange(
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
@@ -139,7 +139,7 @@ void main() {
       expect(range.isNthDayOfMonthInRange(1, DateTime.sunday, 2), true);
     });
 
-    test('returns false for 5th Saturday of December 2023', () {
+    test('returns true for 5th Saturday of December 2023', () {
       final DateTimeRange<DateTime> range = DateTimeRange(
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
@@ -173,14 +173,6 @@ void main() {
         end: DateTime(2023, 12, 31),
       );
       expect(range.isNthDayOfMonthInRange(6, DateTime.friday, 4), false);
-    });
-
-    test('returns false for 5th Wednesday of May 2024', () {
-      final DateTimeRange<DateTime> range = DateTimeRange(
-        start: DateTime(2024),
-        end: DateTime(2024, 12, 31),
-      );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.wednesday, 5), true);
     });
 
     test('returns true for 5th Saturday of December 2024 (does not exist)', () {

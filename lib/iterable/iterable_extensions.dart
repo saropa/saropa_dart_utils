@@ -1,4 +1,8 @@
 import 'dart:collection';
+import 'dart:math';
+
+// Module-level instance avoids allocating a new Random on every randomElement() call.
+final Random _random = Random();
 
 extension GeneralIterableExtensions<T> on Iterable<T> {
   /// Finds the most common value in the list.
@@ -56,7 +60,7 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
-    // Find and return the key with the highest value (frequency) in the map.
+    // Find and return the key with the lowest value (frequency) in the map.
     final MapEntry<T, int>? leastCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<T, int>? previous, MapEntry<T, int> element) =>
@@ -76,8 +80,7 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
   /// Returns null if the iterable is empty.
   T? randomElement() {
     if (isEmpty) return null;
-    final int index = DateTime.now().microsecondsSinceEpoch % length;
-    return elementAt(index);
+    return elementAt(_random.nextInt(length));
   }
 
   /// Returns true if this iterable contains all elements from [other].

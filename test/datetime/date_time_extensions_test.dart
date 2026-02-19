@@ -681,6 +681,16 @@ void main() {
           final DateTime date = DateTime(2023, 1, 1, 12, 30, 45);
           expect(date.isMidnight, isFalse);
         });
+
+        test('returns false if millisecond is not 0', () {
+          final DateTime date = DateTime(2023, 1, 1, 0, 0, 0, 1);
+          expect(date.isMidnight, isFalse);
+        });
+
+        test('returns false if microsecond is not 0', () {
+          final DateTime date = DateTime(2023, 1, 1, 0, 0, 0, 0, 1);
+          expect(date.isMidnight, isFalse);
+        });
       });
 
       group('toDateInYear', () {
@@ -707,6 +717,12 @@ void main() {
         test('handles single-digit month and day', () {
           final DateTime date = DateTime(2000, 5, 8);
           expect(date.toDateInYear(2023), DateTime(2023, 5, 8));
+        });
+
+        test('returns null for Feb 29 when target year is not a leap year', () {
+          final DateTime date = DateTime(2000, 2, 29);
+          expect(date.toDateInYear(2023), isNull);
+          expect(date.toDateInYear(2100), isNull);
         });
       });
 
@@ -1039,27 +1055,27 @@ void main() {
       group('isYearCurrent', () {
         test('returns true if date is in current year', () {
           final DateTime date = DateTime(DateTime.now().year, 6, 15);
-          expect(date.isYearCurrent, isTrue);
+          expect(date.isYearCurrent(), isTrue);
         });
 
         test('returns false if date is in past year', () {
           final DateTime date = DateTime(DateTime.now().year - 1, 6, 15);
-          expect(date.isYearCurrent, isFalse);
+          expect(date.isYearCurrent(), isFalse);
         });
 
         test('returns false if date is in future year', () {
           final DateTime date = DateTime(DateTime.now().year + 1, 6, 15);
-          expect(date.isYearCurrent, isFalse);
+          expect(date.isYearCurrent(), isFalse);
         });
 
         test('handles first day of current year', () {
           final DateTime date = DateTime(DateTime.now().year);
-          expect(date.isYearCurrent, isTrue);
+          expect(date.isYearCurrent(), isTrue);
         });
 
         test('handles last day of current year', () {
           final DateTime date = DateTime(DateTime.now().year, 12, 31);
-          expect(date.isYearCurrent, isTrue);
+          expect(date.isYearCurrent(), isTrue);
         });
       });
 
@@ -1154,70 +1170,37 @@ void main() {
       });
 
       group('getUtcTimeFromLocal', () {
-        test('returns same time when offset is 0', () {
-          final DateTime utcDateTime = DateTime.utc(2023, 6, 15, 10);
-          final DateTime? result = utcDateTime.getUtcTimeFromLocal(0);
-          expect(result, utcDateTime);
+        test('returns same instance when offset is 0', () {
+          final DateTime local = DateTime(2023, 6, 15, 10);
+          expect(local.getUtcTimeFromLocal(0), local);
         });
 
-        test('returns correct UTC time with positive offset', () {
-          final DateTime utcDateTime = DateTime.utc(2023, 6, 15, 10);
-          const double offset = 2;
-          final DateTime? result = utcDateTime.getUtcTimeFromLocal(offset);
-
-          // Calculate expected difference
-          final Duration expectedDifference = Duration(
-            hours: offset.floor(),
-            minutes: ((offset - offset.floor()) * 60).round(),
-          );
-
-          expect(result, isNotNull);
-          expect(result?.difference(utcDateTime), expectedDifference);
+        test('UTC+2: 15:00 local → 13:00 UTC', () {
+          final DateTime local = DateTime(2024, 6, 15, 15);
+          final DateTime utc = local.getUtcTimeFromLocal(2.0);
+          expect(utc.hour, equals(13));
+          expect(utc.minute, equals(0));
         });
 
-        test('returns correct UTC time with negative offset', () {
-          final DateTime utcDateTime = DateTime.utc(2023, 6, 15, 10);
-          const double offset = -2;
-          final DateTime? result = utcDateTime.getUtcTimeFromLocal(offset);
-
-          // Calculate expected difference (will be negative)
-          final Duration expectedDifference = Duration(
-            hours: offset.floor(),
-            minutes: ((offset - offset.floor()) * 60).round(),
-          );
-
-          expect(result, isNotNull);
-          expect(result?.difference(utcDateTime), expectedDifference);
+        test('UTC-5: 10:00 local → 15:00 UTC', () {
+          final DateTime local = DateTime(2024, 1, 15, 10);
+          final DateTime utc = local.getUtcTimeFromLocal(-5.0);
+          expect(utc.hour, equals(15));
+          expect(utc.minute, equals(0));
         });
 
-        test('handles fractional positive offset', () {
-          final DateTime utcDateTime = DateTime.utc(2023, 6, 15, 10);
-          const double offset = 1.5;
-          final DateTime? result = utcDateTime.getUtcTimeFromLocal(offset);
-
-          // Calculate expected difference
-          final Duration expectedDifference = Duration(
-            hours: offset.floor(),
-            minutes: ((offset - offset.floor()) * 60).round(),
-          );
-
-          expect(result, isNotNull);
-          expect(result?.difference(utcDateTime), expectedDifference);
+        test('UTC+5:30 (India): 10:30 local → 05:00 UTC', () {
+          final DateTime local = DateTime(2024, 1, 15, 10, 30);
+          final DateTime utc = local.getUtcTimeFromLocal(5.5);
+          expect(utc.hour, equals(5));
+          expect(utc.minute, equals(0));
         });
 
-        test('handles fractional negative offset', () {
-          final DateTime utcDateTime = DateTime.utc(2023, 6, 15, 10);
-          const double offset = -1.5;
-          final DateTime? result = utcDateTime.getUtcTimeFromLocal(offset);
-
-          // Calculate expected difference (will be negative)
-          final Duration expectedDifference = Duration(
-            hours: offset.floor(),
-            minutes: ((offset - offset.floor()) * 60).round(),
-          );
-
-          expect(result, isNotNull);
-          expect(result?.difference(utcDateTime), expectedDifference);
+        test('UTC-5:30: 10:00 local → 15:30 UTC (negative fractional)', () {
+          final DateTime local = DateTime(2024, 1, 15, 10);
+          final DateTime utc = local.getUtcTimeFromLocal(-5.5);
+          expect(utc.hour, equals(15));
+          expect(utc.minute, equals(30));
         });
       });
 
@@ -1354,27 +1337,49 @@ void main() {
           final DateTime end = DateTime(2023, 6, 30);
           expect(date.isBetween(start, end), isFalse);
         });
+
+        test('returns true when UTC and local DateTimes represent same moment at boundary', () {
+          final DateTime utcBoundary = DateTime.utc(2023, 6, 15, 12);
+          final DateTime localBoundary = utcBoundary.toLocal();
+          final DateTime start = DateTime.utc(2023, 6, 1);
+          final DateTime end = DateTime.utc(2023, 6, 30);
+          expect(localBoundary.isBetween(start, end), isTrue);
+        });
+
+        test('returns true when date equals start using isAtSameMomentAs (UTC vs local)', () {
+          final DateTime utcStart = DateTime.utc(2023, 6, 1);
+          final DateTime localStart = utcStart.toLocal();
+          final DateTime end = DateTime.utc(2023, 6, 30);
+          expect(localStart.isBetween(utcStart, end), isTrue);
+        });
       });
 
       group('isDateAfterToday', () {
         test('returns false if date is today', () {
           final DateTime date = DateTime.now();
-          expect(date.isDateAfterToday(date), isFalse);
+          expect(date.isDateAfterToday(), isFalse);
         });
 
         test('returns true if date is after today', () {
           final DateTime date = DateTime.now().add(const Duration(days: 1));
-          expect(date.isDateAfterToday(date), isTrue);
+          expect(date.isDateAfterToday(), isTrue);
         });
 
         test('returns false if date is before today', () {
           final DateTime date = DateTime.now().subtract(const Duration(days: 1));
-          expect(date.isDateAfterToday(date), isFalse);
+          expect(date.isDateAfterToday(), isFalse);
         });
 
         test('works for date far in the future', () {
           final DateTime date = DateTime(DateTime.now().year + 1);
-          expect(date.isDateAfterToday(date), isTrue);
+          expect(date.isDateAfterToday(), isTrue);
+        });
+
+        test('injectable now works correctly', () {
+          final DateTime fakeNow = DateTime(2024, 6, 15);
+          expect(DateTime(2024, 6, 16).isDateAfterToday(now: fakeNow), isTrue);
+          expect(DateTime(2024, 6, 15).isDateAfterToday(now: fakeNow), isFalse);
+          expect(DateTime(2024, 6, 14).isDateAfterToday(now: fakeNow), isFalse);
         });
       });
 

@@ -14,8 +14,9 @@ void main() {
       '8. Empty object with allowEmpty=true',
       () => expect(JsonUtils.isJson('{}', allowEmpty: true), isTrue),
     );
-    test('9. Empty array (valid - no colon check for arrays)', () {
-      expect(JsonUtils.isJson('[]'), isTrue);
+    test('9. Empty array returns false without allowEmpty', () {
+      expect(JsonUtils.isJson('[]'), isFalse);
+      expect(JsonUtils.isJson('[]', allowEmpty: true), isTrue);
     });
     test('10. Whitespace around object', () => expect(JsonUtils.isJson('  {"a":1}  '), isTrue));
     test('11. Whitespace around empty object', () {

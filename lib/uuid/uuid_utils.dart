@@ -23,6 +23,9 @@ final RegExp _uuidWithoutHyphensRegex = RegExp(
   caseSensitive: false,
 );
 
+// Hex-only: any 32-character string (no UUID structure enforced)
+final RegExp _hexOnly32Regex = RegExp(r'^[0-9a-fA-F]{32}$');
+
 /// Utility class for UUID validation and manipulation.
 ///
 /// Provides methods to validate UUID strings in both standard (with hyphens)
@@ -112,8 +115,12 @@ class UuidUtils {
       return uuid;
     }
 
-    // Must be exactly 32 characters
+    // Must be exactly 32 hex characters
     if (uuid.length != _uuidLengthWithoutHyphens) {
+      return null;
+    }
+
+    if (!_hexOnly32Regex.hasMatch(uuid)) {
       return null;
     }
 

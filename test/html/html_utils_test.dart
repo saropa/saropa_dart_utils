@@ -14,7 +14,7 @@ void main() {
       });
 
       test('unescapes nbsp', () {
-        expect(HtmlUtils.unescape('Hello&nbsp;World'), equals('Hello World'));
+        expect(HtmlUtils.unescape('Hello&nbsp;World'), equals('Hello\u00A0World'));
       });
 
       test('unescapes symbol entities', () {

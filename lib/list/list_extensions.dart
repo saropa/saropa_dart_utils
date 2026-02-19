@@ -238,6 +238,12 @@ extension ListExtensions<T> on List<T> {
   /// This method is designed to safely take a specified number of elements from a list, handling
   /// cases where the count is null, zero, or negative, and providing an option to ignore zero or less counts.
   ///
+  /// **Note on zero behavior:** unlike `List.take(0)` which returns an empty
+  /// list, `takeSafe(0)` returns the **original list** by default because
+  /// `ignoreZeroOrLess` defaults to `true`. Pass
+  /// `takeSafe(0, ignoreZeroOrLess: false)` to get an empty list, matching
+  /// the standard `take(0)` behavior.
+  ///
   /// Parameters:
   ///   - `count`: The number of elements to take. If `null`, the original list is returned.
   ///   - `ignoreZeroOrLess`: If `true` (default), when `count` is zero or less, the original list is returned.
@@ -306,7 +312,8 @@ extension ListExtensions<T> on List<T> {
       return this;
     }
 
-    return where((T e) => !items.contains(e)).toList();
+    final Set<T> excludeSet = items.toSet();
+    return where((T e) => !excludeSet.contains(e)).toList();
   }
 
   /// Checks if this list contains any element that is also present in the `inThis` list.
@@ -344,14 +351,13 @@ extension ListExtensions<T> on List<T> {
       return false;
     }
 
+    final Set<T> lookupSet = inThis.toSet();
     for (final T find in this) {
-      if (inThis.contains(find)) {
-        // fund
+      if (lookupSet.contains(find)) {
         return true;
       }
     }
 
-    // not found
     return false;
   }
 }

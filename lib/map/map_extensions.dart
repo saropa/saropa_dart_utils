@@ -202,9 +202,16 @@ class MapUtils {
 
   /// Converts dynamic to Map`<String, dynamic>`.
   ///
+  /// All keys are converted to [String] via [toString]. If the source map
+  /// contains keys that produce the same string (e.g. `1` and `'1'` both
+  /// become `'1'`), the last value wins by default — **data is silently
+  /// dropped**. Pass `ensureUniqueKey: true` to keep the first value instead
+  /// (uses [Map.putIfAbsent]).
+  ///
   /// Args:
   ///   json: The value to convert.
-  ///   ensureUniqueKey: If true, uses putIfAbsent to avoid overwriting duplicate keys.
+  ///   ensureUniqueKey: If true, uses putIfAbsent to keep first value on
+  ///     duplicate string keys. Defaults to false (last value wins).
   static Map<String, dynamic>? toMapStringDynamic(
     dynamic json, {
     bool ensureUniqueKey = false,
