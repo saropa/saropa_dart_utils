@@ -109,7 +109,7 @@ void main() {
     group('topOccurrence', () {
       test('Empty list returns null', () {
         final List<String> list = <String>[];
-        expect(list.topOccurrence(), null);
+        expect(list.topOccurrence(), isNull);
       });
 
       test('List with one element', () {
@@ -144,7 +144,7 @@ void main() {
 
       test('List with null values (nulls are counted)', () {
         final List<String?> list = <String?>['apple', null, 'apple', null, null];
-        expect(list.topOccurrence(), null);
+        expect(list.topOccurrence(), isNull);
       });
 
       test('List with symbols', () {
@@ -275,7 +275,7 @@ void main() {
     group('lastOrNull', () {
       test('Empty list returns null', () {
         final List<int> list = <int>[];
-        expect(list.lastOrNull, null);
+        expect(list.lastOrNull, isNull);
       });
 
       test('List with one element returns that element', () {
@@ -290,7 +290,7 @@ void main() {
 
       test('List with null last element returns null', () {
         final List<String?> list = <String?>['a', 'b', null];
-        expect(list.lastOrNull, null);
+        expect(list.lastOrNull, isNull);
       });
 
       test('List of strings returns last string', () {
@@ -315,26 +315,26 @@ void main() {
 
       test('List with mixed types returns last element', () {
         final List<dynamic> list = <dynamic>[1, 'a', true];
-        expect(list.lastOrNull, true);
+        expect(list.lastOrNull, isTrue);
       });
 
       test('List with only null element', () {
         final List<String?> list = <String?>[null];
-        expect(list.lastOrNull, null);
+        expect(list.lastOrNull, isNull);
       });
     });
 
     group('itemAt / safeIndex', () {
       test('Null index returns null', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.itemAt(null), null);
+        expect(list.itemAt(null), isNull);
       });
 
       test('Empty list returns null for any index', () {
         final List<int> list = <int>[];
-        expect(list.itemAt(0), null);
-        expect(list.itemAt(1), null);
-        expect(list.itemAt(-1), null);
+        expect(list.itemAt(0), isNull);
+        expect(list.itemAt(1), isNull);
+        expect(list.itemAt(-1), isNull);
       });
 
       test('Valid index 0 returns first element', () {
@@ -354,12 +354,12 @@ void main() {
 
       test('Index out of range (positive) returns null', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.itemAt(3), null);
+        expect(list.itemAt(3), isNull);
       });
 
       test('Index out of range (negative) returns null', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.itemAt(-1), null);
+        expect(list.itemAt(-1), isNull);
       });
 
       test('List of strings, valid index', () {
@@ -374,14 +374,14 @@ void main() {
 
       test('List with null element at valid index', () {
         final List<String?> list = <String?>['a', null, 'c'];
-        expect(list.itemAt(1), null);
+        expect(list.itemAt(1), isNull);
       });
     });
 
     group('nullIfEmpty', () {
       test('Empty list returns null', () {
         final List<int> list = <int>[];
-        expect(list.nullIfEmpty(), null);
+        expect(list.nullIfEmpty(), isNull);
       });
 
       test('Non-empty list returns the list', () {
@@ -540,57 +540,57 @@ void main() {
     group('containsAny', () {
       test('Empty list returns false', () {
         final List<int> list = <int>[];
-        expect(list.containsAny(<int>[1, 2]), false);
+        expect(list.containsAny(<int>[1, 2]), isFalse);
       });
 
       test('Null inThis list returns false', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(null), false);
+        expect(list.containsAny(null), isFalse);
       });
 
       test('Empty inThis list returns false', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(<int>[]), false);
+        expect(list.containsAny(<int>[]), isFalse);
       });
 
       test('List contains one element from inThis', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(<int>[3, 4]), true);
+        expect(list.containsAny(<int>[3, 4]), isTrue);
       });
 
       test('List contains multiple elements from inThis', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(<int>[2, 3, 4]), true);
+        expect(list.containsAny(<int>[2, 3, 4]), isTrue);
       });
 
       test('List contains all elements from inThis', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(<int>[1, 2, 3]), true);
+        expect(list.containsAny(<int>[1, 2, 3]), isTrue);
       });
 
       test('List contains no elements from inThis returns false', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(<int>[4, 5, 6]), false);
+        expect(list.containsAny(<int>[4, 5, 6]), isFalse);
       });
 
       test('inThis list with duplicates', () {
         final List<int> list = <int>[1, 2, 3];
-        expect(list.containsAny(<int>[3, 3, 4]), true);
+        expect(list.containsAny(<int>[3, 3, 4]), isTrue);
       });
 
       test('List of strings contains any from inThis strings', () {
         final List<String> list = <String>['a', 'b', 'c'];
-        expect(list.containsAny(<String>['c', 'd']), true);
+        expect(list.containsAny(<String>['c', 'd']), isTrue);
       });
 
       test('List with different types, contains any (using contains equality)', () {
         final List<dynamic> list = <dynamic>[1, '2', true];
-        expect(list.containsAny(<dynamic>['2', false]), true); // '2' is String, should match
+        expect(list.containsAny(<dynamic>['2', false]), isTrue); // '2' is String, should match
       });
 
       test('Empty input list and empty inThis list returns false', () {
         final List<String> list = <String>[];
-        expect(list.containsAny(<String>[]), false);
+        expect(list.containsAny(<String>[]), isFalse);
       });
     });
   });

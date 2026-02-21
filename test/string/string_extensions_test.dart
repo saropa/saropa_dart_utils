@@ -85,7 +85,7 @@ void main() {
     test('7. Truncate to 1 char', () => expect('abc'.truncateWithEllipsis(1), 'a…'));
     test(
       '8. Resulting length is length + 1',
-      () => expect('hello world'.truncateWithEllipsis(5).length, 6),
+      () => expect('hello world'.truncateWithEllipsis(5), hasLength(6)),
     );
     test('9. With Unicode', () => expect('你好世界'.truncateWithEllipsis(2), '你好…'));
     test('10. Truncate exactly at end', () => expect('abcdef'.truncateWithEllipsis(5), 'abcde…'));
@@ -1047,7 +1047,7 @@ void main() {
   group('getRandomChar', () {
     test('1. Non-empty string returns single char', () {
       final String result = 'hello'.getRandomChar();
-      expect(result.length, 1);
+      expect(result, hasLength(1));
       expect('hello'.contains(result), isTrue);
     });
     test('2. Empty string returns empty', () => expect(''.getRandomChar(), ''));

@@ -114,7 +114,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2023, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), true);
+          expect(date.isAnnualDateInRange(range), isTrue);
         });
 
         test('returns false when date is outside range with specific year', () {
@@ -123,7 +123,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2023, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), false);
+          expect(date.isAnnualDateInRange(range), isFalse);
         });
 
         test('returns true when date with year 0 is within range', () {
@@ -132,7 +132,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2025, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), true);
+          expect(date.isAnnualDateInRange(range), isTrue);
         });
 
         // Updated: The new cross-year logic correctly finds Dec 31, 2023/2024 are
@@ -144,7 +144,7 @@ void main() {
             start: DateTime(2023, 3),
             end: DateTime(2023, 3, 31),
           );
-          expect(date.isAnnualDateInRange(range), false);
+          expect(date.isAnnualDateInRange(range), isFalse);
         });
 
         test('returns true when date is at start of range', () {
@@ -153,7 +153,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2023, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), true);
+          expect(date.isAnnualDateInRange(range), isTrue);
         });
 
         test('returns true when date is at end of range', () {
@@ -162,12 +162,12 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2023, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), true);
+          expect(date.isAnnualDateInRange(range), isTrue);
         });
 
         test('returns true when range is null', () {
           final DateTime date = DateTime(2023, 6, 15);
-          expect(date.isAnnualDateInRange(null), true);
+          expect(date.isAnnualDateInRange(null), isTrue);
         });
 
         test('returns true for leap year date within range', () {
@@ -176,7 +176,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2025, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), true);
+          expect(date.isAnnualDateInRange(range), isTrue);
         });
 
         test('returns false for date just before range start', () {
@@ -185,7 +185,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2025, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), false);
+          expect(date.isAnnualDateInRange(range), isFalse);
         });
 
         test('returns false for date just after range end', () {
@@ -194,7 +194,7 @@ void main() {
             start: DateTime(2023),
             end: DateTime(2025, 12, 31),
           );
-          expect(date.isAnnualDateInRange(range), false);
+          expect(date.isAnnualDateInRange(range), isFalse);
         });
 
         // Tests for cross-year range logic fix
@@ -266,7 +266,7 @@ void main() {
         test('generates a list of 5 consecutive days (startOfDay: true)', () {
           final DateTime startDate = DateTime(2023);
           final List<DateTime> days = startDate.generateDayList(5);
-          expect(days.length, 5);
+          expect(days, hasLength(5));
           expect(days[0], DateTime(2023));
           expect(days[1], DateTime(2023, 1, 2));
           expect(days[2], DateTime(2023, 1, 3));
@@ -277,7 +277,7 @@ void main() {
         test('generates a list of 5 consecutive days (startOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 1, 1, 10, 30); // Example with time
           final List<DateTime> days = startDate.generateDayList(5, startOfDay: false);
-          expect(days.length, 5);
+          expect(days, hasLength(5));
           expect(days[0], DateTime(2023, 1, 1, 10, 30));
           expect(days[1], DateTime(2023, 1, 2, 10, 30));
           expect(days[2], DateTime(2023, 1, 3, 10, 30));
@@ -288,14 +288,14 @@ void main() {
         test('generates a list of 1 day (startOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 6, 15);
           final List<DateTime> days = startDate.generateDayList(1);
-          expect(days.length, 1);
+          expect(days, hasLength(1));
           expect(days[0], DateTime(2023, 6, 15));
         });
 
         test('generates a list of 1 day (startOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 6, 15, 12); // Example with time
           final List<DateTime> days = startDate.generateDayList(1, startOfDay: false);
-          expect(days.length, 1);
+          expect(days, hasLength(1));
           expect(days[0], DateTime(2023, 6, 15, 12));
         });
 
@@ -314,7 +314,7 @@ void main() {
         test('handles crossing month boundaries (startOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 1, 30);
           final List<DateTime> days = startDate.generateDayList(3);
-          expect(days.length, 3);
+          expect(days, hasLength(3));
           expect(days[0], DateTime(2023, 1, 30));
           expect(days[1], DateTime(2023, 1, 31));
           expect(days[2], DateTime(2023, 2));
@@ -322,7 +322,7 @@ void main() {
         test('handles crossing month boundaries (startOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 1, 30, 5, 5);
           final List<DateTime> days = startDate.generateDayList(3, startOfDay: false);
-          expect(days.length, 3);
+          expect(days, hasLength(3));
           expect(days[0], DateTime(2023, 1, 30, 5, 5));
           expect(days[1], DateTime(2023, 1, 31, 5, 5));
           expect(days[2], DateTime(2023, 2, 1, 5, 5));
@@ -331,7 +331,7 @@ void main() {
         test('handles crossing year boundaries (startOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 12, 30);
           final List<DateTime> days = startDate.generateDayList(3);
-          expect(days.length, 3);
+          expect(days, hasLength(3));
           expect(days[0], DateTime(2023, 12, 30));
           expect(days[1], DateTime(2023, 12, 31));
           expect(days[2], DateTime(2024));
@@ -340,7 +340,7 @@ void main() {
         test('handles crossing year boundaries (startOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 12, 30, 10, 10, 10);
           final List<DateTime> days = startDate.generateDayList(3, startOfDay: false);
-          expect(days.length, 3);
+          expect(days, hasLength(3));
           expect(days[0], DateTime(2023, 12, 30, 10, 10, 10));
           expect(days[1], DateTime(2023, 12, 31, 10, 10, 10));
           expect(days[2], DateTime(2024, 1, 1, 10, 10, 10));
@@ -1787,165 +1787,165 @@ void main() {
     group('DateTimeExtensions', () {
       test('Leap year test', () {
         // Existing tests
-        expect(DateTime(2000).isLeapYear(), true); // Leap year
-        expect(DateTime(2024).isLeapYear(), true); // Leap year
-        expect(DateTime(1900).isLeapYear(), false); // Not a leap year
-        expect(DateTime(2001).isLeapYear(), false); // Not a leap year
-        expect(DateTime(2100).isLeapYear(), false); // Not a leap year
-        expect(DateTime(2400).isLeapYear(), true); // Leap year
-        expect(DateTime(1988).isLeapYear(), true); // Leap year
-        expect(DateTime(1992).isLeapYear(), true); // Leap year
-        expect(DateTime(1996).isLeapYear(), true); // Leap year
-        expect(DateTime(1997).isLeapYear(), false); // Not a leap year
+        expect(DateTime(2000).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2024).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1900).isLeapYear(), isFalse); // Not a leap year
+        expect(DateTime(2001).isLeapYear(), isFalse); // Not a leap year
+        expect(DateTime(2100).isLeapYear(), isFalse); // Not a leap year
+        expect(DateTime(2400).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1988).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1992).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1996).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1997).isLeapYear(), isFalse); // Not a leap year
 
         // Additional tests
-        expect(DateTime(1800).isLeapYear(), false); // Not a leap year
-        expect(DateTime(1804).isLeapYear(), true); // Leap year
-        expect(DateTime(1808).isLeapYear(), true); // Leap year
-        expect(DateTime(1812).isLeapYear(), true); // Leap year
-        expect(DateTime(1816).isLeapYear(), true); // Leap year
-        expect(DateTime(1820).isLeapYear(), true); // Leap year
-        expect(DateTime(1824).isLeapYear(), true); // Leap year
-        expect(DateTime(1828).isLeapYear(), true); // Leap year
-        expect(DateTime(1832).isLeapYear(), true); // Leap year
-        expect(DateTime(1836).isLeapYear(), true); // Leap year
-        expect(DateTime(1840).isLeapYear(), true); // Leap year
-        expect(DateTime(1844).isLeapYear(), true); // Leap year
-        expect(DateTime(1848).isLeapYear(), true); // Leap year
-        expect(DateTime(1852).isLeapYear(), true); // Leap year
-        expect(DateTime(1856).isLeapYear(), true); // Leap year
-        expect(DateTime(1860).isLeapYear(), true); // Leap year
-        expect(DateTime(1864).isLeapYear(), true); // Leap year
-        expect(DateTime(1868).isLeapYear(), true); // Leap year
-        expect(DateTime(1872).isLeapYear(), true); // Leap year
-        expect(DateTime(1876).isLeapYear(), true); // Leap year
-        expect(DateTime(1880).isLeapYear(), true); // Leap year
-        expect(DateTime(1884).isLeapYear(), true); // Leap year
-        expect(DateTime(1888).isLeapYear(), true); // Leap year
-        expect(DateTime(1892).isLeapYear(), true); // Leap year
-        expect(DateTime(1896).isLeapYear(), true); // Leap year
-        expect(DateTime(1904).isLeapYear(), true); // Leap year
+        expect(DateTime(1800).isLeapYear(), isFalse); // Not a leap year
+        expect(DateTime(1804).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1808).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1812).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1816).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1820).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1824).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1828).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1832).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1836).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1840).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1844).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1848).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1852).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1856).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1860).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1864).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1868).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1872).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1876).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1880).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1884).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1888).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1892).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1896).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(1904).isLeapYear(), isTrue); // Leap year
 
         // Future year tests
-        expect(DateTime(2028).isLeapYear(), true); // Leap year
-        expect(DateTime(2032).isLeapYear(), true); // Leap year
-        expect(DateTime(2036).isLeapYear(), true); // Leap year
-        expect(DateTime(2040).isLeapYear(), true); // Leap year
-        expect(DateTime(2044).isLeapYear(), true); // Leap year
-        expect(DateTime(2048).isLeapYear(), true); // Leap year
-        expect(DateTime(2052).isLeapYear(), true); // Leap year
-        expect(DateTime(2056).isLeapYear(), true); // Leap year
-        expect(DateTime(2060).isLeapYear(), true); // Leap year
-        expect(DateTime(2064).isLeapYear(), true); // Leap year
-        expect(DateTime(2068).isLeapYear(), true); // Leap year
-        expect(DateTime(2072).isLeapYear(), true); // Leap year
-        expect(DateTime(2076).isLeapYear(), true); // Leap year
-        expect(DateTime(2080).isLeapYear(), true); // Leap year
-        expect(DateTime(2084).isLeapYear(), true); // Leap year
-        expect(DateTime(2088).isLeapYear(), true); // Leap year
-        expect(DateTime(2092).isLeapYear(), true); // Leap year
-        expect(DateTime(2096).isLeapYear(), true); // Leap year
-        expect(DateTime(2104).isLeapYear(), true); // Leap year
-        expect(DateTime(2108).isLeapYear(), true); // Leap year
-        expect(DateTime(2112).isLeapYear(), true); // Leap year
-        expect(DateTime(2116).isLeapYear(), true); // Leap year
-        expect(DateTime(2120).isLeapYear(), true); // Leap year
-        expect(DateTime(2124).isLeapYear(), true); // Leap year
-        expect(DateTime(2128).isLeapYear(), true); // Leap year
+        expect(DateTime(2028).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2032).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2036).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2040).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2044).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2048).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2052).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2056).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2060).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2064).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2068).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2072).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2076).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2080).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2084).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2088).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2092).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2096).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2104).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2108).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2112).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2116).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2120).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2124).isLeapYear(), isTrue); // Leap year
+        expect(DateTime(2128).isLeapYear(), isTrue); // Leap year
       });
     });
 
     group('DateTimeExtensions', () {
       test('Non-leap year test', () {
-        expect(DateTime(2025).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2026).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2027).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2029).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2030).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2031).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2033).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2034).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2035).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2037).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2038).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2039).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2041).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2042).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2043).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2045).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2046).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2047).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2049).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2050).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2051).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2053).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2054).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2055).isLeapYear(), false); // Non-leap year
-        expect(DateTime(2057).isLeapYear(), false); // Non-leap year
+        expect(DateTime(2025).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2026).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2027).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2029).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2030).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2031).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2033).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2034).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2035).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2037).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2038).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2039).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2041).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2042).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2043).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2045).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2046).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2047).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2049).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2050).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2051).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2053).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2054).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2055).isLeapYear(), isFalse); // Non-leap year
+        expect(DateTime(2057).isLeapYear(), isFalse); // Non-leap year
       });
     });
 
     group('isAfterNow', () {
       test('Current date should NOT be in the future', () {
-        expect(DateTime.now().isAfterNow(), false);
+        expect(DateTime.now().isAfterNow(), isFalse);
       });
 
       test('Future date should be in the future', () {
-        expect(DateTime(2053, DateTime.december, 31).isAfterNow(), true);
+        expect(DateTime(2053, DateTime.december, 31).isAfterNow(), isTrue);
       });
 
       test('Same date should NOT be in the future', () {
-        expect(DateTime(2023).isAfterNow(), false);
+        expect(DateTime(2023).isAfterNow(), isFalse);
       });
 
       test('Null date (defaults to current date) should NOT be in the future', () {
-        expect(DateTime.now().isAfterNow(), false);
+        expect(DateTime.now().isAfterNow(), isFalse);
       });
 
       test('Custom current date should NOT be in the future', () {
-        expect(DateTime(2023).isAfterNow(DateTime(2023, DateTime.january, 2)), false);
+        expect(DateTime(2023).isAfterNow(DateTime(2023, DateTime.january, 2)), isFalse);
       });
 
       test('Custom future date should be in the future', () {
-        expect(DateTime(2023, 1, 2).isAfterNow(DateTime(2023)), true);
+        expect(DateTime(2023, 1, 2).isAfterNow(DateTime(2023)), isTrue);
       });
 
       test('Custom past date should NOT be in the future', () {
-        expect(DateTime(2023).isAfterNow(DateTime(2023, DateTime.january, 3)), false);
+        expect(DateTime(2023).isAfterNow(DateTime(2023, DateTime.january, 3)), isFalse);
       });
     });
 
     group('isBeforeNow', () {
       test('Current date should NOT be in the past', () {
         final DateTime now = DateTime.now();
-        expect(now.isBeforeNow(now), false);
+        expect(now.isBeforeNow(now), isFalse);
       });
 
       test('Past date should be in the past', () {
-        expect(DateTime(2020).isBeforeNow(), true);
+        expect(DateTime(2020).isBeforeNow(), isTrue);
       });
 
       test('Same date should NOT be in the past', () {
-        expect(DateTime(2050).isBeforeNow(DateTime(2050)), false);
+        expect(DateTime(2050).isBeforeNow(DateTime(2050)), isFalse);
       });
 
       test('Slightly older date should be in the past', () {
         final DateTime now = DateTime.now();
         final DateTime slightlyBefore = now.subtract(const Duration(milliseconds: 1));
-        expect(slightlyBefore.isBeforeNow(now), true);
+        expect(slightlyBefore.isBeforeNow(now), isTrue);
       });
 
       test('Custom current date should NOT be in the past', () {
         final DateTime now = DateTime.now();
-        expect(now.isBeforeNow(now), false);
+        expect(now.isBeforeNow(now), isFalse);
       });
 
       test('Custom future date should NOT be in the past', () {
-        expect(DateTime(2063, 1, 2).isBeforeNow(DateTime(2023)), false);
+        expect(DateTime(2063, 1, 2).isBeforeNow(DateTime(2023)), isFalse);
       });
 
       test('Custom past date should be in the past', () {
-        expect(DateTime(2023).isBeforeNow(DateTime(2023, DateTime.january, 3)), true);
+        expect(DateTime(2023).isBeforeNow(DateTime(2023, DateTime.january, 3)), isTrue);
       });
     });
 

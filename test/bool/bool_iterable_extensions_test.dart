@@ -15,59 +15,59 @@ void main() {
   group('anyTrue', () {
     // Additional test cases
     test('returns true for list with single true element', () {
-      expect(<bool>[true].anyTrue, true);
+      expect(<bool>[true].anyTrue, isTrue);
     });
 
     test('returns false for list with single false element', () {
-      expect(<bool>[false].anyTrue, false);
+      expect(<bool>[false].anyTrue, isFalse);
     });
 
     test('returns true for list with multiple true elements', () {
-      expect(<bool>[true, true, true, true, true].anyTrue, true);
+      expect(<bool>[true, true, true, true, true].anyTrue, isTrue);
     });
 
     test('returns false for list with multiple false elements', () {
-      expect(<bool>[false, false, false, false, false].anyTrue, false);
+      expect(<bool>[false, false, false, false, false].anyTrue, isFalse);
     });
 
     test('returns true for list with alternating true and false elements', () {
-      expect(<bool>[true, false, true, false, true].anyTrue, true);
+      expect(<bool>[true, false, true, false, true].anyTrue, isTrue);
     });
 
     test('returns false for list with alternating false and true elements '
         'starting with false', () {
-      expect(<bool>[false, true, false, true, false].anyTrue, true);
+      expect(<bool>[false, true, false, true, false].anyTrue, isTrue);
     });
 
     test('returns true for list with all elements true except the first one', () {
-      expect(<bool>[false, true, true, true, true].anyTrue, true);
+      expect(<bool>[false, true, true, true, true].anyTrue, isTrue);
     });
 
     test('returns true for list with all elements true except the last one', () {
-      expect(<bool>[true, true, true, true, false].anyTrue, true);
+      expect(<bool>[true, true, true, true, false].anyTrue, isTrue);
     });
 
     test('returns true for list with all elements true except the middle one', () {
-      expect(<bool>[true, true, false, true, true].anyTrue, true);
+      expect(<bool>[true, true, false, true, true].anyTrue, isTrue);
     });
 
     test('returns false for list with all elements false except the middle one', () {
-      expect(<bool>[false, false, true, false, false].anyTrue, true);
+      expect(<bool>[false, false, true, false, false].anyTrue, isTrue);
     });
   });
 
   group('anyFalse', () {
     // Additional test cases
     test('returns false for list with multiple true elements', () {
-      expect(<bool>[true, true, true, true, true].anyFalse, false);
+      expect(<bool>[true, true, true, true, true].anyFalse, isFalse);
     });
 
     test('returns true for list with alternating true and false elements', () {
-      expect(<bool>[true, false, true, false, true].anyFalse, true);
+      expect(<bool>[true, false, true, false, true].anyFalse, isTrue);
     });
 
     test('returns true for list with all elements true except the first one', () {
-      expect(<bool>[true, true, true, true, false].anyFalse, true);
+      expect(<bool>[true, true, true, true, false].anyFalse, isTrue);
     });
   });
 

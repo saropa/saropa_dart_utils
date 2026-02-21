@@ -5,39 +5,39 @@ void main() {
   group('NumberExtensions', () {
     group('isNotZeroOrNegative', () {
       test('Positive number returns true', () {
-        expect(1.isNotZeroOrNegative, true);
-        expect(100.isNotZeroOrNegative, true);
-        expect(0.001.isNotZeroOrNegative, true);
+        expect(1.isNotZeroOrNegative, isTrue);
+        expect(100.isNotZeroOrNegative, isTrue);
+        expect(0.001.isNotZeroOrNegative, isTrue);
       });
 
       test('Zero returns false', () {
-        expect(0.isNotZeroOrNegative, false);
-        expect(0.0.isNotZeroOrNegative, false);
+        expect(0.isNotZeroOrNegative, isFalse);
+        expect(0.0.isNotZeroOrNegative, isFalse);
       });
 
       test('Negative number returns false', () {
-        expect((-1).isNotZeroOrNegative, false);
-        expect((-100).isNotZeroOrNegative, false);
-        expect((-0.001).isNotZeroOrNegative, false);
+        expect((-1).isNotZeroOrNegative, isFalse);
+        expect((-100).isNotZeroOrNegative, isFalse);
+        expect((-0.001).isNotZeroOrNegative, isFalse);
       });
     });
 
     group('isZeroOrNegative', () {
       test('Positive number returns false', () {
-        expect(1.isZeroOrNegative, false);
-        expect(100.isZeroOrNegative, false);
-        expect(0.001.isZeroOrNegative, false);
+        expect(1.isZeroOrNegative, isFalse);
+        expect(100.isZeroOrNegative, isFalse);
+        expect(0.001.isZeroOrNegative, isFalse);
       });
 
       test('Zero returns true', () {
-        expect(0.isZeroOrNegative, true);
-        expect(0.0.isZeroOrNegative, true);
+        expect(0.isZeroOrNegative, isTrue);
+        expect(0.0.isZeroOrNegative, isTrue);
       });
 
       test('Negative number returns true', () {
-        expect((-1).isZeroOrNegative, true);
-        expect((-100).isZeroOrNegative, true);
-        expect((-0.001).isZeroOrNegative, true);
+        expect((-1).isZeroOrNegative, isTrue);
+        expect((-100).isZeroOrNegative, isTrue);
+        expect((-0.001).isZeroOrNegative, isTrue);
       });
     });
 
@@ -65,137 +65,137 @@ void main() {
     group('isNotNullZeroOrNegative', () {
       test('Null number returns false', () {
         const num? n = null;
-        expect(n.isNotNullZeroOrNegative, false);
+        expect(n.isNotNullZeroOrNegative, isFalse);
       });
 
       test('Zero number returns false', () {
         const num n = 0;
-        expect(n.isNotNullZeroOrNegative, false);
+        expect(n.isNotNullZeroOrNegative, isFalse);
       });
 
       test('Negative number returns false', () {
         const num n = -1;
-        expect(n.isNotNullZeroOrNegative, false);
+        expect(n.isNotNullZeroOrNegative, isFalse);
       });
 
       test('Positive number returns true', () {
         const num n = 1;
-        expect(n.isNotNullZeroOrNegative, true);
+        expect(n.isNotNullZeroOrNegative, isTrue);
       });
     });
 
     group('isNullZeroOrNegative', () {
       test('Null number returns true', () {
         const num? n = null;
-        expect(n.isNullZeroOrNegative, true);
+        expect(n.isNullZeroOrNegative, isTrue);
       });
 
       test('Zero number returns true', () {
         const num n = 0;
-        expect(n.isNullZeroOrNegative, true);
+        expect(n.isNullZeroOrNegative, isTrue);
       });
 
       test('Negative number returns true', () {
         const num n = -1;
-        expect(n.isNullZeroOrNegative, true);
+        expect(n.isNullZeroOrNegative, isTrue);
       });
 
       test('Positive number returns false', () {
         const num n = 1;
-        expect(n.isNullZeroOrNegative, false);
+        expect(n.isNullZeroOrNegative, isFalse);
       });
     });
 
     group('isNullOrZero', () {
       test('Null number returns true', () {
         const num? n = null;
-        expect(n.isNullOrZero, true);
+        expect(n.isNullOrZero, isTrue);
       });
 
       test('Zero number returns true', () {
         const num n = 0;
-        expect(n.isNullOrZero, true);
+        expect(n.isNullOrZero, isTrue);
       });
 
       test('Positive number returns false', () {
         const num n = 1;
-        expect(n.isNullOrZero, false);
+        expect(n.isNullOrZero, isFalse);
       });
 
       test('Negative number returns false', () {
         const num n = -1;
-        expect(n.isNullOrZero, false);
+        expect(n.isNullOrZero, isFalse);
       });
     });
 
     group('isNotNullOrZero', () {
       test('Null number returns false', () {
         const num? n = null;
-        expect(n.isNotNullOrZero, false);
+        expect(n.isNotNullOrZero, isFalse);
       });
 
       test('Zero number returns false', () {
         const num n = 0;
-        expect(n.isNotNullOrZero, false);
+        expect(n.isNotNullOrZero, isFalse);
       });
 
       test('Positive number returns true', () {
         const num n = 1;
-        expect(n.isNotNullOrZero, true);
+        expect(n.isNotNullOrZero, isTrue);
       });
 
       test('Negative number returns true', () {
         const num n = -1;
-        expect(n.isNotNullOrZero, true);
+        expect(n.isNotNullOrZero, isTrue);
       });
     });
 
     group('isGreaterThanZero', () {
       test('Null number returns false', () {
         const num? n = null;
-        expect(n.isGreaterThanZero, false);
+        expect(n.isGreaterThanZero, isFalse);
       });
 
       test('Zero number returns false', () {
         const num n = 0;
-        expect(n.isGreaterThanZero, false);
+        expect(n.isGreaterThanZero, isFalse);
       });
 
       test('Positive number returns true', () {
         const num n = 1;
-        expect(n.isGreaterThanZero, true);
+        expect(n.isGreaterThanZero, isTrue);
       });
 
       test('Negative number returns false', () {
         const num n = -1;
-        expect(n.isGreaterThanZero, false);
+        expect(n.isGreaterThanZero, isFalse);
       });
     });
 
     group('isGreaterThanOne', () {
       test('Null number returns false', () {
         const num? n = null;
-        expect(n.isGreaterThanOne, false);
+        expect(n.isGreaterThanOne, isFalse);
       });
 
       test('Zero number returns false', () {
         const num n = 0;
-        expect(n.isGreaterThanOne, false);
+        expect(n.isGreaterThanOne, isFalse);
       });
 
       test('One number returns false', () {
         const num n = 1;
-        expect(n.isGreaterThanOne, false);
+        expect(n.isGreaterThanOne, isFalse);
       });
 
       test('Number greater than one returns true', () {
         const num n = 2;
-        expect(n.isGreaterThanOne, true);
+        expect(n.isGreaterThanOne, isTrue);
       });
 
       test('Negative number returns false', () {
         const num n = -1;
-        expect(n.isGreaterThanOne, false);
+        expect(n.isGreaterThanOne, isFalse);
       });
     });
 
