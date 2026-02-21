@@ -5,7 +5,7 @@ void main() {
   group('TimeEmojiUtils', () {
     group('getEmojiDayOrNight', () {
       test('Null tzHour returns null', () {
-        expect(TimeEmojiUtils.getEmojiDayOrNight(null), null);
+        expect(TimeEmojiUtils.getEmojiDayOrNight(null), isNull);
       });
 
       test('Hour 6 (6am) returns moonEmoji', () {

@@ -5,7 +5,7 @@ void main() {
   group('NumberUtils', () {
     group('maxOf', () {
       test('Both null returns null', () {
-        expect(NumberUtils.maxOf(null, null), null);
+        expect(NumberUtils.maxOf(null, null), isNull);
       });
 
       test('First null, second not null returns second', () {
@@ -55,7 +55,7 @@ void main() {
       });
 
       test('Invalid range start > end returns null', () {
-        expect(NumberUtils.generateIntList(5, 1), null);
+        expect(NumberUtils.generateIntList(5, 1), isNull);
       });
 
       test('Zero start and positive end', () {

@@ -17,11 +17,11 @@ void main() {
       });
 
       test('Invalid hex string with non-hex characters', () {
-        expect('invalid-hex'.hexToInt(), null);
+        expect('invalid-hex'.hexToInt(), isNull);
       });
 
       test('Empty hex string', () {
-        expect(''.hexToInt(), null);
+        expect(''.hexToInt(), isNull);
       });
 
       test('Hex string representing zero', () {
@@ -33,11 +33,11 @@ void main() {
       });
 
       test('Hex string too large to be represented as int (17 chars)', () {
-        expect('80000000000000000'.hexToInt(), null);
+        expect('80000000000000000'.hexToInt(), isNull);
       });
 
       test('Hex string too large to be represented as int (16 chars, exceeds max int)', () {
-        expect('FFFFFFFFFFFFFFFF'.hexToInt(), null);
+        expect('FFFFFFFFFFFFFFFF'.hexToInt(), isNull);
       });
 
       test('Hex string with leading zeros', () {

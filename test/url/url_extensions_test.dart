@@ -419,7 +419,7 @@ void main() {
     });
     test('9. Multiple params preserved', () {
       final Uri result = Uri.parse('https://example.com?a=1&b=2&c=3').addQueryParameter('d', '4');
-      expect(result.queryParameters.length, 4);
+      expect(result.queryParameters, hasLength(4));
     });
     test('10. Add to non-existent removes nothing', () {
       final Uri result = Uri.parse('https://example.com?a=1').addQueryParameter('b', null);

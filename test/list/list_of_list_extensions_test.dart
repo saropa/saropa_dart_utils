@@ -169,7 +169,7 @@ void main() {
     group('toFlattenedList', () {
       test('Empty list of lists returns null', () {
         final List<List<int>> list = <List<int>>[];
-        expect(list.toFlattenedList(), null);
+        expect(list.toFlattenedList(), isNull);
       });
 
       test('List of empty lists returns null', () {
@@ -546,8 +546,8 @@ void main() {
         final List<List<int>> cloned = original.clone();
         expect(cloned, <List<int>>[<int>[], <int>[]]);
         cloned.add(<int>[1]);
-        expect(original.length, 2);
-        expect(cloned.length, 3);
+        expect(original, hasLength(2));
+        expect(cloned, hasLength(3));
       });
 
       test('Cloning a ragged list works correctly', () {

@@ -4,25 +4,25 @@ import 'package:saropa_dart_utils/bool/bool_string_extensions.dart';
 void main() {
   group('BoolStringExtensions', () {
     test('toBoolNullable', () {
-      expect('true'.toBoolNullable(), true);
-      expect('True'.toBoolNullable(), true);
-      expect('false'.toBoolNullable(), false);
-      expect('False'.toBoolNullable(), false);
-      expect('not a boolean'.toBoolNullable(), null);
+      expect('true'.toBoolNullable(), isTrue);
+      expect('True'.toBoolNullable(), isTrue);
+      expect('false'.toBoolNullable(), isFalse);
+      expect('False'.toBoolNullable(), isFalse);
+      expect('not a boolean'.toBoolNullable(), isNull);
     });
 
     test('toBool', () {
-      expect('true'.toBool(), true);
-      expect('True'.toBool(), true);
-      expect('false'.toBool(), false);
-      expect('False'.toBool(), false);
-      expect('not a boolean'.toBool(), false);
+      expect('true'.toBool(), isTrue);
+      expect('True'.toBool(), isTrue);
+      expect('false'.toBool(), isFalse);
+      expect('False'.toBool(), isFalse);
+      expect('not a boolean'.toBool(), isFalse);
     });
   });
 
   group('BoolStringNullableExtensions', () {
     test('toBool', () {
-      expect(null.toBool(), false);
+      expect(null.toBool(), isFalse);
     });
   });
 }

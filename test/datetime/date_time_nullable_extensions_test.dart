@@ -7,63 +7,63 @@ void main() {
       test('Both dates are null', () {
         const DateTime? dt1 = null;
         const DateTime? dt2 = null;
-        expect(dt1.isBeforeNullable(dt2), false);
+        expect(dt1.isBeforeNullable(dt2), isFalse);
       });
 
       test('This date is null, other is not null', () {
         const DateTime? dt1 = null;
         final DateTime dt2 = DateTime.now();
-        expect(dt1.isBeforeNullable(dt2), true);
+        expect(dt1.isBeforeNullable(dt2), isTrue);
       });
 
       test('This date is not null, other is null', () {
         final DateTime dt1 = DateTime.now();
         const DateTime? dt2 = null;
-        expect(dt1.isBeforeNullable(dt2), false);
+        expect(dt1.isBeforeNullable(dt2), isFalse);
       });
 
       test('Both dates are the same (not null)', () {
         final DateTime dt = DateTime.now();
         final DateTime dt1 = dt;
         final DateTime dt2 = dt;
-        expect(dt1.isBeforeNullable(dt2), false);
+        expect(dt1.isBeforeNullable(dt2), isFalse);
       });
 
       test('This date is before other date (not null)', () {
         final DateTime dt1 = DateTime.now();
         final DateTime dt2 = dt1.add(const Duration(days: 1));
-        expect(dt1.isBeforeNullable(dt2), true);
+        expect(dt1.isBeforeNullable(dt2), isTrue);
       });
 
       test('This date is after other date (not null)', () {
         final DateTime dt1 = DateTime.now();
         final DateTime dt2 = dt1.subtract(const Duration(days: 1));
-        expect(dt1.isBeforeNullable(dt2), false);
+        expect(dt1.isBeforeNullable(dt2), isFalse);
       });
 
       test('This date is the same as other date but different instances (not null)', () {
         // Use fixed dates to avoid race condition with DateTime.now()
         final DateTime dt1 = DateTime(2024, 6, 15, 12, 30, 0);
         final DateTime dt2 = DateTime(2024, 6, 15, 12, 30, 0);
-        expect(dt1.isBeforeNullable(dt2), false);
+        expect(dt1.isBeforeNullable(dt2), isFalse);
       });
 
       test('This date is null, other is future date (not null)', () {
         const DateTime? dt1 = null;
         final DateTime dt2 = DateTime.now().add(const Duration(days: 1));
-        expect(dt1.isBeforeNullable(dt2), true);
+        expect(dt1.isBeforeNullable(dt2), isTrue);
       });
 
       test('This date is past date (not null), other is null', () {
         final DateTime dt1 = DateTime.now().subtract(const Duration(days: 1));
         const DateTime? dt2 = null;
-        expect(dt1.isBeforeNullable(dt2), false);
+        expect(dt1.isBeforeNullable(dt2), isFalse);
       });
 
       test('This date is null, other is past date (not null)', () {
         const DateTime? dt1 = null;
         final DateTime dt2 = DateTime.now().subtract(const Duration(days: 1));
-        expect(dt1.isBeforeNullable(dt2), true);
+        expect(dt1.isBeforeNullable(dt2), isTrue);
       });
     });
 

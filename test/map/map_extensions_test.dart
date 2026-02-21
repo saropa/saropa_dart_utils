@@ -49,7 +49,7 @@ void main() {
         ignoreList: <String>[],
       );
       expect(result, isNotNull);
-      expect(result?.length, 2);
+      expect(result!, hasLength(2));
     });
     test('2. Exclude some keys', () {
       final Map<String, int> map = <String, int>{'a': 1, 'b': 2, 'c': 3};
@@ -91,7 +91,7 @@ void main() {
         ignoreList: <String>[],
       );
       expect(result, isNotNull);
-      expect(result?.length, 2);
+      expect(result!, hasLength(2));
     });
     test('7. Request zero', () {
       final Map<String, int> map = <String, int>{'a': 1, 'b': 2};
@@ -109,7 +109,7 @@ void main() {
         ignoreList: <String>[],
       );
       expect(result, isNotNull);
-      expect(result?.length, 1);
+      expect(result!, hasLength(1));
     });
     test('9. Exclude non-existent key', () {
       final Map<String, int> map = <String, int>{'a': 1, 'b': 2};
@@ -118,7 +118,7 @@ void main() {
         ignoreList: <String>['x'],
       );
       expect(result, isNotNull);
-      expect(result?.length, 2);
+      expect(result!, hasLength(2));
     });
     test('10. Int keys', () {
       final Map<int, String> map = <int, String>{1: 'a', 2: 'b', 3: 'c'};
@@ -280,7 +280,7 @@ void main() {
       final Map<String, dynamic> map = <String, dynamic>{
         'parent': <String, dynamic>{'child': true},
       };
-      expect(map.getGrandchild('parent', 'child'), true);
+      expect(map.getGrandchild('parent', 'child'), isTrue);
     });
   });
 
@@ -341,7 +341,7 @@ void main() {
       final Map<String, dynamic> map = <String, dynamic>{'a': 1};
       final bool result = map.removeKeys(<String>['x']);
       expect(result, isTrue);
-      expect(map.length, 1);
+      expect(map, hasLength(1));
     });
     test('4. Null list', () {
       final Map<String, dynamic> map = <String, dynamic>{'a': 1};
@@ -638,27 +638,27 @@ void main() {
     });
     test('11. Missing input - empty map', () {
       final Map<String, List<String>> testMap = <String, List<String>>{};
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value'), false);
-      expect(MapUtils.mapContainsValue(testMap, 'key', ''), false);
-      expect(MapUtils.mapContainsValue(testMap, 'key', null), false);
-      expect(MapUtils.mapContainsValue(testMap, null, 'value'), false);
-      expect(MapUtils.mapContainsValue(testMap, '', 'value'), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value'), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, 'key', ''), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, 'key', null), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, null, 'value'), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, '', 'value'), isFalse);
     });
     test('12. Invalid input - empty or null key/value', () {
       final Map<String, List<String>> testMap = <String, List<String>>{};
       MapUtils.mapAddValue(testMap, 'key', 'value');
-      expect(MapUtils.mapContainsValue(testMap, 'key', ''), false);
-      expect(MapUtils.mapContainsValue(testMap, 'key', null), false);
-      expect(MapUtils.mapContainsValue(testMap, '', 'value'), false);
-      expect(MapUtils.mapContainsValue(testMap, null, 'value'), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', ''), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, 'key', null), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, '', 'value'), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, null, 'value'), isFalse);
     });
     test('13. Valid input with mapAddValue', () {
       final Map<String, List<String>> testMap = <String, List<String>>{};
       MapUtils.mapAddValue(testMap, 'key', 'value1');
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), true);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), isTrue);
       MapUtils.mapAddValue(testMap, 'key', 'value2');
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), true);
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), true);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), isTrue);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), isTrue);
     });
   });
 
@@ -667,16 +667,16 @@ void main() {
       final Map<String, List<String>> testMap = <String, List<String>>{};
       MapUtils.mapAddValue(testMap, 'key', 'value1');
       MapUtils.mapAddValue(testMap, 'key', 'value2');
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), true);
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), true);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), isTrue);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), isTrue);
 
       MapUtils.mapRemoveValue(testMap, 'key', 'value1');
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), false);
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), true);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), isTrue);
 
       MapUtils.mapRemoveValue(testMap, 'key', 'value2');
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), false);
-      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), false);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value1'), isFalse);
+      expect(MapUtils.mapContainsValue(testMap, 'key', 'value2'), isFalse);
     });
   });
 

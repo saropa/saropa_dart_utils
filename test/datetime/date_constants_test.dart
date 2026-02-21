@@ -60,7 +60,7 @@ void main() {
       test('12. December', () => expect(MonthUtils.monthLongNames[12], 'December'));
       test('13. Invalid month 0', () => expect(MonthUtils.monthLongNames[0], isNull));
       test('14. Invalid month 13', () => expect(MonthUtils.monthLongNames[13], isNull));
-      test('15. Has 12 entries', () => expect(MonthUtils.monthLongNames.length, 12));
+      test('15. Has 12 entries', () => expect(MonthUtils.monthLongNames, hasLength(12)));
     });
 
     group('monthShortNames', () {
@@ -78,13 +78,13 @@ void main() {
       test('12. Dec', () => expect(MonthUtils.monthShortNames[12], 'Dec'));
       test('13. Invalid month 0', () => expect(MonthUtils.monthShortNames[0], isNull));
       test('14. Invalid month 13', () => expect(MonthUtils.monthShortNames[13], isNull));
-      test('15. Has 12 entries', () => expect(MonthUtils.monthShortNames.length, 12));
+      test('15. Has 12 entries', () => expect(MonthUtils.monthShortNames, hasLength(12)));
     });
 
     group('monthNumbers', () {
       test('1. First month is 1', () => expect(MonthUtils.monthNumbers[0], 1));
       test('2. Last month is 12', () => expect(MonthUtils.monthNumbers[11], 12));
-      test('3. Has 12 entries', () => expect(MonthUtils.monthNumbers.length, 12));
+      test('3. Has 12 entries', () => expect(MonthUtils.monthNumbers, hasLength(12)));
       test('4. Contains June (6)', () => expect(MonthUtils.monthNumbers.contains(6), isTrue));
       test('5. Does not contain 0', () => expect(MonthUtils.monthNumbers.contains(0), isFalse));
       test('6. Does not contain 13', () => expect(MonthUtils.monthNumbers.contains(13), isFalse));
@@ -136,7 +136,7 @@ void main() {
       test('7. Sunday', () => expect(WeekdayUtils.dayLongNames[DateTime.sunday], 'Sunday'));
       test('8. Invalid day 0', () => expect(WeekdayUtils.dayLongNames[0], isNull));
       test('9. Invalid day 8', () => expect(WeekdayUtils.dayLongNames[8], isNull));
-      test('10. Has 7 entries', () => expect(WeekdayUtils.dayLongNames.length, 7));
+      test('10. Has 7 entries', () => expect(WeekdayUtils.dayLongNames, hasLength(7)));
     });
 
     group('dayShortNames', () {
@@ -149,7 +149,7 @@ void main() {
       test('7. Sun', () => expect(WeekdayUtils.dayShortNames[DateTime.sunday], 'Sun'));
       test('8. Invalid day 0', () => expect(WeekdayUtils.dayShortNames[0], isNull));
       test('9. Invalid day 8', () => expect(WeekdayUtils.dayShortNames[8], isNull));
-      test('10. Has 7 entries', () => expect(WeekdayUtils.dayShortNames.length, 7));
+      test('10. Has 7 entries', () => expect(WeekdayUtils.dayShortNames, hasLength(7)));
     });
 
     group('getDayLongName', () {

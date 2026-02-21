@@ -5,129 +5,129 @@ void main() {
   // cspell: disable
   group('isAllLetterLowerCase', () {
     test('All lowercase letters returns true', () {
-      expect('lowercase'.isAllLetterLowerCase, true);
+      expect('lowercase'.isAllLetterLowerCase, isTrue);
     });
 
     test('Mixed case letters returns false', () {
-      expect('MixedCase'.isAllLetterLowerCase, false);
+      expect('MixedCase'.isAllLetterLowerCase, isFalse);
     });
 
     test('All uppercase letters returns false', () {
-      expect('UPPERCASE'.isAllLetterLowerCase, false);
+      expect('UPPERCASE'.isAllLetterLowerCase, isFalse);
     });
 
     test('String with numbers returns false', () {
-      expect('lower1case'.isAllLetterLowerCase, false);
+      expect('lower1case'.isAllLetterLowerCase, isFalse);
     });
 
     test('String with spaces returns false', () {
-      expect('lower case'.isAllLetterLowerCase, false);
+      expect('lower case'.isAllLetterLowerCase, isFalse);
     });
 
     test('Empty string returns false', () {
-      expect(''.isAllLetterLowerCase, false);
+      expect(''.isAllLetterLowerCase, isFalse);
     });
 
     test('String with symbols returns false', () {
-      expect('lower-case'.isAllLetterLowerCase, false);
+      expect('lower-case'.isAllLetterLowerCase, isFalse);
     });
 
     test('String with accented lowercase letters returns true', () {
-      expect('café'.isAllLetterLowerCase, true);
+      expect('café'.isAllLetterLowerCase, isTrue);
     });
 
     test('String with unicode lowercase letters returns true', () {
-      expect('привет'.isAllLetterLowerCase, true);
+      expect('привет'.isAllLetterLowerCase, isTrue);
     });
 
     test('String with mixed lowercase and unicode letters returns true', () {
-      expect('lowerприветcase'.isAllLetterLowerCase, true);
+      expect('lowerприветcase'.isAllLetterLowerCase, isTrue);
     });
   });
 
   group('isAnyCaseLetter', () {
     test('All lowercase letters returns true', () {
-      expect('lowercase'.isAnyCaseLetter, true);
+      expect('lowercase'.isAnyCaseLetter, isTrue);
     });
 
     test('Mixed case letters returns true', () {
-      expect('MixedCase'.isAnyCaseLetter, true);
+      expect('MixedCase'.isAnyCaseLetter, isTrue);
     });
 
     test('All uppercase letters returns true', () {
-      expect('UPPERCASE'.isAnyCaseLetter, true);
+      expect('UPPERCASE'.isAnyCaseLetter, isTrue);
     });
 
     test('String with numbers returns false', () {
-      expect('letter1case'.isAnyCaseLetter, false);
+      expect('letter1case'.isAnyCaseLetter, isFalse);
     });
 
     test('String with spaces returns false', () {
-      expect('letter case'.isAnyCaseLetter, false);
+      expect('letter case'.isAnyCaseLetter, isFalse);
     });
 
     test('Empty string returns false', () {
-      expect(''.isAnyCaseLetter, false);
+      expect(''.isAnyCaseLetter, isFalse);
     });
 
     test('String with symbols returns false', () {
-      expect('letter-case'.isAnyCaseLetter, false);
+      expect('letter-case'.isAnyCaseLetter, isFalse);
     });
 
     test('String with accented letters returns true', () {
-      expect('café'.isAnyCaseLetter, true);
+      expect('café'.isAnyCaseLetter, isTrue);
     });
 
     test('String with unicode letters returns true', () {
-      expect('привет'.isAnyCaseLetter, true);
+      expect('привет'.isAnyCaseLetter, isTrue);
     });
 
     test('String with mixed case and unicode letters returns true', () {
-      expect('LetterприветCase'.isAnyCaseLetter, true);
+      expect('LetterприветCase'.isAnyCaseLetter, isTrue);
     });
   });
 
   group('isAllLetterUpperCase', () {
     test('All uppercase letters returns true', () {
-      expect('UPPERCASE'.isAllLetterUpperCase, true);
+      expect('UPPERCASE'.isAllLetterUpperCase, isTrue);
     });
 
     test('Mixed case letters returns false', () {
-      expect('MixedCase'.isAllLetterUpperCase, false);
+      expect('MixedCase'.isAllLetterUpperCase, isFalse);
     });
 
     test('All lowercase letters returns false', () {
-      expect('lowercase'.isAllLetterUpperCase, false);
+      expect('lowercase'.isAllLetterUpperCase, isFalse);
     });
 
     test('String with numbers returns false', () {
-      expect('UPPER1CASE'.isAllLetterUpperCase, false);
+      expect('UPPER1CASE'.isAllLetterUpperCase, isFalse);
     });
 
     test('String with spaces returns false', () {
-      expect('UPPER CASE'.isAllLetterUpperCase, false);
+      expect('UPPER CASE'.isAllLetterUpperCase, isFalse);
     });
 
     test('Empty string returns false', () {
-      expect(''.isAllLetterUpperCase, false);
+      expect(''.isAllLetterUpperCase, isFalse);
     });
 
     test('String with symbols returns false', () {
-      expect('UPPER-CASE'.isAllLetterUpperCase, false);
+      expect('UPPER-CASE'.isAllLetterUpperCase, isFalse);
     });
 
     test('String with accented uppercase letters returns true', () {
-      expect('CAFÉ'.isAllLetterUpperCase, false); // Accented chars are not uppercase in regex
+      expect('CAFÉ'.isAllLetterUpperCase, isFalse); // Accented chars are not uppercase in regex
     });
 
     test('String with unicode uppercase letters returns false', () {
-      expect('ПРИВЕТ'.isAllLetterUpperCase, false); // Unicode chars are not uppercase in regex
+      expect('ПРИВЕТ'.isAllLetterUpperCase, isFalse); // Unicode chars are not uppercase in regex
     });
 
     test('String with mixed uppercase and unicode letters returns false', () {
       expect(
         'UPPERПРИВЕТCASE'.isAllLetterUpperCase,
-        false,
+        isFalse,
       ); // Unicode chars are not uppercase in regex
     });
   });
@@ -476,11 +476,11 @@ void main() {
 
   group('findCapitalizedWords', () {
     test('Empty string returns null', () {
-      expect(''.findCapitalizedWords(), null);
+      expect(''.findCapitalizedWords(), isNull);
     });
 
     test('No capitalized words', () {
-      expect('no capitalized words'.findCapitalizedWords(), null);
+      expect('no capitalized words'.findCapitalizedWords(), isNull);
     });
 
     test('Single capitalized word', () {
@@ -667,11 +667,11 @@ void main() {
 
   group('unCapitalizedWords', () {
     test('Empty string returns null', () {
-      expect(''.unCapitalizedWords(), null);
+      expect(''.unCapitalizedWords(), isNull);
     });
 
     test('No uncapitalized words returns null', () {
-      expect('CAPITALIZED WORDS'.unCapitalizedWords(), null);
+      expect('CAPITALIZED WORDS'.unCapitalizedWords(), isNull);
     });
 
     test('Single uncapitalized word', () {

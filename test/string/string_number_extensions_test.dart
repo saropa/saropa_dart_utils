@@ -26,12 +26,12 @@ void main() {
 
     test('Test invalid input', () {
       // empty data
-      expect(''.toDoubleNullable(), null);
-      // expect(null?.toDoubleNullable(), null);
+      expect(''.toDoubleNullable(), isNull);
+      // expect(null?.toDoubleNullable(), isNull);
 
       // invalid data
-      expect('abc'.toDoubleNullable(), null);
-      expect('#'.toDoubleNullable(), null);
+      expect('abc'.toDoubleNullable(), isNull);
+      expect('#'.toDoubleNullable(), isNull);
     });
   });
 
