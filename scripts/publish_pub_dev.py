@@ -3,19 +3,26 @@
 Publish saropa_dart_utils package to pub.dev and create GitHub release.
 
 This script automates the complete release workflow for a Dart/Flutter package:
-  1. Checks prerequisites (flutter, git, gh)
-  2. Validates pubspec.yaml and CHANGELOG.md versions are in sync
-  3. Validates working tree and remote sync status
-  4. Checks remote sync
-  5. Runs tests
-  6. Runs static analysis
-  7. Validates version exists in CHANGELOG.md
-  8. Generates documentation with dart doc
-  9. Pre-publish validation (dry-run)
-  10. PUBLISHES TO PUB.DEV FIRST
-  11. Commits and pushes changes
-  12. Creates and pushes git tag
-  13. Creates GitHub release with release notes
+
+  Pre-checks (before numbered steps):
+    - Validates pubspec.yaml and CHANGELOG.md versions are in sync
+      (auto-fixes pubspec if changelog is ahead)
+    - Aborts early if version tag already exists on remote
+
+  Numbered steps:
+    1. Checks prerequisites (flutter, git, gh auth, publish workflow)
+    2. Checks working tree status
+    3. Checks remote sync
+    4. Formats code
+    5. Runs tests
+    6. Runs static analysis
+    7. Validates changelog has release notes
+    8. Generates documentation with dart doc
+    9. Pre-publish validation (dry-run)
+    10. Commits and pushes changes
+    11. Creates and pushes git tag
+    12. Triggers GitHub Actions publish to pub.dev
+    13. Creates GitHub release with release notes
 
 Version:   2.2
 Author:    Saropa
@@ -50,8 +57,7 @@ Exit Codes:
     6 - Pre-publish validation failed
     7 - Publish failed
     8 - Git operations failed
-    9 - GitHub release failed
-    10 - User cancelled
+    9 - User cancelled
 """
 
 from __future__ import annotations
@@ -87,8 +93,7 @@ class ExitCode(Enum):
     VALIDATION_FAILED = 6
     PUBLISH_FAILED = 7
     GIT_FAILED = 8
-    GITHUB_RELEASE_FAILED = 9
-    USER_CANCELLED = 10
+    USER_CANCELLED = 9
 
 
 # =============================================================================
@@ -226,30 +231,6 @@ def get_shell_mode() -> bool:
     that are in PATH. On macOS/Linux, executables are found directly without shell.
     """
     return is_windows()
-
-
-def run_via_powershell(
-    cmd: list[str],
-    cwd: Path,
-    capture_output: bool = False,
-) -> subprocess.CompletedProcess:
-    """
-    Run a command via PowerShell on Windows.
-
-    This avoids the 'nul' path bug that occurs with cmd.exe in some Flutter projects.
-    """
-    # Join command with proper escaping for PowerShell
-    cmd_str = " ".join(cmd)
-
-    result = subprocess.run(
-        ["powershell", "-NoProfile", "-Command", cmd_str],
-        cwd=cwd,
-        capture_output=capture_output,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    )
-    return result
 
 
 # =============================================================================
@@ -729,27 +710,6 @@ def pre_publish_validation(project_dir: Path) -> bool:
     return False
 
 
-def publish_to_pubdev(project_dir: Path) -> bool:
-    """Notify that publishing happens automatically via GitHub Actions tag trigger."""
-    print_header("STEP 12: PUBLISHING TO PUB.DEV VIA GITHUB ACTIONS")
-
-    print_success("Tag push triggered GitHub Actions publish workflow!")
-    print()
-    print_colored("  Publishing is now running automatically on GitHub Actions.", Color.CYAN)
-    print_colored("  No personal email will be shown on pub.dev.", Color.GREEN)
-    print()
-
-    # Get repo URL for the actions page
-    remote_url = get_remote_url(project_dir)
-    repo_path = extract_repo_path(remote_url)
-    print_colored(
-        f"  Monitor progress at: https://github.com/{repo_path}/actions", Color.CYAN
-    )
-    print()
-
-    return True
-
-
 def git_commit_and_push(project_dir: Path, version: str, branch: str) -> bool:
     """Commit changes and push to remote."""
     print_header("STEP 10: COMMITTING AND PUSHING CHANGES")
@@ -845,6 +805,27 @@ def create_git_tag(project_dir: Path, version: str) -> bool:
         )
         if result.returncode != 0:
             return False
+
+    return True
+
+
+def publish_to_pubdev(project_dir: Path) -> bool:
+    """Notify that publishing happens automatically via GitHub Actions tag trigger."""
+    print_header("STEP 12: PUBLISHING TO PUB.DEV VIA GITHUB ACTIONS")
+
+    print_success("Tag push triggered GitHub Actions publish workflow!")
+    print()
+    print_colored("  Publishing is now running automatically on GitHub Actions.", Color.CYAN)
+    print_colored("  No personal email will be shown on pub.dev.", Color.GREEN)
+    print()
+
+    # Get repo URL for the actions page
+    remote_url = get_remote_url(project_dir)
+    repo_path = extract_repo_path(remote_url)
+    print_colored(
+        f"  Monitor progress at: https://github.com/{repo_path}/actions", Color.CYAN
+    )
+    print()
 
     return True
 
