@@ -1,65 +1,75 @@
-/// The year of the Unix epoch (January 1, 1970 00:00:00 UTC).
-const int _unixEpochYear = 1970;
-// Date/Time Range Constants
-/// Minimum valid month number (January).
-const int minMonth = 1;
-
-/// Maximum valid month number (December).
-const int maxMonth = 12;
-
-/// Maximum valid year in DateTime (9999).
-const int maxYear = 9999;
-// Time Component Range Constants
-/// Maximum valid hour (23 for 24-hour format, 0-23 range).
-const int maxHour = 23;
-
-/// Maximum valid minute or second (59 for 0-59 range).
-const int maxMinuteOrSecond = 59;
-
-/// Maximum valid millisecond or microsecond (999 for 0-999 range).
-const int maxMillisecondOrMicrosecond = 999;
-// Month Calculation Constants
-/// Minimum number of days that exist in any month (February in non-leap years).
-const int minDaysInAnyMonth = 28;
-
-/// Days to add to safely reach next month (28 + 4 = 32 days > any month).
-const int daysToAddToGetNextMonth = 4;
-
-/// Number of days in February during a leap year.
-const int daysInFebLeapYear = 29;
-
-/// Default year to use for leap year calculations when year is not specified (chosen as a leap year).
-const int defaultLeapYearCheckYear = 2000;
-// Leap Year Calculation Constants
-/// Modulo divisor for basic leap year check (divisible by 4).
-const int leapYearModulo4 = 4;
-
-/// Modulo divisor for century leap year exception (divisible by 100).
-const int leapYearModulo100 = 100;
-
-/// Modulo divisor for century leap year exception override (divisible by 400).
-const int leapYearModulo400 = 400;
-// Day/Night Time Thresholds
-/// Hour threshold for start of "day" time (after 7am).
-const int dayStartHour = 7;
-
-/// Hour threshold for end of "day" time (before 6pm/18:00).
-const int dayEndHour = 18;
-
-/// `DateConstants` is a utility class in Dart that provides static constants
-/// for commonly used dates. This class cannot be instantiated.
+/// Utility class providing static constants for commonly used date/time values.
 ///
-/// The `unixEpochDate` constant in this class represents the Unix epoch,
-/// which is the date and time that Unix systems use as the reference point
-/// for measuring time. The Unix epoch is defined as 00:00:00 Coordinated
-/// Universal Time (UTC), Thursday, 1 January 1970.
+/// This class cannot be instantiated. Access constants via `DateConstants.xxx`.
 ///
 /// Example usage:
 /// ```dart
 /// DateTime epoch = DateConstants.unixEpochDate;
+/// bool valid = month >= DateConstants.minMonth;
 /// ```
-///
+// ignore: avoid_god_class
 class DateConstants {
+  const DateConstants._();
+
+  // Date/Time Range Constants
+
+  /// The year of the Unix epoch (January 1, 1970 00:00:00 UTC).
+  static const int _unixEpochYear = 1970;
+
+  /// Minimum valid month number (January).
+  static const int minMonth = 1;
+
+  /// Maximum valid month number (December).
+  static const int maxMonth = 12;
+
+  /// Maximum valid year in DateTime (9999).
+  static const int maxYear = 9999;
+
+  // Time Component Range Constants
+
+  /// Maximum valid hour (23 for 24-hour format, 0-23 range).
+  static const int maxHour = 23;
+
+  /// Maximum valid minute or second (59 for 0-59 range).
+  static const int maxMinuteOrSecond = 59;
+
+  /// Maximum valid millisecond or microsecond (999 for 0-999 range).
+  static const int maxMillisecondOrMicrosecond = 999;
+
+  // Month Calculation Constants
+
+  /// Minimum number of days that exist in any month (February in non-leap years).
+  static const int minDaysInAnyMonth = 28;
+
+  /// Days to add to safely reach next month (28 + 4 = 32 days > any month).
+  static const int daysToAddToGetNextMonth = 4;
+
+  /// Number of days in February during a leap year.
+  static const int daysInFebLeapYear = 29;
+
+  /// Default year to use for leap year calculations when year is not specified
+  /// (chosen as a leap year).
+  static const int defaultLeapYearCheckYear = 2000;
+
+  // Leap Year Calculation Constants
+
+  /// Modulo divisor for basic leap year check (divisible by 4).
+  static const int leapYearModulo4 = 4;
+
+  /// Modulo divisor for century leap year exception (divisible by 100).
+  static const int leapYearModulo100 = 100;
+
+  /// Modulo divisor for century leap year exception override (divisible by 400).
+  static const int leapYearModulo400 = 400;
+
+  // Day/Night Time Thresholds
+
+  /// Hour threshold for start of "day" time (after 7am).
+  static const int dayStartHour = 7;
+
+  /// Hour threshold for end of "day" time (before 6pm/18:00).
+  static const int dayEndHour = 18;
+
   /// January 1st, 1970 is known as the Unix epoch. It is the date and
   /// time that Unix systems use as the reference point for measuring
   /// time. This date was chosen arbitrarily by early Unix engineers

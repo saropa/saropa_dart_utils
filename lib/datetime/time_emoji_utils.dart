@@ -11,7 +11,7 @@ class TimeEmojiUtils {
   /// Returns [sunEmoji] if the given hour is during daytime (7am inclusive to 6pm exclusive),
   /// otherwise returns [moonEmoji].
   ///
-  /// Daytime range: hour >= [dayStartHour] (7) and hour < [dayEndHour] (18).
+  /// Daytime range: hour >= [DateConstants.dayStartHour] (7) and hour < [DateConstants.dayEndHour] (18).
   /// At exactly 7am, sun is shown. At exactly 6pm (18:00), moon is shown.
   ///
   /// Returns `null` if `tzHour` is null or in case of any error during processing, logging the error.
@@ -29,7 +29,9 @@ class TimeEmojiUtils {
       return null;
     }
 
-    return tzHour >= dayStartHour && tzHour < dayEndHour ? sunEmoji : moonEmoji;
+    return tzHour >= DateConstants.dayStartHour && tzHour < DateConstants.dayEndHour
+        ? sunEmoji
+        : moonEmoji;
   }
 }
 
