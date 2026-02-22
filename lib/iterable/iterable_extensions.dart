@@ -43,7 +43,8 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
     return (mostCommonEntry.key, mostCommonEntry.value);
   }
 
-  /// Find the most common value in the list.
+  /// Returns a record of the least common value and its frequency, or `null`
+  /// if the iterable is empty.
   (T, int)? leastOccurrences() {
     if (isEmpty) {
       return null;
@@ -91,7 +92,7 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
     return true;
   }
 
-  /// Counts elements that satisfy the given [predicate].
+  /// Returns the number of elements that satisfy the given [predicate].
   int countWhere(bool Function(T) predicate) {
     int count = 0;
     for (final T element in this) {

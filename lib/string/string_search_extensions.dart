@@ -20,7 +20,9 @@ enum SearchMatchType {
 
 /// Extension methods for string searching and matching.
 extension StringSearchExtensions on String {
-  /// Returns true if this string equals any item in [list].
+  /// Returns `true` if this string equals any item in [list].
+  ///
+  /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
   bool isEqualsAny(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) return false;
     if (isCaseSensitive) return list.any((String item) => item == this);
@@ -31,7 +33,9 @@ extension StringSearchExtensions on String {
   /// Returns true if this string contains any digits.
   bool isContainsDigits() => _containsDigitsRegex.hasMatch(this);
 
-  /// Returns true if this string contains any item from [list].
+  /// Returns `true` if this string contains any item from [list].
+  ///
+  /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
   bool isContainsAnyInList(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) return false;
     if (isCaseSensitive) return list.any((String item) => contains(item));
@@ -39,7 +43,9 @@ extension StringSearchExtensions on String {
     return list.any((String item) => source.contains(item.toLowerCase()));
   }
 
-  /// Returns true if this string is contained in any item from [list].
+  /// Returns `true` if this string is contained in any item from [list].
+  ///
+  /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
   bool isContainedInAny(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) return false;
     if (isCaseSensitive) return list.any((String item) => item.contains(this));
@@ -47,20 +53,25 @@ extension StringSearchExtensions on String {
     return list.any((String item) => item.toLowerCase().contains(find));
   }
 
-  /// Case-insensitive contains check.
+  /// Returns `true` if this string contains [find] (case-insensitive).
   bool isContainsCaseInsensitive(String? find) {
     if (isEmpty || find == null || find.isEmpty) return false;
     return toLowerCase().contains(find.toLowerCase());
   }
 
-  /// Nullable-safe contains check.
+  /// Returns `true` if this string contains [find], handling `null` safely.
+  ///
+  /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
   bool isContainsNullable(String? find, {bool isCaseSensitive = true}) {
     if (isEmpty || find == null || find.isEmpty) return false;
     if (isCaseSensitive) return contains(find);
     return toLowerCase().contains(find.toLowerCase());
   }
 
-  /// Flexible matching against a list.
+  /// Returns `true` if this string matches any item in [list] using the
+  /// specified [matchType].
+  ///
+  /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
   bool isMatchAny(
     List<String>? list, {
     bool isCaseSensitive = true,
@@ -74,7 +85,9 @@ extension StringSearchExtensions on String {
     };
   }
 
-  /// Returns true if this string starts with any item in [list].
+  /// Returns `true` if this string starts with any item in [list].
+  ///
+  /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
   bool isStartsWithAny(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) return false;
     final String find = isCaseSensitive ? this : toLowerCase();
@@ -84,9 +97,9 @@ extension StringSearchExtensions on String {
     );
   }
 
-  /// Gets the first uppercase letter for use as a repeatable index.
+  /// Returns the first character uppercased for use as a repeatable index.
   ///
-  /// Returns the first character uppercased if it's a Latin letter (A-Z),
+  /// If the first character is a Latin letter (A-Z), returns it uppercased;
   /// otherwise returns the first character as-is.
   String getRepeatableLetter() {
     if (isEmpty) return '';
@@ -114,7 +127,11 @@ extension StringSearchExtensions on String {
     return condition ? contains(find) : !contains(find);
   }
 
-  /// Returns true if this string contains any whole word from [searchItems].
+  /// Returns `true` if this string contains any whole word from
+  /// [searchItems].
+  ///
+  /// When [isCaseSensitive] is `false` (default), comparison is
+  /// case-insensitive.
   bool isContainsAnyWord(List<String>? searchItems, {bool isCaseSensitive = false}) {
     if (isEmpty || searchItems == null || searchItems.isEmpty) return false;
     for (String item in searchItems) {
@@ -123,7 +140,10 @@ extension StringSearchExtensions on String {
     return false;
   }
 
-  /// Returns true if this string contains [find] as a whole word.
+  /// Returns `true` if this string contains [find] as a whole word.
+  ///
+  /// When [isCaseSensitive] is `false` (default), comparison is
+  /// case-insensitive.
   bool isContainsWord(String? find, {bool isCaseSensitive = false}) {
     if (isEmpty || find == null || find.isEmpty) return false;
     final String escapedFind = find.replaceAllMapped(

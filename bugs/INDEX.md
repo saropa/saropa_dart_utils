@@ -6,6 +6,7 @@ Source: `reports/20260221/20260221_162802_saropa_lints_init.log`
 Linter: saropa_lints v5.0.0-beta.9 (professional tier)
 Date: 2026-02-21
 
+<!-- cspell:ignore tostring -->
 ---
 
 ## Rules to EXCLUDE (false positives for this project)
@@ -53,17 +54,9 @@ require_test_description_convention: false
 
 ## Legitimate BUGS to FIX
 
-### High Priority (warnings)
+### High Priority (warnings) — ALL RESOLVED
 
-| Rule | Count | Severity | Impact |
-|------|-------|----------|--------|
-| [verify_documented_parameters_exist](verify_documented_parameters_exist.md) | 31 | warning | Stale parameter references in dartdoc |
-| [avoid_string_substring](avoid_string_substring.md) | 9 | warning | Potential RangeError runtime crashes |
-| [prefer_iterable_of](prefer_iterable_of.md) | 5 | warning | Type safety: .from() vs .of() |
-| [avoid_duplicate_cascades](avoid_duplicate_cascades.md) | 3 | warning | Possible copy-paste errors in UUID utils |
-| [avoid_unsafe_cast](avoid_unsafe_cast.md) | 1 | warning | Runtime crash risk from unchecked cast |
-| [avoid_nullable_interpolation](avoid_nullable_interpolation.md) | 1 | warning | Interpolation may produce literal "null" |
-| [avoid_wildcard_cases_with_sealed_classes](avoid_wildcard_cases_with_sealed_classes.md) | 1 | warning | Defeats exhaustiveness checking |
+All 9 high-priority warning rules (59 violations) have been fixed. See `bugs/history/` for details.
 
 ### Medium Priority (info - code quality)
 
@@ -98,6 +91,9 @@ require_test_description_convention: false
 | [avoid_default_tostring](avoid_default_tostring.md) | 1 | info | Add meaningful toString() |
 | [prefer_simpler_boolean_expressions](prefer_simpler_boolean_expressions.md) | 1 | info | Simplify boolean logic |
 | [prefer_visible_for_testing_on_members](prefer_visible_for_testing_on_members.md) | 1 | info | Document testing-only API |
+| [require_list_preallocate](require_list_preallocate.md) | 3 | info | Preallocate lists before loop .add() |
+| [prefer_typedefs_for_callbacks](prefer_typedefs_for_callbacks.md) | 3 | info | Extract inline function types to typedefs |
+| [prefer_constrained_generics](prefer_constrained_generics.md) | 1 | info | Add `extends` clause to type parameters |
 
 ### Low Priority (documentation)
 

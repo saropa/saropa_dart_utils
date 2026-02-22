@@ -54,10 +54,10 @@ extension ListOfListExtension<T> on List<List<T>> {
   ///
   List<int>? getChildListLengths() => map((List<T> childList) => childList.length).toList();
 
-  /// Copies the elements of this list into [destination].
+  /// Returns `true` after copying the elements of this list into
+  /// [destination], or `false` if the dimensions do not match.
   ///
   /// The dimensions of [destination] must be the same as this list.
-  ///
   bool copy(List<List<T>> destination) {
     // Check row count first
     if (length != destination.length) {
@@ -86,7 +86,7 @@ extension ListOfListExtension<T> on List<List<T>> {
     final List<List<T>> newList = <List<T>>[];
 
     for (List<T> innerList in this) {
-      newList.add(List<T>.from(innerList));
+      newList.add(List<T>.of(innerList));
     }
 
     return newList;

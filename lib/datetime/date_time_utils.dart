@@ -71,15 +71,9 @@ class DateTimeUtils {
 
   /// Returns the date for tomorrow at the specified time.
   ///
-  /// Args:
-  ///   now (DateTime?): The current date and time. Defaults to null (uses
-  ///   the actual current date and time).
-  ///   hour (int?): The hour for tomorrow's date. Defaults to 0.
-  ///   minute (int?): The minute for tomorrow's date. Defaults to 0.
-  ///   second (int?): The second for tomorrow's date. Defaults to 0.
-  ///
-  /// Returns:
-  ///   DateTime: The date for tomorrow at the specified time.
+  /// Pass [now] to override the current date (useful for testing). The
+  /// returned date has its time set to [hour], [minute], and [second]
+  /// (all defaulting to 0).
   static DateTime tomorrow({DateTime? now, int? hour, int minute = 0, int second = 0}) {
     // Get the current date and time
     now ??= DateTime.now();
@@ -137,21 +131,18 @@ class DateTimeUtils {
   /// 365.25 / 12 = 30.4375
   static const double _avgDaysPerMonth = 30.4375;
 
-  /// Converts an integer representing days into a human-readable string format
-  /// of years, months, and optionally remaining days.
+  /// Returns a human-readable string representing [days] as years, months,
+  /// and optionally remaining days, or `null` if [days] is `null` or less
+  /// than 1.
   ///
   /// This method uses average values that account for leap years:
   /// - Average days per year: 365.25 (accounts for leap years)
   /// - Average days per month: 30.4375 (365.25 / 12)
   ///
-  /// Args:
-  ///   days (int?): The number of days to convert. Returns null if null or < 1.
-  ///   includeRemainingDays (bool): If true, includes remaining days in the output
-  ///   when they don't form a complete month. Defaults to false.
+  /// If [includeRemainingDays] is `true`, includes remaining days in the
+  /// output when they don't form a complete month.
   ///
-  /// Returns:
-  ///   String?: A human-readable string representing the duration, or null if
-  ///   [days] is null or less than 1.
+  /// **Note:** Output uses English plural rules only.
   ///
   /// Example:
   /// ```dart
@@ -220,15 +211,8 @@ class DateTimeUtils {
     }
   }
 
-  /// Calculates the first day of the next month for a given month and year.
-  ///
-  /// Args:
-  ///   month (int): The month (1-12).
-  ///   year (int): The year.
-  ///
-  /// Returns:
-  ///   DateTime?: The first day of the next month, or null if the month is
-  ///   invalid.
+  /// Returns the first day of the month following the given [month] and [year],
+  /// or `null` if [month] is invalid.
   static DateTime? firstDayNextMonth({required int month, required int year}) {
     // ref: https://stackoverflow.com/questions/61881850/sort-list-based-on-boolean
     // ref: https://stackoverflow.com/questions/67144785/flutter-dart-datetime-max-min-value
@@ -282,9 +266,11 @@ class DateTimeUtils {
           ||
           year % DateConstants.leapYearModulo400 == 0);
 
-  /// Returns the number of days in the given month and year.
+  /// Returns the number of days in the given [month] and [year].
   ///
   /// Takes into account leap years for February.
+  ///
+  /// Throws [ArgumentError] if [month] is not between 1 and 12.
   static int monthDayCount({required int year, required int month}) {
     if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
       throw ArgumentError('Month must be between 1 and 12');
@@ -299,19 +285,20 @@ class DateTimeUtils {
     return daysInMonth[month - 1];
   }
 
-  /// Validates date and time components.
+  /// Returns `true` if all provided date/time components are within valid
+  /// ranges.
   ///
-  /// Returns true if all provided components are within valid ranges:
-  /// - year: 0-9999
-  /// - month: 1-12
-  /// - day: 1 to max days in month (requires month to be set)
-  /// - hour: 0-23
-  /// - minute: 0-59
-  /// - second: 0-59
-  /// - millisecond: 0-999
-  /// - microsecond: 0-999
+  /// Valid ranges for each component:
+  /// - [year]: 0-9999
+  /// - [month]: 1-12
+  /// - [day]: 1 to max days in [month] (requires [month] to be set)
+  /// - [hour]: 0-23
+  /// - [minute]: 0-59
+  /// - [second]: 0-59
+  /// - [millisecond]: 0-999
+  /// - [microsecond]: 0-999
   ///
-  /// Components that are null are not validated.
+  /// Components that are `null` are not validated.
   static bool isValidDateParts({
     int? year,
     int? month,

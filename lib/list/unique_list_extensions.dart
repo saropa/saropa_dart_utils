@@ -1,20 +1,25 @@
 import 'dart:collection';
 
 extension UniqueIterableExtensions<T> on Iterable<T> {
-  /// LinkedHashSet retains ordering
-  /// NOTE: Removes null elements by default.
+  /// Returns a new list with duplicate elements removed, preserving order.
+  ///
+  /// Uses a [LinkedHashSet] to retain ordering. If [ignoreNulls] is `true`
+  /// (default), null elements are also removed.
   List<T> toUnique({bool ignoreNulls = true}) =>
-      LinkedHashSet<T>.from(where((T? e) => !ignoreNulls || e != null)).toList();
+      LinkedHashSet<T>.of(where((T? e) => !ignoreNulls || e != null)).toList();
 }
 
 extension UniqueListExtensionsUniqueBy<T> on List<T> {
-  /// Returns a new list with unique elements based on the provided key extractor.
-  /// When duplicates are found, the LAST element from the original list is kept.
-  /// The relative order of the kept elements is preserved.
-  /// If [ignoreNullKeys] is true (default), items where the key is null will be removed.
+  /// Returns a new list with unique elements based on the provided
+  /// [keyExtractor] function.
+  ///
+  /// When duplicates are found, the LAST element from the original list is
+  /// kept. The relative order of the kept elements is preserved.
+  /// If [ignoreNullKeys] is `true` (default), items where the key is `null`
+  /// will be removed.
   List<T> toUniqueBy<E>(E Function(T) keyExtractor, {bool ignoreNullKeys = true}) {
     if (isEmpty || length == 1) {
-      return List<T>.from(this);
+      return List<T>.of(this);
     }
 
     final Map<E, int> lastIndices = <E, int>{};
@@ -44,9 +49,12 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
     return indicesToKeep.map((int index) => this[index]).toList();
   }
 
-  /// Modifies the original list to contain only unique elements based on the provided key extractor.
-  /// When duplicates are found, the LAST element from the original list is kept.
-  /// If [ignoreNullKeys] is true (default), items where the key is null will be removed.
+  /// Modifies the original list to contain only unique elements based on the
+  /// provided [keyExtractor] function.
+  ///
+  /// When duplicates are found, the LAST element from the original list is
+  /// kept. If [ignoreNullKeys] is `true` (default), items where the key is
+  /// `null` will be removed.
   void toUniqueByInPlace<E>(E Function(T) keyExtractor, {bool ignoreNullKeys = true}) {
     if (isEmpty || length == 1) {
       return;

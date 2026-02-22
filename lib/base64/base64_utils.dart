@@ -33,7 +33,7 @@ class Base64Utils {
   /// ```
   ///
   /// See also:
-  /// - [decompressText] to reverse this operation
+  /// - `decompressText` to reverse this operation
   static String? compressText(String? value) {
     if (value == null || value.isEmpty) {
       return null;
@@ -45,7 +45,8 @@ class Base64Utils {
 
       return base64.encode(gzipJson);
     } on Object catch (e, stackTrace) {
-      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // ignore: saropa_lints/avoid_print_error
       debugPrint('Base64Utils.compressText failed: $e\n$stackTrace');
       return null;
     }
@@ -53,7 +54,7 @@ class Base64Utils {
 
   /// Decompresses a Base64-encoded gzipped string back to its original form.
   ///
-  /// This method reverses the [compressText] operation by:
+  /// This method reverses the `compressText` operation by:
   /// 1. Decoding the Base64 string to bytes
   /// 2. Decompressing the gzipped bytes
   /// 3. Decoding the UTF-8 bytes back to a string
@@ -70,7 +71,7 @@ class Base64Utils {
   /// ```
   ///
   /// See also:
-  /// - [compressText] to create compressed strings
+  /// - `compressText` to create compressed strings
   static String? decompressText(String? compressedBase64) {
     if (compressedBase64 == null || compressedBase64.isEmpty) {
       return null;
@@ -82,7 +83,8 @@ class Base64Utils {
 
       return utf8.decode(decodedGzip);
     } on Object catch (e, stackTrace) {
-      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // ignore: saropa_lints/avoid_print_error
       debugPrint('Base64Utils.decompressText failed: $e\n$stackTrace');
       return null;
     }

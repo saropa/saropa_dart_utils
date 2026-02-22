@@ -7,10 +7,7 @@ extension NumRangeExtensions on num {
   /// than [max], or the number itself otherwise.
   num forceInRange(num min, final num max) => this < min ? min : (this > max ? max : this);
 
-  /// Is NOT this greater than or equal to [from] and less than or equal
-  /// to [to]?
-  ///
-  /// NOTE: Inclusive match
+  /// Returns `true` if this number is NOT between [from] and [to] inclusive.
   ///
   /// ```dart
   /// print(0.5.isBetween(0, 10)); // true
@@ -18,9 +15,7 @@ extension NumRangeExtensions on num {
   /// ```
   bool isNotBetween(num from, final num to) => !isBetween(from, to);
 
-  /// Is this greater than or equal to [from] and less than or equal to [to]?
-  ///
-  /// NOTE: Inclusive match
+  /// Returns `true` if this number is between [from] and [to] inclusive.
   ///
   /// ```dart
   /// print(0.5.isBetween(0, 10)); // true

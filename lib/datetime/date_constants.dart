@@ -119,10 +119,11 @@ class MonthUtils {
   /// List of all month numbers (1-12).
   static const List<int> monthNumbers = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-  /// Gets the full name of a month.
+  /// Returns the full name of the given [month] (1-12), or `null` if invalid.
   static String? getMonthLongName(int month) => monthLongNames[month];
 
-  /// Gets the abbreviated name of a month.
+  /// Returns the abbreviated name of the given [month] (1-12), or `null` if
+  /// [month] is `null` or invalid.
   static String? getMonthShortName(int? month) => month == null ? null : monthShortNames[month];
 }
 
@@ -152,11 +153,13 @@ class WeekdayUtils {
     DateTime.sunday: 'Sun',
   };
 
-  /// Gets the full name of a weekday.
+  /// Returns the full name of the given [dayOfWeek] (1=Monday, 7=Sunday), or
+  /// `null` if [dayOfWeek] is `null` or invalid.
   static String? getDayLongName(int? dayOfWeek) =>
       dayOfWeek == null ? null : dayLongNames[dayOfWeek];
 
-  /// Gets the abbreviated name of a weekday.
+  /// Returns the abbreviated name of the given [dayOfWeek] (1=Monday,
+  /// 7=Sunday), or `null` if [dayOfWeek] is `null` or invalid.
   static String? getDayShortName(int? dayOfWeek) =>
       dayOfWeek == null ? null : dayShortNames[dayOfWeek];
 }

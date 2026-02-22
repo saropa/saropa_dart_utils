@@ -8,8 +8,8 @@ class TimeEmojiUtils {
   /// Emoji representing the moon (🌙).
   static const String moonEmoji = '🌙';
 
-  /// Returns [sunEmoji] if the given hour is during daytime (7am inclusive to 6pm exclusive),
-  /// otherwise returns [moonEmoji].
+  /// Returns `sunEmoji` if the given hour is during daytime (7am inclusive to 6pm exclusive),
+  /// otherwise returns `moonEmoji`.
   ///
   /// Daytime range: hour >= [DateConstants.dayStartHour] (7) and hour < [DateConstants.dayEndHour] (18).
   /// At exactly 7am, sun is shown. At exactly 6pm (18:00), moon is shown.

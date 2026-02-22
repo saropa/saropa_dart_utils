@@ -81,7 +81,7 @@ extension StringExtensions on String {
   /// Bullet point character (•).
   static const String bullet = '\u2022';
 
-  /// Alias for [bullet].
+  /// Alias for `bullet`.
   static const String dot = bullet;
 
   /// A dot with spaces for joining items (e.g., "Item 1 • Item 2").
@@ -115,15 +115,15 @@ extension StringExtensions on String {
     newLine,
   ];
 
-  /// Wraps the string with the given [before] and [after] strings.
+  /// Returns this string wrapped with [before] prepended and [after] appended.
   String wrap({String? before, String? after}) {
     final String b = before ?? '';
     final String a = after ?? '';
     return '$b$this$a';
   }
 
-  /// Extension method to wrap a [String] with a prefix [before]
-  /// and a suffix [after]. Returns null if the string is empty.
+  /// Returns this string wrapped with [before] prepended and [after] appended,
+  /// or `null` if the string is empty.
   String? wrapWith({String? before, String? after}) {
     if (isEmpty) {
       return null;
@@ -131,9 +131,9 @@ extension StringExtensions on String {
     return '${before ?? ""}$this${after ?? ""}';
   }
 
-  /// Wraps the string in single quotes: `'string'`.
+  /// Returns this string wrapped in single quotes: `'string'`.
   ///
-  /// If the string is empty, returns `''` if [quoteEmpty] is true,
+  /// If the string is empty, returns `''` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
   String wrapSingleQuotes({bool quoteEmpty = false}) => isEmpty
       ? quoteEmpty
@@ -141,9 +141,9 @@ extension StringExtensions on String {
             : ''
       : "'$this'";
 
-  /// Wraps the string in double quotes: `"string"`.
+  /// Returns this string wrapped in double quotes: `"string"`.
   ///
-  /// If the string is empty, returns `""` if [quoteEmpty] is true,
+  /// If the string is empty, returns `""` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
   String wrapDoubleQuotes({bool quoteEmpty = false}) => isEmpty
       ? quoteEmpty
@@ -151,35 +151,41 @@ extension StringExtensions on String {
             : ''
       : '"$this"';
 
-  /// Return a string wrapped in ‘accented quotes’
+  /// Returns this string wrapped in accented single quotes.
   ///
-  /// Note that empty strings will still be wrapped: '‘’'
+  /// If the string is empty, returns the empty quote pair if [quoteEmpty] is
+  /// `true`, otherwise returns an empty string.
   String wrapSingleAccentedQuotes({bool quoteEmpty = false}) => isEmpty
       ? quoteEmpty
             ? '$accentedQuoteOpening$accentedQuoteClosing'
             : ''
       : '$accentedQuoteOpening$this$accentedQuoteClosing';
 
-  /// Return a string wrapped in “accented quotes”
+  /// Returns this string wrapped in accented double quotes.
   ///
-  /// Note that empty strings will still be wrapped: '“”'
+  /// If the string is empty, returns the empty quote pair if [quoteEmpty] is
+  /// `true`, otherwise returns an empty string.
   String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) => isEmpty
       ? quoteEmpty
             ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing'
             : ''
       : '$accentedDoubleQuoteOpening$this$accentedDoubleQuoteClosing';
 
-  /// Extension method to enclose a [String] in parentheses.
+  /// Returns this string enclosed in parentheses, or `null` if empty.
+  ///
+  /// When [wrapEmpty] is `true`, returns `'()'` for empty strings.
   String? encloseInParentheses({bool wrapEmpty = false}) => isEmpty
       ? wrapEmpty
             ? '()'
             : null
       : '($this)';
 
-  /// Inserts a newline character before each opening parenthesis.
+  /// Returns a new string with a newline character inserted before each
+  /// opening parenthesis.
   String insertNewLineBeforeBrackets() => replaceAll('(', '\n(');
 
-  /// Truncates the string to [cutoff] graphemes and appends an ellipsis '…'.
+  /// Returns the string truncated to [cutoff] graphemes with an ellipsis
+  /// appended.
   ///
   /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the original string if it's shorter than [cutoff].
@@ -199,22 +205,13 @@ extension StringExtensions on String {
     return '${substringSafe(0, cutoff)}$ellipsis';
   }
 
-  /// Truncates the string to [cutoff] graphemes and appends an ellipsis '…'.
+  /// Returns the string truncated to [cutoff] graphemes with an ellipsis,
+  /// preserving whole words.
   ///
-  /// This method will not cut words in half. It will truncate at the last
-  /// full word that fits within the [cutoff]. If the first word is longer than
-  /// the cutoff, it falls back to simple truncation at the cutoff point to
-  /// ensure some content is always returned.
+  /// Truncates at the last full word that fits within [cutoff]. If the first
+  /// word is longer than the cutoff, falls back to simple truncation.
   ///
   /// Uses grapheme clusters for proper Unicode support, including emojis.
-  ///
-  /// Args:
-  ///   cutoff (int?): The maximum grapheme length before truncation. If null, 0,
-  ///   or negative, returns the original string.
-  ///
-  /// Returns:
-  ///   String: The truncated string with ellipsis, or the original string if it's
-  ///   shorter than [cutoff].
   ///
   /// Example:
   /// ```dart
@@ -241,10 +238,11 @@ extension StringExtensions on String {
     }
 
     // Truncate at the last space found and remove any trailing space before adding the ellipsis.
-    return '${searchWindow.substring(0, lastSpaceIndex).trimRight()}$ellipsis';
+    return '${searchWindow.substringSafe(0, lastSpaceIndex).trimRight()}$ellipsis';
   }
 
-  /// Reverses the characters in the string. Handles Unicode characters correctly.
+  /// Returns a new string with all characters reversed. Handles Unicode
+  /// correctly.
   String get reversed =>
       // Convert to runes for Unicode safety, reverse the list, and convert back to a string.
       String.fromCharCodes(runes.toList().reversed);
@@ -267,7 +265,7 @@ extension StringExtensions on String {
     return this;
   }
 
-  /// Inserts [newChar] at the specified [position].
+  /// Returns a new string with [newChar] inserted at the specified [position].
   ///
   /// Returns the original string if [position] is out of bounds.
   String insert(String newChar, int position) {
@@ -277,7 +275,7 @@ extension StringExtensions on String {
     return substringSafe(0, position) + newChar + substringSafe(position);
   }
 
-  /// Removes the last occurrence of [target] from the string.
+  /// Returns a new string with the last occurrence of [target] removed.
   String removeLastOccurrence(String target) {
     // Find the last index of the target.
     final int lastIndex = lastIndexOf(target);
@@ -287,12 +285,15 @@ extension StringExtensions on String {
     return substringSafe(0, lastIndex) + substringSafe(lastIndex + target.length);
   }
 
-  /// Removes the first and last characters if they are a matching pair of brackets.
+  /// Returns a new string with the outer matching bracket pair removed.
   String removeMatchingWrappingBrackets() =>
       // Use isBracketWrapped to check, then remove the outer characters.
       isBracketWrapped() ? substringSafe(1, length - 1) : this;
 
-  /// Removes the specified [char] from the beginning and/or end of the string.
+  /// Returns a new string with [char] removed from the beginning and/or end.
+  ///
+  /// When [trimFirst] is `true` (default), the string is trimmed before
+  /// checking.
   String removeWrappingChar(String char, {bool trimFirst = true}) {
     // Method entry point.
     // FIX #1: Trim the string first if requested.
@@ -311,8 +312,11 @@ extension StringExtensions on String {
     return str;
   }
 
-  /// Returns a new string with the specified [start] removed from the beginning
-  /// of the original string, if it exists.
+  /// Returns a new string with [start] removed from the beginning, or `null`
+  /// if the result is empty.
+  ///
+  /// When [isCaseSensitive] is `false`, uses case-insensitive matching. When
+  /// [trimFirst] is `true`, the string is trimmed before checking.
   String? removeStart(String? start, {bool isCaseSensitive = true, bool trimFirst = false}) {
     // If trimFirst is true, recurse with the trimmed string.
     if (trimFirst) {
@@ -332,38 +336,41 @@ extension StringExtensions on String {
         : this;
   }
 
-  /// Removes [end] from the end of the string, if it exists.
+  /// Returns a new string with [end] removed from the end, if it exists.
   String removeEnd(String end) =>
       // Check if the string ends with the target and remove it if so.
       endsWith(end) ? substringSafe(0, length - end.length) : this;
 
-  /// Removes the first character from the string.
+  /// Returns a new string with the first character removed.
   String removeFirstChar() =>
       // Return empty if too short, otherwise return the substringSafe from the second character.
       (length < 1) ? '' : substringSafe(1);
 
-  /// Removes the last character from the string.
+  /// Returns a new string with the last character removed.
   String removeLastChar() =>
       // Return empty if too short, otherwise return the substringSafe without the last character.
       (length < 1) ? '' : substringSafe(0, length - 1);
 
-  /// Removes both the first and the last character from the string.
+  /// Returns a new string with both the first and last characters removed.
   String removeFirstLastChar() =>
       // Return empty if too short, otherwise return the inner substringSafe.
       (length < 2) ? '' : substringSafe(1, length - 1);
 
-  /// Replaces different apostrophe characters (’ and ') with a standard single quote.
+  /// Returns a new string with apostrophe variants replaced by a standard
+  /// single quote.
   String normalizeApostrophe() =>
       // Use a regex to find and replace apostrophe variants.
       replaceAll(_apostropheRegex, "'");
 
-  /// Removes all characters that are not letters (A-Z, a-z).
-  // Replace all non-matching characters.
+  /// Returns a new string with all non-letter characters removed.
+  ///
+  /// When [allowSpace] is `true`, space characters are preserved.
   String toAlphaOnly({bool allowSpace = false}) =>
       replaceAll(allowSpace ? _alphaOnlyWithSpaceRegex : _alphaOnlyRegex, '');
 
-  /// Removes all characters that are not letters or numbers.
-  // Replace all non-matching characters.
+  /// Returns a new string with all non-alphanumeric characters removed.
+  ///
+  /// When [allowSpace] is `true`, space characters are preserved.
   String removeNonAlphaNumeric({bool allowSpace = false}) =>
       replaceAll(allowSpace ? _alphaNumericOnlyWithSpaceRegex : _alphaNumericOnlyRegex, '');
 
@@ -374,18 +381,20 @@ extension StringExtensions on String {
       // The regex \D matches any non-digit character and replaces it.
       replaceAll(_nonDigitRegex, replacement);
 
-  /// Removes all characters that are not digits (0-9).
+  /// Returns a new string with all non-digit characters removed.
   String removeNonNumbers() =>
       // The regex \D matches any non-digit character.
       replaceAll(_nonDigitRegex, '');
 
-  /// Escapes characters in a string that have a special meaning in regular expressions.
+  /// Returns a new string with regex special characters escaped.
   String escapeForRegex() =>
       // The regex finds any special regex character, and the callback prepends a backslash.
-      replaceAllMapped(_regexSpecialCharsRegex, (Match m) => '\\${m[0]}');
+      replaceAllMapped(_regexSpecialCharsRegex, (Match m) => '\\${m.group(0) ?? ''}');
 
-  /// Extension method to remove consecutive spaces in a [String]
-  /// and optionally trim the result.
+  /// Returns a new string with consecutive whitespace collapsed into a single
+  /// space, or `null` if the result is empty.
+  ///
+  /// When [trim] is `true` (default), the result is also trimmed.
   String? removeConsecutiveSpaces({bool trim = true}) {
     // Handle empty string case.
     if (isEmpty) {
@@ -397,18 +406,19 @@ extension StringExtensions on String {
     return replaced.nullIfEmpty(trimFirst: trim);
   }
 
-  /// Extension method to remove consecutive spaces in a [String]
-  /// and optionally trim the result. This is an alias for [removeConsecutiveSpaces].
+  /// Returns the result of collapsing consecutive whitespace, or `null` if
+  /// empty. Alias for `removeConsecutiveSpaces`.
+  ///
+  /// When [trim] is `true` (default), the result is also trimmed.
   String? compressSpaces({bool trim = true}) =>
       // Defer to the main implementation.
       removeConsecutiveSpaces(trim: trim);
 
-  /// Splits a string by capitalized letters (Unicode-aware) and optionally by spaces,
-  /// with an option to prevent splits that result in short segments.
+  /// Returns a list of segments split at capitalized letters (Unicode-aware).
   ///
-  /// - [splitNumbers]: If true, also splits before digits.
-  /// - [splitBySpace]: If true, splits the result by whitespace.
-  /// - [minLength]: Merges adjacent splits if either segment is shorter than this length.
+  /// When [splitNumbers] is `true`, also splits before digits. When
+  /// [splitBySpace] is `true`, further splits each segment by whitespace.
+  /// Adjacent segments shorter than [minLength] are merged together.
   List<String> splitCapitalizedUnicode({
     bool splitNumbers = false,
     bool splitBySpace = false,
@@ -535,9 +545,9 @@ extension StringExtensions on String {
     return substringSafe(charLength - n);
   }
 
-  /// Splits the string into a list of words, using space (" ") as the delimiter.
+  /// Returns this string split into a list of words, or `null` if empty.
   ///
-  /// This method splits the string by spaces, and filters out any empty or null words.
+  /// Uses space as the delimiter and filters out empty words.
   List<String>? words() {
     // Handle empty string case by returning null.
     if (isEmpty) {
@@ -550,13 +560,14 @@ extension StringExtensions on String {
     ).map((String word) => word.nullIfEmpty()).whereType<String>().toList().nullIfEmpty();
   }
 
-  /// Checks if the string contains only Latin alphabet characters (a-z, A-Z).
+  /// Returns `true` if this string contains only Latin alphabet characters
+  /// (a-z, A-Z).
   bool isLatin() =>
       // Use a regular expression to match only alphabetic characters from start to end.
       _latinRegex.hasMatch(this);
 
-  /// Checks if the string starts and ends with matching brackets.
-  /// e.g., `(abc)`, `[abc]`, `{abc}`, `<abc>`.
+  /// Returns `true` if this string starts and ends with a matching bracket
+  /// pair: parentheses, square brackets, curly braces, or angle brackets.
   bool isBracketWrapped() {
     // A wrapped string must have at least 2 characters.
     if (length < 2) return false;
@@ -567,8 +578,9 @@ extension StringExtensions on String {
         (startsWith('<') && endsWith('>'));
   }
 
-  /// Compares this string to [other], with options for case-insensitivity
-  /// and apostrophe normalization.
+  /// Returns `true` if this string equals [other], with options for
+  /// case-insensitivity via [ignoreCase] and apostrophe normalization via
+  /// [normalizeApostrophe].
   bool isEquals(String? other, {bool ignoreCase = true, bool normalizeApostrophe = true}) {
     // If other string is null, they can't be equal.
     if (other == null) return false;
@@ -590,18 +602,11 @@ extension StringExtensions on String {
     return first == second;
   }
 
-  /// Checks if this string contains [other] in a case-insensitive manner.
+  /// Returns `true` if this string contains [other] in a case-insensitive
+  /// manner.
   ///
-  /// Following standard string semantics, an empty string is considered to be
-  /// contained in any string (including empty strings). Returns `false` only
-  /// when [other] is `null`.
-  ///
-  /// Args:
-  ///   other (String?): The substringSafe to search for. Returns `false` if null.
-  ///
-  /// Returns:
-  ///   bool: `true` if this string contains [other] (case-insensitive), `false` if
-  ///   [other] is null.
+  /// An empty string is considered to be contained in any string. Returns
+  /// `false` only when [other] is `null`.
   ///
   /// Example:
   /// ```dart
@@ -621,6 +626,8 @@ extension StringExtensions on String {
     return toLowerCase().contains(other.toLowerCase());
   }
 
+  /// Returns the first character where this string and [other] differ, or an
+  /// empty string if they are identical.
   String getFirstDiffChar(String other) {
     final int minLength = length < other.length ? length : other.length;
 
@@ -652,7 +659,8 @@ extension StringExtensions on String {
     return runes.any((int r) => r == _invalidUnicodeReplacementRuneCode);
   }
 
-  /// Removes all invalid Unicode replacement characters.
+  /// Returns a new string with all invalid Unicode replacement characters
+  /// removed.
   String removeInvalidUnicode() {
     if (isEmpty) return this;
     final StringBuffer buffer = StringBuffer();
@@ -680,9 +688,9 @@ extension StringExtensions on String {
   /// Returns true if this string contains any digit characters.
   bool hasAnyDigits() => contains(_anyDigitsRegex);
 
-  /// Gets the last [len] grapheme clusters of this string.
+  /// Returns the last [len] grapheme clusters of this string.
   ///
-  /// Uses the [characters] package to correctly handle multi-codepoint
+  /// Uses the `characters` package to correctly handle multi-codepoint
   /// sequences such as emoji with skin-tone modifiers or ZWJ sequences.
   ///
   /// Returns the full string if [len] is greater than the grapheme length.
@@ -703,16 +711,10 @@ extension StringExtensions on String {
   }
 
   // cspell: ignore abcabcabc
-  /// Repeats this string [count] times.
+  /// Returns this string repeated [count] times.
   ///
-  /// Uses a [StringBuffer] for efficient concatenation. Returns an empty string
+  /// Uses a `StringBuffer` for efficient concatenation. Returns an empty string
   /// if [count] is zero or negative, or if this string is empty.
-  ///
-  /// **Args:**
-  /// - [count]: The number of times to repeat the string.
-  ///
-  /// **Returns:**
-  /// A new string containing this string repeated [count] times.
   ///
   /// **Example:**
   /// ```dart
@@ -730,33 +732,29 @@ extension StringExtensions on String {
     return buffer.toString();
   }
 
-  /// Replaces all occurrences of [pattern] with an empty string.
+  /// Returns a new string with all occurrences of [pattern] removed.
   String removeAll(Pattern? pattern) {
     if (pattern == null) return this;
     return replaceAll(pattern, '');
   }
 
-  /// Replaces the last [n] characters with [replacementChar].
+  /// Returns a new string with the last [n] characters replaced by
+  /// [replacementChar].
   String replaceLastNCharacters(int n, String replacementChar) {
     if (n <= 0 || n > length) return this;
     return substringSafe(0, length - n) + replacementChar * n;
   }
 
-  /// Replaces hyphens and spaces with non-breaking equivalents.
+  /// Returns a new string with hyphens and spaces replaced by non-breaking
+  /// equivalents.
   String makeNonBreaking() => replaceAll('-', nonBreakingHyphen).replaceAll(' ', nonBreakingSpace);
 
-  /// Removes single-character words (letters and digits) from this string.
+  /// Returns a new string with single-character words removed, or `null` if the
+  /// result is empty.
   ///
-  /// Uses Unicode-aware matching to remove standalone single-character words,
-  /// including both letters (\p{L}) and digits (\p{N}). A "word" is defined as
-  /// a single character surrounded by whitespace or at the start/end of the string.
-  ///
-  /// **Args:**
-  /// - [trim]: If true (default), trims leading/trailing whitespace from the result.
-  /// - [removeMultipleSpaces]: If true (default), collapses consecutive spaces into one.
-  ///
-  /// **Returns:**
-  /// The modified string, or null if the result is empty.
+  /// When [trim] is `true` (default), the result is trimmed. When
+  /// [removeMultipleSpaces] is `true` (default), consecutive spaces are
+  /// collapsed.
   ///
   /// **Example:**
   /// ```dart
@@ -777,18 +775,10 @@ extension StringExtensions on String {
     return result.isEmpty ? null : result;
   }
 
-  /// Replaces all line breaks (\n) with a specified string.
+  /// Returns a new string with all line breaks replaced by [replacement].
   ///
-  /// When [deduplicate] is true, collapses consecutive runs of the replacement
-  /// string into a single occurrence. This uses a non-capturing group regex to
-  /// handle any replacement string, including those with special regex characters.
-  ///
-  /// **Args:**
-  /// - [replacement]: The string to replace line breaks with. Null or empty removes line breaks.
-  /// - [deduplicate]: If true (default), collapses consecutive replacement sequences.
-  ///
-  /// **Returns:**
-  /// The string with line breaks replaced and optionally deduplicated.
+  /// When [deduplicate] is `true` (default), consecutive runs of the
+  /// replacement string are collapsed into a single occurrence.
   ///
   /// **Example:**
   /// ```dart
@@ -807,7 +797,10 @@ extension StringExtensions on String {
     return result;
   }
 
-  /// Removes leading and trailing occurrences of [find].
+  /// Returns a new string with leading and trailing occurrences of [find]
+  /// removed, or `null` if the result is empty.
+  ///
+  /// When [trim] is `true`, whitespace is also trimmed between removals.
   String? removeLeadingAndTrailing(String? find, {bool trim = false}) {
     if (isEmpty || find == null || find.isEmpty) return this;
     String value = trim ? this.trim() : this;
@@ -822,13 +815,14 @@ extension StringExtensions on String {
     return value.isEmpty ? null : value;
   }
 
-  /// Returns the first word of this string.
+  /// Returns the first word of this string, or `null` if empty.
   String? firstWord() {
     if (isEmpty) return null;
     return words()?.firstOrNull;
   }
 
-  /// Returns the second word of this string.
+  /// Returns the second word of this string, or `null` if fewer than two
+  /// words.
   String? secondWord() {
     if (isEmpty) return null;
     final List<String>? wordList = words();
@@ -836,19 +830,8 @@ extension StringExtensions on String {
     return wordList[1];
   }
 
-  /// Counts occurrences of [find] in this string.
-  ///
-  /// Uses a split-based approach that counts non-overlapping matches only.
-  /// For example, counting 'aa' in 'aaa' returns 1, not 2.
-  ///
-  /// Note: This method counts non-overlapping matches. Consider adding an
-  /// `allowOverlap` parameter if overlapping occurrences are desired.
-  ///
-  /// **Args:**
-  /// - [find]: The substringSafe to count. Returns 0 if empty.
-  ///
-  /// **Returns:**
-  /// The number of non-overlapping occurrences of [find].
+  /// Returns the number of non-overlapping occurrences of [find] in this
+  /// string.
   ///
   /// **Example:**
   /// ```dart
@@ -909,12 +892,15 @@ extension StringExtensions on String {
     return lines.take(limit).join(newLine);
   }
 
-  /// Trims each line and removes empty lines.
+  /// Returns a new string with each line trimmed and empty lines removed.
   String trimLines() => split(
     newLine,
   ).map((String line) => line.trim()).where((String line) => line.isNotEmpty).join(newLine);
 
-  /// Prefixes every line with [insertText].
+  /// Returns a new string with [insertText] prepended to every line.
+  ///
+  /// When [prefixEmptyStrings] is `true`, empty strings also receive the
+  /// prefix.
   String multiLinePrefix(String insertText, {bool prefixEmptyStrings = false}) {
     if (insertText.isEmpty) return this;
     if (isEmpty) return prefixEmptyStrings ? insertText : '';
@@ -937,7 +923,8 @@ extension StringExtensions on String {
     return list.any((String e) => e == this);
   }
 
-  /// Finds the index of the second occurrence of [char].
+  /// Returns the index of the second occurrence of [char], or `-1` if not
+  /// found.
   int secondIndex(String char) {
     if (char.isEmpty || isEmpty) return -1;
     final int firstIdx = indexOf(char);
@@ -972,28 +959,22 @@ extension StringExtensions on String {
     return matches.isEmpty ? null : matches;
   }
 
-  /// Appends [value] only if this string is not empty.
+  /// Returns this string with [value] appended, or an empty string if this
+  /// string is empty.
   String appendNotEmpty(String value) => isEmpty ? '' : this + value;
 
-  /// Prepends [value] only if this string is not empty.
+  /// Returns this string with [value] prepended, or this string unchanged if
+  /// empty.
   String prefixNotEmpty(String? value) {
     if (isEmpty || value == null || value.isEmpty) return this;
     return value + this;
   }
 
-  /// Returns the appropriate indefinite article ('a' or 'an') for this word.
+  /// Returns the appropriate indefinite article (`'a'` or `'an'`) for this
+  /// word, or an empty string if input is empty.
   ///
-  /// Uses English grammar heuristics:
-  /// - Silent 'h' words (hour, honest, honor, heir) → 'an'
-  /// - "You"-sound words (uni, use, user, union, university) → 'a'
-  /// - Words starting with 'one' (one-time, one-way) → 'a'
-  /// - Vowel sounds (a, e, i, o, u) → 'an'
-  /// - Consonant sounds → 'a'
-  ///
-  /// The word is trimmed and compared case-insensitively.
-  ///
-  /// **Returns:**
-  /// 'a' or 'an' based on pronunciation heuristics, or empty string if input is empty.
+  /// Uses English grammar heuristics for silent 'h', "you"-sound words,
+  /// and vowel/consonant detection.
   ///
   /// **Example:**
   /// ```dart
@@ -1036,17 +1017,8 @@ extension StringExtensions on String {
 
   /// Returns the possessive form of this string (e.g., "John's", "boss'").
   ///
-  /// Trims the input before processing. For words ending in 's':
-  /// - US style (default): adds apostrophe only → "boss'"
-  /// - Non-US style: adds apostrophe-s → "boss's"
-  ///
-  /// All other words get apostrophe-s → "John's".
-  ///
-  /// **Args:**
-  /// - [isLocaleUS]: If true (default), uses US possessive style for words ending in 's'.
-  ///
-  /// **Returns:**
-  /// The possessive form of the trimmed string, or the original if empty.
+  /// When [isLocaleUS] is `true` (default), words ending in 's' get only an
+  /// apostrophe ("boss'"). When `false`, they get apostrophe-s ("boss's").
   ///
   /// **Example:**
   /// ```dart
@@ -1066,7 +1038,10 @@ extension StringExtensions on String {
     return "$base's";
   }
 
-  /// Returns the plural form of this string.
+  /// Returns the plural form of this string based on [count].
+  ///
+  /// When [simple] is `true`, just appends 's'. Otherwise, applies English
+  /// pluralization rules (e.g., -es, -ies).
   String pluralize(num? count, {bool simple = false}) {
     if (isEmpty || count == 1) return this;
     if (simple) return '${this}s';
@@ -1087,21 +1062,11 @@ extension StringExtensions on String {
     return '${this}s';
   }
 
-  /// Creates an obscured version of this string (e.g., for masking passwords).
+  /// Returns an obscured version of this string using [char] repeated, or
+  /// `null` if empty.
   ///
-  /// The output length varies by ±[obscureLength] characters using a time-based jitter
-  /// (microseconds since epoch). This makes the output length non-deterministic and
-  /// prevents easy guessing of the original string length.
-  ///
-  /// **Important**: For deterministic output (e.g., in tests), consider using a fixed
-  /// length or injecting a seeded [Random] instance to control variability.
-  ///
-  /// **Args:**
-  /// - [char]: The character to use for obfuscation (default: '•').
-  /// - [obscureLength]: Maximum jitter in characters (default: 3).
-  ///
-  /// **Returns:**
-  /// A string of [char] repeated with variable length, or null if input is empty.
+  /// The output length varies by ±[obscureLength] characters using a
+  /// time-based jitter to prevent guessing the original string length.
   ///
   /// **Example:**
   /// ```dart
@@ -1117,7 +1082,8 @@ extension StringExtensions on String {
     return char * (finalLength > 0 ? finalLength : 1);
   }
 
-  /// Truncates with ellipsis at both ends.
+  /// Returns a truncated version of this string with ellipsis, keeping the
+  /// first and last [minLength] characters.
   String trimWithEllipsis({int minLength = 5}) {
     if (length < minLength) return ellipsis;
     if (length < (minLength * 2) + 2) {
@@ -1126,7 +1092,11 @@ extension StringExtensions on String {
     return substringSafe(0, minLength) + ellipsis + substringSafe(length - minLength);
   }
 
-  /// Collapses a multiline string into a single line with optional truncation.
+  /// Returns this multiline string collapsed into a single line, truncated to
+  /// [cropLength] characters.
+  ///
+  /// When [appendEllipsis] is `true` (default), an ellipsis is appended if
+  /// truncated.
   String collapseMultilineString({required int cropLength, bool appendEllipsis = true}) {
     if (isEmpty) return this;
     final String collapsed = replaceAll(newLine, ' ').replaceAll('  ', ' ');

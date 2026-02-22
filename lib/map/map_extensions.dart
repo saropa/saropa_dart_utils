@@ -2,17 +2,13 @@ import 'dart:math';
 
 /// Extension methods for generic maps.
 extension MapExtensions<K, V> on Map<K, V> {
-  /// Returns null if this map is empty.
+  /// Returns this map, or `null` if it is empty.
   Map<K, V>? nullIfEmpty() => isEmpty ? null : this;
 
-  /// Gets random entries from this map, excluding specified keys.
+  /// Returns up to [count] random entries from this map, excluding any keys
+  /// present in [ignoreList].
   ///
-  /// Args:
-  ///   count: The number of random entries to return.
-  ///   ignoreList: List of keys to exclude from selection.
-  ///
-  /// Returns:
-  ///   A list of random map entries, or an empty list if no eligible entries.
+  /// Returns `null` if no eligible entries remain after exclusion.
   List<MapEntry<K, V>>? getRandomListExcept({
     required int count,
     required List<K>? ignoreList,
@@ -29,7 +25,8 @@ extension MapExtensions<K, V> on Map<K, V> {
 
 /// Extension methods for String-keyed dynamic maps.
 extension StringMapExtensions on Map<String, dynamic> {
-  /// Formats this map as a human-readable string with indentation.
+  /// Returns a human-readable string representation of this map with
+  /// indentation.
   String formatMap() {
     if (isEmpty) return '';
     const String indent = '  ';
@@ -60,52 +57,64 @@ extension StringMapExtensions on Map<String, dynamic> {
     return buffer.toString();
   }
 
-  /// Gets a child value as String.
-  String? getChildString(String childKey) => this[childKey] as String?;
-
-  /// Gets a grandchild value.
-  dynamic getGrandchild(String childKey, String grandChildKey) {
-    final Map<dynamic, dynamic>? child = this[childKey] as Map<dynamic, dynamic>?;
-    return child?[grandChildKey];
+  /// Returns the value for [childKey] as a `String`, or `null` if the key is
+  /// missing or the value is not a `String`.
+  String? getChildString(String childKey) {
+    final dynamic value = this[childKey];
+    return value is String ? value : null;
   }
 
-  /// Gets a grandchild value as String.
-  String? getGrandchildString(String childKey, String grandChildKey) =>
-      getGrandchild(childKey, grandChildKey) as String?;
+  /// Returns the nested value at [childKey] → [grandChildKey], or `null` if
+  /// either key is missing or the child is not a map.
+  dynamic getGrandchild(String childKey, String grandChildKey) {
+    final dynamic child = this[childKey];
+    if (child is Map<dynamic, dynamic>) return child[grandChildKey];
+    return null;
+  }
 
-  /// Gets a great-grandchild value.
+  /// Returns the nested value at [childKey] → [grandChildKey] as a `String`,
+  /// or `null` if either key is missing or the value is not a `String`.
+  String? getGrandchildString(String childKey, String grandChildKey) {
+    final dynamic value = getGrandchild(childKey, grandChildKey);
+    return value is String ? value : null;
+  }
+
+  /// Returns the nested value at [childKey] → [grandChildKey] →
+  /// [greatGrandChildKey], or `null` if any key is missing.
   dynamic getGreatGrandchild(
     String childKey,
     String grandChildKey,
     String greatGrandChildKey,
   ) {
-    final Map<dynamic, dynamic>? grandChild =
-        getGrandchild(childKey, grandChildKey) as Map<dynamic, dynamic>?;
-    return grandChild?[greatGrandChildKey];
+    final dynamic grandChild = getGrandchild(childKey, grandChildKey);
+    if (grandChild is Map<dynamic, dynamic>) return grandChild[greatGrandChildKey];
+    return null;
   }
 
-  /// Gets a great-grandchild value as String.
+  /// Returns the nested value at [childKey] → [grandChildKey] →
+  /// [greatGrandChildKey] as a `String`, or `null` if any key is missing or
+  /// the value is not a `String`.
   String? getGreatGrandchildString(
     String childKey,
     String grandChildKey,
     String greatGrandChildKey,
-  ) => getGreatGrandchild(childKey, grandChildKey, greatGrandChildKey) as String?;
+  ) {
+    final dynamic value = getGreatGrandchild(childKey, grandChildKey, greatGrandChildKey);
+    return value is String ? value : null;
+  }
 
-  /// Gets a child as Map`<String, dynamic>`.
+  /// Returns the value for [key] as a `Map<String, dynamic>`, or `null` if the
+  /// key is missing or the value cannot be converted.
   Map<String, dynamic>? getValue(String? key) {
     if (isEmpty || key == null) return null;
     final dynamic value = this[key];
     return MapUtils.toMapStringDynamic(value);
   }
 
-  /// Removes specified keys from this map.
+  /// Returns `true` after removing all keys in [removeKeysList] from this map.
   ///
-  /// Args:
-  ///   removeKeysList: List of keys to remove.
-  ///   recurseChildValues: If true, also removes keys from nested maps.
-  ///
-  /// Returns:
-  ///   True if any modifications were made.
+  /// When [recurseChildValues] is `true` (default), keys are also removed from
+  /// nested `Map<String, dynamic>` values.
   bool removeKeys(List<String>? removeKeysList, {bool recurseChildValues = true}) {
     if (removeKeysList == null || removeKeysList.isEmpty) return false;
     removeWhere((String key, _) => removeKeysList.contains(key));
@@ -119,7 +128,7 @@ extension StringMapExtensions on Map<String, dynamic> {
     return true;
   }
 
-  /// Returns a new map with keys sorted alphabetically.
+  /// Returns a new `Map<String, dynamic>` with keys sorted alphabetically.
   Map<String, dynamic> toKeySorted() => Map<String, dynamic>.fromEntries(
     entries.toList()..sort(
       (MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) => a.key.compareTo(b.key),
@@ -131,14 +140,15 @@ extension StringMapExtensions on Map<String, dynamic> {
 class MapUtils {
   const MapUtils._();
 
-  /// Counts total items across all iterable values in a map.
+  /// Returns the total number of items across all iterable values in
+  /// [inputMap].
   static int countItems<K, V>(Map<K, Iterable<V>> inputMap) =>
       inputMap.values.fold<int>(0, (int sum, Iterable<V> iter) => sum + iter.length);
 
-  /// Toggles a value in a map of lists.
+  /// Toggles [value] in the list at [key] within [map].
   ///
-  /// If [add] is null, toggles based on current presence.
-  /// If [add] is true, adds the value. If false, removes it.
+  /// If [add] is `null`, toggles based on current presence.
+  /// If [add] is `true`, adds the value. If `false`, removes it.
   static void mapToggleValue<K, V>(Map<K, List<V>> map, K key, V value, {bool? add}) {
     if (value == null) return;
     add ??= !mapContainsValue(map, key, value);
@@ -149,48 +159,39 @@ class MapUtils {
     }
   }
 
-  /// Adds a value to a map of lists.
+  /// Adds [value] to the list at [key] within [map], creating the list if
+  /// absent.
   ///
-  /// Uses an immutable approach: creates a new list rather than mutating the existing one.
-  ///
-  /// **Performance vs Safety Tradeoff:**
-  /// - **Safety:** No parameter mutation, predictable behavior, safer for concurrent code
-  /// - **Cost:** Allocates a new list on each call
-  /// - **When it matters:** Large lists (>1000 items) with frequent operations
-  /// - **When it doesn't:** Typical use cases with small to medium lists
+  /// Uses an immutable approach: creates a new list rather than mutating the
+  /// existing one.
   ///
   /// Example:
   /// ```dart
   /// final map = <String, List<int>>{};
-  /// MapUtils.mapAddValue(map, 'scores', 100); // Creates ['scores': [100]]
-  /// MapUtils.mapAddValue(map, 'scores', 200); // Creates new list [100, 200]
+  /// MapUtils.mapAddValue(map, 'scores', 100); // {'scores': [100]}
+  /// MapUtils.mapAddValue(map, 'scores', 200); // {'scores': [100, 200]}
   /// ```
   static void mapAddValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
-    // ignore: avoid_parameter_mutation - Function is designed to mutate the map parameter
+    // Function is designed to mutate the map parameter
+    // ignore: saropa_lints/avoid_parameter_mutation
     map.update(key, (List<V> list) => [...list, value], ifAbsent: () => <V>[value]);
   }
 
-  /// Removes a value from a map of lists.
+  /// Removes all occurrences of [value] from the list at [key] within [map].
   ///
-  /// Uses an immutable approach: creates a new list rather than mutating the existing one.
-  ///
-  /// **Performance vs Safety Tradeoff:**
-  /// - **Safety:** No parameter mutation, predictable behavior, safer for concurrent code
-  /// - **Cost:** Allocates a new list on each call (filters existing list)
-  /// - **When it matters:** Large lists (>1000 items) with frequent operations
-  /// - **When it doesn't:** Typical use cases with small to medium lists
-  ///
-  /// **Note:** Removes all occurrences of the value, not just the first one.
+  /// Uses an immutable approach: creates a new filtered list rather than
+  /// mutating the existing one.
   ///
   /// Example:
   /// ```dart
   /// final map = <String, List<int>>{'scores': [100, 200, 100]};
-  /// MapUtils.mapRemoveValue(map, 'scores', 100); // Creates new list [200]
+  /// MapUtils.mapRemoveValue(map, 'scores', 100); // {'scores': [200]}
   /// ```
   static void mapRemoveValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return;
-    // ignore: avoid_parameter_mutation - Function is designed to mutate the map parameter
+    // Function is designed to mutate the map parameter
+    // ignore: saropa_lints/avoid_parameter_mutation
     map.update(
       key,
       (List<V> list) => list.where((V v) => v != value).toList(),
@@ -198,24 +199,19 @@ class MapUtils {
     );
   }
 
-  /// Checks if a map of lists contains a specific value.
+  /// Returns `true` if the list at [key] within [map] contains [value].
   static bool mapContainsValue<K, V>(Map<K, List<V>> map, K key, V value) {
     if (value == null) return false;
     return map[key]?.contains(value) ?? false;
   }
 
-  /// Converts dynamic to Map`<String, dynamic>`.
+  /// Returns [json] as a `Map<String, dynamic>`, or `null` if conversion is
+  /// not possible.
   ///
-  /// All keys are converted to [String] via [toString]. If the source map
+  /// All keys are converted to `String` via `toString()`. If the source map
   /// contains keys that produce the same string (e.g. `1` and `'1'` both
-  /// become `'1'`), the last value wins by default — **data is silently
-  /// dropped**. Pass `ensureUniqueKey: true` to keep the first value instead
-  /// (uses [Map.putIfAbsent]).
-  ///
-  /// Args:
-  ///   json: The value to convert.
-  ///   ensureUniqueKey: If true, uses putIfAbsent to keep first value on
-  ///     duplicate string keys. Defaults to false (last value wins).
+  /// become `'1'`), the last value wins by default. Pass
+  /// [ensureUniqueKey] as `true` to keep the first value instead.
   static Map<String, dynamic>? toMapStringDynamic(
     dynamic json, {
     bool ensureUniqueKey = false,

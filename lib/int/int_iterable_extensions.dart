@@ -5,7 +5,8 @@ import 'dart:collection';
 ///       Comparable&lt;num&gt;
 ///
 extension IntIterableExtensions on Iterable<int> {
-  /// find the most common value in the list.
+  /// Returns a record of the most common value and its frequency, or `null`
+  /// if the iterable is empty.
   (int, int)? mostOccurrences() {
     // check if the list is empty before calling reduce
     if (isEmpty) {
@@ -37,7 +38,8 @@ extension IntIterableExtensions on Iterable<int> {
     return mostCommonEntry == null ? null : (mostCommonEntry.key, mostCommonEntry.value);
   }
 
-  /// find the most common value in the list.
+  /// Returns a record of the least common value and its frequency, or `null`
+  /// if the iterable is empty.
   (int, int)? leastOccurrences() {
     // check if the list is empty before calling reduce
     if (isEmpty) {

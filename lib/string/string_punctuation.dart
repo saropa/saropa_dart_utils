@@ -18,7 +18,7 @@ extension StringPunctuation on String {
   /// alphabetic characters (including accented characters and characters
   /// from other languages like Chinese, Japanese, and Korean), **numbers**, and whitespace.
   ///
-  /// The method uses a Unicode-aware regular expression ([punctuationRegex]) to identify and remove
+  /// The method uses a Unicode-aware regular expression (`punctuationRegex`) to identify and remove
   /// any character that is not a letter (as defined by Unicode Letter property `\p{L}`), whitespace (`\s`), or a number (`\p{N}`).
   /// This ensures that accented characters, characters from non-Latin alphabets, numbers, and various whitespace
   /// characters are correctly preserved, while common punctuation marks and symbols are removed.
