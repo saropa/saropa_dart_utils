@@ -35,7 +35,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// ```
   bool isNthDayOfMonthInRange(int n, int dayOfWeek, int month, {bool isInclusive = true}) {
     // Validate month parameter
-    if (month < minMonth || month > maxMonth) {
+    if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
       return false;
     }
 
