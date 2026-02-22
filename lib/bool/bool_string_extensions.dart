@@ -4,9 +4,11 @@ extension BoolStringExtensions on String {
   /// Converts a case-insensitive string of 'true' or 'false' to a boolean.
   /// Returns null if the string is empty or not 'true' or 'false'.
   bool? toBoolNullable() {
-    if (toLowerCase() == 'true') {
+    final String lower = toLowerCase();
+    if (lower == 'true') {
       return true;
-    } else if (toLowerCase() == 'false') {
+    }
+    if (lower == 'false') {
       return false;
     }
     return null;

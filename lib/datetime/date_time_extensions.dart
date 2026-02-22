@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
+import 'package:saropa_dart_utils/datetime/date_time_arithmetic_extensions.dart';
 import 'package:saropa_dart_utils/datetime/date_time_utils.dart';
 import 'package:saropa_dart_utils/int/int_string_extensions.dart';
+
+// Re-export split files for backward compatibility
+export 'date_time_arithmetic_extensions.dart';
+export 'date_time_calendar_extensions.dart';
+export 'date_time_comparison_extensions.dart';
 
 /// Extensions on the [DateTime] class to provide additional functionality.
 extension DateTimeExtensions on DateTime {
@@ -13,28 +17,27 @@ extension DateTimeExtensions on DateTime {
   /// [dayOfWeek] is the day of the week (e.g., [DateTime.monday]).
   DateTime? getNthWeekdayOfMonthInYear(int n, int dayOfWeek) {
     if (n < 1) {
-      return null; // Invalid input: n must be at least 1
+      return null;
     }
 
-    // Get the first day of the month for the current year
     final DateTime firstDayOfMonth = DateTime(year, month);
 
-    // Calculate the offset to the first occurrence of the desired day
-    // of the week
     final int offset = (dayOfWeek - firstDayOfMonth.weekday + 7) % 7;
 
-    // Calculate the date of the first occurrence
-    final DateTime firstOccurrence = firstDayOfMonth.add(Duration(days: offset));
+    final DateTime firstOccurrence =
+        firstDayOfMonth.add(Duration(days: offset));
 
-    // Calculate the date of the nth occurrence
-    final DateTime nthOccurrence = firstOccurrence.add(Duration(days: (n - 1) * 7));
-    // Check if the nth occurrence is within the target month
+    final DateTime nthOccurrence =
+        firstOccurrence.add(Duration(days: (n - 1) * 7));
     if (nthOccurrence.month != month) {
-      return null; // The nth occurrence falls outside the month
+      return null;
     }
 
-    // **Set time components to zero (midnight)**
-    return DateTime(nthOccurrence.year, nthOccurrence.month, nthOccurrence.day);
+    return DateTime(
+      nthOccurrence.year,
+      nthOccurrence.month,
+      nthOccurrence.day,
+    );
   }
 
   /// Returns `true` if the date (of birth) is under 13 years old.
@@ -42,24 +45,17 @@ extension DateTimeExtensions on DateTime {
   /// This is useful for determining non-child content access based on
   /// the Children's Online Privacy Protection Act (COPPA).
   ///
-  /// [today] can be optionally provided to specify the date to compare against.
-  /// If not provided, the current date is used.
-  ///
-  /// NOTE:  the legal definition of "under 13" can vary slightly by region or
-  ///  specific regulation.
+  /// [today] can be optionally provided to specify the date to compare
+  /// against. If not provided, the current date is used.
   bool isUnder13({DateTime? today}) {
     today ??= DateTime.now();
 
-    // NEW: Check if the date of birth is in the future.
     if (isAfter(today)) {
-      return false; // Future dates are not considered under 13.
+      return false;
     }
 
-    // Calculate the 13th birthday by adding 13 years to the current date
     final DateTime thirteenthBirthday = addYears(13);
 
-    // Return true if today's date is before the 13th birthday,
-    // indicating the age is under 13
     return today.isBefore(thirteenthBirthday);
   }
 
@@ -70,10 +66,6 @@ extension DateTimeExtensions on DateTime {
   ///
   /// NOTE: returns an empty list when [days] is 0.
   List<DateTime> generateDayList(int days, {bool startOfDay = true}) {
-    // if (days <= 0) {
-    //   throw ArgumentError('The number of days must be greater than zero.');
-    // }
-
     final List<DateTime> dayList = <DateTime>[];
     DateTime currentDate = this;
     for (int i = 0; i < days; i++) {
@@ -109,33 +101,8 @@ extension DateTimeExtensions on DateTime {
     return result;
   }
 
-  /// Checks if the date is in the future compared to the current date and time.
-  ///
-  /// Args:
-  ///   [now] (DateTime?, optional): The current date and time. Defaults to
-  ///          null (uses the actual current date and time).
-  ///
-  /// Returns:
-  ///   bool: True if the date is in the future, False otherwise.
-  bool isAfterNow([DateTime? now]) {
-    now ??= DateTime.now();
-    return isAfter(now);
-  }
-
-  /// Checks if the date is in the past compared to the current date and time.
-  ///
-  /// Args:
-  ///   [now] (DateTime?, optional): The current date and time. Defaults to
-  ///         null (uses the actual current date and time).
-  ///
-  /// Returns:
-  ///   bool: True if the date is in the past, False otherwise.
-  bool isBeforeNow([DateTime? now]) {
-    now ??= DateTime.now();
-    return isBefore(now);
-  }
-
-  /// Checks if the current year is a leap year using [DateTimeUtils.isLeapYear]
+  /// Checks if the current year is a leap year using
+  /// [DateTimeUtils.isLeapYear].
   ///
   /// Returns:
   ///   bool: True if the year is a leap year, false otherwise.
@@ -153,7 +120,6 @@ extension DateTimeExtensions on DateTime {
       throw ArgumentError('[year] must be <= 9999');
     }
 
-    // January 1st of the year - 1 is the default month and day
     return DateTime(year);
   }
 
@@ -172,28 +138,6 @@ extension DateTimeExtensions on DateTime {
     return DateTime(year, 12, 31);
   }
 
-  /// Extension method to check if this [DateTime] is before another [DateTime].
-  ///
-  /// Returns `false` if [other] is `null`, otherwise returns the result of
-  /// comparing this [DateTime] with [other] using the `isBefore` method.
-  bool isBeforeNullable(DateTime? other) {
-    if (other == null) {
-      return false;
-    }
-    return isBefore(other);
-  }
-
-  /// Extension method to check if this [DateTime] is after another [DateTime].
-  ///
-  /// Returns `false` if [other] is `null`, otherwise returns the result of
-  /// comparing this [DateTime] with [other] using the `isAfter` method.
-  bool isAfterNullable(DateTime? other) {
-    if (other == null) {
-      return false;
-    }
-    return isAfter(other);
-  }
-
   /// Checks if the current time is exactly midnight (00:00:00.000000).
   ///
   /// All time components — including milliseconds and microseconds — must be
@@ -202,7 +146,11 @@ extension DateTimeExtensions on DateTime {
   /// Returns:
   ///   bool: True if the time is exactly midnight, false otherwise.
   bool get isMidnight =>
-      hour == 0 && minute == 0 && second == 0 && millisecond == 0 && microsecond == 0;
+      hour == 0 &&
+      minute == 0 &&
+      second == 0 &&
+      millisecond == 0 &&
+      microsecond == 0;
 
   /// Ignores the year of the current [DateTime] and returns a new [DateTime]
   /// with the specified [setYear].
@@ -212,12 +160,21 @@ extension DateTimeExtensions on DateTime {
   /// Returns null if the date is invalid in [setYear] — for example, when
   /// this is February 29 (a leap day) and [setYear] is not a leap year.
   DateTime? toDateInYear(int setYear) {
-    // Guard: Feb 29 only exists in leap years.
     if (month == DateTime.february && day == 29) {
-      final bool targetIsLeap = setYear % 4 == 0 && (setYear % 100 != 0 || setYear % 400 == 0);
+      final bool targetIsLeap =
+          setYear % 4 == 0 && (setYear % 100 != 0 || setYear % 400 == 0);
       if (!targetIsLeap) return null;
     }
-    return DateTime(setYear, month, day, hour, minute, second, millisecond, microsecond);
+    return DateTime(
+      setYear,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+    );
   }
 
   /// Returns the ordinal representation of the day of the month.
@@ -225,594 +182,4 @@ extension DateTimeExtensions on DateTime {
   /// For example, for the 1st day of the month, it returns "1st".
   /// For the 2nd day, it returns "2nd", and so on.
   String? dayOfMonthOrdinal() => day.ordinal();
-
-  /// Returns the time difference in milliseconds between this [DateTime] and
-  /// [compareTo], or `null` if [compareTo] is `null`.
-  ///
-  /// When [alwaysPositive] is `true` (default), the result is always
-  /// non-negative.
-  int? getTimeDifferenceMs(DateTime? compareTo, {bool alwaysPositive = true}) {
-    if (compareTo == null) {
-      return null;
-    }
-
-    final int inMilliseconds = difference(compareTo).inMilliseconds;
-
-    return alwaysPositive ? inMilliseconds.abs() : inMilliseconds;
-  }
-
-  /// Adds the specified number of years to the current [DateTime].
-  ///
-  /// Note: When adding a year to February 29th, it returns February 28th
-  ///  (not March 1st)
-  ///
-  /// Args:
-  ///   years (int): The number of years to add.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the added years.
-  DateTime addYears(int years) {
-    if (years == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).add(years: years).dateTime;
-  }
-
-  /// Adds the specified number of months to the current [DateTime].
-  ///
-  /// Args:
-  ///   months (int): The number of months to add.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the added months.
-  DateTime addMonths(int months) {
-    if (months == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).add(months: months).dateTime;
-  }
-
-  /// Adds the specified number of days to the current [DateTime].
-  ///
-  /// Args:
-  ///   days (int): The number of days to add.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the added days.
-  DateTime addDays(int days) {
-    if (days == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).add(days: days).dateTime;
-  }
-
-  /// Adds the specified number of hours to the current [DateTime].
-  ///
-  /// Args:
-  ///   hours (int): The number of hours to add.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the added hours.
-  DateTime addHours(int hours) {
-    if (hours == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).add(hours: hours).dateTime;
-  }
-
-  /// Adds the specified number of minutes to the current [DateTime].
-  ///
-  /// Args:
-  ///   minutes (int): The number of minutes to add.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the added minutes.
-  DateTime addMinutes(int minutes) {
-    if (minutes == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).add(minutes: minutes).dateTime;
-  }
-
-  /// Subtracts the specified number of minutes from the current [DateTime].
-  ///
-  /// Args:
-  ///   minutes (int): The number of minutes to subtract.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the subtracted minutes.
-  DateTime subtractMinutes(int minutes) {
-    if (minutes == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).subtract(minutes: minutes).dateTime;
-  }
-
-  /// Subtracts the specified number of hours from the current [DateTime].
-  ///
-  /// Args:
-  ///   hours (int): The number of hours to subtract.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the subtracted hours.
-  DateTime subtractHours(int hours) {
-    if (hours == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).subtract(hours: hours).dateTime;
-  }
-
-  /// Subtracts the specified number of months from the current [DateTime].
-  ///
-  /// Args:
-  ///   months (int): The number of months to subtract.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the subtracted months.
-  DateTime subtractMonths(int months) {
-    if (months == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).subtract(months: months).dateTime;
-  }
-
-  /// Subtracts the specified number of years from the current [DateTime].
-  ///
-  /// NOTE: you WILL lose Feb 29th when adding and subtracting 1 year
-  ///
-  /// Args:
-  ///   years (int): The number of years to subtract.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the subtracted years.
-  ///
-  DateTime subtractYears(int years) {
-    if (years == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).subtract(years: years).dateTime;
-  }
-
-  /// Subtracts the specified number of days from the current [DateTime].
-  ///
-  /// Args:
-  ///   days (int?): The number of days to subtract.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the subtracted days.
-  DateTime subtractDays(int? days) {
-    if (days == null || days == 0) {
-      // same
-      return this;
-    }
-
-    // We used the Jiffy package to add years, months, etc
-    // https://stackoverflow.com/questions/54792056/add-subtract-months-years-to-date-in-dart
-    return Jiffy.parseFromDateTime(this).subtract(days: days).dateTime;
-  }
-
-  /// Checks if the date is in the current calendar year.
-  ///
-  /// Pass [now] to override the current time (useful for testing).
-  ///
-  /// Returns:
-  ///   bool: True if the date is in the current year, false otherwise.
-  // https://stackoverflow.com/questions/56427418/how-to-extract-only-the-time-from-datetime-now
-  bool isYearCurrent({DateTime? now}) => year == (now ?? DateTime.now()).year;
-
-  /// Returns true if this date (date-only) is the same as or after [other].
-  ///
-  /// Compares only year/month/day — time components are ignored.
-  bool isSameDateOrAfter(DateTime other) {
-    final DateTime selfDate = toDateOnly();
-    final DateTime otherDate = other.toDateOnly();
-    return !selfDate.isBefore(otherDate);
-  }
-
-  /// Returns true if this date (date-only) is the same as or before [other].
-  ///
-  /// Compares only year/month/day — time components are ignored.
-  bool isSameDateOrBefore(DateTime other) {
-    final DateTime selfDate = toDateOnly();
-    final DateTime otherDate = other.toDateOnly();
-    return !selfDate.isAfter(otherDate);
-  }
-
-  /// Removes the time component from the [DateTime] object, returning only
-  /// the date part (year, month, and day).
-  DateTime toDateOnly() => DateTime(year, month, day);
-
-  /// Converts this local [DateTime] to UTC using the given timezone [offset].
-  ///
-  /// [offset] is the hours-ahead-of-UTC value for this DateTime's timezone.
-  /// Positive for timezones east of UTC (e.g., `2.0` for UTC+2),
-  /// negative for timezones west of UTC (e.g., `-5.0` for UTC-5).
-  /// Fractional values represent partial hours (e.g., `5.5` for UTC+5:30).
-  ///
-  /// Always returns a non-null [DateTime]. Returns the original instance if [offset] is 0.
-  ///
-  /// Example:
-  /// ```dart
-  /// // 15:00 local in UTC+2 → 13:00 UTC
-  /// DateTime(2024, 6, 15, 15, 0).getUtcTimeFromLocal(2.0); // 13:00
-  /// // 10:00 local in UTC-5 → 15:00 UTC
-  /// DateTime(2024, 1, 15, 10, 0).getUtcTimeFromLocal(-5.0); // 15:00
-  /// // 10:30 local in UTC+5:30 → 05:00 UTC
-  /// DateTime(2024, 1, 15, 10, 30).getUtcTimeFromLocal(5.5); // 05:00
-  /// ```
-  DateTime getUtcTimeFromLocal(double offset) {
-    if (offset == 0) {
-      return this;
-    }
-
-    // Use truncate (not floor) so -5.5 → hours=-5, fraction=-0.5 (correct sign)
-    final int hours = offset.truncate();
-    final int minutes = ((offset - hours) * 60).round();
-
-    // Subtract offset: UTC = local − offset
-    return subtract(Duration(hours: hours, minutes: minutes));
-  }
-
-  /// Returns `true` if this [DateTime] is within the specified [range].
-  ///
-  /// When `year` is 0, this method checks if the month/day combination falls
-  /// within the range for ANY year covered by the range. This correctly handles
-  /// ranges that span year boundaries (e.g., Dec 2023 to Feb 2024).
-  ///
-  /// If [inclusive] is `true` (default), the start and end dates of the range
-  /// are included in the check. If `false`, only dates strictly between start
-  /// and end are considered in range. Returns `true` if [range] is `null`.
-  ///
-  /// Example:
-  /// ```dart
-  /// // Range spanning year boundary: Dec 15, 2023 to Feb 15, 2024
-  /// final range = DateTimeRange(
-  ///   start: DateTime(2023, 12, 15),
-  ///   end: DateTime(2024, 2, 15),
-  /// );
-  /// // January 10 with year=0 should be in range
-  /// DateTime(0, 1, 10).isAnnualDateInRange(range); // true
-  /// // March 10 with year=0 should NOT be in range
-  /// DateTime(0, 3, 10).isAnnualDateInRange(range); // false
-  /// ```
-  bool isAnnualDateInRange(DateTimeRange? range, {bool inclusive = true}) {
-    if (range == null) {
-      return true;
-    }
-
-    if (year == 0) {
-      // If year is 0, check if the month and day fall within the range for
-      // any year covered by the range.
-      //
-      // We need to handle ranges that span year boundaries correctly.
-      // For example, a range from Dec 2023 to Feb 2024 should include Jan 15.
-
-      // Check each year in the range to see if our month/day falls within it
-      for (int checkYear = range.start.year; checkYear <= range.end.year; checkYear++) {
-        // Create a date with our month/day in this year
-        final DateTime dateInYear = DateTime(checkYear, month, day);
-
-        // Check if this date falls within the range
-        if (dateInYear.isBetween(range.start, range.end, inclusive: inclusive)) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    // If year is provided, use it for comparison
-    return isBetweenRange(range, inclusive: inclusive);
-  }
-
-  /// Returns `true` if this [DateTime] is within the specified [range],
-  /// `false` if [range] is `null`.
-  ///
-  /// This method delegates to `isBetween` with the range's start and end dates,
-  /// properly forwarding the [inclusive] parameter to control boundary behavior.
-  ///
-  /// If [inclusive] is `true` (default), the start and end dates of the range
-  /// are included in the check (closed interval). If `false`, only dates
-  /// strictly between start and end are considered in range (open interval).
-  ///
-  /// Example:
-  /// ```dart
-  /// final date = DateTime(2024, 6, 15);
-  /// final range = DateTimeRange(
-  ///   start: DateTime(2024, 6, 1),
-  ///   end: DateTime(2024, 6, 30),
-  /// );
-  /// date.isBetweenRange(range); // true
-  /// DateTime(2024, 6, 1).isBetweenRange(range, inclusive: true); // true
-  /// DateTime(2024, 6, 1).isBetweenRange(range, inclusive: false); // false
-  /// ```
-  bool isBetweenRange(DateTimeRange? range, {bool inclusive = true}) {
-    if (range == null) {
-      return false;
-    }
-
-    return isBetween(range.start, range.end, inclusive: inclusive);
-  }
-
-  /// Returns `true` if this [DateTime] is between [start] and [end].
-  ///
-  /// If [inclusive] is `true` (default), [start] and [end] are included
-  /// in the check. If `false`, only dates strictly between them match.
-  bool isBetween(DateTime start, DateTime end, {bool inclusive = true}) {
-    if (inclusive) {
-      return (isAfter(start) || isAtSameMomentAs(start)) &&
-          (isBefore(end) || isAtSameMomentAs(end));
-    }
-
-    return isAfter(start) && isBefore(end);
-  }
-
-  /// Returns true if this date is strictly after today (i.e., tomorrow or later).
-  ///
-  /// Pass [now] to override the current time (useful for testing).
-  ///
-  /// Example:
-  /// ```dart
-  /// DateTime.now().add(Duration(days: 1)).isDateAfterToday(); // true
-  /// DateTime.now().isDateAfterToday(); // false
-  /// ```
-  bool isDateAfterToday({DateTime? now}) {
-    final DateTime currentNow = now ?? DateTime.now();
-
-    // End of today = start of tomorrow minus one microsecond
-    final DateTime endOfToday = DateTime(
-      currentNow.year,
-      currentNow.month,
-      currentNow.day,
-    ).add(const Duration(days: 1)).subtract(const Duration(microseconds: 1));
-
-    return isAfter(endOfToday);
-  }
-
-  /// Returns `true` if this [DateTime] matches the current date (today).
-  ///
-  /// Pass [now] to override the current time (useful for testing). If
-  /// [ignoreYear] is `true`, the year is excluded from the comparison.
-  bool isToday({DateTime? now, bool ignoreYear = false}) {
-    now ??= DateTime.now();
-
-    // https://stackoverflow.com/questions/54391477/check-if-datetime-variable-is-today-tomorrow-or-yesterday
-    return now.day == day && now.month == month && (ignoreYear || now.year == year);
-  }
-
-  /// Checks if the current [DateTime] has the same date (year, month, day)
-  /// as another [DateTime].
-  ///
-  /// Args:
-  ///   other (DateTime): The other [DateTime] to compare with.
-  ///
-  /// Returns:
-  ///   bool: True if the dates are the same, false otherwise.
-  bool isSameDateOnly(DateTime other) =>
-      year == other.year && month == other.month && day == other.day;
-
-  /// Checks if the current [DateTime] has the same day and month as another
-  /// [DateTime].
-  ///
-  /// Args:
-  ///   other (DateTime): The other [DateTime] to compare with.
-  ///
-  /// Returns:
-  ///   bool: True if the day and month are the same, false otherwise.
-  bool isSameDayMonth(DateTime other) => month == other.month && day == other.day;
-
-  /// Checks if the current [DateTime] has the same month as another [DateTime].
-  ///
-  /// Args:
-  ///   other (DateTime): The other [DateTime] to compare with.
-  ///
-  /// Returns:
-  ///   bool: True if the month is the same, false otherwise.
-  bool isSameMonth(DateTime other) => month == other.month;
-
-  /// Sets the time of the current [DateTime] to the specified [TimeOfDay].
-  ///
-  /// Args:
-  ///   time (TimeOfDay): The time to set.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object with the updated time.
-  DateTime setTime({required TimeOfDay time}) => DateTime(year, month, day, time.hour, time.minute);
-
-  /// Returns a new [DateTime] aligned to the specified [alignment] duration.
-  ///
-  /// If [roundUp] is `true`, the result is rounded up to the next alignment
-  /// boundary. Defaults to rounding down.
-  DateTime alignDateTime({required Duration alignment, bool roundUp = false}) {
-    // ref: https://stackoverflow.com/questions/60880315/how-to-round-up-the-date-time-nearest-to-30-min-interval-in-dart-flutter
-    if (alignment == Duration.zero) {
-      return this;
-    }
-
-    final Duration correction = Duration(
-      //days: 0,
-      hours: alignment.inDays > 0
-          ? hour
-          : alignment.inHours > 0
-          ? hour % alignment.inHours
-          : 0,
-      minutes: alignment.inHours > 0
-          ? minute
-          : alignment.inMinutes > 0
-          ? minute % alignment.inMinutes
-          : 0,
-      seconds: alignment.inMinutes > 0
-          ? second
-          : alignment.inSeconds > 0
-          ? second % alignment.inSeconds
-          : 0,
-      milliseconds: alignment.inSeconds > 0
-          ? millisecond
-          : alignment.inMilliseconds > 0
-          ? millisecond % alignment.inMilliseconds
-          : 0,
-      microseconds: alignment.inMilliseconds > 0 ? microsecond : 0,
-    );
-
-    if (correction == Duration.zero) {
-      return this;
-    }
-
-    final DateTime corrected = subtract(correction);
-
-    return roundUp ? corrected.add(alignment) : corrected;
-  }
-
-  /// Calculates the age based on the current date.
-  ///
-  /// Args:
-  ///   now (DateTime?): The current date and time. Defaults to null (uses
-  ///   the actual current date and time).
-  ///
-  /// Returns:
-  ///   int: The calculated age.
-  int calculateAgeFromNow({DateTime? now}) {
-    now ??= DateTime.now();
-
-    return calculateAgeFromDate(now);
-  }
-
-  /// Calculates the age based on a given date.
-  ///
-  /// Args:
-  ///   fromDate (DateTime): The date to calculate the age from.
-  ///
-  /// Returns:
-  ///   int: The calculated age.
-  int calculateAgeFromDate(DateTime fromDate) {
-    // final int age = fromDate.year - year;
-    // final int month1 = fromDate.month;
-    // final int month2 = month;
-
-    // if (month2 > month1) {
-    //   return age - 1;
-    // }
-
-    // if (month1 == month2) {
-    //   final int day1 = fromDate.day;
-    //   final int day2 = day;
-
-    //   if (day2 > day1) {
-    //     return age - 1;
-    //   }
-    // }
-
-    int age = fromDate.year - year;
-
-    // Adjust age if the birthday hasn't occurred yet this year
-    if (month > fromDate.month || (month == fromDate.month && day > fromDate.day)) {
-      age--;
-    }
-
-    return age;
-  }
-
-  /// Returns the most recent Sunday before or on this date.
-  DateTime get mostRecentSunday => mostRecentWeekday(DateTime.sunday);
-
-  /// Returns the most recent occurrence of the specified weekday.
-  ///
-  /// **Args:**
-  /// - [weekdayTarget]: The target weekday (1 = Monday, 7 = Sunday).
-  ///
-  /// **Returns:**
-  /// The most recent date that falls on the target weekday.
-  DateTime mostRecentWeekday(int weekdayTarget) =>
-      DateTime(year, month, day - (weekday - weekdayTarget) % 7);
-
-  /// Returns the day of the year (1-366).
-  int get dayOfYear {
-    final DateTime jan1 = DateTime(year);
-    return difference(jan1).inDays + 1;
-  }
-
-  /// Returns a raw week-of-year value used internally.
-  ///
-  /// **Warning:** this value can be 0 for dates in early January that belong
-  /// to the last ISO week of the previous year, or 53 for dates in late
-  /// December that belong to week 1 of the next year. Use `weekNumber` for
-  /// fully ISO 8601-compliant results.
-  int get weekOfYear => ((dayOfYear - weekday + 10) / 7).floor();
-
-  /// Returns the number of ISO weeks in the specified year.
-  int numOfWeeks(int targetYear) {
-    final DateTime dec28 = DateTime(targetYear, DateTime.december, 28);
-    final DateTime jan1 = DateTime(targetYear);
-    final int dayOfDec28 = dec28.difference(jan1).inDays + 1;
-    return ((dayOfDec28 - dec28.weekday + 10) / 7).floor();
-  }
-
-  /// Returns the ISO 8601 week number, correctly handling year boundaries.
-  ///
-  /// Dates in early January that belong to the last week of the previous year
-  /// return that year's final week number. Dates in late December that belong
-  /// to week 1 of the next year return 1.
-  ///
-  /// Prefer this over `weekOfYear` for any user-facing or standards-compliant
-  /// week calculations.
-  int weekNumber() {
-    if (weekOfYear < 1) return numOfWeeks(year - 1);
-    if (weekOfYear > numOfWeeks(year)) return 1;
-    return weekOfYear;
-  }
-
-  /// Converts this DateTime to a serial string format (yyyyMMdd'T'HHmmss).
-  String? get toSerialString {
-    final String y = year.toString().padLeft(4, '0');
-    final String m = month.toString().padLeft(2, '0');
-    final String d = day.toString().padLeft(2, '0');
-    final String h = hour.toString().padLeft(2, '0');
-    final String min = minute.toString().padLeft(2, '0');
-    final String s = second.toString().padLeft(2, '0');
-    return '$y$m${d}T$h$min$s';
-  }
-
-  /// Converts this DateTime to a serial day string format (yyyyMMdd).
-  String? get toSerialStringDay {
-    final String y = year.toString().padLeft(4, '0');
-    final String m = month.toString().padLeft(2, '0');
-    final String d = day.toString().padLeft(2, '0');
-    return '$y$m$d';
-  }
 }

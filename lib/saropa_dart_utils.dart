@@ -12,6 +12,9 @@ export 'bool/bool_string_extensions.dart';
 // DateTime extensions and utilities
 export 'datetime/date_constant_extensions.dart';
 export 'datetime/date_constants.dart';
+export 'datetime/date_time_arithmetic_extensions.dart';
+export 'datetime/date_time_calendar_extensions.dart';
+export 'datetime/date_time_comparison_extensions.dart';
 export 'datetime/date_time_extensions.dart';
 export 'datetime/date_time_nullable_extensions.dart';
 export 'datetime/date_time_range_utils.dart';
@@ -68,15 +71,18 @@ export 'num/num_utils.dart';
 export 'random/common_random.dart';
 
 // String extensions and utilities
+export 'string/string_analysis_extensions.dart';
 export 'string/string_between_extensions.dart';
 export 'string/string_case_extensions.dart';
 export 'string/string_character_extensions.dart';
 export 'string/string_diacritics_extensions.dart';
 export 'string/string_extensions.dart';
+export 'string/string_manipulation_extensions.dart';
 export 'string/string_nullable_extensions.dart';
 export 'string/string_number_extensions.dart';
 export 'string/string_punctuation.dart';
 export 'string/string_search_extensions.dart';
+export 'string/string_text_extensions.dart';
 export 'string/string_utils.dart';
 
 // URL extensions and utilities

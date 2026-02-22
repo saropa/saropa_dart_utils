@@ -29,8 +29,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Lint compliance**: Resolved 10 lint rule categories across 4 files:
+  - `avoid_nested_conditional_expressions` (5): refactored nested ternaries to if-else in wrap methods
+  - `avoid_redundant_else` (2): removed redundant else in `getFirstDiffChar`, `toBoolNullable`
+  - `prefer_switch_expression` (2): converted `isVowel`, `grammarArticle` to switch expressions
+  - `avoid_string_concatenation_loop` (1): replaced string concat with StringBuffer in `splitCapitalizedUnicode`
+  - `avoid_duplicate_string_literals` (1): reused `_alphaOnlyRegex` in `lettersOnly`
+  - `prefer_correct_identifier_length` (1): renamed `r` to `deduplicateRegex` in `replaceLineBreaks`
+  - `missing_use_result_annotation` (1): added `@useResult` to `makeNonBreaking`
+  - `no_magic_string` (1): extracted grammar article prefixes to named constants
+  - `avoid_long_length_files` (2): split oversized files (see Refactored below)
+  - `avoid_very_long_length_files` (1): split `string_extensions.dart` (1114 lines)
+- **Performance**: cached `toLowerCase()` call in `toBoolNullable`, extracted inline RegExp to top-level finals in `lowerCaseLettersOnly` and `removeSingleCharacterWords`
+- **Lint compliance (prior)**: Resolved 59 high-priority warnings across 9 saropa_lints rules:
+  - `avoid_type_casts` (7): replaced `as` casts with `is` checks in map/json utils
+  - `verify_documented_parameters_exist` (31): fixed stale dartdoc references
+  - `avoid_string_substring` (9): replaced `substring()` with `substringSafe()`
+  - `prefer_iterable_of` (5): replaced `.from()` with `.of()` for type safety
+  - `avoid_duplicate_cascades` (3): refactored UUID StringBuffer to `List.join()`
+  - `avoid_nullable_interpolation` (1): added `??` fallback in `escapeForRegex`
+  - `avoid_unsafe_cast` (1): used type promotion in `make_list_extensions`
+  - `avoid_wildcard_cases_with_sealed_classes` (1): narrowed `num` to `int`
+  - `avoid_god_class` (1): suppressed (constants namespace)
+
 ### Refactored
+- **`string_extensions.dart`** (1114 → 4 files): Split into `string_extensions.dart` (275), `string_analysis_extensions.dart` (195), `string_manipulation_extensions.dart` (286), `string_text_extensions.dart` (296). Re-exports maintain backward compatibility.
+- **`date_time_extensions.dart`** (818 → 4 files): Split into `date_time_extensions.dart` (185), `date_time_arithmetic_extensions.dart` (175), `date_time_comparison_extensions.dart` (164), `date_time_calendar_extensions.dart` (174). Re-exports maintain backward compatibility.
 - **`DateConstants`**: Moved 16 top-level constants into `DateConstants` class as `static const` members for proper namespacing and consistency with `MonthUtils`, `WeekdayUtils`, and `SerialDateUtils` patterns. Added private constructor to prevent instantiation.
+
+### Changed
+- **Publish script** (`publish_pub_dev.ps1`): Hardened with smarter pre-checks — auto-fixes pubspec version when CHANGELOG is ahead, aborts early if version tag exists on remote, verifies `gh` auth status and publish workflow. Removed dead code, fixed docstrings and step numbering. Bumped to v2.2.
+
+### Tests
+- Replaced 312 raw literal matchers with proper test matchers across 19 test files (`avoid_misused_test_matchers`): `expect(x, true)` → `isTrue`, `expect(x, false)` → `isFalse`, `expect(x, null)` → `isNull`, `expect(x.length, N)` → `hasLength(N)`
+
+### Added
+- Bug reports for 80+ saropa_lints rules with reproduction steps and suggestions in `bugs/`
 
 ## [1.0.6] - 2026-02-19
 
