@@ -1,4 +1,5 @@
 import 'package:characters/characters.dart';
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 
 final RegExp _apostropheRegex = RegExp("['’]");
@@ -33,6 +34,10 @@ final RegExp _anyDigitsRegex = RegExp(r'\d');
 final RegExp _curlyBracesRegex = RegExp(r'\{.+?\}');
 
 final RegExp _lineBreakRegex = RegExp('\n');
+
+const List<String> _silentHPrefixes = <String>['hour', 'honest', 'honor', 'heir'];
+const List<String> _youSoundPrefixes = <String>['uni', 'use', 'user', 'union', 'university'];
+const String _wunSoundPrefix = 'one';
 
 /// Extensions for presentation, like adding quotes, truncating text, and formatting.
 extension StringExtensions on String {
@@ -117,9 +122,9 @@ extension StringExtensions on String {
 
   /// Returns this string wrapped with [before] prepended and [after] appended.
   String wrap({String? before, String? after}) {
-    final String b = before ?? '';
-    final String a = after ?? '';
-    return '$b$this$a';
+    final String prefix = before ?? '';
+    final String suffix = after ?? '';
+    return '$prefix$this$suffix';
   }
 
   /// Returns this string wrapped with [before] prepended and [after] appended,
@@ -135,50 +140,59 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns `''` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
-  String wrapSingleQuotes({bool quoteEmpty = false}) => isEmpty
-      ? quoteEmpty
-            ? "''"
-            : ''
-      : "'$this'";
+  String wrapSingleQuotes({bool quoteEmpty = false}) {
+    if (isEmpty) {
+      return quoteEmpty ? "''" : '';
+    }
+    return "'$this'";
+  }
 
   /// Returns this string wrapped in double quotes: `"string"`.
   ///
   /// If the string is empty, returns `""` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
-  String wrapDoubleQuotes({bool quoteEmpty = false}) => isEmpty
-      ? quoteEmpty
-            ? '""'
-            : ''
-      : '"$this"';
+  String wrapDoubleQuotes({bool quoteEmpty = false}) {
+    if (isEmpty) {
+      return quoteEmpty ? '""' : '';
+    }
+    return '"$this"';
+  }
 
   /// Returns this string wrapped in accented single quotes.
   ///
   /// If the string is empty, returns the empty quote pair if [quoteEmpty] is
   /// `true`, otherwise returns an empty string.
-  String wrapSingleAccentedQuotes({bool quoteEmpty = false}) => isEmpty
-      ? quoteEmpty
-            ? '$accentedQuoteOpening$accentedQuoteClosing'
-            : ''
-      : '$accentedQuoteOpening$this$accentedQuoteClosing';
+  String wrapSingleAccentedQuotes({bool quoteEmpty = false}) {
+    if (isEmpty) {
+      return quoteEmpty
+          ? '$accentedQuoteOpening$accentedQuoteClosing'
+          : '';
+    }
+    return '$accentedQuoteOpening$this$accentedQuoteClosing';
+  }
 
   /// Returns this string wrapped in accented double quotes.
   ///
   /// If the string is empty, returns the empty quote pair if [quoteEmpty] is
   /// `true`, otherwise returns an empty string.
-  String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) => isEmpty
-      ? quoteEmpty
-            ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing'
-            : ''
-      : '$accentedDoubleQuoteOpening$this$accentedDoubleQuoteClosing';
+  String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) {
+    if (isEmpty) {
+      return quoteEmpty
+          ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing'
+          : '';
+    }
+    return '$accentedDoubleQuoteOpening$this$accentedDoubleQuoteClosing';
+  }
 
   /// Returns this string enclosed in parentheses, or `null` if empty.
   ///
   /// When [wrapEmpty] is `true`, returns `'()'` for empty strings.
-  String? encloseInParentheses({bool wrapEmpty = false}) => isEmpty
-      ? wrapEmpty
-            ? '()'
-            : null
-      : '($this)';
+  String? encloseInParentheses({bool wrapEmpty = false}) {
+    if (isEmpty) {
+      return wrapEmpty ? '()' : null;
+    }
+    return '($this)';
+  }
 
   /// Returns a new string with a newline character inserted before each
   /// opening parenthesis.
@@ -374,9 +388,14 @@ extension StringExtensions on String {
   String removeNonAlphaNumeric({bool allowSpace = false}) =>
       replaceAll(allowSpace ? _alphaNumericOnlyWithSpaceRegex : _alphaNumericOnlyRegex, '');
 
-  /// Replaces all characters that are not digits (0-9) with the [replacement] string.
+  /// Replaces all characters that are not digits (0-9) with the [replacement]
+  /// string.
   ///
-  /// For example, `'abc123def'.replaceNonNumbers(replacement: '-')` results in `'---123---'`.
+  /// Returns a new string with every non-digit character replaced by
+  /// [replacement].
+  ///
+  /// For example, `'abc123def'.replaceNonNumbers(replacement: '-')` results
+  /// in `'---123---'`.
   String replaceNonNumbers({String replacement = ''}) =>
       // The regex \D matches any non-digit character and replaces it.
       replaceAll(_nonDigitRegex, replacement);
@@ -444,7 +463,7 @@ extension StringExtensions on String {
         final String nextPart = intermediateSplit[i];
         // If either the current or next part is too short, merge them.
         if (currentBuffer.length < minLength || nextPart.length < minLength) {
-          currentBuffer += nextPart;
+          currentBuffer = '$currentBuffer$nextPart';
         } else {
           // Otherwise, finalize the current buffer and start a new one.
           mergedResult.add(currentBuffer);
@@ -503,7 +522,12 @@ extension StringExtensions on String {
   /// Uses grapheme clusters (user-perceived characters) for proper Unicode
   /// support, including emojis and other multi-code-unit characters.
   ///
-  /// Returns an empty string if [start] is out of bounds or parameters are invalid.
+  /// [start] is the inclusive start index in grapheme clusters.
+  /// [end] is the optional exclusive end index in grapheme clusters. When
+  /// omitted, returns from [start] to the end of the string.
+  ///
+  /// Returns an empty string if [start] is out of bounds or parameters are
+  /// invalid.
   ///
   /// **Note**: Indices refer to grapheme clusters, not code units. For example,
   /// '👨‍👩‍👧‍👦' (family emoji) counts as 1 grapheme, not 7 code units.
@@ -642,7 +666,8 @@ extension StringExtensions on String {
     // of the longer string.
     if (length > other.length) {
       return this[minLength];
-    } else if (other.length > length) {
+    }
+    if (other.length > length) {
       return other[minLength];
     }
 
@@ -673,16 +698,10 @@ extension StringExtensions on String {
   /// Returns true if this single-character string is a vowel.
   bool isVowel() {
     if (isEmpty || length != 1) return false;
-    switch (toLowerCase()) {
-      case 'a':
-      case 'e':
-      case 'i':
-      case 'o':
-      case 'u':
-        return true;
-      default:
-        return false;
-    }
+    return switch (toLowerCase()) {
+      'a' || 'e' || 'i' || 'o' || 'u' => true,
+      _ => false,
+    };
   }
 
   /// Returns true if this string contains any digit characters.
@@ -747,6 +766,7 @@ extension StringExtensions on String {
 
   /// Returns a new string with hyphens and spaces replaced by non-breaking
   /// equivalents.
+  @useResult
   String makeNonBreaking() => replaceAll('-', nonBreakingHyphen).replaceAll(' ', nonBreakingSpace);
 
   /// Returns a new string with single-character words removed, or `null` if the
@@ -791,8 +811,8 @@ extension StringExtensions on String {
     final String result = replaceAll(_lineBreakRegex, replacement ?? '');
     if (deduplicate && replacement != null && replacement.isNotEmpty) {
       final String pattern = '(?:${RegExp.escape(replacement)})+';
-      final RegExp r = RegExp(pattern);
-      return result.replaceAll(r, replacement);
+      final RegExp deduplicateRegex = RegExp(pattern);
+      return result.replaceAll(deduplicateRegex, replacement);
     }
     return result;
   }
@@ -862,7 +882,7 @@ extension StringExtensions on String {
   /// ```
   String lettersOnly() {
     if (isEmpty) return '';
-    return replaceAll(RegExp(r'[^A-Za-z]'), '');
+    return replaceAll(_alphaOnlyRegex, '');
   }
 
   // cspell: ignore elloorld
@@ -991,28 +1011,14 @@ extension StringExtensions on String {
     if (word.isEmpty) return '';
     final String lower = word.toLowerCase();
 
-    const List<String> silentH = <String>['hour', 'honest', 'honor', 'heir'];
-    for (final String ex in silentH) {
-      if (lower.startsWith(ex)) return 'an';
-    }
+    if (_silentHPrefixes.any(lower.startsWith)) return 'an';
+    if (_youSoundPrefixes.any(lower.startsWith)) return 'a';
+    if (lower.startsWith(_wunSoundPrefix)) return 'a';
 
-    const List<String> youSound = <String>['uni', 'use', 'user', 'union', 'university'];
-    for (final String ex in youSound) {
-      if (lower.startsWith(ex)) return 'a';
-    }
-
-    if (lower.startsWith('one')) return 'a';
-
-    switch (lower[0]) {
-      case 'a':
-      case 'e':
-      case 'i':
-      case 'o':
-      case 'u':
-        return 'an';
-      default:
-        return 'a';
-    }
+    return switch (lower[0]) {
+      'a' || 'e' || 'i' || 'o' || 'u' => 'an',
+      _ => 'a',
+    };
   }
 
   /// Returns the possessive form of this string (e.g., "John's", "boss'").
