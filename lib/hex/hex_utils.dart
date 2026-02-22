@@ -76,5 +76,5 @@ extension HexIntExtensions on int {
   /// 6719.intToHex(); // Returns '1a3f'
   /// 0.intToHex(); // Returns '0'
   /// ```
-  String? intToHex() => toRadixString(_hexRadix);
+  String intToHex() => toRadixString(_hexRadix);
 }

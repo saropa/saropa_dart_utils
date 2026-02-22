@@ -1,6 +1,6 @@
 # avoid_long_length_files
 
-## 2 violations | Severity: info
+## 2 violations | Severity: info | RESOLVED
 
 ### Rule Description
 File exceeds the long length threshold. Very long files are hard to navigate, understand, and maintain. They often indicate that a file has too many responsibilities.
@@ -13,5 +13,8 @@ File exceeds the long length threshold. Very long files are hard to navigate, un
 - `lib\datetime\date_time_extensions.dart`
 - `lib\string\string_extensions.dart`
 
-### Recommended Action
-FIX -- split into smaller, focused files. Each file should have a single responsibility and stay within the project's 200-line limit. For example, `string_extensions.dart` could be split by category (case, search, truncation, etc.).
+### Resolution (2026-02-22)
+Both files split into focused sub-files with re-exports for backward compatibility:
+- `date_time_extensions.dart` (818 lines) → 4 files (185, 175, 164, 174 lines)
+- `string_extensions.dart` (1114 lines) → 4 files (275, 195, 286, 296 lines)
+All 3022 tests pass.
