@@ -18,10 +18,11 @@ enum JsonEpochScale {
 
 /// Utility class for JSON encoding of iterables.
 class JsonIterablesUtils<T> {
-  /// The elements of the iterable (type [T]) must be
-  /// directly encodable by `dart:convert.jsonEncode`
-  /// (e.g., `num`, `String`, `bool`, `null`, `List`, or `Map`
-  /// with encodable keys and values).
+  /// Returns the JSON-encoded string representation of [iterable].
+  ///
+  /// The elements of [iterable] (type [T]) must be directly encodable by
+  /// `dart:convert.jsonEncode` (e.g., `num`, `String`, `bool`, `null`,
+  /// `List`, or `Map` with encodable keys and values).
   static String jsonEncode<T>(Iterable<T> iterable) => dc.jsonEncode(iterable.toList());
 }
 
@@ -29,7 +30,8 @@ class JsonIterablesUtils<T> {
 class JsonUtils {
   const JsonUtils._();
 
-  /// Decodes a JSON string to a Map.
+  /// Returns a decoded `Map` from the given [jsonString], or `null` if
+  /// decoding fails.
   static Map<String, dynamic>? jsonDecodeToMap(String? jsonString) {
     if (jsonString == null || jsonString.isEmpty) return null;
     final dynamic decoded = jsonDecodeSafe(jsonString);
@@ -45,22 +47,18 @@ class JsonUtils {
     try {
       return dc.jsonDecode(jsonString);
     } on Object catch (e, stackTrace) {
-      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // ignore: saropa_lints/avoid_print_error
       debugPrint('JsonUtils.jsonDecodeSafe failed: $e\n$stackTrace');
       return null;
     }
   }
 
-  /// Checks if a string appears to be valid JSON.
+  /// Returns `true` if [value] appears to be valid JSON.
   ///
-  /// **Args:**
-  /// - [value]: The string to check.
-  /// - [testDecode]: If true, actually attempts to decode to verify.
-  /// - [allowEmpty]: If true, treats '{}' and '[]' as valid JSON.
-  ///   Defaults to false for backwards compatibility.
-  ///
-  /// **Returns:**
-  /// True if the string appears to be valid JSON.
+  /// If [testDecode] is `true`, actually attempts to decode to verify.
+  /// If [allowEmpty] is `true`, treats `'{}'` and `'[]'` as valid JSON
+  /// (defaults to `false` for backwards compatibility).
   static bool isJson(String? value, {bool testDecode = false, bool allowEmpty = false}) {
     if (value == null || value.length < 2) return false;
     final String trimmed = value.trim();
@@ -79,14 +77,16 @@ class JsonUtils {
     try {
       return dc.jsonDecode(value) != null;
     } on Object catch (e, stackTrace) {
-      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // ignore: saropa_lints/avoid_print_error
       debugPrint('JsonUtils.isJson testDecode failed: $e\n$stackTrace');
       return false;
     }
   }
 
-  /// Cleans a JSON response string by stripping outer double-quotes and
-  /// unescaping any inner escaped quotes (`\"`).
+  /// Returns a cleaned version of the JSON response [value] by stripping
+  /// outer double-quotes and unescaping any inner escaped quotes (`\"`),
+  /// or `null` if the result is empty.
   ///
   /// Correctly handles strings that contain escaped inner quotes, e.g.:
   /// `'"hello \"world\""'` → `'hello "world"'`.
@@ -97,7 +97,7 @@ class JsonUtils {
 
     // Detect outer quotes BEFORE unescaping inner ones.
     if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2) {
-      final String inner = trimmed.substring(1, trimmed.length - 1);
+      final String inner = trimmed.substringSafe(1, trimmed.length - 1);
       return inner.replaceAll(r'\"', '"').nullIfEmpty();
     }
 
@@ -105,7 +105,9 @@ class JsonUtils {
     return trimmed.replaceAll(r'\"', '"').nullIfEmpty();
   }
 
-  /// Attempts to decode a JSON string to a Map.
+  /// Returns a decoded `Map` from the JSON string [value], optionally
+  /// cleaning the input first when [cleanInput] is `true`, or `null` if
+  /// decoding fails.
   static Map<String, dynamic>? tryJsonDecode(String? value, {bool cleanInput = false}) {
     if (value == null || value.isEmpty) return null;
     if (cleanInput) {
@@ -116,44 +118,50 @@ class JsonUtils {
     return jsonDecodeToMap(value);
   }
 
-  /// Attempts to decode a JSON string to a list of maps.
+  /// Returns a list of maps decoded from the JSON string [value], or `null`
+  /// if decoding fails.
   static List<Map<String, dynamic>>? tryJsonDecodeListMap(String? value) {
     if (value == null || !isJson(value)) return null;
     try {
       final dynamic data = dc.json.decode(value);
       if (data is! List || data.isEmpty || data[0] is! Map<String, dynamic>) return null;
       if (!data.every((dynamic e) => e is Map<String, dynamic>)) return null;
-      return List<Map<String, dynamic>>.from(data);
+      return data.cast<Map<String, dynamic>>().toList();
     } on Object catch (e, stackTrace) {
-      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // ignore: saropa_lints/avoid_print_error
       debugPrint('JsonUtils.tryJsonDecodeListMap failed: $e\n$stackTrace');
       return null;
     }
   }
 
-  /// Attempts to decode a JSON string to a list of strings.
+  /// Returns a list of strings decoded from the JSON string [value], or
+  /// `null` if decoding fails.
   static List<String>? tryJsonDecodeList(String? value) {
     if (value == null || !isJson(value)) return null;
     try {
       final dynamic data = dc.json.decode(value);
       if (data is! List || data.isEmpty) return null;
       if (!data.every((dynamic e) => e is String)) return null;
-      return List<String>.from(data);
+      return data.cast<String>().toList();
     } on Object catch (e, stackTrace) {
-      // ignore: avoid_print_error - debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
+      // ignore: saropa_lints/avoid_print_error
       debugPrint('JsonUtils.tryJsonDecodeList failed: $e\n$stackTrace');
       return null;
     }
   }
 
-  /// Converts a dynamic list to a list of maps.
+  /// Returns a list of maps extracted from [valueList], or `null` if empty
+  /// or `null`.
   static List<Map<String, dynamic>>? toListMap(List<dynamic>? valueList) {
     if (valueList == null) return null;
     final List<Map<String, dynamic>> result = valueList.whereType<Map<String, dynamic>>().toList();
     return result.isEmpty ? null : result;
   }
 
-  /// Counts items in an iterable or comma-separated string.
+  /// Returns the item count from [json], which may be an iterable or a
+  /// [separator]-delimited string.
   static int countIterableJson(dynamic json, {String separator = ','}) {
     if (json == null) return 0;
     if (json is Iterable) return json.length;
@@ -163,11 +171,12 @@ class JsonUtils {
     return 0;
   }
 
-  /// Converts JSON to a list of strings.
+  /// Returns a list of strings parsed from [json], splitting on [separator]
+  /// if the value is a string, or `null` if conversion is not possible.
   static List<String>? toStringListJson(dynamic json, {String separator = ','}) {
     if (json == null) return null;
     if (json is List<String>) return json;
-    if (json is List && json.every((dynamic e) => e is String)) return List<String>.from(json);
+    if (json is List && json.every((dynamic e) => e is String)) return json.cast<String>().toList();
     if (json is Iterable<String>) return json.toList();
     if (json is String) {
       return json
@@ -179,7 +188,8 @@ class JsonUtils {
     return null;
   }
 
-  /// Converts JSON to a list of integers.
+  /// Returns a list of integers parsed from [json], or `null` if conversion
+  /// is not possible.
   static List<int>? toIntListJson(dynamic json) {
     if (json == null) return null;
     if (json is List<int>) return json;
@@ -190,7 +200,8 @@ class JsonUtils {
     return null;
   }
 
-  /// Converts JSON to an integer.
+  /// Returns an integer parsed from [json], or `null` if conversion is not
+  /// possible.
   static int? toIntJson(dynamic json) {
     if (json == null) return null;
     if (json is int) return json;
@@ -199,7 +210,8 @@ class JsonUtils {
     return null;
   }
 
-  /// Converts JSON to a boolean.
+  /// Returns a boolean parsed from [json], using [isCaseSensitive] to control
+  /// string comparison, or `null` if conversion is not possible.
   static bool? toBoolJson(dynamic json, {bool isCaseSensitive = true}) {
     if (json == null) return null;
     if (json is bool) return json;
@@ -208,13 +220,15 @@ class JsonUtils {
     return str == '1' || (isCaseSensitive ? str == 'true' : str.toLowerCase() == 'true');
   }
 
-  /// Converts JSON to a double.
+  /// Returns a double parsed from [json], or `null` if conversion is not
+  /// possible.
   static double? toDoubleJson(dynamic json) {
     if (json == null) return null;
     return double.tryParse(json.toString());
   }
 
-  /// Converts JSON to a list of doubles.
+  /// Returns a list of doubles parsed from [json], or `null` if conversion
+  /// is not possible.
   static List<double>? toDoubleListJson(dynamic json) {
     if (json == null) return null;
     if (json is List<double>) return json;
@@ -229,7 +243,9 @@ class JsonUtils {
     return null;
   }
 
-  /// Converts JSON to a string with optional transformations.
+  /// Returns a string from [json] with optional transformations controlled
+  /// by [trim], [makeUppercase], [makeLowercase], and [makeCapitalized],
+  /// or `null` if the result is empty.
   static String? toStringJson(
     dynamic json, {
     bool trim = true,
@@ -256,7 +272,8 @@ class JsonUtils {
     return result.isEmpty ? null : result;
   }
 
-  /// Converts JSON to a DateTime.
+  /// Returns a [DateTime] parsed from [json], or `null` if conversion is not
+  /// possible.
   static DateTime? toDateTimeJson(dynamic json) {
     if (json == null) return null;
     if (json is DateTime) return json;
@@ -266,10 +283,11 @@ class JsonUtils {
     return DateTime.tryParse(str);
   }
 
-  /// Converts an epoch timestamp to DateTime.
+  /// Returns a [DateTime] from the epoch timestamp [json] interpreted at the
+  /// given [scale], or `null` if [json] is not a valid integer.
   static DateTime? toDateTimeEpochJson(dynamic json, JsonEpochScale scale) {
     if (json == null) return null;
-    final int? since = json as int?;
+    final int? since = json is int ? json : null;
     if (since == null) return null;
     return switch (scale) {
       JsonEpochScale.seconds => DateTime.fromMillisecondsSinceEpoch(since * 1000),
@@ -278,6 +296,6 @@ class JsonUtils {
     };
   }
 
-  /// Converts a value to a dynamic list if it is one.
+  /// Returns [value] as a dynamic list if it is one, or `null` otherwise.
   static List<dynamic>? toListDynamic(dynamic value) => value is List<dynamic> ? value : null;
 }

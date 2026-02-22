@@ -25,7 +25,7 @@ extension DoubleExtensions on double {
     return this % 1 != 0;
   }
 
-  /// Formats this double value as a percentage string.
+  /// Returns this double formatted as a percentage string.
   ///
   /// Multiplies the value by 100 and appends a '%' symbol.
   ///
@@ -56,7 +56,8 @@ extension DoubleExtensions on double {
     return '${roundedValue.formatDouble(decimalPlaces, showTrailingZeros: false)}%';
   }
 
-  /// Formats this double to a string with a specified number of decimal places.
+  /// Returns this double formatted as a string with the specified number of
+  /// decimal places.
   ///
   /// Optionally removes trailing zeros after the decimal point when
   /// [showTrailingZeros] is `false`.
@@ -116,7 +117,8 @@ extension DoubleExtensions on double {
     return this;
   }
 
-  /// Truncates this double to a given precision after the decimal point.
+  /// Returns this double truncated to the given [precision] after the decimal
+  /// point.
   ///
   /// Unlike rounding, this always truncates towards zero.
   ///
@@ -134,7 +136,7 @@ extension DoubleExtensions on double {
     return (this * multiplier).truncate() / multiplier;
   }
 
-  /// Formats this double with smart decimal handling.
+  /// Returns this double formatted as a string with smart decimal handling.
   ///
   /// Shows the value without decimals if it's a whole number,
   /// otherwise shows it with the specified precision.

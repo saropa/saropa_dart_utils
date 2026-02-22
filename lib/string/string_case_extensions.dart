@@ -289,7 +289,7 @@ extension StringCaseExtensions on String {
   /// This method splits the string into words and then filters out the words that start with
   ///  an uppercase letter.
   ///
-  /// The definition of a 'word' is determined by the [words] method of [StringExtensions].
+  /// The definition of a 'word' is determined by the `words` method of `StringExtensions`.
   ///
   /// Returns:
   /// A [List<String>?] containing the capitalized words found in the string, or `null` if no
@@ -390,7 +390,7 @@ extension StringCaseExtensions on String {
   ///
   /// This method splits the string into words and then filters out the words that start with a
   ///  lowercase letter.
-  /// The definition of a 'word' is determined by the [words] method of [StringExtensions].
+  /// The definition of a 'word' is determined by the `words` method of `StringExtensions`.
   ///
   /// Returns:
   /// A [List<String>?] containing the uncapitalized words found in the string, or `null` if no

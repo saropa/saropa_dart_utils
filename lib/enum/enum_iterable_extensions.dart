@@ -3,13 +3,16 @@ import 'package:collection/collection.dart';
 /// Saropa extensions for [List]s of [Enum]s
 ///
 extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
-  /// Return a MapEntry with the most common value and its frequency.
+  /// Returns a [MapEntry] with the most common value and its frequency.
   ///
   /// Dart’s type system doesn’t allow us to return a strongly typed enum
   /// from a method that works with the base Enum type. This is because
   /// Dart’s generics are invariant, which means you can’t use a subtype
   /// (like ZodiacSigns) where a base type (like Enum) is expected.
   ///
+  /// Throws [Exception] if the iterable is empty.
+  ///
+  /// Throws [StateError] if the frequency map yields no entries unexpectedly.
   MapEntry<Enum, int> mostOccurrences() {
     // If the list is empty, the method will now throw an exception with
     // a descriptive error message.

@@ -5,16 +5,16 @@ final RegExp _trailingIntRegex = RegExp(r'\d+$');
 /// This extension provides a method to get the trailing integer from a string.
 /// If the string is empty or does not contain a trailing integer, it returns null.
 extension StringNumberExtensions on String {
-  /// Checks if the string can be parsed as a number.
+  /// Returns `true` if this string can be parsed as a number.
   bool isNumeric() =>
       // Attempt to parse as a double and check if the result is not null.
       double.tryParse(this) != null;
 
-  /// safely get an double from a string
+  /// Returns this string parsed as a `double`, or `null` if parsing fails.
   // https://api.flutter.dev/flutter/dart-core/double/tryParse.html
   double? toDoubleNullable() => isEmpty ? null : double.tryParse(this);
 
-  /// safely get an int from a String
+  /// Returns this string parsed as an `int`, or `null` if parsing fails.
   int? toIntNullable() {
     if (isEmpty) {
       return null;

@@ -18,8 +18,10 @@ const int _defaultMaxRecursionDepth = 500;
 /// Instead, they will return a reasonable default value (usually null).
 ///
 class IntUtils {
-  /// This method finds the greatest common denominator of two integers.
-  /// It uses the Euclidean algorithm, which is based on the principle that the
+  /// Returns the greatest common denominator of [a] and [b], or `null` if
+  /// the inputs are invalid or recursion exceeds [maxDepth].
+  ///
+  /// Uses the Euclidean algorithm, which is based on the principle that the
   /// greatest common denominator of two numbers does not change if the larger
   /// number is replaced by its difference with the smaller number.
   ///

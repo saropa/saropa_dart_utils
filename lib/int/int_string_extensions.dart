@@ -34,7 +34,7 @@ extension IntStringExtensions on int {
   /// 999218.ordinal(); // 999218th
   /// ```
   ///
-  /// A [double] typed version can use: value.floor()
+  /// A `double` typed version can use: value.floor()
   ///
   String ordinal() {
     // All "teens" (12, 13, 14.. 19) are 'th'
@@ -42,7 +42,7 @@ extension IntStringExtensions on int {
       return '${this}th';
     }
 
-    final num onesPlace = this % _base10;
+    final int onesPlace = this % _base10;
     return switch (onesPlace) {
       1 => '${this}st',
       2 => '${this}nd',

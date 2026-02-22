@@ -1,3 +1,5 @@
+import 'package:saropa_dart_utils/string/string_extensions.dart';
+
 /// Length of a UUID string without hyphens (32 hex characters).
 const int _uuidLengthWithoutHyphens = 32;
 
@@ -123,18 +125,13 @@ class UuidUtils {
       return null;
     }
 
-    final StringBuffer sb = StringBuffer()
-      ..write(uuid.substring(0, _segment1End))
-      ..write('-')
-      ..write(uuid.substring(_segment1End, _segment2End))
-      ..write('-')
-      ..write(uuid.substring(_segment2End, _segment3End))
-      ..write('-')
-      ..write(uuid.substring(_segment3End, _segment4End))
-      ..write('-')
-      ..write(uuid.substring(_segment4End));
-
-    return sb.toString();
+    return <String>[
+      uuid.substringSafe(0, _segment1End),
+      uuid.substringSafe(_segment1End, _segment2End),
+      uuid.substringSafe(_segment2End, _segment3End),
+      uuid.substringSafe(_segment3End, _segment4End),
+      uuid.substringSafe(_segment4End),
+    ].join('-');
   }
 
   /// Removes hyphens from a UUID string to create the compact format.

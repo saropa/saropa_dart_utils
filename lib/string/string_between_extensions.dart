@@ -2,10 +2,11 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Extension methods for extracting content between delimiters.
 extension StringBetweenExtensions on String {
-  /// Extracts content between bracket pairs.
+  /// Returns a record of (content between brackets, remaining string) for the
+  /// first matching bracket pair found.
   ///
-  /// Tries parentheses, square brackets, angle brackets, and curly braces in order.
-  /// Returns a tuple of (content between brackets, remaining string after removal).
+  /// Tries parentheses, square brackets, angle brackets, and curly braces in
+  /// order. Returns `null` if no bracket pairs are found.
   (String, String?)? betweenBracketsResult() {
     if (isEmpty) return null;
     return betweenResult('(', ')') ??
@@ -14,7 +15,7 @@ extension StringBetweenExtensions on String {
         betweenResult('{', '}');
   }
 
-  /// Same as [betweenBracketsResult] but searches from the end.
+  /// Returns a record like `betweenBracketsResult` but searches from the end.
   (String, String?)? betweenBracketsResultLast() {
     if (isEmpty) return null;
     return betweenResultLast('(', ')') ??
@@ -23,9 +24,11 @@ extension StringBetweenExtensions on String {
         betweenResultLast('{', '}');
   }
 
-  /// Gets content between bracket pairs.
+  /// Returns the content between the first matching bracket pair found, or
+  /// `null` if none is found.
   ///
-  /// Tries parentheses, square brackets, angle brackets, and curly braces in order.
+  /// Tries parentheses, square brackets, angle brackets, and curly braces in
+  /// order.
   String? betweenBrackets() {
     if (isEmpty) return null;
     String r = between('(', ')');
@@ -39,9 +42,11 @@ extension StringBetweenExtensions on String {
     return null;
   }
 
-  /// Removes all content between [start] and [end] delimiters.
+  /// Returns a new string with all content between [start] and [end]
+  /// delimiters removed.
   ///
-  /// If [inclusive] is true (default), removes the delimiters as well.
+  /// If [inclusive] is `true` (default), the delimiters themselves are also
+  /// removed.
   String removeBetweenAll(String start, String end, {bool inclusive = true}) {
     if (start.isEmpty) return this;
     if (this == start + end && inclusive) return '';
@@ -58,7 +63,12 @@ extension StringBetweenExtensions on String {
     return replaceAll(pattern, '');
   }
 
-  /// Extracts all sections between [start] and [end] delimiters.
+  /// Returns a list of all sections found between [start] and [end]
+  /// delimiters, or `null` if none are found.
+  ///
+  /// When [endOptional] is `true` (default), content after the last [start]
+  /// delimiter is included even without a closing [end]. When [trim] is `true`
+  /// (default), each extracted section is trimmed.
   List<String>? betweenSplit(
     String start,
     String end, {
@@ -81,19 +91,14 @@ extension StringBetweenExtensions on String {
     return result;
   }
 
-  /// Extracts content between [start] and [end] delimiters.
+  /// Returns a record of (content between [start] and [end] delimiters,
+  /// remaining string after the closing delimiter), or `null` if not found.
   ///
-  /// Returns a tuple of (content between delimiters, remaining string after
-  /// the closing delimiter). The second element is an empty string if nothing
-  /// follows the closing delimiter.
+  /// When [endOptional] is `true` and [end] is not found, returns the content
+  /// after [start]. When [trim] is `true` (default), results are trimmed.
   ///
-  /// **Design:** uses `indexOf` for [start] (first occurrence) and
-  /// `lastIndexOf` for [end] (last occurrence). This intentionally returns
-  /// the **outermost** match, so nested delimiters are included in the
-  /// content: `'(a(test)b)'.betweenResult('(',')')` → `('a(test)b', '')`.
-  ///
-  /// If you need the **first balanced pair** instead, use `between()` which
-  /// uses `indexOf` for both delimiters.
+  /// Uses `indexOf` for [start] (first occurrence) and `lastIndexOf` for
+  /// [end] (last occurrence), returning the **outermost** match.
   (String, String?)? betweenResult(
     String start,
     String end, {
@@ -134,7 +139,12 @@ extension StringBetweenExtensions on String {
     return (finalFound, finalRemaining.isEmpty ? '' : finalRemaining);
   }
 
-  /// Same as [betweenResult] but searches from the end.
+  /// Returns a record like `betweenResult` but searches from the end using
+  /// [start] and [end] delimiters.
+  ///
+  /// When [endOptional] is `true` (default) and [end] is not found, returns
+  /// content after the last [start]. When [trim] is `true` (default), results
+  /// are trimmed.
   (String, String?)? betweenResultLast(
     String start,
     String end, {
@@ -149,13 +159,11 @@ extension StringBetweenExtensions on String {
     return (found, remaining);
   }
 
-  /// Extracts content between first occurrence of [start] and [end].
+  /// Returns the content between the first occurrence of [start] and [end].
   ///
-  /// If [endOptional] is true and [end] is not found, returns content after [start].
-  ///
-  /// **Special case:** if [end] is empty, it is treated as "not found", so
-  /// with `endOptional: true` (default) the entire tail after [start] is
-  /// returned, and with `endOptional: false` an empty string is returned.
+  /// If [endOptional] is `true` (default) and [end] is not found, returns
+  /// content after [start]. When [trim] is `true` (default), the result is
+  /// trimmed. Returns an empty string if no match is found.
   String between(String start, String end, {bool endOptional = true, bool trim = true}) {
     if (isEmpty || start.isEmpty) return '';
     final int startIndex = indexOf(start);
@@ -172,9 +180,11 @@ extension StringBetweenExtensions on String {
     return trim ? content.trim() : content;
   }
 
-  /// Extracts content between last occurrence of [start] and [end].
+  /// Returns the content between the last occurrence of [start] and [end].
   ///
-  /// If [endOptional] is true and [end] is not found, returns content after last [start].
+  /// If [endOptional] is `true` (default) and [end] is not found, returns
+  /// content after the last [start]. When [trim] is `true` (default), the
+  /// result is trimmed. Returns an empty string if no match is found.
   String betweenLast(String start, String end, {bool endOptional = true, bool trim = true}) {
     if (isEmpty || start.isEmpty) return '';
     final int startIndex = lastIndexOf(start);

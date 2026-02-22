@@ -12,17 +12,16 @@ extension HexExtensions on String {
   /// This is 2^63 - 1 = 9223372036854775807 = 0x7FFFFFFFFFFFFFFF.
   static const String _maxInt64Hex = '7FFFFFFFFFFFFFFF';
 
-  /// Converts a hexadecimal string to an integer ([int]).
+  /// Converts a hexadecimal string to an `int`.
   ///
   /// This method attempts to parse the string as a hexadecimal number.
   /// It performs several checks to ensure the input is a valid hexadecimal string
-  /// and that the resulting value can be represented as an [int] (signed 64-bit).
+  /// and that the resulting value can be represented as an `int` (signed 64-bit).
   ///
   /// The method correctly handles both uppercase and lowercase hex strings,
   /// normalizing to uppercase for the overflow comparison.
   ///
-  /// Returns:
-  /// An [int] representation of the hexadecimal string, or `null` if:
+  /// Returns an `int` representation of the hexadecimal string, or `null` if:
   /// - The string is empty
   /// - The string contains non-hexadecimal characters
   /// - The value exceeds the maximum signed 64-bit integer (0x7FFFFFFFFFFFFFFF)
@@ -65,12 +64,11 @@ extension HexExtensions on String {
 
 /// Extension methods for [int] to facilitate hexadecimal conversions.
 extension HexIntExtensions on int {
-  /// Converts an integer ([int]) value to a hexadecimal string ([String]).
+  /// Converts an `int` value to a hexadecimal `String`.
   ///
   /// This method converts the integer to its hexadecimal representation as a string.
   ///
-  /// Returns:
-  /// A hexadecimal [String] representation of the [int] value.
+  /// Returns a hexadecimal `String` representation of this integer.
   ///
   /// Example:
   /// ```dart

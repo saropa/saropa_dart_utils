@@ -22,7 +22,7 @@ extension StringDiacriticsExtensions on String {
   // --- Public Methods ---
 
   /// Accurately checks if the string contains any diacritical characters
-  /// that can be removed by the [removeDiacritics] method.
+  /// that can be removed by the `removeDiacritics` method.
   ///
   /// Returns `true` if a known diacritic character is found, `false` otherwise.
   bool containsDiacritics() {
@@ -35,8 +35,8 @@ extension StringDiacriticsExtensions on String {
     return split('').any((String char) => _reverseAccentsMap.containsKey(char));
   }
 
-  /// Removes diacritical marks from the string, replacing them with their
-  /// base ASCII equivalents (e.g., 'é' becomes 'e').
+  /// Returns a new string with diacritical marks replaced by their base ASCII
+  /// equivalents (e.g., 'é' becomes 'e').
   ///
   /// This method is optimized to perform well by using a pre-computed map.
   String removeDiacritics() {

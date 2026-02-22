@@ -1,10 +1,9 @@
 /// Utility class for number-related operations.
 class NumberUtils {
-  /// Returns the maximum of two nullable numbers.
+  /// Returns the maximum of [a] and [b], handling `null` values.
   ///
-  /// If both `a` and `b` are null, returns null.
-  /// If only one of `a` or `b` is null, returns the non-null number.
-  /// If both are non-null, returns the larger of the two.
+  /// If both are `null`, returns `null`. If only one is `null`, returns the
+  /// non-null number. If both are non-null, returns the larger of the two.
   ///
   /// Example:
   /// ```dart

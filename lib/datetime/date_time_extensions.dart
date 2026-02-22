@@ -5,18 +5,12 @@ import 'package:saropa_dart_utils/int/int_string_extensions.dart';
 
 /// Extensions on the [DateTime] class to provide additional functionality.
 extension DateTimeExtensions on DateTime {
-  /// Returns the date of the nth occurrence of a specific weekday within the
-  /// current instance's month and year.
+  /// Returns the date of the [n]th occurrence of [dayOfWeek] within the
+  /// current instance's month and year, or `null` if it does not exist
+  /// (e.g., 5th Friday in February).
   ///
-  /// Args:
-  ///   n (int): The desired occurrence (e.g., 1 for the 1st, 2 for the 2nd,
-  ///  etc.).
-  ///   dayOfWeek (int): The day of the week (e.g., DateTime.monday,
-  ///  DateTime.tuesday, etc.).
-  ///
-  /// Returns:
-  ///   DateTime?: The date of the nth occurrence, or null if it does not exist
-  ///  (e.g., 5th Friday in February).
+  /// [n] is the desired occurrence (e.g., 1 for the 1st, 2 for the 2nd).
+  /// [dayOfWeek] is the day of the week (e.g., [DateTime.monday]).
   DateTime? getNthWeekdayOfMonthInYear(int n, int dayOfWeek) {
     if (n < 1) {
       return null; // Invalid input: n must be at least 1
@@ -43,7 +37,7 @@ extension DateTimeExtensions on DateTime {
     return DateTime(nthOccurrence.year, nthOccurrence.month, nthOccurrence.day);
   }
 
-  /// Determines if the date (of birth) is under 13 years old.
+  /// Returns `true` if the date (of birth) is under 13 years old.
   ///
   /// This is useful for determining non-child content access based on
   /// the Children's Online Privacy Protection Act (COPPA).
@@ -69,11 +63,12 @@ extension DateTimeExtensions on DateTime {
     return today.isBefore(thirteenthBirthday);
   }
 
-  /// Generates a list of [DateTime] objects for consecutive days.
+  /// Returns a list of [DateTime] objects for consecutive days.
   ///
-  /// Starts from `this` and generates [days] number of dates.
+  /// Starts from `this` and generates [days] number of dates. If [startOfDay]
+  /// is `true` (default), each date is set to midnight.
   ///
-  /// NOTE: generates an empty list when [days] is 0
+  /// NOTE: returns an empty list when [days] is 0.
   List<DateTime> generateDayList(int days, {bool startOfDay = true}) {
     // if (days <= 0) {
     //   throw ArgumentError('The number of days must be greater than zero.');
@@ -212,7 +207,7 @@ extension DateTimeExtensions on DateTime {
   /// Ignores the year of the current [DateTime] and returns a new [DateTime]
   /// with the specified [setYear].
   ///
-  /// Requires [month] and [day] to be set in the current [DateTime].
+  /// Requires `month` and `day` to be set in the current [DateTime].
   ///
   /// Returns null if the date is invalid in [setYear] — for example, when
   /// this is February 29 (a leap day) and [setYear] is not a leap year.
@@ -231,17 +226,11 @@ extension DateTimeExtensions on DateTime {
   /// For the 2nd day, it returns "2nd", and so on.
   String? dayOfMonthOrdinal() => day.ordinal();
 
-  /// Calculates the time difference in milliseconds between the current
-  /// [DateTime] and another [DateTime].
+  /// Returns the time difference in milliseconds between this [DateTime] and
+  /// [compareTo], or `null` if [compareTo] is `null`.
   ///
-  /// Args:
-  ///   compareTo (DateTime?): The [DateTime] to compare to.
-  ///   alwaysPositive (bool): If true, the result will always be a
-  ///   positive value. Defaults to true.
-  ///
-  /// Returns:
-  ///   int?: The time difference in milliseconds, or null if [compareTo]
-  ///   is null.
+  /// When [alwaysPositive] is `true` (default), the result is always
+  /// non-negative.
   int? getTimeDifferenceMs(DateTime? compareTo, {bool alwaysPositive = true}) {
     if (compareTo == null) {
       return null;
@@ -500,21 +489,15 @@ extension DateTimeExtensions on DateTime {
     return subtract(Duration(hours: hours, minutes: minutes));
   }
 
-  /// Checks if the current [DateTime] is within the specified range,
-  /// considering all years in the range if the current year is 0.
+  /// Returns `true` if this [DateTime] is within the specified [range].
   ///
-  /// When [year] is 0, this method checks if the month/day combination falls
+  /// When `year` is 0, this method checks if the month/day combination falls
   /// within the range for ANY year covered by the range. This correctly handles
   /// ranges that span year boundaries (e.g., Dec 2023 to Feb 2024).
   ///
-  /// Args:
-  ///   range (DateTimeRange?): The range to check against. Returns `true` if null.
-  ///   inclusive (bool): If `true` (default), the start and end dates of the range
-  ///   are included in the check. If `false`, only dates strictly between start
-  ///   and end are considered in range.
-  ///
-  /// Returns:
-  ///   bool: `true` if the [DateTime] is within the range, `false` otherwise.
+  /// If [inclusive] is `true` (default), the start and end dates of the range
+  /// are included in the check. If `false`, only dates strictly between start
+  /// and end are considered in range. Returns `true` if [range] is `null`.
   ///
   /// Example:
   /// ```dart
@@ -558,20 +541,15 @@ extension DateTimeExtensions on DateTime {
     return isBetweenRange(range, inclusive: inclusive);
   }
 
-  /// Checks if the current [DateTime] is within the specified range.
+  /// Returns `true` if this [DateTime] is within the specified [range],
+  /// `false` if [range] is `null`.
   ///
-  /// This method delegates to [isBetween] with the range's start and end dates,
+  /// This method delegates to `isBetween` with the range's start and end dates,
   /// properly forwarding the [inclusive] parameter to control boundary behavior.
   ///
-  /// Args:
-  ///   range (DateTimeRange?): The range to check against. Returns `false` if null.
-  ///   inclusive (bool): If `true` (default), the start and end dates of the range
-  ///   are included in the check (closed interval). If `false`, only dates strictly
-  ///   between start and end are considered in range (open interval).
-  ///
-  /// Returns:
-  ///   bool: `true` if the [DateTime] is within the range according to the
-  ///   [inclusive] setting, `false` otherwise.
+  /// If [inclusive] is `true` (default), the start and end dates of the range
+  /// are included in the check (closed interval). If `false`, only dates
+  /// strictly between start and end are considered in range (open interval).
   ///
   /// Example:
   /// ```dart
@@ -592,18 +570,10 @@ extension DateTimeExtensions on DateTime {
     return isBetween(range.start, range.end, inclusive: inclusive);
   }
 
-  /// Checks if the current [DateTime] is between the specified start and
-  /// end dates.
+  /// Returns `true` if this [DateTime] is between [start] and [end].
   ///
-  /// Args:
-  ///   start (DateTime): The start date of the range.
-  ///   end (DateTime): The end date of the range.
-  ///   inclusive (bool): If true, the start and end dates are included in
-  ///   the check. Defaults to true.
-  ///
-  /// Returns:
-  ///   bool: True if the [DateTime] is between the start and end dates,
-  ///   false otherwise.
+  /// If [inclusive] is `true` (default), [start] and [end] are included
+  /// in the check. If `false`, only dates strictly between them match.
   bool isBetween(DateTime start, DateTime end, {bool inclusive = true}) {
     if (inclusive) {
       return (isAfter(start) || isAtSameMomentAs(start)) &&
@@ -635,16 +605,10 @@ extension DateTimeExtensions on DateTime {
     return isAfter(endOfToday);
   }
 
-  /// Checks if the current [DateTime] matches the current date (today).
+  /// Returns `true` if this [DateTime] matches the current date (today).
   ///
-  /// Args:
-  ///   now (DateTime?): The current date and time. Defaults to null (uses
-  ///   the actual current date and time).
-  ///   ignoreYear (bool): If true, the year is ignored in the comparison.
-  ///   Defaults to false.
-  ///
-  /// Returns:
-  ///   bool: True if the [DateTime] matches the current date, false otherwise.
+  /// Pass [now] to override the current time (useful for testing). If
+  /// [ignoreYear] is `true`, the year is excluded from the comparison.
   bool isToday({DateTime? now, bool ignoreYear = false}) {
     now ??= DateTime.now();
 
@@ -691,15 +655,10 @@ extension DateTimeExtensions on DateTime {
   ///   DateTime: A new [DateTime] object with the updated time.
   DateTime setTime({required TimeOfDay time}) => DateTime(year, month, day, time.hour, time.minute);
 
-  /// Aligns the current [DateTime] to the specified duration.
+  /// Returns a new [DateTime] aligned to the specified [alignment] duration.
   ///
-  /// Args:
-  ///   alignment (Duration): The duration to align to.
-  ///   roundUp (bool): If true, the [DateTime] is rounded up to the next
-  ///   alignment. Defaults to false.
-  ///
-  /// Returns:
-  ///   DateTime: A new [DateTime] object aligned to the specified duration.
+  /// If [roundUp] is `true`, the result is rounded up to the next alignment
+  /// boundary. Defaults to rounding down.
   DateTime alignDateTime({required Duration alignment, bool roundUp = false}) {
     // ref: https://stackoverflow.com/questions/60880315/how-to-round-up-the-date-time-nearest-to-30-min-interval-in-dart-flutter
     if (alignment == Duration.zero) {
@@ -812,7 +771,7 @@ extension DateTimeExtensions on DateTime {
   ///
   /// **Warning:** this value can be 0 for dates in early January that belong
   /// to the last ISO week of the previous year, or 53 for dates in late
-  /// December that belong to week 1 of the next year. Use [weekNumber] for
+  /// December that belong to week 1 of the next year. Use `weekNumber` for
   /// fully ISO 8601-compliant results.
   int get weekOfYear => ((dayOfYear - weekday + 10) / 7).floor();
 
@@ -830,7 +789,7 @@ extension DateTimeExtensions on DateTime {
   /// return that year's final week number. Dates in late December that belong
   /// to week 1 of the next year return 1.
   ///
-  /// Prefer this over [weekOfYear] for any user-facing or standards-compliant
+  /// Prefer this over `weekOfYear` for any user-facing or standards-compliant
   /// week calculations.
   int weekNumber() {
     if (weekOfYear < 1) return numOfWeeks(year - 1);

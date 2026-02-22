@@ -7,7 +7,7 @@ import 'package:characters/characters.dart';
 extension StringCharacterExtensions on String {
   /// Gets a grapheme-aware substring.
   ///
-  /// Unlike the standard [substring] which works with code units, this method
+  /// Unlike the standard `substring` which works with code units, this method
   /// counts and extracts based on user-perceived characters (grapheme clusters).
   ///
   /// **Args:**

@@ -1,3 +1,5 @@
+import 'package:saropa_dart_utils/string/string_extensions.dart';
+
 /// Common image file extensions supported by Flutter.
 const Set<String> flutterImageExtensions = <String>{
   '.png',
@@ -12,7 +14,9 @@ const Set<String> flutterImageExtensions = <String>{
 
 /// Extension methods for URI manipulation.
 extension UriExtensions on Uri {
-  /// Removes query parameters and optionally the fragment from this URI.
+  /// Returns a new URI with query parameters removed.
+  ///
+  /// When [removeFragment] is `true` (default), the fragment is also removed.
   Uri removeQuery({bool removeFragment = true}) =>
       removeFragment ? replace(query: '', fragment: '') : replace(query: '');
 
@@ -24,24 +28,24 @@ extension UriExtensions on Uri {
     if (filePath.isEmpty) return false;
     final int dotIndex = filePath.lastIndexOf('.');
     if (dotIndex == -1) return false;
-    final String extension = filePath.substring(dotIndex).toLowerCase();
+    final String extension = filePath.substringSafe(dotIndex).toLowerCase();
     return flutterImageExtensions.contains(extension);
   }
 
-  /// Gets the file name from this URI path.
+  /// Returns the file name from this URI path, or `null` if the path is empty.
   String? get fileName {
     if (path.isEmpty) return null;
     final String lastSegment = path.split('/').lastOrNull ?? '';
     return lastSegment.isEmpty ? null : lastSegment;
   }
 
-  /// Gets the file extension from this URI path.
+  /// Returns the file extension from this URI path, or `null` if none exists.
   String? get fileExtension {
     final String? name = fileName;
     if (name == null) return null;
     final int dotIndex = name.lastIndexOf('.');
     if (dotIndex == -1 || dotIndex == name.length - 1) return null;
-    return name.substring(dotIndex + 1).toLowerCase();
+    return name.substringSafe(dotIndex + 1).toLowerCase();
   }
 
   /// Returns true if this URI uses HTTPS scheme.
@@ -53,16 +57,9 @@ extension UriExtensions on Uri {
   /// ```
   bool get isSecure => scheme.toLowerCase() == 'https';
 
-  /// Adds or updates a query parameter in this URI.
+  /// Returns a new URI with the [key] query parameter set to [value].
   ///
-  /// If [value] is null or empty, the parameter is removed instead.
-  ///
-  /// **Args:**
-  /// - [key]: The query parameter key.
-  /// - [value]: The query parameter value. If null/empty, removes the parameter.
-  ///
-  /// **Returns:**
-  /// A new URI with the updated query parameters.
+  /// If [value] is `null` or empty, the parameter is removed instead.
   ///
   /// **Example:**
   /// ```dart
@@ -82,13 +79,7 @@ extension UriExtensions on Uri {
     return replace(queryParameters: params);
   }
 
-  /// Returns true if this URI has a specific query parameter.
-  ///
-  /// **Args:**
-  /// - [key]: The query parameter key to check.
-  ///
-  /// **Returns:**
-  /// True if the parameter exists, false otherwise.
+  /// Returns `true` if this URI has a query parameter named [key].
   ///
   /// **Example:**
   /// ```dart
@@ -97,13 +88,7 @@ extension UriExtensions on Uri {
   /// ```
   bool hasQueryParameter(String key) => queryParameters.containsKey(key);
 
-  /// Gets the value of a specific query parameter.
-  ///
-  /// **Args:**
-  /// - [key]: The query parameter key.
-  ///
-  /// **Returns:**
-  /// The parameter value, or null if not found.
+  /// Returns the value of the [key] query parameter, or `null` if not found.
   ///
   /// **Example:**
   /// ```dart
@@ -112,13 +97,8 @@ extension UriExtensions on Uri {
   /// ```
   String? getQueryParameter(String key) => queryParameters[key];
 
-  /// Returns a new URI with the host replaced.
-  ///
-  /// **Args:**
-  /// - [newHost]: The new host to use.
-  ///
-  /// **Returns:**
-  /// A new URI with the replaced host, or this URI if newHost is empty.
+  /// Returns a new URI with the host replaced by [newHost], or this URI if
+  /// [newHost] is empty.
   ///
   /// **Example:**
   /// ```dart
@@ -144,20 +124,20 @@ extension UriNullableExtensions on Uri? {
 class UrlUtils {
   const UrlUtils._();
 
-  /// Tries to parse a string as a URI.
+  /// Returns [url] parsed as a URI, or `null` if parsing fails.
   static Uri? tryParse(String? url) {
     if (url == null || url.isEmpty) return null;
     return Uri.tryParse(url);
   }
 
-  /// Checks if a string is a valid URL.
+  /// Returns `true` if [url] is a valid URL with a scheme and host.
   static bool isValidUrl(String? url) {
     if (url == null || url.isEmpty) return false;
     final Uri? uri = Uri.tryParse(url);
     return uri != null && uri.hasScheme && uri.host.isNotEmpty;
   }
 
-  /// Checks if a string is a valid HTTP/HTTPS URL.
+  /// Returns `true` if [url] is a valid HTTP or HTTPS URL.
   static bool isValidHttpUrl(String? url) {
     if (url == null || url.isEmpty) return false;
     final Uri? uri = Uri.tryParse(url);
@@ -165,7 +145,7 @@ class UrlUtils {
     return (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty;
   }
 
-  /// Extracts the domain from a URL string.
+  /// Returns the domain (host) extracted from [url], or `null` if invalid.
   static String? extractDomain(String? url) {
     if (url == null || url.isEmpty) return null;
     final Uri? uri = Uri.tryParse(url);

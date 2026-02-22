@@ -233,25 +233,18 @@ extension ListExtensions<T> on List<T> {
   /// ```
   List<T>? nullIfEmpty() => isEmpty ? null : this;
 
-  /// Returns a new list containing at most the first `count` elements of this list, in a safe manner.
+  /// Returns a new list containing at most the first [count] elements of this
+  /// list, in a safe manner.
   ///
-  /// This method is designed to safely take a specified number of elements from a list, handling
-  /// cases where the count is null, zero, or negative, and providing an option to ignore zero or less counts.
+  /// Safely handles cases where [count] is `null`, zero, or negative. When
+  /// [ignoreZeroOrLess] is `true` (default), a [count] of zero or less returns
+  /// the original list unchanged. When `false`, returns an empty list.
   ///
   /// **Note on zero behavior:** unlike `List.take(0)` which returns an empty
   /// list, `takeSafe(0)` returns the **original list** by default because
-  /// `ignoreZeroOrLess` defaults to `true`. Pass
+  /// [ignoreZeroOrLess] defaults to `true`. Pass
   /// `takeSafe(0, ignoreZeroOrLess: false)` to get an empty list, matching
   /// the standard `take(0)` behavior.
-  ///
-  /// Parameters:
-  ///   - `count`: The number of elements to take. If `null`, the original list is returned.
-  ///   - `ignoreZeroOrLess`: If `true` (default), when `count` is zero or less, the original list is returned.
-  ///                         If `false`, when `count` is zero or less, an empty list is returned.
-  ///
-  /// Returns:
-  /// A new [List<T>] containing at most the first `count` elements, or the original list
-  /// if `count` is `null`, or based on `ignoreZeroOrLess` behavior when `count` is zero or less, or if the list is empty.
   ///
   /// Example:
   /// ```dart

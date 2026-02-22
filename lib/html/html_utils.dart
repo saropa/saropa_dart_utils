@@ -166,7 +166,7 @@ class HtmlUtils {
 
   /// Strips HTML tags and unescapes HTML entities in one operation.
   ///
-  /// Combines [removeHtmlTags] and [unescape] for convenience when you need
+  /// Combines `removeHtmlTags` and `unescape` for convenience when you need
   /// to convert HTML content to plain text.
   ///
   /// Returns `null` if:
