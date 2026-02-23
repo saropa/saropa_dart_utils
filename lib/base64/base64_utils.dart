@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// Utility class for Base64 encoding/decoding and text compression.
 ///
@@ -15,7 +16,6 @@ import 'package:flutter/foundation.dart';
 /// print(decompressed); // 'Hello, World!'
 /// ```
 abstract final class Base64Utils {
-
   /// Compresses a string using gzip and encodes it as Base64.
   ///
   /// This method first encodes the input string to UTF-8, then compresses it
@@ -33,6 +33,7 @@ abstract final class Base64Utils {
   ///
   /// See also:
   /// - `decompressText` to reverse this operation
+  @useResult
   static String? compressText(String? value) {
     if (value == null || value.isEmpty) {
       return null;
@@ -43,7 +44,7 @@ abstract final class Base64Utils {
       final List<int> gzipJson = io.gzip.encode(encodedJson);
 
       return base64.encode(gzipJson);
-    } on Object catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
       // ignore: saropa_lints/avoid_print_error
       debugPrint('Base64Utils.compressText failed: $e\n$stackTrace');
@@ -71,6 +72,7 @@ abstract final class Base64Utils {
   ///
   /// See also:
   /// - `compressText` to create compressed strings
+  @useResult
   static String? decompressText(String? compressedBase64) {
     if (compressedBase64 == null || compressedBase64.isEmpty) {
       return null;
@@ -81,7 +83,7 @@ abstract final class Base64Utils {
       final List<int> decodedGzip = io.gzip.decode(decodedBase64);
 
       return utf8.decode(decodedGzip);
-    } on Object catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
       // ignore: saropa_lints/avoid_print_error
       debugPrint('Base64Utils.decompressText failed: $e\n$stackTrace');

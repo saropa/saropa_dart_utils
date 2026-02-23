@@ -446,7 +446,7 @@ void main() {
         final List<List<int>> destination = <List<int>>[
           <int>[0, 0],
         ];
-        source.copy(destination);
+        expect(source.copy(destination), isTrue);
         source[0][0] = 99;
         expect(source, <List<int>>[
           <int>[99, 2],

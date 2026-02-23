@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 
 /// `DateConstantExtensions` is an extension on the `DateTime` class in Dart.
@@ -25,6 +26,7 @@ extension DateConstantExtensions on DateTime {
   /// Returns `true` if the year, month, and day match the Unix epoch date,
   /// and `false` otherwise.
   ///
+  @useResult
   bool get isUnixEpochDate =>
       year == DateConstants.unixEpochDate.year &&
       month == DateConstants.unixEpochDate.month &&
@@ -36,5 +38,6 @@ extension DateConstantExtensions on DateTime {
   /// Returns `true` if the `DateTime` instance represents the exact
   /// Unix epoch date and time, and `false` otherwise.
   ///
+  @useResult
   bool get isUnixEpochDateTime => this == DateConstants.unixEpochDate;
 }

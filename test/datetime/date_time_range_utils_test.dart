@@ -338,7 +338,7 @@ void main() {
           start: DateTime(2025),
           end: DateTime(2025, 1, 31),
         );
-        expect(range.inRange(DateTime(2025), inclusive: false), isFalse);
+        expect(range.inRange(DateTime(2025), isInclusive: false), isFalse);
       });
 
       // Updated: inRange now defaults to inclusive=true
@@ -355,7 +355,7 @@ void main() {
           start: DateTime(2025),
           end: DateTime(2025, 1, 31),
         );
-        expect(range.inRange(DateTime(2025, 1, 31), inclusive: false), isFalse);
+        expect(range.inRange(DateTime(2025, 1, 31), isInclusive: false), isFalse);
       });
 
       test('returns true for date one millisecond after start', () {
@@ -405,8 +405,8 @@ void main() {
           start: DateTime(2024, 6, 1),
           end: DateTime(2024, 6, 30),
         );
-        expect(range.inRange(DateTime(2024, 6, 15), inclusive: false), isTrue);
-        expect(range.inRange(DateTime(2024, 6, 15), inclusive: true), isTrue);
+        expect(range.inRange(DateTime(2024, 6, 15), isInclusive: false), isTrue);
+        expect(range.inRange(DateTime(2024, 6, 15), isInclusive: true), isTrue);
       });
 
       test('single-day range with inclusive=true includes the date', () {
@@ -414,7 +414,7 @@ void main() {
           start: DateTime(2024, 6, 15),
           end: DateTime(2024, 6, 15),
         );
-        expect(range.inRange(DateTime(2024, 6, 15), inclusive: true), isTrue);
+        expect(range.inRange(DateTime(2024, 6, 15), isInclusive: true), isTrue);
       });
 
       test('single-day range with inclusive=false excludes the date', () {
@@ -422,7 +422,7 @@ void main() {
           start: DateTime(2024, 6, 15),
           end: DateTime(2024, 6, 15),
         );
-        expect(range.inRange(DateTime(2024, 6, 15), inclusive: false), isFalse);
+        expect(range.inRange(DateTime(2024, 6, 15), isInclusive: false), isFalse);
       });
     });
 
@@ -478,7 +478,7 @@ void main() {
           end: now.add(const Duration(days: 1)),
         );
 
-        expect(range.isNowInRange(now: now, inclusive: false), isFalse);
+        expect(range.isNowInRange(now: now, isInclusive: false), isFalse);
       });
 
       // Updated: isNowInRange now defaults to inclusive=true
@@ -497,7 +497,7 @@ void main() {
           start: now.subtract(const Duration(days: 1)),
           end: now,
         );
-        expect(range.isNowInRange(now: now, inclusive: false), isFalse);
+        expect(range.isNowInRange(now: now, isInclusive: false), isFalse);
       });
 
       test('returns true when current date is one millisecond '

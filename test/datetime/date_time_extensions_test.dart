@@ -231,7 +231,7 @@ void main() {
             start: DateTime(2023, 12, 1),
             end: DateTime(2024, 2, 28),
           );
-          expect(date.isAnnualDateInRange(range, inclusive: true), isTrue);
+          expect(date.isAnnualDateInRange(range, isInclusive: true), isTrue);
         });
 
         test('year=0 date at exact end boundary', () {
@@ -240,7 +240,7 @@ void main() {
             start: DateTime(2023, 12, 1),
             end: DateTime(2024, 2, 28),
           );
-          expect(date.isAnnualDateInRange(range, inclusive: true), isTrue);
+          expect(date.isAnnualDateInRange(range, isInclusive: true), isTrue);
         });
 
         test('year=0 with inclusive=false excludes boundaries', () {
@@ -249,7 +249,7 @@ void main() {
             start: DateTime(2023, 12, 1),
             end: DateTime(2024, 2, 28),
           );
-          expect(date.isAnnualDateInRange(range, inclusive: false), isFalse);
+          expect(date.isAnnualDateInRange(range, isInclusive: false), isFalse);
         });
 
         test('year=0 date with multi-year range', () {
@@ -263,7 +263,7 @@ void main() {
       });
 
       group('generateDayList', () {
-        test('generates a list of 5 consecutive days (startOfDay: true)', () {
+        test('generates a list of 5 consecutive days (isStartOfDay: true)', () {
           final DateTime startDate = DateTime(2023);
           final List<DateTime> days = startDate.generateDayList(5);
           expect(days, hasLength(5));
@@ -274,9 +274,9 @@ void main() {
           expect(days[4], DateTime(2023, 1, 5));
         });
 
-        test('generates a list of 5 consecutive days (startOfDay: false)', () {
+        test('generates a list of 5 consecutive days (isStartOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 1, 1, 10, 30); // Example with time
-          final List<DateTime> days = startDate.generateDayList(5, startOfDay: false);
+          final List<DateTime> days = startDate.generateDayList(5, isStartOfDay: false);
           expect(days, hasLength(5));
           expect(days[0], DateTime(2023, 1, 1, 10, 30));
           expect(days[1], DateTime(2023, 1, 2, 10, 30));
@@ -285,33 +285,33 @@ void main() {
           expect(days[4], DateTime(2023, 1, 5, 10, 30));
         });
 
-        test('generates a list of 1 day (startOfDay: true)', () {
+        test('generates a list of 1 day (isStartOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 6, 15);
           final List<DateTime> days = startDate.generateDayList(1);
           expect(days, hasLength(1));
           expect(days[0], DateTime(2023, 6, 15));
         });
 
-        test('generates a list of 1 day (startOfDay: false)', () {
+        test('generates a list of 1 day (isStartOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 6, 15, 12); // Example with time
-          final List<DateTime> days = startDate.generateDayList(1, startOfDay: false);
+          final List<DateTime> days = startDate.generateDayList(1, isStartOfDay: false);
           expect(days, hasLength(1));
           expect(days[0], DateTime(2023, 6, 15, 12));
         });
 
-        test('generates an empty list when days is 0 (startOfDay: true)', () {
+        test('generates an empty list when days is 0 (isStartOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 12, 31);
           final List<DateTime> days = startDate.generateDayList(0);
           expect(days.isEmpty, isTrue);
         });
 
-        test('generates an empty list when days is 0 (startOfDay: false)', () {
+        test('generates an empty list when days is 0 (isStartOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 12, 31, 20); // Example with time
-          final List<DateTime> days = startDate.generateDayList(0, startOfDay: false);
+          final List<DateTime> days = startDate.generateDayList(0, isStartOfDay: false);
           expect(days.isEmpty, isTrue);
         });
 
-        test('handles crossing month boundaries (startOfDay: true)', () {
+        test('handles crossing month boundaries (isStartOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 1, 30);
           final List<DateTime> days = startDate.generateDayList(3);
           expect(days, hasLength(3));
@@ -319,16 +319,16 @@ void main() {
           expect(days[1], DateTime(2023, 1, 31));
           expect(days[2], DateTime(2023, 2));
         });
-        test('handles crossing month boundaries (startOfDay: false)', () {
+        test('handles crossing month boundaries (isStartOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 1, 30, 5, 5);
-          final List<DateTime> days = startDate.generateDayList(3, startOfDay: false);
+          final List<DateTime> days = startDate.generateDayList(3, isStartOfDay: false);
           expect(days, hasLength(3));
           expect(days[0], DateTime(2023, 1, 30, 5, 5));
           expect(days[1], DateTime(2023, 1, 31, 5, 5));
           expect(days[2], DateTime(2023, 2, 1, 5, 5));
         });
 
-        test('handles crossing year boundaries (startOfDay: true)', () {
+        test('handles crossing year boundaries (isStartOfDay: true)', () {
           final DateTime startDate = DateTime(2023, 12, 30);
           final List<DateTime> days = startDate.generateDayList(3);
           expect(days, hasLength(3));
@@ -337,9 +337,9 @@ void main() {
           expect(days[2], DateTime(2024));
         });
 
-        test('handles crossing year boundaries (startOfDay: false)', () {
+        test('handles crossing year boundaries (isStartOfDay: false)', () {
           final DateTime startDate = DateTime(2023, 12, 30, 10, 10, 10);
-          final List<DateTime> days = startDate.generateDayList(3, startOfDay: false);
+          final List<DateTime> days = startDate.generateDayList(3, isStartOfDay: false);
           expect(days, hasLength(3));
           expect(days[0], DateTime(2023, 12, 30, 10, 10, 10));
           expect(days[1], DateTime(2023, 12, 31, 10, 10, 10));
@@ -348,83 +348,83 @@ void main() {
       });
 
       group('prevDay', () {
-        test('returns the previous day (startOfDay: true)', () {
+        test('returns the previous day (isStartOfDay: true)', () {
           final DateTime date = DateTime(2023, 1, 15);
           expect(date.prevDay(), DateTime(2023, 1, 14));
         });
 
-        test('returns the previous day (startOfDay: false)', () {
+        test('returns the previous day (isStartOfDay: false)', () {
           final DateTime date = DateTime(2023, 1, 15, 10);
-          expect(date.prevDay(startOfDay: false), DateTime(2023, 1, 14, 10));
+          expect(date.prevDay(isStartOfDay: false), DateTime(2023, 1, 14, 10));
         });
 
-        test('handles the first day of the month (startOfDay: true)', () {
+        test('handles the first day of the month (isStartOfDay: true)', () {
           final DateTime date = DateTime(2023, 6);
           expect(date.prevDay(), DateTime(2023, 5, 31));
         });
-        test('handles the first day of the month (startOfDay: false)', () {
+        test('handles the first day of the month (isStartOfDay: false)', () {
           final DateTime date = DateTime(2023, 6, 1, 1, 1, 1);
-          expect(date.prevDay(startOfDay: false), DateTime(2023, 5, 31, 1, 1, 1));
+          expect(date.prevDay(isStartOfDay: false), DateTime(2023, 5, 31, 1, 1, 1));
         });
 
-        test('handles the first day of the year (startOfDay: true)', () {
+        test('handles the first day of the year (isStartOfDay: true)', () {
           final DateTime date = DateTime(2023);
           expect(date.prevDay(), DateTime(2022, 12, 31));
         });
 
-        test('handles the first day of the year (startOfDay: false)', () {
+        test('handles the first day of the year (isStartOfDay: false)', () {
           final DateTime date = DateTime(2023, 1, 1, 5, 5, 5);
-          expect(date.prevDay(startOfDay: false), DateTime(2022, 12, 31, 5, 5, 5));
+          expect(date.prevDay(isStartOfDay: false), DateTime(2022, 12, 31, 5, 5, 5));
         });
 
-        test('handles leap years (startOfDay: true)', () {
+        test('handles leap years (isStartOfDay: true)', () {
           final DateTime date = DateTime(2024, 3);
           expect(date.prevDay(), DateTime(2024, 2, 29));
         });
 
-        test('handles leap years (startOfDay: false)', () {
+        test('handles leap years (isStartOfDay: false)', () {
           final DateTime date = DateTime(2024, 3, 1, 1, 2, 3);
-          expect(date.prevDay(startOfDay: false), DateTime(2024, 2, 29, 1, 2, 3));
+          expect(date.prevDay(isStartOfDay: false), DateTime(2024, 2, 29, 1, 2, 3));
         });
       });
 
       group('nextDay', () {
-        test('returns the next day (startOfDay: true)', () {
+        test('returns the next day (isStartOfDay: true)', () {
           final DateTime date = DateTime(2023, 1, 15);
           expect(date.nextDay(), DateTime(2023, 1, 16));
         });
 
-        test('returns the next day (startOfDay: false)', () {
+        test('returns the next day (isStartOfDay: false)', () {
           final DateTime date = DateTime(2023, 1, 15, 5, 4, 3);
-          expect(date.nextDay(startOfDay: false), DateTime(2023, 1, 16, 5, 4, 3));
+          expect(date.nextDay(isStartOfDay: false), DateTime(2023, 1, 16, 5, 4, 3));
         });
 
-        test('handles the last day of the month (startOfDay: true)', () {
+        test('handles the last day of the month (isStartOfDay: true)', () {
           final DateTime date = DateTime(2023, 1, 31);
           expect(date.nextDay(), DateTime(2023, 2));
         });
 
-        test('handles the last day of the month (startOfDay: false)', () {
+        test('handles the last day of the month (isStartOfDay: false)', () {
           final DateTime date = DateTime(2023, 1, 31, 2, 2, 2);
-          expect(date.nextDay(startOfDay: false), DateTime(2023, 2, 1, 2, 2, 2));
+          expect(date.nextDay(isStartOfDay: false), DateTime(2023, 2, 1, 2, 2, 2));
         });
 
-        test('handles the last day of the year (startOfDay: true)', () {
+        test('handles the last day of the year (isStartOfDay: true)', () {
           final DateTime date = DateTime(2023, 12, 31);
           expect(date.nextDay(), DateTime(2024));
         });
-        test('handles the last day of the year (startOfDay: false)', () {
+        test('handles the last day of the year (isStartOfDay: false)', () {
           final DateTime date = DateTime(2023, 12, 31, 5, 5);
-          expect(date.nextDay(startOfDay: false), DateTime(2024, 1, 1, 5, 5));
+          expect(date.nextDay(isStartOfDay: false), DateTime(2024, 1, 1, 5, 5));
         });
 
-        test('handles leap years (startOfDay: true)', () {
+        test('handles leap years (isStartOfDay: true)', () {
           final DateTime date = DateTime(2024, 2, 28);
           expect(date.nextDay(), DateTime(2024, 2, 29));
         });
-        test('handles leap years (startOfDay: false)', () {
+        test('handles leap years (isStartOfDay: false)', () {
           final DateTime date = DateTime(2024, 2, 28, 1, 1, 1);
-          expect(date.nextDay(startOfDay: false), DateTime(2024, 2, 29, 1, 1, 1));
+          expect(date.nextDay(isStartOfDay: false), DateTime(2024, 2, 29, 1, 1, 1));
         });
       });
 
@@ -1257,7 +1257,7 @@ void main() {
             start: DateTime(2024, 6, 1),
             end: DateTime(2024, 6, 30),
           );
-          expect(date.isBetweenRange(range, inclusive: false), isFalse);
+          expect(date.isBetweenRange(range, isInclusive: false), isFalse);
         });
 
         test('inclusive=false excludes end date', () {
@@ -1266,7 +1266,7 @@ void main() {
             start: DateTime(2024, 6, 1),
             end: DateTime(2024, 6, 30),
           );
-          expect(date.isBetweenRange(range, inclusive: false), isFalse);
+          expect(date.isBetweenRange(range, isInclusive: false), isFalse);
         });
 
         test('inclusive=false includes middle date', () {
@@ -1275,7 +1275,7 @@ void main() {
             start: DateTime(2024, 6, 1),
             end: DateTime(2024, 6, 30),
           );
-          expect(date.isBetweenRange(range, inclusive: false), isTrue);
+          expect(date.isBetweenRange(range, isInclusive: false), isTrue);
         });
 
         test('null range returns false', () {
@@ -1289,7 +1289,7 @@ void main() {
             start: DateTime(2023, 12, 1),
             end: DateTime(2024, 2, 28),
           );
-          expect(date.isBetweenRange(range, inclusive: true), isTrue);
+          expect(date.isBetweenRange(range, isInclusive: true), isTrue);
         });
 
         test('handles single-day range with inclusive=true', () {
@@ -1298,7 +1298,7 @@ void main() {
             start: DateTime(2024, 6, 15),
             end: DateTime(2024, 6, 15),
           );
-          expect(date.isBetweenRange(range, inclusive: true), isTrue);
+          expect(date.isBetweenRange(range, isInclusive: true), isTrue);
         });
       });
 
@@ -1559,7 +1559,7 @@ void main() {
         test('aligns to 1 hour interval (round up)', () {
           final DateTime date = DateTime(2023, 6, 15, 10, 37);
           expect(
-            date.alignDateTime(alignment: const Duration(hours: 1), roundUp: true),
+            date.alignDateTime(alignment: const Duration(hours: 1), shouldRoundUp: true),
             DateTime(2023, 6, 15, 11),
           );
         });
@@ -1714,7 +1714,7 @@ void main() {
 
         // round up
         expect(
-          value.alignDateTime(alignment: const Duration(minutes: 30), roundUp: true),
+          value.alignDateTime(alignment: const Duration(minutes: 30), shouldRoundUp: true),
           DateTime.tryParse('2022-01-07 16:00:00.000'),
         );
       });

@@ -329,12 +329,12 @@ void main() {
   group('StringMapExtensions.removeKeys', () {
     test('1. Remove single key', () {
       final Map<String, dynamic> map = <String, dynamic>{'a': 1, 'b': 2, 'c': 3};
-      map.removeKeys(<String>['b']);
+      expect(map.removeKeys(<String>['b']), isTrue);
       expect(map.containsKey('b'), isFalse);
     });
     test('2. Remove multiple keys', () {
       final Map<String, dynamic> map = <String, dynamic>{'a': 1, 'b': 2, 'c': 3};
-      map.removeKeys(<String>['a', 'c']);
+      expect(map.removeKeys(<String>['a', 'c']), isTrue);
       expect(map.keys, <String>['b']);
     });
     test('3. Remove non-existent key', () {
@@ -358,7 +358,7 @@ void main() {
         'a': 1,
         'nested': <String, dynamic>{'a': 2, 'b': 3},
       };
-      map.removeKeys(<String>['a']);
+      expect(map.removeKeys(<String>['a']), isTrue);
       expect(map.containsKey('a'), isFalse);
       expect((map['nested'] as Map<String, dynamic>).containsKey('a'), isFalse);
     });
@@ -367,7 +367,7 @@ void main() {
         'a': 1,
         'nested': <String, dynamic>{'a': 2},
       };
-      map.removeKeys(<String>['a'], recurseChildValues: false);
+      expect(map.removeKeys(<String>['a'], recurseChildValues: false), isTrue);
       expect(map.containsKey('a'), isFalse);
       expect((map['nested'] as Map<String, dynamic>).containsKey('a'), isTrue);
     });
@@ -378,7 +378,7 @@ void main() {
     });
     test('9. All keys removed', () {
       final Map<String, dynamic> map = <String, dynamic>{'a': 1, 'b': 2};
-      map.removeKeys(<String>['a', 'b']);
+      expect(map.removeKeys(<String>['a', 'b']), isTrue);
       expect(map.isEmpty, isTrue);
     });
     test('10. Deeply nested recurse', () {
@@ -389,7 +389,7 @@ void main() {
           'l2': <String, dynamic>{'a': 3},
         },
       };
-      map.removeKeys(<String>['a']);
+      expect(map.removeKeys(<String>['a']), isTrue);
       expect((map['l1'] as Map<String, dynamic>)['l2'], <String, dynamic>{});
     });
   });
