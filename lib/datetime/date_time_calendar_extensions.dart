@@ -27,8 +27,7 @@ extension DateTimeCalendarExtensions on DateTime {
     int age = fromDate.year - year;
 
     // Adjust age if the birthday hasn't occurred yet this year
-    if (month > fromDate.month ||
-        (month == fromDate.month && day > fromDate.day)) {
+    if (month > fromDate.month || (month == fromDate.month && day > fromDate.day)) {
       age--;
     }
 
@@ -124,8 +123,7 @@ extension DateTimeCalendarExtensions on DateTime {
   }
 
   /// Sets the time of the current [DateTime] to the specified [TimeOfDay].
-  DateTime setTime({required TimeOfDay time}) =>
-      DateTime(year, month, day, time.hour, time.minute);
+  DateTime setTime({required TimeOfDay time}) => DateTime(year, month, day, time.hour, time.minute);
 
   /// Returns a new [DateTime] aligned to the specified [alignment] duration.
   ///
@@ -143,23 +141,23 @@ extension DateTimeCalendarExtensions on DateTime {
       hours: alignment.inDays > 0
           ? hour
           : alignment.inHours > 0
-              ? hour % alignment.inHours
-              : 0,
+          ? hour % alignment.inHours
+          : 0,
       minutes: alignment.inHours > 0
           ? minute
           : alignment.inMinutes > 0
-              ? minute % alignment.inMinutes
-              : 0,
+          ? minute % alignment.inMinutes
+          : 0,
       seconds: alignment.inMinutes > 0
           ? second
           : alignment.inSeconds > 0
-              ? second % alignment.inSeconds
-              : 0,
+          ? second % alignment.inSeconds
+          : 0,
       milliseconds: alignment.inSeconds > 0
           ? millisecond
           : alignment.inMilliseconds > 0
-              ? millisecond % alignment.inMilliseconds
-              : 0,
+          ? millisecond % alignment.inMilliseconds
+          : 0,
       microseconds: alignment.inMilliseconds > 0 ? microsecond : 0,
     );
 

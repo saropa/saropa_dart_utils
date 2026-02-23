@@ -7,7 +7,9 @@ This script automates the complete release workflow for a Dart/Flutter package:
   Pre-checks (before numbered steps):
     - Validates pubspec.yaml and CHANGELOG.md versions are in sync
       (auto-fixes pubspec if changelog is ahead)
-    - Aborts early if version tag already exists on remote
+    - If version tag already exists on remote and CHANGELOG.md has an
+      [Unreleased] section, offers to auto-bump to the next patch version
+      (updates both CHANGELOG.md and pubspec.yaml)
 
   Numbered steps:
     1. Checks prerequisites (flutter, git, gh auth, publish workflow)
@@ -310,6 +312,32 @@ def update_pubspec_version(pubspec_path: Path, new_version: str) -> None:
         flags=re.MULTILINE,
     )
     pubspec_path.write_text(updated, encoding="utf-8")
+
+
+def has_unreleased_section(changelog_path: Path) -> bool:
+    """Check if CHANGELOG.md has an [Unreleased] section."""
+    content = changelog_path.read_text(encoding="utf-8")
+    return bool(re.search(r"##\s*\[Unreleased\]", content, re.IGNORECASE))
+
+
+def bump_patch_version(version: str) -> str:
+    """Bump the patch component of a semantic version string."""
+    major, minor, patch = parse_version(version)
+    return f"{major}.{minor}.{patch + 1}"
+
+
+def update_changelog_unreleased(changelog_path: Path, new_version: str) -> None:
+    """Replace [Unreleased] header with versioned header and today's date."""
+    content = changelog_path.read_text(encoding="utf-8")
+    today = datetime.now().strftime("%Y-%m-%d")
+    updated = re.sub(
+        r"(##\s*)\[Unreleased\]",
+        rf"\g<1>[{new_version}] - {today}",
+        content,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+    changelog_path.write_text(updated, encoding="utf-8")
 
 
 def get_package_name(pubspec_path: Path) -> str:
@@ -1019,7 +1047,7 @@ def main() -> int:
                 ExitCode.CHANGELOG_FAILED,
             )
 
-    # Early check: abort if this version is already tagged on remote
+    # Early check: if this version is already tagged on remote, offer to bump
     tag_name = f"v{version}"
     use_shell = get_shell_mode()
     result = subprocess.run(
@@ -1032,11 +1060,41 @@ def main() -> int:
         errors="replace",
     )
     if result.returncode == 0 and result.stdout.strip():
-        exit_with_error(
-            f"Tag {tag_name} already exists on remote. "
-            "This version has already been released.",
-            ExitCode.VALIDATION_FAILED,
-        )
+        if has_unreleased_section(changelog_path):
+            next_version = bump_patch_version(version)
+            print_warning(
+                f"Tag {tag_name} already exists on remote. "
+                "This version has already been released."
+            )
+            response = (
+                input(
+                    f"  Would you like to publish as v{next_version} instead? [y/N] "
+                )
+                .strip()
+                .lower()
+            )
+            if not response.startswith("y"):
+                exit_with_error(
+                    "User cancelled version bump.", ExitCode.USER_CANCELLED
+                )
+            # Update changelog [Unreleased] → new version with today's date
+            update_changelog_unreleased(changelog_path, next_version)
+            print_success(
+                f"CHANGELOG.md: [Unreleased] → [{next_version}]"
+            )
+            # Update pubspec.yaml version
+            update_pubspec_version(pubspec_path, next_version)
+            print_success(f"pubspec.yaml: {version} → {next_version}")
+            version = next_version
+            tag_name = f"v{version}"
+        else:
+            exit_with_error(
+                f"Tag {tag_name} already exists on remote. "
+                "This version has already been released.\n"
+                "  Tip: Add an [Unreleased] section to CHANGELOG.md "
+                "to enable automatic version bumping.",
+                ExitCode.VALIDATION_FAILED,
+            )
 
     print_header("SAROPA DART UTILS PUBLISHER")
 

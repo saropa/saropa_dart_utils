@@ -6,7 +6,8 @@ import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 final RegExp _yearRegex = RegExp(r'\b\d{4}\b');
 
 /// A utility class for working with [DateTime] objects.
-class DateTimeUtils {
+abstract final class DateTimeUtils {
+
   /// Calculates the age at death based on the date of birth (DOB) and date
   /// of death (DOD).
   ///
@@ -314,8 +315,10 @@ class DateTimeUtils {
       return false;
     if (day != null) {
       if (month == null) return false;
-      final int maxDay =
-          monthDayCount(year: year ?? DateConstants.defaultLeapYearCheckYear, month: month);
+      final int maxDay = monthDayCount(
+        year: year ?? DateConstants.defaultLeapYearCheckYear,
+        month: month,
+      );
       if (day < 1 || day > maxDay) return false;
     }
     if (hour != null && (hour < 0 || hour > DateConstants.maxHour)) return false;

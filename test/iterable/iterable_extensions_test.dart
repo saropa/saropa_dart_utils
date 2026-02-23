@@ -4,6 +4,7 @@ import 'package:saropa_dart_utils/iterable/iterable_extensions.dart';
 // A helper class to test with custom comparable objects.
 class _ComparableObject implements Comparable<_ComparableObject> {
   const _ComparableObject(this.id, this.name);
+
   final int id;
   final String name;
 

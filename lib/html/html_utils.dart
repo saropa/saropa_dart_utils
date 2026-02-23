@@ -64,8 +64,7 @@ final RegExp _multipleWhitespaceRegex = RegExp(r'\s+');
 /// HtmlUtils.unescape('&lt;Hello&gt;'); // '<Hello>'
 /// HtmlUtils.removeHtmlTags('<p>Hello <b>World</b></p>'); // 'Hello World'
 /// ```
-class HtmlUtils {
-  const HtmlUtils._(); // Private constructor to prevent instantiation
+abstract final class HtmlUtils {
 
   /// Converts HTML entities to their corresponding characters.
   ///

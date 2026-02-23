@@ -17,8 +17,9 @@ enum JsonEpochScale {
 }
 
 /// Utility class for JSON encoding of iterables.
-class JsonIterablesUtils<T> {
-  /// Returns the JSON-encoded string representation of [iterable].
+abstract final class JsonIterablesUtils<T> {
+
+ /// Returns the JSON-encoded string representation of [iterable].
   ///
   /// The elements of [iterable] (type [T]) must be directly encodable by
   /// `dart:convert.jsonEncode` (e.g., `num`, `String`, `bool`, `null`,
@@ -27,8 +28,8 @@ class JsonIterablesUtils<T> {
 }
 
 /// Utility class for JSON parsing and type conversion.
-class JsonUtils {
-  const JsonUtils._();
+abstract final class JsonUtils {
+
 
   /// Returns a decoded `Map` from the given [jsonString], or `null` if
   /// decoding fails.

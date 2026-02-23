@@ -121,8 +121,8 @@ extension UriNullableExtensions on Uri? {
 }
 
 /// Utility class for URL operations.
-class UrlUtils {
-  const UrlUtils._();
+abstract final class UrlUtils {
+
 
   /// Returns [url] parsed as a URI, or `null` if parsing fails.
   static Uri? tryParse(String? url) {

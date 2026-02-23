@@ -90,8 +90,7 @@ extension StringAnalysisExtensions on String {
   String removeInvalidUnicode() {
     if (isEmpty) return this;
     final StringBuffer buffer = StringBuffer();
-    for (int r in runes
-        .where((int e) => e != _invalidUnicodeReplacementRuneCode)) {
+    for (int r in runes.where((int e) => e != _invalidUnicodeReplacementRuneCode)) {
       buffer.write(String.fromCharCode(r));
     }
     return buffer.toString();
@@ -184,8 +183,7 @@ extension StringAnalysisExtensions on String {
   }
 
   /// Returns `true` if this string ends with punctuation (`.`, `?`, or `!`).
-  bool endsWithPunctuation() =>
-      endsWithAny(const <String>['.', '?', '!']);
+  bool endsWithPunctuation() => endsWithAny(const <String>['.', '?', '!']);
 
   /// Returns `true` if this string equals any item in [list].
   bool isAny(List<String> list) {

@@ -27,7 +27,8 @@ const int _maxAlphabetPosition = 26;
 /// an exception if the input string is null. Instead, they will return a
 /// reasonable default value (usually null or false, depending on the method).
 ///
-class StringUtils {
+abstract final class StringUtils {
+
   /// Returns the n-th letter of the alphabet in uppercase.
   ///
   /// - [n] is an integer representing the position of the letter in the
