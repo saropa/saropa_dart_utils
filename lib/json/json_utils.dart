@@ -1,6 +1,7 @@
 import 'dart:convert' as dc;
 
 import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/map/map_extensions.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
@@ -17,22 +18,24 @@ enum JsonEpochScale {
 }
 
 /// Utility class for JSON encoding of iterables.
-abstract final class JsonIterablesUtils<T> {
-
- /// Returns the JSON-encoded string representation of [iterable].
+abstract final class JsonIterablesUtils {
+  /// Returns the JSON-encoded string representation of [iterable].
   ///
   /// The elements of [iterable] (type [T]) must be directly encodable by
   /// `dart:convert.jsonEncode` (e.g., `num`, `String`, `bool`, `null`,
   /// `List`, or `Map` with encodable keys and values).
+  @useResult
   static String jsonEncode<T>(Iterable<T> iterable) => dc.jsonEncode(iterable.toList());
 }
 
+/// Milliseconds per second, used for epoch timestamp conversion.
+const int _millisecondsPerSecond = 1000;
+
 /// Utility class for JSON parsing and type conversion.
 abstract final class JsonUtils {
-
-
   /// Returns a decoded `Map` from the given [jsonString], or `null` if
   /// decoding fails.
+  @useResult
   static Map<String, dynamic>? jsonDecodeToMap(String? jsonString) {
     if (jsonString == null || jsonString.isEmpty) return null;
     final dynamic decoded = jsonDecodeSafe(jsonString);
@@ -41,6 +44,7 @@ abstract final class JsonUtils {
   }
 
   /// Safely decodes a JSON string, returning null on error.
+  @useResult
   static dynamic jsonDecodeSafe(String? jsonString) {
     jsonString = jsonString?.trim();
     if (jsonString == null || jsonString.isEmpty || jsonString == 'null') return null;
@@ -60,6 +64,7 @@ abstract final class JsonUtils {
   /// If [testDecode] is `true`, actually attempts to decode to verify.
   /// If [allowEmpty] is `true`, treats `'{}'` and `'[]'` as valid JSON
   /// (defaults to `false` for backwards compatibility).
+  @useResult
   static bool isJson(String? value, {bool testDecode = false, bool allowEmpty = false}) {
     if (value == null || value.length < 2) return false;
     final String trimmed = value.trim();
@@ -91,6 +96,7 @@ abstract final class JsonUtils {
   ///
   /// Correctly handles strings that contain escaped inner quotes, e.g.:
   /// `'"hello \"world\""'` → `'hello "world"'`.
+  @useResult
   static String? cleanJsonResponse(String? value) {
     if (value == null || value.isEmpty) return null;
     final String trimmed = value.trim();
@@ -109,6 +115,7 @@ abstract final class JsonUtils {
   /// Returns a decoded `Map` from the JSON string [value], optionally
   /// cleaning the input first when [cleanInput] is `true`, or `null` if
   /// decoding fails.
+  @useResult
   static Map<String, dynamic>? tryJsonDecode(String? value, {bool cleanInput = false}) {
     if (value == null || value.isEmpty) return null;
     if (cleanInput) {
@@ -121,6 +128,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of maps decoded from the JSON string [value], or `null`
   /// if decoding fails.
+  @useResult
   static List<Map<String, dynamic>>? tryJsonDecodeListMap(String? value) {
     if (value == null || !isJson(value)) return null;
     try {
@@ -138,6 +146,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of strings decoded from the JSON string [value], or
   /// `null` if decoding fails.
+  @useResult
   static List<String>? tryJsonDecodeList(String? value) {
     if (value == null || !isJson(value)) return null;
     try {
@@ -155,6 +164,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of maps extracted from [valueList], or `null` if empty
   /// or `null`.
+  @useResult
   static List<Map<String, dynamic>>? toListMap(List<dynamic>? valueList) {
     if (valueList == null) return null;
     final List<Map<String, dynamic>> result = valueList.whereType<Map<String, dynamic>>().toList();
@@ -163,6 +173,7 @@ abstract final class JsonUtils {
 
   /// Returns the item count from [json], which may be an iterable or a
   /// [separator]-delimited string.
+  @useResult
   static int countIterableJson(dynamic json, {String separator = ','}) {
     if (json == null) return 0;
     if (json is Iterable) return json.length;
@@ -174,6 +185,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of strings parsed from [json], splitting on [separator]
   /// if the value is a string, or `null` if conversion is not possible.
+  @useResult
   static List<String>? toStringListJson(dynamic json, {String separator = ','}) {
     if (json == null) return null;
     if (json is List<String>) return json;
@@ -191,6 +203,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of integers parsed from [json], or `null` if conversion
   /// is not possible.
+  @useResult
   static List<int>? toIntListJson(dynamic json) {
     if (json == null) return null;
     if (json is List<int>) return json;
@@ -203,6 +216,7 @@ abstract final class JsonUtils {
 
   /// Returns an integer parsed from [json], or `null` if conversion is not
   /// possible.
+  @useResult
   static int? toIntJson(dynamic json) {
     if (json == null) return null;
     if (json is int) return json;
@@ -213,6 +227,7 @@ abstract final class JsonUtils {
 
   /// Returns a boolean parsed from [json], using [isCaseSensitive] to control
   /// string comparison, or `null` if conversion is not possible.
+  @useResult
   static bool? toBoolJson(dynamic json, {bool isCaseSensitive = true}) {
     if (json == null) return null;
     if (json is bool) return json;
@@ -223,6 +238,7 @@ abstract final class JsonUtils {
 
   /// Returns a double parsed from [json], or `null` if conversion is not
   /// possible.
+  @useResult
   static double? toDoubleJson(dynamic json) {
     if (json == null) return null;
     return double.tryParse(json.toString());
@@ -230,6 +246,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of doubles parsed from [json], or `null` if conversion
   /// is not possible.
+  @useResult
   static List<double>? toDoubleListJson(dynamic json) {
     if (json == null) return null;
     if (json is List<double>) return json;
@@ -247,6 +264,7 @@ abstract final class JsonUtils {
   /// Returns a string from [json] with optional transformations controlled
   /// by [trim], [makeUppercase], [makeLowercase], and [makeCapitalized],
   /// or `null` if the result is empty.
+  @useResult
   static String? toStringJson(
     dynamic json, {
     bool trim = true,
@@ -275,6 +293,7 @@ abstract final class JsonUtils {
 
   /// Returns a [DateTime] parsed from [json], or `null` if conversion is not
   /// possible.
+  @useResult
   static DateTime? toDateTimeJson(dynamic json) {
     if (json == null) return null;
     if (json is DateTime) return json;
@@ -286,17 +305,19 @@ abstract final class JsonUtils {
 
   /// Returns a [DateTime] from the epoch timestamp [json] interpreted at the
   /// given [scale], or `null` if [json] is not a valid integer.
+  @useResult
   static DateTime? toDateTimeEpochJson(dynamic json, JsonEpochScale scale) {
     if (json == null) return null;
     final int? since = json is int ? json : null;
     if (since == null) return null;
     return switch (scale) {
-      JsonEpochScale.seconds => DateTime.fromMillisecondsSinceEpoch(since * 1000),
+      JsonEpochScale.seconds => DateTime.fromMillisecondsSinceEpoch(since * _millisecondsPerSecond),
       JsonEpochScale.milliseconds => DateTime.fromMillisecondsSinceEpoch(since),
       JsonEpochScale.microseconds => DateTime.fromMicrosecondsSinceEpoch(since),
     };
   }
 
   /// Returns [value] as a dynamic list if it is one, or `null` otherwise.
+  @useResult
   static List<dynamic>? toListDynamic(dynamic value) => value is List<dynamic> ? value : null;
 }

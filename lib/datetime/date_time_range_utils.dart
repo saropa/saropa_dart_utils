@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
+
+/// One day duration used for month-end calculations.
+const Duration _oneDay = Duration(days: 1);
 
 /// Extension on [DateTimeRange] to provide additional functionality
 extension DateTimeRangeExtensions on DateTimeRange {
@@ -25,6 +29,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// // Check if 2nd Monday of January falls in range
   /// range.isNthDayOfMonthInRange(2, DateTime.monday, 1); // true (Jan 2024)
   /// ```
+  @useResult
   bool isNthDayOfMonthInRange(int n, int dayOfWeek, int month, {bool isInclusive = true}) {
     // Validate month parameter
     if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
@@ -35,10 +40,8 @@ extension DateTimeRangeExtensions on DateTimeRange {
     // We no longer do an early-exit check on months because that fails
     // for ranges spanning year boundaries (e.g., Nov 2023 to Feb 2024).
     for (int year = start.year; year <= end.year; year++) {
-      // Optimization: Only proceed if the month is within the range for the
-      // current year. This correctly handles year boundaries.
       final DateTime monthStart = DateTime(year, month);
-      final DateTime monthEnd = DateTime(year, month + 1).subtract(const Duration(days: 1));
+      final DateTime monthEnd = DateTime(year, month + 1).subtract(_oneDay);
 
       // Skip this year if the entire month is outside the range
       if (monthEnd.isBefore(start) || monthStart.isAfter(end)) {
@@ -57,7 +60,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
       }
 
       // Check if the nth occurrence is in range using isBetween for consistency
-      if (nthOccurrence.isBetween(start, end, inclusive: isInclusive)) {
+      if (nthOccurrence.isBetween(start, end, isInclusive: isInclusive)) {
         return true;
       }
     }
@@ -69,7 +72,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
 
   /// Returns `true` if the given [date] is within this range.
   ///
-  /// By default, this check is [inclusive], meaning dates exactly equal to the
+  /// By default, this check is [isInclusive], meaning dates exactly equal to the
   /// range's start or end are considered within the range.
   ///
   /// Example:
@@ -80,27 +83,24 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// );
   /// range.inRange(DateTime(2024, 6, 15)); // true
   /// range.inRange(DateTime(2024, 1, 1)); // true (inclusive by default)
-  /// range.inRange(DateTime(2024, 1, 1), inclusive: false); // false
+  /// range.inRange(DateTime(2024, 1, 1), isInclusive: false); // false
   /// ```
-  bool inRange(DateTime date, {bool inclusive = true}) {
-    if (inclusive) {
-      return (date.isAtSameMomentAs(start) || date.isAfter(start)) &&
-          (date.isAtSameMomentAs(end) || date.isBefore(end));
-    }
-    return date.isAfter(start) && date.isBefore(end);
-  }
+  @useResult
+  bool inRange(DateTime date, {bool isInclusive = true}) =>
+      date.isBetween(start, end, isInclusive: isInclusive);
 
   /// Returns `true` if [now] is within this range.
   ///
-  /// By default, this check is [inclusive], meaning if [now] equals the start
+  /// By default, this check is [isInclusive], meaning if [now] equals the start
   /// or end of the range, it is considered within the range.
   ///
   /// NOTE: You can't really make date optional, even if looking for now,
   /// because of microsecond precision. So just cache DateTime.now()
   /// and pass it in for consistent results.
-  bool isNowInRange({DateTime? now, bool inclusive = true}) {
+  @useResult
+  bool isNowInRange({DateTime? now, bool isInclusive = true}) {
     now ??= DateTime.now();
 
-    return inRange(now, inclusive: inclusive);
+    return inRange(now, isInclusive: isInclusive);
   }
 }
