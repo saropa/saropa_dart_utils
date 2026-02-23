@@ -193,7 +193,8 @@ extension SwipeProperties on DragEndDetails {
 
 /// This is a utility class that contains static methods related to gesture
 /// processing.
-class GestureUtils {
+abstract final class GestureUtils {
+
   /// Method to get the swipe speed based on the thresholds defined in
   /// [_swipeSpeedThresholds].
   ///

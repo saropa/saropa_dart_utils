@@ -17,8 +17,9 @@ const int _defaultMaxRecursionDepth = 500;
 /// an exception if the input integers are not within the expected range.
 /// Instead, they will return a reasonable default value (usually null).
 ///
-class IntUtils {
-  /// Returns the greatest common denominator of [a] and [b], or `null` if
+abstract final class IntUtils {
+
+/// Returns the greatest common denominator of [a] and [b], or `null` if
   /// the inputs are invalid or recursion exceeds [maxDepth].
   ///
   /// Uses the Euclidean algorithm, which is based on the principle that the

@@ -24,11 +24,9 @@ extension DateTimeExtensions on DateTime {
 
     final int offset = (dayOfWeek - firstDayOfMonth.weekday + 7) % 7;
 
-    final DateTime firstOccurrence =
-        firstDayOfMonth.add(Duration(days: offset));
+    final DateTime firstOccurrence = firstDayOfMonth.add(Duration(days: offset));
 
-    final DateTime nthOccurrence =
-        firstOccurrence.add(Duration(days: (n - 1) * 7));
+    final DateTime nthOccurrence = firstOccurrence.add(Duration(days: (n - 1) * 7));
     if (nthOccurrence.month != month) {
       return null;
     }
@@ -146,11 +144,7 @@ extension DateTimeExtensions on DateTime {
   /// Returns:
   ///   bool: True if the time is exactly midnight, false otherwise.
   bool get isMidnight =>
-      hour == 0 &&
-      minute == 0 &&
-      second == 0 &&
-      millisecond == 0 &&
-      microsecond == 0;
+      hour == 0 && minute == 0 && second == 0 && millisecond == 0 && microsecond == 0;
 
   /// Ignores the year of the current [DateTime] and returns a new [DateTime]
   /// with the specified [setYear].
@@ -161,8 +155,7 @@ extension DateTimeExtensions on DateTime {
   /// this is February 29 (a leap day) and [setYear] is not a leap year.
   DateTime? toDateInYear(int setYear) {
     if (month == DateTime.february && day == 29) {
-      final bool targetIsLeap =
-          setYear % 4 == 0 && (setYear % 100 != 0 || setYear % 400 == 0);
+      final bool targetIsLeap = setYear % 4 == 0 && (setYear % 100 != 0 || setYear % 400 == 0);
       if (!targetIsLeap) return null;
     }
     return DateTime(

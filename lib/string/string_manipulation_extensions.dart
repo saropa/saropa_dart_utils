@@ -33,8 +33,7 @@ extension StringManipulationExtensions on String {
   String removeLastOccurrence(String target) {
     final int lastIndex = lastIndexOf(target);
     if (lastIndex == -1) return this;
-    return substringSafe(0, lastIndex) +
-        substringSafe(lastIndex + target.length);
+    return substringSafe(0, lastIndex) + substringSafe(lastIndex + target.length);
   }
 
   /// Returns a new string with the outer matching bracket pair removed.
@@ -83,9 +82,7 @@ extension StringManipulationExtensions on String {
       return this;
     }
     if (isCaseSensitive) {
-      return startsWith(start)
-          ? substringSafe(start.length).nullIfEmpty()
-          : this;
+      return startsWith(start) ? substringSafe(start.length).nullIfEmpty() : this;
     }
     return toLowerCase().startsWith(start.toLowerCase())
         ? substringSafe(start.length).nullIfEmpty()
@@ -93,8 +90,7 @@ extension StringManipulationExtensions on String {
   }
 
   /// Returns a new string with [end] removed from the end, if it exists.
-  String removeEnd(String end) =>
-      endsWith(end) ? substringSafe(0, length - end.length) : this;
+  String removeEnd(String end) => endsWith(end) ? substringSafe(0, length - end.length) : this;
 
   /// Returns a new string with the first character removed.
   String removeFirstChar() => (length < 1) ? '' : substringSafe(1);
@@ -103,8 +99,7 @@ extension StringManipulationExtensions on String {
   String removeLastChar() => (length < 1) ? '' : substringSafe(0, length - 1);
 
   /// Returns a new string with both the first and last characters removed.
-  String removeFirstLastChar() =>
-      (length < 2) ? '' : substringSafe(1, length - 1);
+  String removeFirstLastChar() => (length < 2) ? '' : substringSafe(1, length - 1);
 
   /// Returns a new string with apostrophe variants replaced by a standard
   /// single quote.
@@ -129,8 +124,7 @@ extension StringManipulationExtensions on String {
   ///
   /// For example, `'abc123def'.replaceNonNumbers(replacement: '-')` results
   /// in `'---123---'`.
-  String replaceNonNumbers({String replacement = ''}) =>
-      replaceAll(_nonDigitRegex, replacement);
+  String replaceNonNumbers({String replacement = ''}) => replaceAll(_nonDigitRegex, replacement);
 
   /// Returns a new string with all non-digit characters removed.
   String removeNonNumbers() => replaceAll(_nonDigitRegex, '');

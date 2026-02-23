@@ -1,7 +1,8 @@
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 
 /// Utility class for handling time-related emojis, specifically for day/night representation.
-class TimeEmojiUtils {
+abstract final class TimeEmojiUtils {
+
   /// Emoji representing the sun (☀️).
   static const String sunEmoji = '☀️';
 

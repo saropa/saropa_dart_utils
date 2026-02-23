@@ -14,8 +14,7 @@ import 'package:flutter/foundation.dart';
 /// final decompressed = Base64Utils.decompressText(compressed!);
 /// print(decompressed); // 'Hello, World!'
 /// ```
-class Base64Utils {
-  const Base64Utils._(); // Private constructor to prevent instantiation
+abstract final class Base64Utils {
 
   /// Compresses a string using gzip and encodes it as Base64.
   ///

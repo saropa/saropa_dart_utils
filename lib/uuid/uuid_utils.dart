@@ -39,8 +39,7 @@ final RegExp _hexOnly32Regex = RegExp(r'^[0-9a-fA-F]{32}$');
 /// UuidUtils.isUUID('123e4567e89b12d3a456426614174000'); // true
 /// UuidUtils.isUUID('not-a-uuid'); // false
 /// ```
-class UuidUtils {
-  const UuidUtils._(); // Private constructor to prevent instantiation
+abstract final class UuidUtils {
 
   /// Validates if the given string is a valid UUID.
   ///

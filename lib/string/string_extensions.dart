@@ -124,9 +124,7 @@ extension StringExtensions on String {
   /// is `true`, otherwise returns an empty string.
   String wrapSingleAccentedQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
-      return quoteEmpty
-          ? '$accentedQuoteOpening$accentedQuoteClosing'
-          : '';
+      return quoteEmpty ? '$accentedQuoteOpening$accentedQuoteClosing' : '';
     }
     return '$accentedQuoteOpening$this$accentedQuoteClosing';
   }
@@ -137,9 +135,7 @@ extension StringExtensions on String {
   /// is `true`, otherwise returns an empty string.
   String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
-      return quoteEmpty
-          ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing'
-          : '';
+      return quoteEmpty ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing' : '';
     }
     return '$accentedDoubleQuoteOpening$this$accentedDoubleQuoteClosing';
   }
@@ -192,8 +188,7 @@ extension StringExtensions on String {
       return this;
     }
 
-    final int searchLength =
-        cutoff + 1 > charLength ? charLength : cutoff + 1;
+    final int searchLength = cutoff + 1 > charLength ? charLength : cutoff + 1;
     final String searchWindow = characters.take(searchLength).toString();
     final int lastSpaceIndex = searchWindow.lastIndexOf(' ');
 
@@ -201,15 +196,13 @@ extension StringExtensions on String {
       return '${characters.take(cutoff).toString()}$ellipsis';
     }
 
-    final String trimmed =
-        searchWindow.substringSafe(0, lastSpaceIndex).trimRight();
+    final String trimmed = searchWindow.substringSafe(0, lastSpaceIndex).trimRight();
     return '$trimmed$ellipsis';
   }
 
   /// Returns a new string with all characters reversed. Handles Unicode
   /// correctly.
-  String get reversed =>
-      String.fromCharCodes(runes.toList().reversed);
+  String get reversed => String.fromCharCodes(runes.toList().reversed);
 
   /// Returns `null` if the string is empty or contains only whitespace.
   ///

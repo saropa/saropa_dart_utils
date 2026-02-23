@@ -137,8 +137,9 @@ extension StringMapExtensions on Map<String, dynamic> {
 }
 
 /// Utility class for map operations.
-class MapUtils {
-  const MapUtils._();
+abstract final class MapUtils {
+
+
 
   /// Returns the total number of items across all iterable values in
   /// [inputMap].

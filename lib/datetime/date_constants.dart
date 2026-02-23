@@ -8,8 +8,7 @@
 /// bool valid = month >= DateConstants.minMonth;
 /// ```
 // ignore: avoid_god_class
-class DateConstants {
-  const DateConstants._();
+abstract final class DateConstants {
 
   // Date/Time Range Constants
 
@@ -81,8 +80,7 @@ class DateConstants {
 }
 
 /// Utility class for month name operations.
-class MonthUtils {
-  const MonthUtils._();
+abstract final class MonthUtils {
 
   /// Full month names indexed by month number (1-12).
   static const Map<int, String> monthLongNames = <int, String>{
@@ -128,8 +126,7 @@ class MonthUtils {
 }
 
 /// Utility class for weekday name operations.
-class WeekdayUtils {
-  const WeekdayUtils._();
+abstract final class WeekdayUtils {
 
   /// Full weekday names indexed by DateTime weekday constant (1 = Monday, 7 = Sunday).
   static const Map<int, String> dayLongNames = <int, String>{
@@ -165,8 +162,7 @@ class WeekdayUtils {
 }
 
 /// Utility class for serial date string parsing.
-class SerialDateUtils {
-  const SerialDateUtils._();
+abstract final class SerialDateUtils {
 
   /// Parses a serial date string (ISO 8601 format) to DateTime.
   ///

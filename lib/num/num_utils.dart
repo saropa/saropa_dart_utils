@@ -1,6 +1,7 @@
 /// Utility class for number-related operations.
-class NumberUtils {
-  /// Returns the maximum of [a] and [b], handling `null` values.
+abstract final class NumberUtils {
+
+ /// Returns the maximum of [a] and [b], handling `null` values.
   ///
   /// If both are `null`, returns `null`. If only one is `null`, returns the
   /// non-null number. If both are non-null, returns the larger of the two.

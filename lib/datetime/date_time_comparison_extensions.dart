@@ -73,9 +73,7 @@ extension DateTimeComparisonExtensions on DateTime {
     }
 
     if (year == 0) {
-      for (int checkYear = range.start.year;
-          checkYear <= range.end.year;
-          checkYear++) {
+      for (int checkYear = range.start.year; checkYear <= range.end.year; checkYear++) {
         final DateTime dateInYear = DateTime(checkYear, month, day);
 
         if (dateInYear.isBetween(
@@ -143,9 +141,7 @@ extension DateTimeComparisonExtensions on DateTime {
   bool isToday({DateTime? now, bool ignoreYear = false}) {
     now ??= DateTime.now();
 
-    return now.day == day &&
-        now.month == month &&
-        (ignoreYear || now.year == year);
+    return now.day == day && now.month == month && (ignoreYear || now.year == year);
   }
 
   /// Checks if the current [DateTime] has the same date (year, month, day)
@@ -155,8 +151,7 @@ extension DateTimeComparisonExtensions on DateTime {
 
   /// Checks if the current [DateTime] has the same day and month as another
   /// [DateTime].
-  bool isSameDayMonth(DateTime other) =>
-      month == other.month && day == other.day;
+  bool isSameDayMonth(DateTime other) => month == other.month && day == other.day;
 
   /// Checks if the current [DateTime] has the same month as another
   /// [DateTime].

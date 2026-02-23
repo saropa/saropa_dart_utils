@@ -27,7 +27,11 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+**pub.dev** - [saropa.saropa-log-capture](https://pub.dev/packages/saropa_dart_utils)
+
+**Published version**: See field "version": "x.y.z" in [package.json](./package.json)
+
+## [1.0.7] - 2026-02-22
 
 ### Fixed
 - **Lint compliance**: Resolved 10 lint rule categories across 4 files:

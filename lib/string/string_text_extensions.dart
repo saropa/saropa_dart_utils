@@ -5,16 +5,14 @@ import 'package:saropa_dart_utils/string/string_manipulation_extensions.dart';
 
 final RegExp _consecutiveSpacesRegex = RegExp(r'\s+');
 
-final RegExp _splitCapitalizedUnicodeRegex =
-    RegExp(r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt})', unicode: true);
+final RegExp _splitCapitalizedUnicodeRegex = RegExp(r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt})', unicode: true);
 
 final RegExp _splitCapitalizedUnicodeWithNumbersRegex = RegExp(
   r'(?<=\p{Ll})(?=\p{Lu}|\p{Lt}|\p{Nd})|(?<=\p{Nd})(?=\p{L})',
   unicode: true,
 );
 
-final RegExp _singleCharWordRegex =
-    RegExp(r'(?<=^|\s)[\p{L}\p{N}](?=\s|$)', unicode: true);
+final RegExp _singleCharWordRegex = RegExp(r'(?<=^|\s)[\p{L}\p{N}](?=\s|$)', unicode: true);
 
 const List<String> _silentHPrefixes = <String>[
   'hour',
@@ -47,8 +45,7 @@ extension StringTextExtensions on String {
 
   /// Returns the result of collapsing consecutive whitespace, or `null` if
   /// empty. Alias for `removeConsecutiveSpaces`.
-  String? compressSpaces({bool trim = true}) =>
-      removeConsecutiveSpaces(trim: trim);
+  String? compressSpaces({bool trim = true}) => removeConsecutiveSpaces(trim: trim);
 
   /// Returns a list of segments split at capitalized letters (Unicode-aware).
   ///
@@ -72,8 +69,7 @@ extension StringTextExtensions on String {
       String currentBuffer = intermediateSplit[0];
       for (int i = 1; i < intermediateSplit.length; i++) {
         final String nextPart = intermediateSplit[i];
-        if (currentBuffer.length < minLength ||
-            nextPart.length < minLength) {
+        if (currentBuffer.length < minLength || nextPart.length < minLength) {
           currentBuffer = '$currentBuffer$nextPart';
         } else {
           mergedResult.add(currentBuffer);
@@ -100,11 +96,9 @@ extension StringTextExtensions on String {
       return null;
     }
 
-    return split(' ')
-        .map((String word) => word.nullIfEmpty())
-        .whereType<String>()
-        .toList()
-        .nullIfEmpty();
+    return split(
+      ' ',
+    ).map((String word) => word.nullIfEmpty()).whereType<String>().toList().nullIfEmpty();
   }
 
   /// Returns the first word of this string, or `null` if empty.
@@ -179,7 +173,6 @@ extension StringTextExtensions on String {
           StringExtensions.newLine + insertText,
         );
   }
-
 
   /// Returns the appropriate indefinite article (`'a'` or `'an'`) for this
   /// word, or an empty string if input is empty.
@@ -279,13 +272,11 @@ extension StringTextExtensions on String {
     bool appendEllipsis = true,
   }) {
     if (isEmpty) return this;
-    final String collapsed = replaceAll(StringExtensions.newLine, ' ')
-        .replaceAll('  ', ' ');
+    final String collapsed = replaceAll(StringExtensions.newLine, ' ').replaceAll('  ', ' ');
     if (collapsed.length <= cropLength) return collapsed.trim();
 
     String cropped = collapsed.substringSafe(0, cropLength + 1);
-    while (cropped.isNotEmpty &&
-        !cropped.endsWithAny(StringExtensions.commonWordEndings)) {
+    while (cropped.isNotEmpty && !cropped.endsWithAny(StringExtensions.commonWordEndings)) {
       cropped = cropped.substringSafe(0, cropped.length - 1);
     }
     if (cropped.isNotEmpty) {

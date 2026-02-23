@@ -11,7 +11,7 @@ void main() {
     test('5. wrap empty string', () => expect(''.wrap(before: '<', after: '>'), '<>'));
     test(
       '6. wrapWith returns null for empty string',
-      () => expect(''.wrapWith(before: '<', after: '>'), null),
+      () => expect(''.wrapWith(before: '<', after: '>'), isNull),
     );
     test('7. wrapWith basic', () => expect('a'.wrapWith(before: '<', after: '>'), '<a>'));
     test('8. wrapWith with only before', () => expect('a'.wrapWith(before: '<'), '<a'));
@@ -29,7 +29,7 @@ void main() {
     );
     test(
       '5. encloseInParentheses on empty with wrapEmpty: false (default)',
-      () => expect(''.encloseInParentheses(), null),
+      () => expect(''.encloseInParentheses(), isNull),
     );
     // test('6. wrapSingleQuotes on empty', () => expect(''.wrapSingleQuotes(), "''"));
     // test('7. wrapDoubleQuotes on empty', () => expect(''.wrapDoubleQuotes(), '""'));
@@ -446,7 +446,7 @@ void main() {
     );
     test('6. Start is empty', () => expect('Hello'.removeStart(''), 'Hello'));
     test('7. String is empty', () => expect(''.removeStart('a'), ''));
-    test('8. Start is the whole string', () => expect('Hello'.removeStart('Hello'), null));
+    test('8. Start is the whole string', () => expect('Hello'.removeStart('Hello'), isNull));
     test(
       '9. No match, trimFirst: true',
       () => expect('  Hello'.removeStart('World', trimFirst: true), 'Hello'),
@@ -571,8 +571,8 @@ void main() {
       () => expect('  a b  '.removeConsecutiveSpaces(trim: false), ' a b '),
     );
     test('5. Tabs and newlines', () => expect('a\t\nb\nc'.removeConsecutiveSpaces(), 'a b c'));
-    test('6. Empty string', () => expect(''.removeConsecutiveSpaces(), null));
-    test('7. Whitespace-only string', () => expect('   '.removeConsecutiveSpaces(), null));
+    test('6. Empty string', () => expect(''.removeConsecutiveSpaces(), isNull));
+    test('7. Whitespace-only string', () => expect('   '.removeConsecutiveSpaces(), isNull));
     test('8. Alias compressSpaces works', () => expect('a  b'.compressSpaces(), 'a b'));
     test('9. Mixed whitespace characters', () => expect('a \t b \n c'.compressSpaces(), 'a b c'));
     test('10. Single word with spaces', () => expect('  word  '.compressSpaces(), 'word'));
@@ -827,7 +827,7 @@ void main() {
   });
 
   group('words', () {
-    test('1. Empty string returns null', () => expect(''.words(), null));
+    test('1. Empty string returns null', () => expect(''.words(), isNull));
     test('2. Single word string', () => expect('Hello'.words(), <String>['Hello']));
     test(
       '3. Multiple words string',
@@ -858,7 +858,7 @@ void main() {
       '8. String with punctuation attached to words',
       () => expect('Hello, world!'.words(), <String>['Hello,', 'world!']),
     );
-    test('9. String with only whitespace returns null', () => expect('   '.words(), null));
+    test('9. String with only whitespace returns null', () => expect('   '.words(), isNull));
     test('10. String with Unicode words', () => expect('你好 世界'.words(), <String>['你好', '世界']));
   });
 
@@ -1138,7 +1138,7 @@ void main() {
       () => expect('hello world'.removeSingleCharacterWords(), 'hello world'),
     );
     test('3. Empty string', () => expect(''.removeSingleCharacterWords(), ''));
-    test('4. Only single char words', () => expect('a b c'.removeSingleCharacterWords(), null));
+    test('4. Only single char words', () => expect('a b c'.removeSingleCharacterWords(), isNull));
     test(
       '5. Preserve multi-char words',
       () => expect('I am a test'.removeSingleCharacterWords(), 'am test'),
@@ -1224,7 +1224,7 @@ void main() {
       '9. With trim enabled',
       () => expect('  ---hello---  '.removeLeadingAndTrailing('-', trim: true), 'hello'),
     );
-    test('10. All removed returns null', () => expect('---'.removeLeadingAndTrailing('-'), null));
+    test('10. All removed returns null', () => expect('---'.removeLeadingAndTrailing('-'), isNull));
     test(
       '11. Keep middle occurrences',
       () => expect('---hel-lo---'.removeLeadingAndTrailing('-'), 'hel-lo'),
@@ -1235,9 +1235,9 @@ void main() {
   group('firstWord', () {
     test('1. Multiple words', () => expect('hello world test'.firstWord(), 'hello'));
     test('2. Single word', () => expect('hello'.firstWord(), 'hello'));
-    test('3. Empty string', () => expect(''.firstWord(), null));
+    test('3. Empty string', () => expect(''.firstWord(), isNull));
     test('4. Leading spaces', () => expect('  hello world'.firstWord(), 'hello'));
-    test('5. Only spaces', () => expect('   '.firstWord(), null));
+    test('5. Only spaces', () => expect('   '.firstWord(), isNull));
     test('6. Unicode words', () => expect('你好 世界'.firstWord(), '你好'));
     test('7. Numbers as first word', () => expect('123 abc'.firstWord(), '123'));
     test('8. Punctuation attached', () => expect('hello, world'.firstWord(), 'hello,'));
@@ -1251,10 +1251,10 @@ void main() {
   group('secondWord', () {
     test('1. Multiple words', () => expect('hello world test'.secondWord(), 'world'));
     test('2. Two words', () => expect('hello world'.secondWord(), 'world'));
-    test('3. Single word', () => expect('hello'.secondWord(), null));
-    test('4. Empty string', () => expect(''.secondWord(), null));
+    test('3. Single word', () => expect('hello'.secondWord(), isNull));
+    test('4. Empty string', () => expect(''.secondWord(), isNull));
     test('5. Leading spaces', () => expect('  hello world'.secondWord(), 'world'));
-    test('6. Only spaces', () => expect('   '.secondWord(), null));
+    test('6. Only spaces', () => expect('   '.secondWord(), isNull));
     test('7. Unicode words', () => expect('你好 世界 测试'.secondWord(), '世界'));
     test('8. Three words', () => expect('one two three'.secondWord(), 'two'));
     test('9. Numbers', () => expect('1 2 3'.secondWord(), '2'));
@@ -1419,9 +1419,9 @@ void main() {
       expect(result, isNotNull);
       expect(result, isNotEmpty);
     });
-    test('3. No matches', () => expect('hello world'.extractCurlyBraces(), null));
-    test('4. Empty braces', () => expect('{}'.extractCurlyBraces(), null));
-    test('5. Empty string', () => expect(''.extractCurlyBraces(), null));
+    test('3. No matches', () => expect('hello world'.extractCurlyBraces(), isNull));
+    test('4. Empty braces', () => expect('{}'.extractCurlyBraces(), isNull));
+    test('5. Empty string', () => expect(''.extractCurlyBraces(), isNull));
     test('6. Nested braces', () {
       final List<String>? result = '{{nested}}'.extractCurlyBraces();
       expect(result, isNotNull);
