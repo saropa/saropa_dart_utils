@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Length of a UUID string without hyphens (32 hex characters).
@@ -40,7 +41,6 @@ final RegExp _hexOnly32Regex = RegExp(r'^[0-9a-fA-F]{32}$');
 /// UuidUtils.isUUID('not-a-uuid'); // false
 /// ```
 abstract final class UuidUtils {
-
   /// Validates if the given string is a valid UUID.
   ///
   /// Supports both UUID formats:
@@ -67,6 +67,7 @@ abstract final class UuidUtils {
   /// UuidUtils.isUUID('not-a-uuid'); // false
   /// UuidUtils.isUUID('123e4567-e89b-62d3-a456-426614174000'); // false (invalid version 6)
   /// ```
+  @useResult
   static bool isUUID(String? uuid) {
     if (uuid == null || uuid.isEmpty) {
       return false;
@@ -105,6 +106,7 @@ abstract final class UuidUtils {
   ///
   /// UuidUtils.addHyphens('too-short'); // Returns null
   /// ```
+  @useResult
   static String? addHyphens(String? uuid) {
     if (uuid == null || uuid.isEmpty) {
       return null;
@@ -147,6 +149,7 @@ abstract final class UuidUtils {
   /// UuidUtils.removeHyphens('123e4567-e89b-12d3-a456-426614174000');
   /// // Returns '123e4567e89b12d3a456426614174000'
   /// ```
+  @useResult
   static String? removeHyphens(String? uuid) {
     if (uuid == null || uuid.isEmpty) {
       return null;

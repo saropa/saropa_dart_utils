@@ -1,8 +1,8 @@
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 
 /// Utility class for handling time-related emojis, specifically for day/night representation.
 abstract final class TimeEmojiUtils {
-
   /// Emoji representing the sun (☀️).
   static const String sunEmoji = '☀️';
 
@@ -25,6 +25,7 @@ abstract final class TimeEmojiUtils {
   /// TimeEmojiUtils.getEmojiDayOrNight(20); // Returns '🌙' (8pm)
   /// TimeEmojiUtils.getEmojiDayOrNight(null); // Returns null
   /// ```
+  @useResult
   static String? getEmojiDayOrNight(int? tzHour) {
     if (tzHour == null) {
       return null;
@@ -49,5 +50,6 @@ extension EmojiDateTimeExtensions on DateTime {
   /// DateTime now = DateTime.now();
   /// String? emoji = now.emojiDayOrNight; // Returns '☀️' or '🌙' based on the current hour.
   /// ```
+  @useResult
   String? get emojiDayOrNight => TimeEmojiUtils.getEmojiDayOrNight(hour);
 }

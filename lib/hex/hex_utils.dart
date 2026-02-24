@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Radix for hexadecimal number system (base 16).
 const int _hexRadix = 16;
 
@@ -38,6 +40,7 @@ extension HexExtensions on String {
   /// 'invalid-hex'.hexToInt(); // Returns null, prints a warning
   /// '8000000000000000'.hexToInt(); // Returns null, prints a warning (too large)
   /// ```
+  @useResult
   int? hexToInt() {
     if (isEmpty) {
       return null;
@@ -76,5 +79,6 @@ extension HexIntExtensions on int {
   /// 6719.intToHex(); // Returns '1a3f'
   /// 0.intToHex(); // Returns '0'
   /// ```
+  @useResult
   String intToHex() => toRadixString(_hexRadix);
 }

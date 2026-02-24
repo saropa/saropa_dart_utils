@@ -36,12 +36,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **`Occurrence<T>` class** (`lib/iterable/occurrence.dart`): typed result for `mostOccurrences()` and `leastOccurrences()` methods, replacing record return types
 - **`BetweenResult` class** (`lib/string/between_result.dart`): typed result for `betweenResult()`, `betweenResultLast()`, and bracket-extraction methods, replacing record return types
+- **`GestureUtils`** (`lib/gesture/gesture_utils.dart`): extracted swipe speed/magnitude classification into standalone utility class with public thresholds
+- **`JsonEpochScale` enum** (`lib/json/json_epoch_scale.dart`): epoch timestamp scale (seconds, milliseconds, microseconds) extracted from `json_utils.dart`
+- **`JsonIterablesUtils`** (`lib/json/json_iterables_utils.dart`): generic JSON encoding for iterables
+- **`JsonTypeUtils`** (`lib/json/json_type_utils.dart`): 13 type-safe JSON conversion methods (lists, strings, ints, doubles, booleans, dates, epochs) extracted from `json_utils.dart`
+- **`@useResult` annotations**: Added to 40+ public methods across string, datetime, gesture, json, list, map, num, and other extensions to prevent silent discard of return values
+- **`KeyExtractor<T, E>` typedef**: for `toUniqueBy`/`toUniqueByInPlace` parameters (`prefer_typedefs_for_callbacks`)
+- **`Swipe.toString()`**: Added string representation for debugging
 
 ### Changed
-- **Lint compliance**: Resolved `prefer_all_named_parameters` warnings by converting positional parameters to required named parameters in `isNthDayOfMonthInRange`, `getGreatGrandchild`, `getGreatGrandchildString`, `mapToggleValue`, `mapAddValue`, `mapRemoveValue`, and `mapContainsValue`
-- **Lint compliance**: Resolved `prefer_class_over_record_return` warnings across 5 extension files by replacing record `(T, int)?` and `(String, String?)?` return types with named classes
-- Updated `bool_iterable_extensions.dart`, `int_iterable_extensions.dart`, `double_iterable_extensions.dart`, `iterable_extensions.dart`, and `string_between_extensions.dart`
+- **`json_utils.dart` split**: Extracted type conversions, epoch scale, and iterable encoding into 3 focused modules for modularity
+- **`Swipe` constructor**: Changed from positional to required named parameters (`prefer_all_named_parameters`)
+- **Boolean parameter renames** (`prefer_boolean_prefixes`): `testDecode` → `shouldTestDecode`, `allowEmpty` → `shouldAllowEmpty`, `cleanInput` → `shouldCleanInput`, `inclusive` → `isInclusive`, `startOfDay` → `isStartOfDay`, `roundUp` → `shouldRoundUp`
+- **Exception narrowing** (`avoid_catch_all`): Replaced bare `catch (e)` with specific exception types (`on FormatException`)
+- **`dynamic` → `Object?`**: Replaced `dynamic` return types in JSON decode methods (`avoid_dynamic_type`)
+- **Abstract final classes**: Converted static-only utility classes to `abstract final` to prevent instantiation and inheritance
+- **Lint compliance**: Resolved `prefer_all_named_parameters` across `isNthDayOfMonthInRange`, `getGreatGrandchild`, `getGreatGrandchildString`, `mapToggleValue`, `mapAddValue`, `mapRemoveValue`, `mapContainsValue`
+- **Lint compliance**: Resolved `prefer_class_over_record_return` across 5 extension files by replacing record types with named classes
+- **Lint compliance**: Resolved `prefer_parentheses_with_if_null` in `string_between_extensions.dart`
+- **Lint compliance**: Resolved `prefer_typedefs_for_callbacks` and `prefer_extracting_function_callbacks` in unique list and map extensions
+- **Lint compliance**: Extracted `_writeFormattedValue` helper from `formatMap` using Dart 3 switch pattern matching
+- **Lint compliance**: Eliminated logic duplication — `inRange` now delegates to `isBetween`; replaced inline leap-year math with `DateTimeUtils.isLeapYear()` reuse
+- **Lint compliance**: Used `List.generate` for pre-allocated day lists (`require_list_preallocate`)
+- **Lint compliance**: Extracted hardcoded `Duration` constants (`_oneDay`, `_oneMicrosecond`) per `avoid_hardcoded_durations`
+- **Lint compliance**: Avoided parameter mutation — use local `resolvedNow` instead of reassigning `now`
+- **Refactoring**: Extracted helper methods in `date_time_utils.dart` (`_pluralLabel`, `_joinWithAnd`, `_buildDurationParts`) and replaced switch statements with constant set lookups
 - Added `T extends Object` constraint to `GeneralIterableExtensions` generic parameter
+- Updated `analysis_options.yaml` and `analysis_options_custom.yaml` lint configurations
+
+### Tests
+- Added comprehensive test suite for `JsonTypeUtils` (60+ test cases)
+- Updated tests for renamed boolean parameters across json, datetime, gesture, and enum tests
+- Lint violations reduced from ~10,000 to ~30
 
 ## [1.0.7] - 2026-02-22
 
@@ -93,7 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`randomElement`**: was using `DateTime.now().microsecondsSinceEpoch % length` (deterministic, biased). Now uses a module-level `Random` instance with `nextInt()`.
 - **`isBetween`**: inclusive mode was using `==` instead of `isAtSameMomentAs` for boundary equality — boundary values were excluded.
 - **`removeStart`**: case-insensitive path was calling `nullIfEmpty()` on the trimmed match, returning `null` instead of the original string on non-match.
-- **`last()`**: was using rune-based indexing, splitting multi-codepoint emoji. Now uses `characters` package grapheme clusters. Also optimised: replaces `toList()` + `sublist()` with `chars.skip()` to avoid full list allocation.
+- **`last()`**: was using rune-based indexing, splitting multi-codepoint emoji. Now uses `characters` package grapheme clusters. Also optimized: replaces `toList()` + `sublist()` with `chars.skip()` to avoid full list allocation.
 - **`toDateInYear`**: was crashing with `ArgumentError` for Feb 29 → non-leap year. Now returns `null`.
 - **`cleanJsonResponse`**: was unescaping `\"` before detecting outer quotes, corrupting strings like `"hello \"world\""`. Now detects outer quotes first.
 
@@ -121,11 +147,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`between`**: documented special case where empty `end` returns the tail from `start`.
 - **`takeSafe(0)`**: documented that `count == 0` returns the original list (unlike `take(0)`).
 - **`weekOfYear`** / **`weekNumber()`**: documented ISO 8601 edge cases at year boundaries.
-- **`num.length()`**: documented scientific notation behaviour for values ≥ 1e21.
+- **`num.length()`**: documented scientific notation behavior for values ≥ 1e21.
 - **`pluralize`**: removed `length == 1` guard that incorrectly skipped single-character strings.
 - **`forceBetween`**: corrected misleading dartdoc ("NOT greater than" → correctly describes clamping).
 - **`truncateWithEllipsisPreserveWords`**: fixed grapheme-unsafe fallback that could split multi-codepoint emoji; now uses `characters.take()` for the search window.
-- **`toMapStringDynamic`**: documented silent key collision behaviour when `ensureUniqueKey: false`.
+- **`toMapStringDynamic`**: documented silent key collision behavior when `ensureUniqueKey: false`.
 - **`timeToEmoji`**: boundary was `>` instead of `>=` — 7:00am showed moon emoji instead of sun.
 
 ### Tests

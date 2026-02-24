@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
@@ -7,6 +8,52 @@ final RegExp _yearRegex = RegExp(r'\b\d{4}\b');
 
 /// A utility class for working with [DateTime] objects.
 abstract final class DateTimeUtils {
+  // -- Locale constants for month-first date format --
+
+  /// Locale codes that commonly use month-first (MM/DD/YYYY) date format.
+  ///
+  /// Includes US, Philippines, Canada (English), Filipino, Micronesian,
+  /// Guamanian, Marshallese, Palauan, and Belize.
+  // cspell: ignore Palauan
+  static const Set<String> _monthFirstLocales = <String>{
+    'en_US', // US English
+    'en_PH', // Philippine English
+    'en_CA', // Canadian English
+    'fil', // Filipino
+    'fsm', // Micronesian - Federated States of Micronesia
+    'gu_GU', // Guamanian - Guam
+    'mh', // Marshallese - Marshall Islands
+    'pw', // Palauan - Palau
+    'en_BZ', // Belize
+  };
+
+  // -- Duration display labels (English) --
+
+  /// Singular form of 'year' for duration display.
+  static const String _yearLabel = 'year';
+
+  /// Plural form of 'year' for duration display.
+  static const String _yearsLabel = 'years';
+
+  /// Singular form of 'month' for duration display.
+  static const String _monthLabel = 'month';
+
+  /// Plural form of 'month' for duration display.
+  static const String _monthsLabel = 'months';
+
+  /// Singular form of 'day' for duration display.
+  static const String _dayLabel = 'day';
+
+  /// Plural form of 'day' for duration display.
+  static const String _daysLabel = 'days';
+
+  /// Default output when no full years or months are present.
+  static const String _zeroDays = '0 days';
+
+  // -- Error messages --
+
+  /// Error message for out-of-range month values.
+  static const String _invalidMonthMessage = 'Month must be between 1 and 12';
 
   /// Calculates the age at death based on the date of birth (DOB) and date
   /// of death (DOD).
@@ -18,6 +65,7 @@ abstract final class DateTimeUtils {
   /// Returns:
   ///   int?: The calculated age at death, or null if either [dob] or [dod]
   ///   is null, or if [dod] is before [dob].
+  @useResult
   static int? calculateAgeAtDeath({required DateTime? dob, required DateTime? dod}) {
     // Check if either dob or dod is null
     if (dob == null || dod == null) {
@@ -52,6 +100,7 @@ abstract final class DateTimeUtils {
   ///
   /// @param input The string to search for a 4-digit year.
   /// @return The extracted year as an integer, or null if no year is found.
+  @useResult
   static int? extractYear(String input) {
     // Regular expression to match a 4-digit year
     final RegExp yearRegex = _yearRegex;
@@ -75,12 +124,11 @@ abstract final class DateTimeUtils {
   /// Pass [now] to override the current date (useful for testing). The
   /// returned date has its time set to [hour], [minute], and [second]
   /// (all defaulting to 0).
+  @useResult
   static DateTime tomorrow({DateTime? now, int? hour, int minute = 0, int second = 0}) {
-    // Get the current date and time
-    now ??= DateTime.now();
-
     // Calculate the date for tomorrow at the specified time
-    final DateTime tomorrowAtSpecifiedTime = now.addDays(1);
+    final DateTime resolvedNow = now ?? DateTime.now();
+    final DateTime tomorrowAtSpecifiedTime = resolvedNow.addDays(1);
 
     return tomorrowAtSpecifiedTime.copyWith(
       hour: hour ?? 0,
@@ -101,28 +149,8 @@ abstract final class DateTimeUtils {
   /// Note: This method provides a simplified approximation and may not be
   /// accurate for all locales or regions within those locales.  Date format
   /// usage can be complex and vary.
-  static bool isDeviceDateMonthFirst() {
-    final String locale = Platform.localeName;
-
-    /// Locales that are commonly month-first (MM/DD/YYYY)
-    switch (locale) {
-      case 'en_US':
-      case 'en_PH':
-      case 'en_CA': // Canadian English - month-day-year common but YYYY-MM-DD official
-      case 'fil': // Filipino
-      case 'fsm': // Micronesian - Federated States of Micronesia
-      case 'gu_GU': // Guamanian - Guam
-      case 'mh': // Marshallese - Marshall Islands
-      // cspell: ignore Palauan
-      case 'pw': // Palauan - Palau
-      case 'en_BZ': // Belize
-        return true;
-
-      //Default to false, assuming day-first or year-first format for other locales.
-      default:
-        return false;
-    }
-  }
+  @useResult
+  static bool isDeviceDateMonthFirst() => _monthFirstLocales.contains(Platform.localeName);
 
   /// Average number of days per year, accounting for leap years.
   /// (365 * 3 + 366) / 4 = 365.25
@@ -131,6 +159,29 @@ abstract final class DateTimeUtils {
   /// Average number of days per month.
   /// 365.25 / 12 = 30.4375
   static const double _avgDaysPerMonth = 30.4375;
+
+  /// Returns the English singular or plural label for [count].
+  ///
+  /// English-only by design (no Intl dependency).
+  // ignore: require_plural_handling
+  static String _pluralLabel({
+    required int count,
+    required String singular,
+    required String plural,
+  }) => count == 1 ? singular : plural;
+
+  /// Joins duration parts with 'and' for readability.
+  static String _joinWithAnd(List<String> parts) {
+    if (parts.length == 1) {
+      return parts[0];
+    }
+
+    if (parts.length == 2) {
+      return '${parts[0]} and ${parts[1]}';
+    }
+
+    return '${parts[0]}, ${parts[1]}, and ${parts[2]}';
+  }
 
   /// Returns a human-readable string representing [days] as years, months,
   /// and optionally remaining days, or `null` if [days] is `null` or less
@@ -154,6 +205,7 @@ abstract final class DateTimeUtils {
   /// convertDaysToYearsAndMonths(10); // '0 days'
   /// convertDaysToYearsAndMonths(10, includeRemainingDays: true); // '10 days'
   /// ```
+  @useResult
   static String? convertDaysToYearsAndMonths(
     int? days, {
     bool includeRemainingDays = false,
@@ -162,58 +214,67 @@ abstract final class DateTimeUtils {
       return null;
     }
 
-    // Calculate years using average days per year (365.25 to account for leap years)
     final int years = (days / _avgDaysPerYear).floor();
     double remainingDays = days - (years * _avgDaysPerYear);
-
-    // Calculate months from remaining days using average days per month
     final int months = (remainingDays / _avgDaysPerMonth).floor();
-    remainingDays = remainingDays - (months * _avgDaysPerMonth);
-
-    // Round remaining days
+    remainingDays -= months * _avgDaysPerMonth;
     final int remainingDaysInt = remainingDays.round();
 
-    // Determine whether to use singular or plural forms
-    final String yearStr = (years == 1) ? 'year' : 'years';
-    final String monthStr = (months == 1) ? 'month' : 'months';
-    final String dayStr = (remainingDaysInt == 1) ? 'day' : 'days';
+    final List<String> parts = _buildDurationParts(
+      years: years,
+      months: months,
+      remainingDaysInt: remainingDaysInt,
+      includeRemainingDays: includeRemainingDays,
+    );
 
-    // Build result parts
+    if (parts.isEmpty) {
+      if (!includeRemainingDays || remainingDaysInt <= 0) {
+        return _zeroDays;
+      }
+
+      final String dayStr = _pluralLabel(
+        count: remainingDaysInt,
+        singular: _dayLabel,
+        plural: _daysLabel,
+      );
+
+      return '$remainingDaysInt $dayStr';
+    }
+
+    return _joinWithAnd(parts);
+  }
+
+  /// Builds the list of duration parts (years, months, days).
+  static List<String> _buildDurationParts({
+    required int years,
+    required int months,
+    required int remainingDaysInt,
+    required bool includeRemainingDays,
+  }) {
     final List<String> parts = <String>[];
 
     if (years > 0) {
-      parts.add('$years $yearStr');
+      parts.add('$years ${_pluralLabel(count: years, singular: _yearLabel, plural: _yearsLabel)}');
     }
 
     if (months > 0) {
-      parts.add('$months $monthStr');
+      parts.add(
+        '$months ${_pluralLabel(count: months, singular: _monthLabel, plural: _monthsLabel)}',
+      );
     }
 
     if (includeRemainingDays && remainingDaysInt > 0) {
-      parts.add('$remainingDaysInt $dayStr');
+      parts.add(
+        '$remainingDaysInt ${_pluralLabel(count: remainingDaysInt, singular: _dayLabel, plural: _daysLabel)}',
+      );
     }
 
-    // Handle case where we have no years or months
-    if (parts.isEmpty) {
-      if (includeRemainingDays && remainingDaysInt > 0) {
-        return '$remainingDaysInt $dayStr';
-      }
-      return '0 days';
-    }
-
-    // Join parts with 'and' for readability
-    if (parts.length == 1) {
-      return parts[0];
-    } else if (parts.length == 2) {
-      return '${parts[0]} and ${parts[1]}';
-    } else {
-      // For 3 parts: "X years, Y months, and Z days"
-      return '${parts[0]}, ${parts[1]}, and ${parts[2]}';
-    }
+    return parts;
   }
 
   /// Returns the first day of the month following the given [month] and [year],
   /// or `null` if [month] is invalid.
+  @useResult
   static DateTime? firstDayNextMonth({required int month, required int year}) {
     // ref: https://stackoverflow.com/questions/61881850/sort-list-based-on-boolean
     // ref: https://stackoverflow.com/questions/67144785/flutter-dart-datetime-max-min-value
@@ -235,6 +296,7 @@ abstract final class DateTimeUtils {
   /// Returns the later of two dates.
   ///
   /// If [date2] is null, [date1] is returned.
+  @useResult
   static DateTime maxDate(DateTime date1, DateTime? date2) {
     if (date2 == null) {
       return date1;
@@ -246,6 +308,7 @@ abstract final class DateTimeUtils {
   /// Returns the earlier of two dates.
   ///
   /// If [date2] is null, [date1] is returned.
+  @useResult
   static DateTime minDate(DateTime date1, DateTime? date2) {
     if (date2 == null) {
       return date1;
@@ -257,24 +320,24 @@ abstract final class DateTimeUtils {
   /// Checks if the given year is a leap year.
   ///
   /// Returns true if the year is a leap year, false otherwise.
-  static bool isLeapYear({required int year}) =>
-      // A year is a leap year if it is divisible by 4
-      year % DateConstants.leapYearModulo4 == 0
-      // A year is not a leap year if it is divisible by 100
-      &&
-      (year % DateConstants.leapYearModulo100 != 0
-          // unless it is also divisible by 400
-          ||
-          year % DateConstants.leapYearModulo400 == 0);
+  @useResult
+  static bool isLeapYear({required int year}) {
+    final bool isDivisibleBy4 = year % DateConstants.leapYearModulo4 == 0;
+    final bool isDivisibleBy100 = year % DateConstants.leapYearModulo100 == 0;
+    final bool isDivisibleBy400 = year % DateConstants.leapYearModulo400 == 0;
+
+    return isDivisibleBy4 && (!isDivisibleBy100 || isDivisibleBy400);
+  }
 
   /// Returns the number of days in the given [month] and [year].
   ///
   /// Takes into account leap years for February.
   ///
   /// Throws [ArgumentError] if [month] is not between 1 and 12.
+  @useResult
   static int monthDayCount({required int year, required int month}) {
     if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
-      throw ArgumentError('Month must be between 1 and 12');
+      throw ArgumentError(_invalidMonthMessage);
     }
 
     const List<int> daysInMonth = <int>[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -284,6 +347,15 @@ abstract final class DateTimeUtils {
     }
 
     return daysInMonth[month - 1];
+  }
+
+  /// Returns `true` if [value] is `null` or within [min]..[max] inclusive.
+  static bool _isInRange({required int? value, required int min, required int max}) {
+    if (value == null) {
+      return true;
+    }
+
+    return value >= min && value <= max;
   }
 
   /// Returns `true` if all provided date/time components are within valid
@@ -300,6 +372,9 @@ abstract final class DateTimeUtils {
   /// - [microsecond]: 0-999
   ///
   /// Components that are `null` are not validated.
+  @useResult
+  // All 8 named params are needed to validate each DateTime component
+  // ignore: avoid_long_parameter_list
   static bool isValidDateParts({
     int? year,
     int? month,
@@ -310,26 +385,52 @@ abstract final class DateTimeUtils {
     int? millisecond,
     int? microsecond,
   }) {
-    if (year != null && (year < 0 || year > DateConstants.maxYear)) return false;
-    if (month != null && (month < DateConstants.minMonth || month > DateConstants.maxMonth))
+    if (!_isInRange(value: year, min: 0, max: DateConstants.maxYear)) {
       return false;
-    if (day != null) {
-      if (month == null) return false;
-      final int maxDay = monthDayCount(
-        year: year ?? DateConstants.defaultLeapYearCheckYear,
-        month: month,
-      );
-      if (day < 1 || day > maxDay) return false;
     }
-    if (hour != null && (hour < 0 || hour > DateConstants.maxHour)) return false;
-    if (minute != null && (minute < 0 || minute > DateConstants.maxMinuteOrSecond)) return false;
-    if (second != null && (second < 0 || second > DateConstants.maxMinuteOrSecond)) return false;
-    if (millisecond != null &&
-        (millisecond < 0 || millisecond > DateConstants.maxMillisecondOrMicrosecond))
+
+    if (!_isInRange(value: month, min: DateConstants.minMonth, max: DateConstants.maxMonth)) {
       return false;
-    if (microsecond != null &&
-        (microsecond < 0 || microsecond > DateConstants.maxMillisecondOrMicrosecond))
+    }
+
+    if (!_isValidDay(day: day, month: month, year: year)) {
       return false;
-    return true;
+    }
+
+    if (!_isInRange(value: hour, min: 0, max: DateConstants.maxHour)) {
+      return false;
+    }
+
+    if (!_isInRange(value: minute, min: 0, max: DateConstants.maxMinuteOrSecond)) {
+      return false;
+    }
+
+    if (!_isInRange(value: second, min: 0, max: DateConstants.maxMinuteOrSecond)) {
+      return false;
+    }
+
+    if (!_isInRange(value: millisecond, min: 0, max: DateConstants.maxMillisecondOrMicrosecond)) {
+      return false;
+    }
+
+    return _isInRange(value: microsecond, min: 0, max: DateConstants.maxMillisecondOrMicrosecond);
+  }
+
+  /// Validates the [day] component given [month] and [year].
+  static bool _isValidDay({int? day, int? month, int? year}) {
+    if (day == null) {
+      return true;
+    }
+
+    if (month == null) {
+      return false;
+    }
+
+    final int maxDay = monthDayCount(
+      year: year ?? DateConstants.defaultLeapYearCheckYear,
+      month: month,
+    );
+
+    return day >= 1 && day <= maxDay;
   }
 }

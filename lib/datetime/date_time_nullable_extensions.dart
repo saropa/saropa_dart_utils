@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Extension methods for nullable DateTime (`DateTime?`) to enhance null-aware DateTime comparisons,
 /// especially useful for sorting and ordering operations where null DateTimes need to be handled explicitly.
 extension DateTimeNullableExtensions on DateTime? {
@@ -23,6 +25,7 @@ extension DateTimeNullableExtensions on DateTime? {
   /// dt1.isBeforeNullable(dt3); // false (non-null is not before null)
   /// dt3.isBeforeNullable(null); // false (not strictly before, but not considered before for sorting)
   /// ```
+  @useResult
   bool isBeforeNullable(DateTime? other) {
     final DateTime? self = this;
     if (self == null) {
@@ -58,6 +61,7 @@ extension DateTimeNullableExtensions on DateTime? {
   /// dt1.compareDateTimeNullable(dt3); // 1 (non-null is considered after null)
   /// dt3.compareDateTimeNullable(null); // 0 (both null are considered equal)
   /// ```
+  @useResult
   int compareDateTimeNullable(DateTime? other) {
     final DateTime? self = this;
     if (self == other) {

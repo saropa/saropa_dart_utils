@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Start of the "teen" range (11-19) where ordinal suffix is always 'th'.
 const int _teenRangeStart = 11;
 
@@ -6,6 +8,9 @@ const int _teenRangeEnd = 19;
 
 /// Base 10 modulo for determining the ones place digit.
 const int _base10 = 10;
+
+/// Ones digit for the 'rd' ordinal suffix (3rd, 23rd, etc.).
+const int _ordinalRdDigit = 3;
 
 /// `IntStringExtensions` is an extension on the `int` class in Dart. It
 ///  provides additional methods for performing operations on integers.
@@ -36,6 +41,7 @@ extension IntStringExtensions on int {
   ///
   /// A `double` typed version can use: value.floor()
   ///
+  @useResult
   String ordinal() {
     // All "teens" (12, 13, 14.. 19) are 'th'
     if (this >= _teenRangeStart && this <= _teenRangeEnd) {
@@ -43,10 +49,11 @@ extension IntStringExtensions on int {
     }
 
     final int onesPlace = this % _base10;
+
     return switch (onesPlace) {
       1 => '${this}st',
       2 => '${this}nd',
-      3 => '${this}rd',
+      _ordinalRdDigit => '${this}rd',
       _ => '${this}th',
     };
   }

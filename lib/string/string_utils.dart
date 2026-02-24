@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 // Utility methods for string operations.
 //
 // These methods are designed to provide additional functionality for
@@ -28,7 +30,6 @@ const int _maxAlphabetPosition = 26;
 /// reasonable default value (usually null or false, depending on the method).
 ///
 abstract final class StringUtils {
-
   /// Returns the n-th letter of the alphabet in uppercase.
   ///
   /// - [n] is an integer representing the position of the letter in the
@@ -37,6 +38,7 @@ abstract final class StringUtils {
   /// Returns a string containing the n-th letter of the alphabet in uppercase,
   /// or `null` if [n] is not within the valid range or an error occurs.
   ///
+  @useResult
   static String? getNthLatinLetterUpper(int n) {
     // Check if n is within the valid range.
     if (n < _minAlphabetPosition || n > _maxAlphabetPosition) {
@@ -59,6 +61,7 @@ abstract final class StringUtils {
   /// Returns a string containing the n-th letter of the alphabet in lowercase,
   /// or `null` if [n] is not within the valid range or an error occurs.
   ///
+  @useResult
   static String? getNthLatinLetterLower(int n) {
     // Check if n is within the valid range.
     if (n < _minAlphabetPosition || n > _maxAlphabetPosition) {

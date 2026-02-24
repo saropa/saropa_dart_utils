@@ -47,8 +47,12 @@ export 'int/int_utils.dart';
 // Iterable extensions
 export 'iterable/comparable_iterable_extensions.dart';
 export 'iterable/iterable_extensions.dart';
+export 'iterable/occurrence.dart';
 
 // JSON utilities
+export 'json/json_epoch_scale.dart';
+export 'json/json_iterables_utils.dart';
+export 'json/json_type_utils.dart';
 export 'json/json_utils.dart';
 
 // List extensions
@@ -71,6 +75,7 @@ export 'num/num_utils.dart';
 export 'random/common_random.dart';
 
 // String extensions and utilities
+export 'string/between_result.dart';
 export 'string/string_analysis_extensions.dart';
 export 'string/string_between_extensions.dart';
 export 'string/string_case_extensions.dart';

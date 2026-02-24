@@ -1,7 +1,8 @@
-/// Utility class for number-related operations.
-abstract final class NumberUtils {
+import 'package:meta/meta.dart';
 
- /// Returns the maximum of [a] and [b], handling `null` values.
+/// Utility class for number-related operations.
+abstract final class NumUtils {
+  /// Returns the maximum of [a] and [b], handling `null` values.
   ///
   /// If both are `null`, returns `null`. If only one is `null`, returns the
   /// non-null number. If both are non-null, returns the larger of the two.
@@ -13,6 +14,7 @@ abstract final class NumberUtils {
   /// NumberUtils.maxOf(10, null); // Returns 10
   /// NumberUtils.maxOf(null, null); // Returns null
   /// ```
+  @useResult
   static num? maxOf(num? a, num? b) {
     // If both numbers are null, return null
     if (a == null && b == null) {
@@ -44,6 +46,7 @@ abstract final class NumberUtils {
   /// NumberUtils.generateIntList(3, 3); // Returns [3]
   /// NumberUtils.generateIntList(5, 1); // Returns null, prints a warning
   /// ```
+  @useResult
   static List<int>? generateIntList(int start, int end) {
     if (start > end) {
       return null;

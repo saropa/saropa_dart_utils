@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Extension on [String] to provide punctuation removal functionality.
 extension StringPunctuation on String {
   /// Regular expression to remove punctuation while preserving alphabetic characters,
@@ -43,5 +45,6 @@ extension StringPunctuation on String {
   /// String cleanedMixedText = mixedText.removePunctuation();
   /// print(cleanedMixedText); // Output: Text with 123 punctuation marks
   /// ```
+  @useResult
   String removePunctuation() => replaceAll(punctuationRegex, '');
 }

@@ -13,11 +13,8 @@ extension DateTimeCalendarExtensions on DateTime {
   /// Returns:
   ///   int: The calculated age.
   @useResult
-  int calculateAgeFromNow({DateTime? now}) {
-    now ??= DateTime.now();
-
-    return calculateAgeFromDate(now);
-  }
+  int calculateAgeFromNow({DateTime? now}) =>
+      calculateAgeFromDate(now ?? DateTime.now());
 
   /// Calculates the age based on a given date.
   ///
@@ -57,6 +54,7 @@ extension DateTimeCalendarExtensions on DateTime {
   @useResult
   int get dayOfYear {
     final DateTime jan1 = DateTime(year);
+
     return difference(jan1).inDays + 1;
   }
 
@@ -67,15 +65,22 @@ extension DateTimeCalendarExtensions on DateTime {
   /// December that belong to week 1 of the next year. Use `weekNumber` for
   /// fully ISO 8601-compliant results.
   @useResult
-  int get weekOfYear => ((dayOfYear - weekday + DateConstants.isoWeekOffset) / DateConstants.daysPerWeek).floor();
+  int get weekOfYear =>
+      ((dayOfYear - weekday + DateConstants.isoWeekOffset) / DateConstants.daysPerWeek).floor();
 
   /// Returns the number of ISO weeks in the specified year.
   @useResult
   int numOfWeeks(int targetYear) {
-    final DateTime dec28 = DateTime(targetYear, DateTime.december, DateConstants.isoWeekReferenceDay);
+    final DateTime dec28 = DateTime(
+      targetYear,
+      DateTime.december,
+      DateConstants.isoWeekReferenceDay,
+    );
     final DateTime jan1 = DateTime(targetYear);
     final int dayOfDec28 = dec28.difference(jan1).inDays + 1;
-    return ((dayOfDec28 - dec28.weekday + DateConstants.isoWeekOffset) / DateConstants.daysPerWeek).floor();
+
+    return ((dayOfDec28 - dec28.weekday + DateConstants.isoWeekOffset) / DateConstants.daysPerWeek)
+        .floor();
   }
 
   /// Returns the ISO 8601 week number, correctly handling year boundaries.
@@ -88,8 +93,14 @@ extension DateTimeCalendarExtensions on DateTime {
   /// week calculations.
   @useResult
   int weekNumber() {
-    if (weekOfYear < 1) return numOfWeeks(year - 1);
-    if (weekOfYear > numOfWeeks(year)) return 1;
+    if (weekOfYear < 1) {
+      return numOfWeeks(year - 1);
+    }
+
+    if (weekOfYear > numOfWeeks(year)) {
+      return 1;
+    }
+
     return weekOfYear;
   }
 
@@ -102,6 +113,7 @@ extension DateTimeCalendarExtensions on DateTime {
     final String hourPad = hour.toString().padLeft(2, '0');
     final String minutePad = minute.toString().padLeft(2, '0');
     final String secondPad = second.toString().padLeft(2, '0');
+
     return '$yearPad$monthPad${dayPad}T$hourPad$minutePad$secondPad';
   }
 
@@ -111,6 +123,7 @@ extension DateTimeCalendarExtensions on DateTime {
     final String yearPad = year.toString().padLeft(DateConstants.yearStringWidth, '0');
     final String monthPad = month.toString().padLeft(2, '0');
     final String dayPad = day.toString().padLeft(2, '0');
+
     return '$yearPad$monthPad$dayPad';
   }
 

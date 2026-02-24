@@ -43,6 +43,7 @@ if (json is Map<dynamic, dynamic>) {
       result.putIfAbsent(key.toString(), () => value);
       // Silently skips duplicate string keys — no warning
     });
+
     return result;
   }
   return json.map(
@@ -89,6 +90,7 @@ static Map<String, dynamic>? toMapStringDynamic(
       }
       result[key] = entry.value;
     }
+
     return result.isEmpty ? null : result;
   }
   // ... rest of method

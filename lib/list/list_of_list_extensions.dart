@@ -1,8 +1,10 @@
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/list/unique_list_extensions.dart';
 
 extension ListOfListExtension<T> on List<List<T>> {
   /// sum the total number of items
   ///
+  @useResult
   int get totalLength {
     if (isEmpty) {
       return 0;
@@ -16,6 +18,7 @@ extension ListOfListExtension<T> on List<List<T>> {
 
   /// Getting the length of [toFlattenedList]
   ///
+  @useResult
   int get totalUniqueLength {
     if (isEmpty) {
       return 0;
@@ -27,6 +30,7 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// Extension method that returns a flattened list of unique elements of type T.
   ///
   /// Returns `null` if this list is empty or all inner lists are empty.
+  @useResult
   List<T>? toFlattenedList({bool ignoreNulls = true}) {
     if (isEmpty) {
       return null;
@@ -35,6 +39,7 @@ extension ListOfListExtension<T> on List<List<T>> {
     // Use expand() method to flatten the 2D list and create a
     // new set with the same elements as this iterable
     final List<T>? result = expand((List<T> e) => e).toUnique(ignoreNulls: ignoreNulls);
+
     return (result == null || result.isEmpty) ? null : result;
   }
 
@@ -52,12 +57,14 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// print(childListLengths); // [2, 3, 1]
   /// ```
   ///
-  List<int>? getChildListLengths() => map((List<T> childList) => childList.length).toList();
+  @useResult
+  List<int> getChildListLengths() => map((List<T> childList) => childList.length).toList();
 
   /// Returns `true` after copying the elements of this list into
   /// [destination], or `false` if the dimensions do not match.
   ///
   /// The dimensions of [destination] must be the same as this list.
+  @useResult
   bool copy(List<List<T>> destination) {
     // Check row count first
     if (length != destination.length) {
@@ -77,20 +84,17 @@ extension ListOfListExtension<T> on List<List<T>> {
         destination[i][j] = this[i][j];
       }
     }
+
     return true;
   }
 
   /// Returns a new list that is an exact duplicate of this list.
   ///
-  List<List<T>> clone() {
-    final List<List<T>> newList = <List<T>>[];
-
-    for (List<T> innerList in this) {
-      newList.add(List<T>.of(innerList));
-    }
-
-    return newList;
-  }
+  @useResult
+  List<List<T>> clone() => List<List<T>>.generate(
+    length,
+    (int i) => List<T>.of(this[i]),
+  );
 
   /// Converts a two-dimensional matrix into a string with comma-separated
   /// values and line breaks between rows.
@@ -98,7 +102,8 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// Returns a string representation of the matrix with comma-separated
   /// values and line breaks between rows.
   ///
-  String? toMatrixString({String lineBreak = '\n'}) {
+  @useResult
+  String toMatrixString({String lineBreak = '\n'}) {
     // Create a StringBuffer to store the result
     final StringBuffer result = StringBuffer();
 

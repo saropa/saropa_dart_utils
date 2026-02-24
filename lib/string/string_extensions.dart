@@ -4,6 +4,7 @@ import 'package:characters/characters.dart';
 export 'string_analysis_extensions.dart';
 export 'string_manipulation_extensions.dart';
 export 'string_text_extensions.dart';
+import 'package:meta/meta.dart';
 
 /// Extensions for presentation, like adding quotes, truncating text,
 /// and formatting.
@@ -81,18 +82,22 @@ extension StringExtensions on String {
 
   /// Returns this string wrapped with [before] prepended and [after]
   /// appended.
+  @useResult
   String wrap({String? before, String? after}) {
     final String prefix = before ?? '';
     final String suffix = after ?? '';
+
     return '$prefix$this$suffix';
   }
 
   /// Returns this string wrapped with [before] prepended and [after]
   /// appended, or `null` if the string is empty.
+  @useResult
   String? wrapWith({String? before, String? after}) {
     if (isEmpty) {
       return null;
     }
+
     return '${before ?? ""}$this${after ?? ""}';
   }
 
@@ -100,10 +105,12 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns `''` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
+  @useResult
   String wrapSingleQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
       return quoteEmpty ? "''" : '';
     }
+
     return "'$this'";
   }
 
@@ -111,10 +118,12 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns `""` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
+  @useResult
   String wrapDoubleQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
       return quoteEmpty ? '""' : '';
     }
+
     return '"$this"';
   }
 
@@ -122,10 +131,12 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns the empty quote pair if [quoteEmpty]
   /// is `true`, otherwise returns an empty string.
+  @useResult
   String wrapSingleAccentedQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
       return quoteEmpty ? '$accentedQuoteOpening$accentedQuoteClosing' : '';
     }
+
     return '$accentedQuoteOpening$this$accentedQuoteClosing';
   }
 
@@ -133,25 +144,30 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns the empty quote pair if [quoteEmpty]
   /// is `true`, otherwise returns an empty string.
+  @useResult
   String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
       return quoteEmpty ? '$accentedDoubleQuoteOpening$accentedDoubleQuoteClosing' : '';
     }
+
     return '$accentedDoubleQuoteOpening$this$accentedDoubleQuoteClosing';
   }
 
   /// Returns this string enclosed in parentheses, or `null` if empty.
   ///
   /// When [wrapEmpty] is `true`, returns `'()'` for empty strings.
+  @useResult
   String? encloseInParentheses({bool wrapEmpty = false}) {
     if (isEmpty) {
       return wrapEmpty ? '()' : null;
     }
+
     return '($this)';
   }
 
   /// Returns a new string with a newline character inserted before each
   /// opening parenthesis.
+  @useResult
   String insertNewLineBeforeBrackets() => replaceAll('(', '\n(');
 
   /// Returns the string truncated to [cutoff] graphemes with an ellipsis
@@ -159,6 +175,7 @@ extension StringExtensions on String {
   ///
   /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the original string if it's shorter than [cutoff].
+  @useResult
   String truncateWithEllipsis(int? cutoff) {
     if (isEmpty || cutoff == null || cutoff <= 0) {
       return this;
@@ -182,6 +199,7 @@ extension StringExtensions on String {
   /// 'Hello World'.truncateWithEllipsisPreserveWords(8); // 'Hello…'
   /// 'Hello World'.truncateWithEllipsisPreserveWords(20); // 'Hello World'
   /// ```
+  @useResult
   String truncateWithEllipsisPreserveWords(int? cutoff) {
     final int charLength = characters.length;
     if (isEmpty || cutoff == null || cutoff <= 0 || charLength <= cutoff) {
@@ -197,25 +215,31 @@ extension StringExtensions on String {
     }
 
     final String trimmed = searchWindow.substringSafe(0, lastSpaceIndex).trimRight();
+
     return '$trimmed$ellipsis';
   }
 
   /// Returns a new string with all characters reversed. Handles Unicode
   /// correctly.
+  @useResult
   String get reversed => String.fromCharCodes(runes.toList().reversed);
 
   /// Returns `null` if the string is empty or contains only whitespace.
   ///
   /// - [trimFirst]: If true (default), the string is trimmed before the
   ///   check.
+  @useResult
   String? nullIfEmpty({bool trimFirst = true}) {
     if (isEmpty) {
       return null;
     }
+
     if (trimFirst) {
       final String trimmed = trim();
+
       return trimmed.isEmpty ? null : trimmed;
     }
+
     return this;
   }
 
@@ -229,26 +253,39 @@ extension StringExtensions on String {
   /// '🙂hello'.substringSafe(0, 1); // '🙂'
   /// 'hello'.substringSafe(1, 3); // 'el'
   /// ```
+  @useResult
   String substringSafe(int start, [int? end]) {
     final Characters chars = characters;
     final int charLength = chars.length;
 
-    if (start < 0 || start > charLength) return '';
-    if (end != null) {
-      if (end < start) return '';
-      end = end > charLength ? charLength : end;
+    if (start < 0 || start > charLength) {
+      return '';
     }
-    return chars.getRange(start, end ?? charLength).string;
+
+    if (end != null && end < start) {
+      return '';
+    }
+
+    final int clampedEnd = (end ?? charLength).clamp(start, charLength);
+
+    return chars.getRange(start, clampedEnd).string;
   }
 
   /// Get the last [n] graphemes (user-perceived characters) of a string.
   ///
   /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the full string if its length is less than [n].
+  @useResult
   String lastChars(int n) {
-    if (n <= 0) return '';
+    if (n <= 0) {
+      return '';
+    }
+
     final int charLength = characters.length;
-    if (n >= charLength) return this;
+    if (n >= charLength) {
+      return this;
+    }
+
     return substringSafe(charLength - n);
   }
 
@@ -258,11 +295,18 @@ extension StringExtensions on String {
   /// sequences such as emoji with skin-tone modifiers or ZWJ sequences.
   ///
   /// Returns the full string if [len] is greater than the grapheme length.
+  @useResult
   String last(int len) {
-    if (isEmpty || len <= 0) return '';
+    if (isEmpty || len <= 0) {
+      return '';
+    }
+
     final Characters chars = characters;
     final int charLength = chars.length;
-    if (len >= charLength) return this;
+    if (len >= charLength) {
+      return this;
+    }
+
     return chars.skip(charLength - len).string;
   }
 }

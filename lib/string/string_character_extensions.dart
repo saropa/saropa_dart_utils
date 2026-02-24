@@ -1,4 +1,5 @@
 import 'package:characters/characters.dart';
+import 'package:meta/meta.dart';
 
 /// Extension methods for grapheme-aware character operations.
 ///
@@ -16,17 +17,27 @@ extension StringCharacterExtensions on String {
   ///
   /// **Returns:**
   /// The substring between the grapheme indices, or empty string if invalid.
+  @useResult
   String substringCharacter(int graphemeStart, [int? graphemeEnd]) {
-    if (isEmpty) return '';
+    if (isEmpty) {
+      return '';
+    }
 
     final Characters chars = characters;
     final int len = chars.length;
 
-    if (graphemeStart < 0 || graphemeStart > len) return '';
+    if (graphemeStart < 0 || graphemeStart > len) {
+      return '';
+    }
 
     final int end = graphemeEnd ?? len;
-    if (end < graphemeStart || end > len) return '';
-    if (graphemeStart == end) return '';
+    if (end < graphemeStart || end > len) {
+      return '';
+    }
+
+    if (graphemeStart == end) {
+      return '';
+    }
 
     return chars.skip(graphemeStart).take(end - graphemeStart).toString();
   }
@@ -40,9 +51,12 @@ extension StringCharacterExtensions on String {
   ///
   /// **Returns:**
   /// The first character, or empty string if the string is empty.
+  @useResult
   String firstCharacter({bool trim = true, bool supportGraphemes = true}) {
     final String effective = trim ? this.trim() : this;
-    if (effective.isEmpty) return '';
+    if (effective.isEmpty) {
+      return '';
+    }
 
     if (supportGraphemes) {
       return effective.characters.first;
@@ -61,19 +75,28 @@ extension StringCharacterExtensions on String {
   ///
   /// **Returns:**
   /// The second character, or empty string if the string has fewer than 2 characters.
+  @useResult
   String secondCharacter({bool trim = true, bool supportGraphemes = true}) {
     final String effective = trim ? this.trim() : this;
-    if (effective.isEmpty) return '';
+    if (effective.isEmpty) {
+      return '';
+    }
 
     if (supportGraphemes) {
       final Characters chars = effective.characters;
-      if (chars.length < 2) return '';
+      if (chars.length < 2) {
+        return '';
+      }
+
       return chars.elementAt(1);
     }
 
     // Without grapheme support, use runes (code points)
     final List<int> runeList = effective.runes.toList();
-    if (runeList.length < 2) return '';
+    if (runeList.length < 2) {
+      return '';
+    }
+
     return String.fromCharCode(runeList[1]);
   }
 
@@ -82,5 +105,6 @@ extension StringCharacterExtensions on String {
   /// This counts Unicode grapheme clusters rather than code units.
   /// For example, an emoji like 👨‍👩‍👧 counts as 1 grapheme even though
   /// it consists of multiple code points.
+  @useResult
   int get graphemeLength => characters.length;
 }

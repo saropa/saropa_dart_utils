@@ -1,20 +1,22 @@
 import 'package:jiffy/jiffy.dart';
+import 'package:meta/meta.dart';
 
 /// Extensions on [DateTime] for add, subtract, and difference operations.
 extension DateTimeArithmeticExtensions on DateTime {
   /// Returns the time difference in milliseconds between this [DateTime] and
   /// [compareTo], or `null` if [compareTo] is `null`.
   ///
-  /// When [alwaysPositive] is `true` (default), the result is always
+  /// When [isAlwaysPositive] is `true` (default), the result is always
   /// non-negative.
-  int? getTimeDifferenceMs(DateTime? compareTo, {bool alwaysPositive = true}) {
+  @useResult
+  int? getTimeDifferenceMs(DateTime? compareTo, {bool isAlwaysPositive = true}) {
     if (compareTo == null) {
       return null;
     }
 
     final int inMilliseconds = difference(compareTo).inMilliseconds;
 
-    return alwaysPositive ? inMilliseconds.abs() : inMilliseconds;
+    return isAlwaysPositive ? inMilliseconds.abs() : inMilliseconds;
   }
 
   /// Adds the specified number of years to the current [DateTime].
@@ -27,6 +29,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added years.
+  @useResult
   DateTime addYears(int years) {
     if (years == 0) {
       return this;
@@ -42,6 +45,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added months.
+  @useResult
   DateTime addMonths(int months) {
     if (months == 0) {
       return this;
@@ -57,6 +61,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added days.
+  @useResult
   DateTime addDays(int days) {
     if (days == 0) {
       return this;
@@ -72,6 +77,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added hours.
+  @useResult
   DateTime addHours(int hours) {
     if (hours == 0) {
       return this;
@@ -87,6 +93,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added minutes.
+  @useResult
   DateTime addMinutes(int minutes) {
     if (minutes == 0) {
       return this;
@@ -102,6 +109,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted minutes.
+  @useResult
   DateTime subtractMinutes(int minutes) {
     if (minutes == 0) {
       return this;
@@ -117,6 +125,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted hours.
+  @useResult
   DateTime subtractHours(int hours) {
     if (hours == 0) {
       return this;
@@ -132,6 +141,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted months.
+  @useResult
   DateTime subtractMonths(int months) {
     if (months == 0) {
       return this;
@@ -150,6 +160,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted years.
   ///
+  @useResult
   DateTime subtractYears(int years) {
     if (years == 0) {
       return this;
@@ -165,6 +176,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted days.
+  @useResult
   DateTime subtractDays(int? days) {
     if (days == null || days == 0) {
       return this;

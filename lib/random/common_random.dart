@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:meta/meta.dart';
+
 /// Creates a [Random] number generator.
 ///
 /// Every time you reinstall your app, a `Random()` instance is initialized
@@ -24,6 +26,7 @@ import 'dart:math';
 /// You can also provide a fixed [seed] to get a predictable sequence of numbers,
 /// which is useful for testing.
 // ignore: non_constant_identifier_names
+@useResult
 Random CommonRandom([int? seed]) =>
     // Algorithm:
     // 1. Check if a `seed` value is provided.
