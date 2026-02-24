@@ -31,6 +31,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Published version**: See field "version": "x.y.z" in [package.json](./package.json)
 
+## [1.0.8] - 2026-02-24
+
+### Added
+- **`Occurrence<T>` class** (`lib/iterable/occurrence.dart`): typed result for `mostOccurrences()` and `leastOccurrences()` methods, replacing record return types
+- **`BetweenResult` class** (`lib/string/between_result.dart`): typed result for `betweenResult()`, `betweenResultLast()`, and bracket-extraction methods, replacing record return types
+
+### Changed
+- **Lint compliance**: Resolved `prefer_all_named_parameters` warnings by converting positional parameters to required named parameters in `isNthDayOfMonthInRange`, `getGreatGrandchild`, `getGreatGrandchildString`, `mapToggleValue`, `mapAddValue`, `mapRemoveValue`, and `mapContainsValue`
+- **Lint compliance**: Resolved `prefer_class_over_record_return` warnings across 5 extension files by replacing record `(T, int)?` and `(String, String?)?` return types with named classes
+- Updated `bool_iterable_extensions.dart`, `int_iterable_extensions.dart`, `double_iterable_extensions.dart`, `iterable_extensions.dart`, and `string_between_extensions.dart`
+- Added `T extends Object` constraint to `GeneralIterableExtensions` generic parameter
+
 ## [1.0.7] - 2026-02-22
 
 ### Fixed

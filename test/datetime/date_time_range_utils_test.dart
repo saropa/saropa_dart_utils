@@ -9,7 +9,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(2, DateTime.monday, 3), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 3), isTrue);
     });
 
     test('returns false for 2nd Monday of March outside range', () {
@@ -17,7 +17,7 @@ void main() {
         start: DateTime(2023, 4),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(2, DateTime.monday, 3), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 3), isFalse);
     });
 
     test('returns true for 1st Friday of January at start of range', () {
@@ -25,15 +25,15 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.friday, 1), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.friday, month: 1), isTrue);
     });
 
-    test('returns true for last day of range', () {
+    test('returns true for last day of range (5th Sunday is Dec 31)', () {
       final DateTimeRange<DateTime> range = DateTimeRange(
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.sunday, 12), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.sunday, month: 12), isTrue);
     });
 
     test('returns false for day just after range', () {
@@ -41,7 +41,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 30),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.sunday, 12), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.sunday, month: 12), isFalse);
     });
 
     test('returns true for recurring holiday across multiple years', () {
@@ -49,7 +49,7 @@ void main() {
         start: DateTime(2022),
         end: DateTime(2024, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(3, DateTime.monday, 1), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 3, dayOfWeek: DateTime.monday, month: 1), isTrue);
     });
 
     test('returns false when nth occurrence does not exist', () {
@@ -58,7 +58,7 @@ void main() {
         end: DateTime(2023, 12, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(5, DateTime.monday, 2),
+        range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.monday, month: 2),
         isFalse,
       ); // February never has 5 Mondays
     });
@@ -68,7 +68,7 @@ void main() {
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.thursday, 2), isTrue); // February 29, 2024
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.thursday, month: 2), isTrue); // February 29, 2024
     });
 
     test('returns false for leap year day when not in range', () {
@@ -77,7 +77,7 @@ void main() {
         end: DateTime(2023, 12, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(5, DateTime.thursday, 2),
+        range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.thursday, month: 2),
         isFalse,
       ); // February 29, 2024 not in 2023
     });
@@ -87,7 +87,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2025, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 1), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.monday, month: 1), isTrue);
     });
 
     test('returns false for 6th Friday of April (impossible case)', () {
@@ -95,7 +95,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(6, DateTime.friday, 4), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 6, dayOfWeek: DateTime.friday, month: 4), isFalse);
     });
 
     test('returns true for 5th Wednesday of May 2023 (May 31, 2023)', () {
@@ -103,7 +103,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.wednesday, 5), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.wednesday, month: 5), isTrue);
     });
 
     test('returns true for 5th Wednesday of May 2024', () {
@@ -111,7 +111,7 @@ void main() {
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.wednesday, 5), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.wednesday, month: 5), isTrue);
     });
 
     test('returns true for 4th Thursday of November (Thanksgiving) in 2023', () {
@@ -119,7 +119,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(4, DateTime.thursday, 11), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 4, dayOfWeek: DateTime.thursday, month: 11), isTrue);
     });
 
     test('returns false for 4th Thursday of November (Thanksgiving) in range '
@@ -128,7 +128,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 10, 31),
       );
-      expect(range.isNthDayOfMonthInRange(4, DateTime.thursday, 11), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 4, dayOfWeek: DateTime.thursday, month: 11), isFalse);
     });
 
     test('returns true for 1st Sunday of February in leap year 2024', () {
@@ -136,7 +136,7 @@ void main() {
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.sunday, 2), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.sunday, month: 2), isTrue);
     });
 
     test('returns true for 5th Saturday of December 2023', () {
@@ -144,7 +144,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.saturday, 12), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.saturday, month: 12), isTrue);
     });
 
     test('returns true for 2nd Tuesday of February in non-leap year range '
@@ -153,26 +153,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2025, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(2, DateTime.tuesday, 2), isTrue);
-    });
-
-    test('returns false when nth occurrence does not exist', () {
-      final DateTimeRange<DateTime> range = DateTimeRange(
-        start: DateTime(2023),
-        end: DateTime(2023, 12, 31),
-      );
-      expect(
-        range.isNthDayOfMonthInRange(5, DateTime.monday, 2),
-        isFalse,
-      ); // February never has 5 Mondays
-    });
-
-    test('returns false for 6th Friday of April (impossible case)', () {
-      final DateTimeRange<DateTime> range = DateTimeRange(
-        start: DateTime(2023),
-        end: DateTime(2023, 12, 31),
-      );
-      expect(range.isNthDayOfMonthInRange(6, DateTime.friday, 4), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.tuesday, month: 2), isTrue);
     });
 
     test('returns true for 5th Saturday of December 2024 (does not exist)', () {
@@ -180,15 +161,7 @@ void main() {
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(5, DateTime.saturday, 12), isFalse);
-    });
-
-    test('returns true for 1st Monday of January in multi-year range', () {
-      final DateTimeRange<DateTime> range = DateTimeRange(
-        start: DateTime(2023),
-        end: DateTime(2025, 12, 31),
-      );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 1), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.saturday, month: 12), isFalse);
     });
 
     test('returns true for February 29 in leap year', () {
@@ -197,7 +170,7 @@ void main() {
         end: DateTime(2024, 12, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(1, DateTime.thursday, 2),
+        range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.thursday, month: 2),
         isTrue,
       ); // February has a Thursday on Feb.29
     });
@@ -208,20 +181,9 @@ void main() {
         end: DateTime(2023, 12, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(5, DateTime.monday, 2),
+        range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.monday, month: 2),
         isFalse,
       ); // February never has a fifth Monday
-    });
-
-    test('returns true for last day of range', () {
-      final DateTimeRange<DateTime> range = DateTimeRange(
-        start: DateTime(2023),
-        end: DateTime(2023, 12, 31),
-      );
-      expect(
-        range.isNthDayOfMonthInRange(5, DateTime.sunday, 12),
-        isTrue,
-      ); // December has a Sunday on Dec.31
     });
 
     // Cross-year range tests (Fix 3: algorithm fix for cross-year validation)
@@ -231,7 +193,7 @@ void main() {
         end: DateTime(2024, 2, 15),
       );
       // 2nd Monday of January 2024 is January 8
-      expect(range.isNthDayOfMonthInRange(2, DateTime.monday, 1), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1), isTrue);
     });
 
     test('October month not in range spanning Nov to Feb', () {
@@ -239,7 +201,7 @@ void main() {
         start: DateTime(2023, 11, 15),
         end: DateTime(2024, 2, 15),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 10), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.monday, month: 10), isFalse);
     });
 
     test('December month in range spanning Nov to Feb', () {
@@ -248,7 +210,7 @@ void main() {
         end: DateTime(2024, 2, 15),
       );
       // 1st Monday of December 2023 is December 4
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 12), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.monday, month: 12), isTrue);
     });
 
     test('invalid month 13 returns false', () {
@@ -256,7 +218,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 13), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.monday, month: 13), isFalse);
     });
 
     test('month 0 returns false', () {
@@ -264,7 +226,7 @@ void main() {
         start: DateTime(2023),
         end: DateTime(2023, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 0), isFalse);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.monday, month: 0), isFalse);
     });
 
     test('inclusive=false excludes boundary dates', () {
@@ -273,7 +235,7 @@ void main() {
         end: DateTime(2024, 1, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, isInclusive: false),
+        range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1, isInclusive: false),
         isFalse,
       );
     });
@@ -284,7 +246,7 @@ void main() {
         end: DateTime(2024, 1, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(2, DateTime.monday, 1, isInclusive: true),
+        range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1, isInclusive: true),
         isTrue,
       );
     });
@@ -294,7 +256,7 @@ void main() {
         start: DateTime(2024),
         end: DateTime(2024, 1, 31),
       );
-      expect(range.isNthDayOfMonthInRange(1, DateTime.monday, 1), isTrue);
+      expect(range.isNthDayOfMonthInRange(n: 1, dayOfWeek: DateTime.monday, month: 1), isTrue);
     });
   });
 

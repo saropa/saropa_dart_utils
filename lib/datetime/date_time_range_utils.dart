@@ -27,10 +27,10 @@ extension DateTimeRangeExtensions on DateTimeRange {
   ///   end: DateTime(2024, 2, 15),
   /// );
   /// // Check if 2nd Monday of January falls in range
-  /// range.isNthDayOfMonthInRange(2, DateTime.monday, 1); // true (Jan 2024)
+  /// range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1); // true (Jan 2024)
   /// ```
   @useResult
-  bool isNthDayOfMonthInRange(int n, int dayOfWeek, int month, {bool isInclusive = true}) {
+  bool isNthDayOfMonthInRange({required int n, required int dayOfWeek, required int month, bool isInclusive = true}) {
     // Validate month parameter
     if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
       return false;
@@ -66,7 +66,6 @@ extension DateTimeRangeExtensions on DateTimeRange {
     }
 
     // If we couldn't find the nth occurrence in any year within the range,
-    // return false
     return false;
   }
 
@@ -99,8 +98,8 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// and pass it in for consistent results.
   @useResult
   bool isNowInRange({DateTime? now, bool isInclusive = true}) {
-    now ??= DateTime.now();
+    final DateTime resolvedNow = now ?? DateTime.now();
 
-    return inRange(now, isInclusive: isInclusive);
+    return inRange(resolvedNow, isInclusive: isInclusive);
   }
 }
