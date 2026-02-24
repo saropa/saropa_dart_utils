@@ -1,16 +1,22 @@
 import 'dart:collection';
 import 'dart:math';
+import 'package:meta/meta.dart';
+import 'package:saropa_dart_utils/iterable/occurrence.dart';
+
+/// A function that tests whether an element of type [T] satisfies a condition.
+typedef ElementPredicate<T> = bool Function(T element);
 
 // Module-level instance avoids allocating a new Random on every randomElement() call.
 final Random _random = Random();
 
-extension GeneralIterableExtensions<T> on Iterable<T> {
+extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// Finds the most common value in the list.
   ///
-  /// Returns a record (tuple) containing the most common value and its
+  /// Returns an [Occurrence] containing the most common value and its
   ///  frequency.
   /// If the list is empty, returns null.
-  (T, int)? mostOccurrences() {
+  @useResult
+  Occurrence<T>? mostOccurrences() {
     if (isEmpty) {
       return null;
     }
@@ -39,13 +45,13 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
       return null;
     }
 
-    // Return a tuple with the most common value and its frequency.
-    return (mostCommonEntry.key, mostCommonEntry.value);
+    return Occurrence<T>(mostCommonEntry.key, mostCommonEntry.value);
   }
 
-  /// Returns a record of the least common value and its frequency, or `null`
-  /// if the iterable is empty.
-  (T, int)? leastOccurrences() {
+  /// Returns an [Occurrence] of the least common value and its frequency,
+  /// or `null` if the iterable is empty.
+  @useResult
+  Occurrence<T>? leastOccurrences() {
     if (isEmpty) {
       return null;
     }
@@ -72,32 +78,41 @@ extension GeneralIterableExtensions<T> on Iterable<T> {
       return null;
     }
 
-    // Return a tuple with the most common value and its frequency.
-    return (leastCommonEntry.key, leastCommonEntry.value);
+    return Occurrence<T>(leastCommonEntry.key, leastCommonEntry.value);
   }
 
   /// Returns a random element from this iterable.
   ///
   /// Returns null if the iterable is empty.
+  @useResult
   T? randomElement() {
-    if (isEmpty) return null;
+    if (isEmpty) {
+      return null;
+    }
+
     return elementAt(_random.nextInt(length));
   }
 
   /// Returns true if this iterable contains all elements from [other].
+  @useResult
   bool containsAll(Iterable<T> other) {
     for (final T element in other) {
-      if (!contains(element)) return false;
+      if (!contains(element)) {
+        return false;
+      }
     }
+
     return true;
   }
 
   /// Returns the number of elements that satisfy the given [predicate].
-  int countWhere(bool Function(T) predicate) {
+  @useResult
+  int countWhere(ElementPredicate<T> predicate) {
     int count = 0;
     for (final T element in this) {
       if (predicate(element)) count++;
     }
+
     return count;
   }
 }
