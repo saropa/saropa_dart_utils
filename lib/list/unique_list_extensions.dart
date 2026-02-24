@@ -1,10 +1,15 @@
 import 'dart:collection';
+import 'package:meta/meta.dart';
+
+/// Extracts a key of type [E] from an element of type [T].
+typedef KeyExtractor<T, E> = E Function(T element);
 
 extension UniqueIterableExtensions<T> on Iterable<T> {
   /// Returns a new list with duplicate elements removed, preserving order.
   ///
   /// Uses a [LinkedHashSet] to retain ordering. If [ignoreNulls] is `true`
   /// (default), null elements are also removed.
+  @useResult
   List<T> toUnique({bool ignoreNulls = true}) =>
       LinkedHashSet<T>.of(where((T? e) => !ignoreNulls || e != null)).toList();
 }
@@ -17,14 +22,14 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
   /// kept. The relative order of the kept elements is preserved.
   /// If [ignoreNullKeys] is `true` (default), items where the key is `null`
   /// will be removed.
-  List<T> toUniqueBy<E>(E Function(T) keyExtractor, {bool ignoreNullKeys = true}) {
+  @useResult
+  List<T> toUniqueBy<E>(KeyExtractor<T, E> keyExtractor, {bool ignoreNullKeys = true}) {
     if (isEmpty || length == 1) {
       return List<T>.of(this);
     }
 
-    final Map<E, int> lastIndices = <E, int>{};
-
     // 1. Iterate backwards to find the index of the LAST occurrence of each key.
+    final Map<E, int> lastIndices = <E, int>{};
     for (int i = length - 1; i >= 0; i--) {
       final T item = this[i];
       final E key = keyExtractor(item);
@@ -55,7 +60,7 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
   /// When duplicates are found, the LAST element from the original list is
   /// kept. If [ignoreNullKeys] is `true` (default), items where the key is
   /// `null` will be removed.
-  void toUniqueByInPlace<E>(E Function(T) keyExtractor, {bool ignoreNullKeys = true}) {
+  void toUniqueByInPlace<E>(KeyExtractor<T, E> keyExtractor, {bool ignoreNullKeys = true}) {
     if (isEmpty || length == 1) {
       return;
     }

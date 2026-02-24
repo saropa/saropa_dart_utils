@@ -92,7 +92,7 @@ All 9 high-priority warning rules (59 violations) have been fixed. See `bugs/his
 | [prefer_simpler_boolean_expressions](prefer_simpler_boolean_expressions.md) | 1 | info | Simplify boolean logic |
 | [prefer_visible_for_testing_on_members](prefer_visible_for_testing_on_members.md) | 1 | info | Document testing-only API |
 | [require_list_preallocate](require_list_preallocate.md) | 3 | info | Preallocate lists before loop .add() |
-| [prefer_typedefs_for_callbacks](prefer_typedefs_for_callbacks.md) | 3 | info | Extract inline function types to typedefs |
+| ~~prefer_typedefs_for_callbacks~~ | ~~3~~ | ~~info~~ | ~~RESOLVED — typedefs added~~ |
 | [prefer_constrained_generics](prefer_constrained_generics.md) | 1 | info | Add `extends` clause to type parameters |
 
 ### Low Priority (documentation)
@@ -135,10 +135,10 @@ All 9 high-priority warning rules (59 violations) have been fixed. See `bugs/his
 | [avoid_if_with_many_branches](avoid_if_with_many_branches.md) | 1 | info | Convert to switch |
 | [avoid_duplicate_string_literals](avoid_duplicate_string_literals.md) | 1 | info | Extract to constant |
 | [prefer_extracting_callbacks](prefer_extracting_callbacks.md) | 1 | info | Extract complex callbacks |
-| [prefer_extracting_function_callbacks](prefer_extracting_function_callbacks.md) | 2 | info | Extract function callbacks |
+| [prefer_extracting_function_callbacks](prefer_extracting_function_callbacks.md) | 1 | info | Extract function callbacks (1 fixed) |
 | [prefer_named_parameters](prefer_named_parameters.md) | 1 | info | Too many positional params |
 | [prefer_result_pattern](prefer_result_pattern.md) | 1 | info | Evaluate Result vs throw pattern |
-| [prefer_switch_with_sealed_classes](prefer_switch_with_sealed_classes.md) | 1 | info | Check if type hierarchy is sealed |
+| ~~prefer_switch_with_sealed_classes~~ | ~~1~~ | ~~info~~ | ~~RESOLVED — switch pattern matching~~ |
 
 ---
 

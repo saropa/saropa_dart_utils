@@ -1,5 +1,10 @@
 # prefer_switch_with_sealed_classes
 
+## RESOLVED — 2026-02-24
+
+Violation fixed by extracting `_writeFormattedValue` helper with Dart 3 switch
+pattern matching, replacing the if-else type-check chain in `formatMap`.
+
 ## 1 violation | Severity: info
 
 ### Rule Description
