@@ -1,8 +1,11 @@
+import 'package:meta/meta.dart';
+
 extension ComparableIterableExtensions<T extends Comparable<T>> on Iterable<T> {
   /// Finds the smallest occurrence in the list.
   ///
   /// Returns the smallest element in the list based on the Comparable
   /// implementation.
+  @useResult
   T? smallestOccurrence() {
     // check if the list is empty before calling reduce
     if (isEmpty) {
@@ -16,6 +19,7 @@ extension ComparableIterableExtensions<T extends Comparable<T>> on Iterable<T> {
   ///
   /// Returns the biggest element in the list based on the Comparable
   /// implementation.
+  @useResult
   T? biggestOccurrence() {
     // check if the list is empty before calling reduce
     if (isEmpty) {

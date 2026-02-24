@@ -1,3 +1,7 @@
+import 'package:meta/meta.dart';
+
+// cspell:ignore codepoint plusmn hellip ndash laquo mdash lsquo raquo rsquo ldquo rdquo
+
 /// Radix for hexadecimal number system (base 16) used in hex HTML entities.
 const int _hexRadix = 16;
 
@@ -65,7 +69,6 @@ final RegExp _multipleWhitespaceRegex = RegExp(r'\s+');
 /// HtmlUtils.removeHtmlTags('<p>Hello <b>World</b></p>'); // 'Hello World'
 /// ```
 abstract final class HtmlUtils {
-
   /// Converts HTML entities to their corresponding characters.
   ///
   /// Handles both named entities (e.g., `&amp;`, `&lt;`, `&nbsp;`) and
@@ -91,6 +94,7 @@ abstract final class HtmlUtils {
   /// HtmlUtils.unescape('Hello&nbsp;World'); // 'Hello World'
   /// HtmlUtils.unescape('&copy; 2024'); // '© 2024'
   /// ```
+  @useResult
   static String? unescape(String? htmlText) {
     if (htmlText == null || htmlText.isEmpty) {
       return null;
@@ -99,32 +103,40 @@ abstract final class HtmlUtils {
     String result = htmlText;
 
     // Replace named entities
-    _htmlEntities.forEach((String entity, String char) {
-      result = result.replaceAll(entity, char);
-    });
+    _htmlEntities.forEach(
+      (String entity, String char) {
+        result = result.replaceAll(entity, char);
+      },
+    );
 
     // Replace numeric entities (decimal and hex)
-    result = result.replaceAllMapped(_numericEntityRegex, (Match match) {
-      final String? decimal = match.group(1);
-      final String? hex = match.group(2);
-
-      int? codePoint;
-      if (decimal != null) {
-        codePoint = int.tryParse(decimal);
-      } else if (hex != null) {
-        codePoint = int.tryParse(hex, radix: _hexRadix);
-      }
-
-      if (codePoint != null &&
-          codePoint > 0 &&
-          codePoint <= _maxUnicodeCodePoint &&
-          !(codePoint >= _surrogateMin && codePoint <= _surrogateMax)) {
-        return String.fromCharCode(codePoint);
-      }
-      return match.group(0) ?? ''; // Return original if invalid
-    });
+    result = result.replaceAllMapped(_numericEntityRegex, _decodeNumericEntity);
 
     return result;
+  }
+
+  /// Decodes a single numeric HTML entity match to its character.
+  static String _decodeNumericEntity(Match match) {
+    final String? decimal = match.group(1);
+    final String? hex = match.group(2);
+
+    int? codePoint;
+    if (decimal != null) {
+      codePoint = int.tryParse(decimal);
+    } else if (hex != null) {
+      codePoint = int.tryParse(hex, radix: _hexRadix);
+    }
+
+    final bool isValidCodePoint =
+        codePoint != null && codePoint > 0 && codePoint <= _maxUnicodeCodePoint;
+    final bool isSurrogate =
+        codePoint != null && codePoint >= _surrogateMin && codePoint <= _surrogateMax;
+
+    if (isValidCodePoint && !isSurrogate) {
+      return String.fromCharCode(codePoint);
+    }
+
+    return match.group(0) ?? '';
   }
 
   /// Removes all HTML tags from a string, leaving only the text content.
@@ -149,6 +161,7 @@ abstract final class HtmlUtils {
   /// HtmlUtils.removeHtmlTags('No tags here'); // 'No tags here'
   /// HtmlUtils.removeHtmlTags('<p></p>'); // null (empty result)
   /// ```
+  @useResult
   static String? removeHtmlTags(String? htmlText) {
     if (htmlText == null || htmlText.isEmpty) {
       return null;
@@ -177,11 +190,13 @@ abstract final class HtmlUtils {
   /// HtmlUtils.toPlainText('<p>Hello &amp; World</p>'); // 'Hello & World'
   /// HtmlUtils.toPlainText('&lt;script&gt;'); // '<script>'
   /// ```
+  @useResult
   static String? toPlainText(String? htmlText) {
     final String? stripped = removeHtmlTags(htmlText);
     if (stripped == null) {
       return null;
     }
+
     return unescape(stripped);
   }
 }

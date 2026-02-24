@@ -40,8 +40,8 @@ void main() {
       });
 
       test('rounds normally when roundDown is false', () {
-        expect(0.999.toPercentage(roundDown: false), equals('100%'));
-        expect(0.995.toPercentage(roundDown: false), equals('100%'));
+        expect(0.999.toPercentage(doRoundDown: false), equals('100%'));
+        expect(0.995.toPercentage(doRoundDown: false), equals('100%'));
       });
 
       test('handles values over 100%', () {

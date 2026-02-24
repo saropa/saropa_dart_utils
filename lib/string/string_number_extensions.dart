@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 final RegExp _trailingIntRegex = RegExp(r'\d+$');
 
 /// An extension on the String class to extract the trailing integer from a string.
@@ -6,15 +8,18 @@ final RegExp _trailingIntRegex = RegExp(r'\d+$');
 /// If the string is empty or does not contain a trailing integer, it returns null.
 extension StringNumberExtensions on String {
   /// Returns `true` if this string can be parsed as a number.
+  @useResult
   bool isNumeric() =>
       // Attempt to parse as a double and check if the result is not null.
       double.tryParse(this) != null;
 
   /// Returns this string parsed as a `double`, or `null` if parsing fails.
   // https://api.flutter.dev/flutter/dart-core/double/tryParse.html
+  @useResult
   double? toDoubleNullable() => isEmpty ? null : double.tryParse(this);
 
   /// Returns this string parsed as an `int`, or `null` if parsing fails.
+  @useResult
   int? toIntNullable() {
     if (isEmpty) {
       return null;
@@ -34,6 +39,7 @@ extension StringNumberExtensions on String {
   /// String example = "FUZZY_NAME_60";
   /// print(example.getTrailingInt()); // Output: 60
   /// ```
+  @useResult
   int? getTrailingInt() {
     // Exit early if the string is empty
     if (isEmpty) {

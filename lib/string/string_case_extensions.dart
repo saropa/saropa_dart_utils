@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
@@ -30,6 +31,7 @@ extension StringCaseExtensions on String {
   /// '123'.isAllLetterLowerCase;     // Returns false
   /// ''.isAllLetterLowerCase;        // Returns false
   /// ```
+  @useResult
   bool get isAllLetterLowerCase => _allLetterLowerCaseRegex.hasMatch(this);
 
   /// Checks if the string contains only letters, regardless of case (a-z, A-Z).
@@ -51,6 +53,7 @@ extension StringCaseExtensions on String {
   /// ```
   ///
   /// NOTE: supports unicode
+  @useResult
   bool get isAnyCaseLetter => _anyCaseLetterRegex.hasMatch(this);
 
   /// Checks if the string contains only uppercase letters (A-Z).
@@ -70,6 +73,7 @@ extension StringCaseExtensions on String {
   /// '123'.isAllLetterUpperCase;     // Returns false
   /// ''.isAllLetterUpperCase;        // Returns false
   /// ```
+  @useResult
   bool get isAllLetterUpperCase => _allLetterUpperCaseRegex.hasMatch(this);
 
   /// Capitalizes the first letter of each word in the string, leaving other characters as they are.
@@ -91,6 +95,7 @@ extension StringCaseExtensions on String {
   /// 'mixed CASE words'.capitalizeWords(lowerCaseRemaining: true); // Returns 'Mixed Case Words'
   /// ''.capitalizeWords(); // Returns ''
   /// ```
+  @useResult
   String capitalizeWords({bool makeLowerCaseRemaining = false}) {
     if (isEmpty) {
       // failed null or empty check
@@ -100,12 +105,15 @@ extension StringCaseExtensions on String {
     final List<String> originalWords = split(' '); // Keep original words with spaces
 
     // The original code was using words() which effectively removed extra spaces.
-    final List<String> capitalizedWords = originalWords.map((String word) {
-      if (word.isNotEmpty) {
-        return word.capitalize(makeLowerCaseRemaining: makeLowerCaseRemaining);
-      }
-      return word; // Keep empty strings (for multiple spaces)
-    }).toList();
+    final List<String> capitalizedWords = originalWords.map(
+      (String word) {
+        if (word.isNotEmpty) {
+          return word.capitalize(makeLowerCaseRemaining: makeLowerCaseRemaining);
+        }
+
+        return word; // Keep empty strings (for multiple spaces)
+      },
+    ).toList();
 
     return capitalizedWords.join(' ');
   }
@@ -123,6 +131,7 @@ extension StringCaseExtensions on String {
   /// 'lowercase'.lowerCaseFirstChar(); // Returns 'lowercase'
   /// ''.lowerCaseFirstChar();        // Returns ''
   /// ```
+  @useResult
   String lowerCaseFirstChar() => isEmpty ? '' : this[0].toLowerCase() + substringSafe(1);
 
   /// Converts the first character of the string to uppercase, leaving the rest of the string unchanged.
@@ -138,6 +147,7 @@ extension StringCaseExtensions on String {
   /// 'UPPERCASE'.upperCaseFirstChar(); // Returns 'UPPERCASE'
   /// ''.upperCaseFirstChar();        // Returns ''
   /// ```
+  @useResult
   String upperCaseFirstChar() => isEmpty ? '' : this[0].toUpperCase() + substringSafe(1);
 
   /// Converts the string to title case, capitalizing the first letter and lowercasing the rest.
@@ -153,6 +163,7 @@ extension StringCaseExtensions on String {
   /// 'TITLE CASE'.titleCase(); // Returns 'Title case'
   /// ''.titleCase();           // Returns ''
   /// ```
+  @useResult
   String titleCase() => isEmpty ? '' : this[0].toUpperCase() + substringSafe(1).toLowerCase();
 
   /// Converts only the Latin alphabetic characters (a-z) in the string to uppercase, leaving
@@ -174,26 +185,27 @@ extension StringCaseExtensions on String {
   /// 'UPPERCASE'.toUpperLatinOnly();    // Returns 'UPPERCASE' (already uppercase)
   /// ''.toUpperLatinOnly();             // Returns ''
   /// ```
+  @useResult
   String toUpperLatinOnly() {
     if (isEmpty) {
       return '';
     }
 
-    // Use StringBuffer for O(n) performance instead of O(n²) string concatenation
-    final StringBuffer buffer = StringBuffer();
-
     // ASCII code points for lowercase Latin letters
     const int codeUnitA = 0x61; // 'a'
     const int codeUnitZ = 0x7A; // 'z'
 
+    // Use StringBuffer for O(n) performance instead of O(n²) string concatenation
+    final StringBuffer buffer = StringBuffer();
+
     // Don't iterate over runes because unicode / emoji == multiple runes
     for (int i = 0; i < length; i++) {
-      final String s = this[i];
-      final int codeUnit = s.codeUnitAt(0);
+      final String char = this[i];
+      final int codeUnit = char.codeUnitAt(0);
       if (codeUnit >= codeUnitA && codeUnit <= codeUnitZ) {
-        buffer.write(s.toUpperCase());
+        buffer.write(char.toUpperCase());
       } else {
-        buffer.write(s);
+        buffer.write(char);
       }
     }
 
@@ -231,6 +243,7 @@ extension StringCaseExtensions on String {
   /// 'mIxEd'.capitalize(lowerCaseRemaining: true); // Returns 'Mixed'
   /// ''.capitalize();        // Returns ''
   /// ```
+  @useResult
   String capitalize({bool makeLowerCaseRemaining = false}) {
     if (isEmpty) {
       // failed null or empty check
@@ -263,6 +276,7 @@ extension StringCaseExtensions on String {
   /// 'lowercase'.upperCaseLettersOnly();       // Returns ''
   /// ''.upperCaseLettersOnly();                // Returns ''
   /// ```
+  @useResult
   String upperCaseLettersOnly() {
     if (isEmpty) {
       return '';
@@ -301,6 +315,7 @@ extension StringCaseExtensions on String {
   /// 'No capitalized words'.findCapitalizedWords();  // Returns null
   /// ''.findCapitalizedWords();                     // Returns null
   /// ```
+  @useResult
   List<String>? findCapitalizedWords() {
     if (isEmpty) {
       // failed null or empty check
@@ -334,6 +349,7 @@ extension StringCaseExtensions on String {
   ///
   /// NOTE:  No split for Unicode
   /// NOTE:  .trim() is applied afterwards
+  @useResult
   String insertSpaceBetweenCapitalized({bool splitNumbers = false}) {
     if (isEmpty) {
       // failed null or empty check
@@ -370,6 +386,7 @@ extension StringCaseExtensions on String {
   /// 'Numbers123Split'.splitCapitalized(splitNumbers: true); // Returns ['Numbers', '123', 'Split']
   /// ''.splitCapitalized(); // Returns []
   /// ```
+  @useResult
   List<String> splitCapitalized({bool splitNumbers = false}) {
     // Return empty list for empty input string
     if (isEmpty) {
@@ -402,6 +419,7 @@ extension StringCaseExtensions on String {
   /// 'CAPITALIZED WORDS'.unCapitalizedWords();           // Returns null
   /// ''.unCapitalizedWords();                              // Returns null
   /// ```
+  @useResult
   List<String>? unCapitalizedWords() => words()
       ?.where((String word) => word.isNotEmpty && word[0].isAllLetterLowerCase)
       .toList()

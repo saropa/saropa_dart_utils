@@ -55,6 +55,7 @@ static String? cleanJsonResponse(String? value) {
 ```
 
 The order of operations is wrong:
+
 1. All `\"` are converted to `"` (both outer wrapper quotes and inner content quotes)
 2. Then the pattern tries to match the outer `"..."` wrapper
 3. But inner quotes now look like outer quotes — pattern may not match
@@ -71,11 +72,13 @@ The order of operations is wrong:
 ## Example API Response that Fails
 
 This is a common pattern from REST APIs and LLM responses:
+
 ```
 "Hello, I said \"goodbye\" to them."
 ```
 
 After the buggy `replaceAll`:
+
 ```
 "Hello, I said "goodbye" to them."
 ```
@@ -99,6 +102,7 @@ static String? cleanJsonResponse(String? value) {
   if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2) {
     // Strip outer quotes, then unescape inner quotes
     final String inner = trimmed.substring(1, trimmed.length - 1);
+
     return inner.replaceAll(r'\"', '"');
   }
 
@@ -108,6 +112,7 @@ static String? cleanJsonResponse(String? value) {
 ```
 
 This correctly:
+
 1. Detects outer quotes first (before destroying inner ones)
 2. Strips outer quotes
 3. Then unescapes inner `\"` → `"`

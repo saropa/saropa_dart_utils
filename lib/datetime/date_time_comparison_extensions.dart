@@ -13,19 +13,13 @@ extension DateTimeComparisonExtensions on DateTime {
   ///
   /// Returns `true` if this date is after [now] (defaults to current time).
   @useResult
-  bool isAfterNow([DateTime? now]) {
-    now ??= DateTime.now();
-    return isAfter(now);
-  }
+  bool isAfterNow([DateTime? now]) => isAfter(now ?? DateTime.now());
 
   /// Checks if the date is in the past compared to the current date and time.
   ///
   /// Returns `true` if this date is before [now] (defaults to current time).
   @useResult
-  bool isBeforeNow([DateTime? now]) {
-    now ??= DateTime.now();
-    return isBefore(now);
-  }
+  bool isBeforeNow([DateTime? now]) => isBefore(now ?? DateTime.now());
 
   /// Returns `false` if [other] is `null`, otherwise returns the result of
   /// comparing this [DateTime] with [other] using the `isBefore` method.
@@ -34,6 +28,7 @@ extension DateTimeComparisonExtensions on DateTime {
     if (other == null) {
       return false;
     }
+
     return isBefore(other);
   }
 
@@ -44,6 +39,7 @@ extension DateTimeComparisonExtensions on DateTime {
     if (other == null) {
       return false;
     }
+
     return isAfter(other);
   }
 
@@ -61,6 +57,7 @@ extension DateTimeComparisonExtensions on DateTime {
   bool isSameDateOrAfter(DateTime other) {
     final DateTime selfDate = toDateOnly();
     final DateTime otherDate = other.toDateOnly();
+
     return !selfDate.isBefore(otherDate);
   }
 
@@ -71,6 +68,7 @@ extension DateTimeComparisonExtensions on DateTime {
   bool isSameDateOrBefore(DateTime other) {
     final DateTime selfDate = toDateOnly();
     final DateTime otherDate = other.toDateOnly();
+
     return !selfDate.isAfter(otherDate);
   }
 
@@ -165,10 +163,10 @@ extension DateTimeComparisonExtensions on DateTime {
   /// [ignoreYear] is `true`, the year is excluded from the comparison.
   @useResult
   bool isToday({DateTime? now, bool ignoreYear = false}) {
-    now ??= DateTime.now();
+    final DateTime resolvedNow = now ?? DateTime.now();
+    final bool isSameDayAndMonth = resolvedNow.day == day && resolvedNow.month == month;
 
-    final bool isSameDayAndMonth = now.day == day && now.month == month;
-    return isSameDayAndMonth && (ignoreYear || now.year == year);
+    return isSameDayAndMonth && (ignoreYear || resolvedNow.year == year);
   }
 
   /// Checks if the current [DateTime] has the same date (year, month, day)

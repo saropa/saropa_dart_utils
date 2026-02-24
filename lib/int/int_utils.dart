@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Default maximum recursion depth for GCD calculation to prevent stack overflow.
 const int _defaultMaxRecursionDepth = 500;
 
@@ -18,8 +20,7 @@ const int _defaultMaxRecursionDepth = 500;
 /// Instead, they will return a reasonable default value (usually null).
 ///
 abstract final class IntUtils {
-
-/// Returns the greatest common denominator of [a] and [b], or `null` if
+  /// Returns the greatest common denominator of [a] and [b], or `null` if
   /// the inputs are invalid or recursion exceeds [maxDepth].
   ///
   /// Uses the Euclidean algorithm, which is based on the principle that the
@@ -31,6 +32,7 @@ abstract final class IntUtils {
   ///
   /// Both [a] and [b] must be non-negative.
   ///
+  @useResult
   static int? findGreatestCommonDenominator(
     int a,
     int b, {

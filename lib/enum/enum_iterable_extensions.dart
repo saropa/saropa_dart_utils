@@ -1,39 +1,30 @@
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 /// Saropa extensions for [List]s of [Enum]s
 ///
 extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
-  /// Returns a [MapEntry] with the most common value and its frequency.
+  /// Returns a [MapEntry] with the most common value and its frequency,
+  /// or `null` if the iterable is empty.
   ///
-  /// Dart’s type system doesn’t allow us to return a strongly typed enum
+  /// Dart's type system doesn’t allow us to return a strongly typed enum
   /// from a method that works with the base Enum type. This is because
-  /// Dart’s generics are invariant, which means you can’t use a subtype
+  /// Dart's generics are invariant, which means you can’t use a subtype
   /// (like ZodiacSigns) where a base type (like Enum) is expected.
-  ///
-  /// Throws [Exception] if the iterable is empty.
-  ///
-  /// Throws [StateError] if the frequency map yields no entries unexpectedly.
-  MapEntry<Enum, int> mostOccurrences() {
-    // If the list is empty, the method will now throw an exception with
-    // a descriptive error message.
+  @useResult
+  MapEntry<Enum, int>? mostOccurrences() {
     if (isEmpty) {
-      throw Exception('Error: The list is empty.');
+      return null;
     }
 
-    // Create a new HashMap to store each integer and its frequency.
-    // In Dart, Map is an interface that HashMap implements. Using Map makes
-    // code more flexible, as it can work with any class that implements Map.
     final Map<Enum, int> frequencyMap = <Enum, int>{};
 
-    // Iterate over each integer in the list.
     for (final Enum item in this) {
-      // Update the frequency of the current integer in the map, or set it
-      // to 1 if it's not in the map yet.
+      // Map.update is called for in-place mutation; no Future is involved
       // ignore: require_future_error_handling
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
-    // Find and return the key with the highest value (frequency) in the map.
     // The map is guaranteed non-empty since we checked isEmpty above.
     MapEntry<Enum, int>? mostCommonEntry;
     for (final MapEntry<Enum, int> entry in frequencyMap.entries) {
@@ -42,11 +33,6 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
       }
     }
 
-    // Return a MapEntry with the most common value and its frequency.
-    // mostCommonEntry is guaranteed non-null since the list is non-empty.
-    if (mostCommonEntry == null) {
-      throw StateError('Unexpected null entry in non-empty frequency map');
-    }
     return mostCommonEntry;
   }
 
@@ -63,6 +49,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   ///
   /// - Returns: The first enum value whose [name] matches the given [name],
   ///  or `null` if no such value is found.
+  @useResult
   T? byNameTry(String? name, {bool isCaseSensitive = true}) {
     if (name == null || name.isEmpty) {
       return null;
@@ -88,6 +75,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   /// ```
   ///
   /// - Returns: A list of enum values sorted alphabetically by name.
+  @useResult
   List<T> sortedEnumValues() =>
       // Map the list of enum values to a list of their names as strings
       toList()

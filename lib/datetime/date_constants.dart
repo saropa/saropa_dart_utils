@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Utility class providing static constants for commonly used date/time values.
 ///
 /// This class cannot be instantiated. Access constants via `DateConstants.xxx`.
@@ -9,7 +11,6 @@
 /// ```
 // ignore: avoid_god_class
 abstract final class DateConstants {
-
   // Date/Time Range Constants
 
   /// The year of the Unix epoch (January 1, 1970 00:00:00 UTC).
@@ -77,11 +78,35 @@ abstract final class DateConstants {
   ///
   // NOTE: default month and day == 1
   static final DateTime unixEpochDate = DateTime.utc(_unixEpochYear);
+
+  // Week and ISO Week Constants
+
+  /// Number of days in a week.
+  static const int daysPerWeek = 7;
+
+  /// Offset used in the ISO 8601 week number formula.
+  static const int isoWeekOffset = 10;
+
+  /// December day used to determine ISO weeks in a year.
+  static const int isoWeekReferenceDay = 28;
+
+  // Formatting and Conversion Constants
+
+  /// Number of digits in a year for zero-padded formatting.
+  static const int yearStringWidth = 4;
+
+  /// Number of minutes in one hour.
+  static const int minutesPerHour = 60;
+
+  /// Last day of December.
+  static const int decemberLastDay = 31;
+
+  /// Minimum age for non-child content access under COPPA.
+  static const int coppaMinAge = 13;
 }
 
 /// Utility class for month name operations.
 abstract final class MonthUtils {
-
   /// Full month names indexed by month number (1-12).
   static const Map<int, String> monthLongNames = <int, String>{
     1: 'January',
@@ -118,16 +143,17 @@ abstract final class MonthUtils {
   static const List<int> monthNumbers = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   /// Returns the full name of the given [month] (1-12), or `null` if invalid.
+  @useResult
   static String? getMonthLongName(int month) => monthLongNames[month];
 
   /// Returns the abbreviated name of the given [month] (1-12), or `null` if
   /// [month] is `null` or invalid.
+  @useResult
   static String? getMonthShortName(int? month) => month == null ? null : monthShortNames[month];
 }
 
 /// Utility class for weekday name operations.
 abstract final class WeekdayUtils {
-
   /// Full weekday names indexed by DateTime weekday constant (1 = Monday, 7 = Sunday).
   static const Map<int, String> dayLongNames = <int, String>{
     DateTime.monday: 'Monday',
@@ -152,18 +178,19 @@ abstract final class WeekdayUtils {
 
   /// Returns the full name of the given [dayOfWeek] (1=Monday, 7=Sunday), or
   /// `null` if [dayOfWeek] is `null` or invalid.
+  @useResult
   static String? getDayLongName(int? dayOfWeek) =>
       dayOfWeek == null ? null : dayLongNames[dayOfWeek];
 
   /// Returns the abbreviated name of the given [dayOfWeek] (1=Monday,
   /// 7=Sunday), or `null` if [dayOfWeek] is `null` or invalid.
+  @useResult
   static String? getDayShortName(int? dayOfWeek) =>
       dayOfWeek == null ? null : dayShortNames[dayOfWeek];
 }
 
 /// Utility class for serial date string parsing.
 abstract final class SerialDateUtils {
-
   /// Parses a serial date string (ISO 8601 format) to DateTime.
   ///
   /// Args:
@@ -171,8 +198,12 @@ abstract final class SerialDateUtils {
   ///
   /// Returns:
   ///   A DateTime object, or null if the string is null, empty, or invalid.
+  @useResult
   static DateTime? serialToDateTime(String? dateWithT) {
-    if (dateWithT == null || dateWithT.isEmpty) return null;
+    if (dateWithT == null || dateWithT.isEmpty) {
+      return null;
+    }
+
     return DateTime.tryParse(dateWithT);
   }
 }

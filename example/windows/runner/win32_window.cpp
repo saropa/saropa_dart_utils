@@ -65,6 +65,7 @@ class WindowClassRegistrar {
     if (!instance_) {
       instance_ = new WindowClassRegistrar();
     }
+
     return instance_;
   }
 
@@ -185,6 +186,7 @@ Win32Window::MessageHandler(HWND hwnd,
       if (quit_on_close_) {
         PostQuitMessage(0);
       }
+
       return 0;
 
     case WM_DPICHANGED: {
@@ -204,6 +206,7 @@ Win32Window::MessageHandler(HWND hwnd,
         MoveWindow(child_content_, rect.left, rect.top, rect.right - rect.left,
                    rect.bottom - rect.top, TRUE);
       }
+
       return 0;
     }
 
@@ -211,10 +214,12 @@ Win32Window::MessageHandler(HWND hwnd,
       if (child_content_ != nullptr) {
         SetFocus(child_content_);
       }
+
       return 0;
 
     case WM_DWMCOLORIZATIONCOLORCHANGED:
       UpdateTheme(hwnd);
+
       return 0;
   }
 

@@ -1,10 +1,17 @@
 import 'dart:math';
+import 'package:meta/meta.dart';
 
 /// Multiplier to convert decimal to percentage (0.5 * 100 = 50%).
 const int _percentageMultiplier = 100;
 
 /// Base for decimal number system and power-of-10 calculations.
 const int _base10 = 10;
+
+/// Display string for not-a-number values.
+const String _nanDisplay = 'NaN';
+
+/// Maximum decimal places supported by [double.toStringAsFixed].
+const int _maxDecimalPlaces = 20;
 
 // Matches trailing zeros after a decimal point (e.g., "15.50" -> "15.5", "15.00" -> "15")
 final RegExp _trailingZerosRegex = RegExp(r'0+$');
@@ -20,8 +27,12 @@ extension DoubleExtensions on double {
   /// 15.0.hasDecimals; // false
   /// 15.00.hasDecimals; // false
   /// ```
+  @useResult
   bool get hasDecimals {
-    if (isNaN || isInfinite) return false;
+    if (isNaN || isInfinite) {
+      return false;
+    }
+
     return this % 1 != 0;
   }
 
@@ -30,7 +41,7 @@ extension DoubleExtensions on double {
   /// Multiplies the value by 100 and appends a '%' symbol.
   ///
   /// - [decimalPlaces]: Number of decimal places to include (default: 0).
-  /// - [roundDown]: If `true` (default), rounds down to the nearest value.
+  /// - [doRoundDown]: If `true` (default), rounds down to the nearest value.
   ///   If `false`, uses standard rounding.
   ///
   /// Example:
@@ -41,8 +52,9 @@ extension DoubleExtensions on double {
   /// 0.999.toPercentage(); // '99%' (rounded down)
   /// 0.999.toPercentage(roundDown: false); // '100%'
   /// ```
-  String toPercentage({int decimalPlaces = 0, bool roundDown = true}) {
-    if (!roundDown) {
+  @useResult
+  String toPercentage({int decimalPlaces = 0, bool doRoundDown = true}) {
+    if (!doRoundDown) {
       return '${(this * _percentageMultiplier).formatDouble(decimalPlaces, showTrailingZeros: false)}%';
     }
 
@@ -77,11 +89,18 @@ extension DoubleExtensions on double {
   /// 15.5.formatDouble(2, showTrailingZeros: false); // '15.5'
   /// 15.05.formatDouble(2, showTrailingZeros: false); // '15.05'
   /// ```
+  @useResult
   String formatDouble(int decimalPlaces, {bool showTrailingZeros = true}) {
-    if (isNaN) return 'NaN';
-    if (isInfinite) return isNegative ? '-∞' : '∞';
+    if (isNaN) {
+      return _nanDisplay;
+    }
+
+    if (isInfinite) {
+      return isNegative ? '-∞' : '∞';
+    }
+
     // toStringAsFixed throws RangeError for decimalPlaces < 0 or > 20
-    final int clampedPlaces = decimalPlaces.clamp(0, 20);
+    final int clampedPlaces = decimalPlaces.clamp(0, _maxDecimalPlaces);
     final String result = toStringAsFixed(clampedPlaces);
 
     if (showTrailingZeros || clampedPlaces == 0) {
@@ -105,6 +124,7 @@ extension DoubleExtensions on double {
   /// (-5.0).forceBetween(0.0, 10.0); // 0.0
   /// 15.0.forceBetween(0.0, 10.0); // 10.0
   /// ```
+  @useResult
   double forceBetween(double from, double to) {
     if (this < from) {
       return from;
@@ -130,6 +150,7 @@ extension DoubleExtensions on double {
   /// 3.149.toPrecision(2); // 3.14 (truncated, not rounded)
   /// (-3.149).toPrecision(2); // -3.14
   /// ```
+  @useResult
   double toPrecision(int precision) {
     final num multiplier = pow(_base10, precision);
 
@@ -150,7 +171,7 @@ extension DoubleExtensions on double {
   /// 15.5.formatPrecision(); // '15.50'
   /// 15.123.formatPrecision(); // '15.12'
   /// ```
-  String formatPrecision({int precision = 2}) {
-    return hasDecimals ? toStringAsFixed(precision) : toStringAsFixed(0);
-  }
+  @useResult
+  String formatPrecision({int precision = 2}) =>
+      hasDecimals ? toStringAsFixed(precision) : toStringAsFixed(0);
 }

@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 extension NumberExtensions on num {
   /// Returns `true` if the number is not zero and not negative.
   ///
@@ -9,6 +11,7 @@ extension NumberExtensions on num {
   /// 0.isNotZeroOrNegative; // Returns false
   /// (-3).isNotZeroOrNegative; // Returns false
   /// ```
+  @useResult
   bool get isNotZeroOrNegative => this != 0 && !isNegative;
 
   /// Returns `true` if the number is zero or negative.
@@ -21,6 +24,7 @@ extension NumberExtensions on num {
   /// 0.isZeroOrNegative; // Returns true
   /// (-3).isZeroOrNegative; // Returns true
   /// ```
+  @useResult
   bool get isZeroOrNegative => this == 0 || isNegative;
 
   /// Returns the number of characters in the string representation of this number.
@@ -43,6 +47,7 @@ extension NumberExtensions on num {
   /// ```
   ///
   /// NOTE: negative zero is removed when formatting. I.e. -0 becomes 0
+  @useResult
   int length() => toString().length;
 }
 
@@ -59,8 +64,10 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNotNullZeroOrNegative; // Returns false
   /// num? n4 = -3; n4.isNotNullZeroOrNegative; // Returns false
   /// ```
+  @useResult
   bool get isNotNullZeroOrNegative {
     final value = this;
+
     return value != null && value.isNotZeroOrNegative;
   }
 
@@ -75,8 +82,10 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNullZeroOrNegative; // Returns true
   /// num? n4 = -3; n4.isNullZeroOrNegative; // Returns true
   /// ```
+  @useResult
   bool get isNullZeroOrNegative {
     final value = this;
+
     return value == null || value.isZeroOrNegative;
   }
 
@@ -89,6 +98,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNullOrZero; // Returns true
   /// num? n4 = -3; n4.isNullOrZero; // Returns false
   /// ```
+  @useResult
   bool get isNullOrZero => this == null || this == 0;
 
   /// Returns `true` if the nullable number is not null and not zero.
@@ -100,6 +110,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNotNullOrZero; // Returns false
   /// num? n4 = -3; n4.isNotNullOrZero; // Returns true
   /// ```
+  @useResult
   bool get isNotNullOrZero => this != null && this != 0;
 
   /// Returns `true` if the nullable number is not null and greater than zero.
@@ -111,8 +122,10 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isGreaterThanZero; // Returns false
   /// num? n4 = -3; n4.isGreaterThanZero; // Returns false
   /// ```
+  @useResult
   bool get isGreaterThanZero {
     final num? self = this;
+
     return self != null && self > 0;
   }
 
@@ -126,14 +139,18 @@ extension NumberNullableExtensions on num? {
   /// num? n4 = 0; n4.isGreaterThanOne; // Returns false
   /// num? n5 = -3; n5.isGreaterThanOne; // Returns false
   /// ```
+  @useResult
   bool get isGreaterThanOne {
     final num? self = this;
+
     return self != null && self > 1;
   }
 
   /// Converts this nullable num to a double, or returns null if null.
+  @useResult
   double? toDoubleOrNull() => this?.toDouble();
 
   /// Converts this nullable num to an int, or returns null if null.
+  @useResult
   int? toIntOrNull() => this?.toInt();
 }

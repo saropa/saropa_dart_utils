@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// A set of utility methods for working with strings.
 extension StringNullableExtensions on String? {
   /// Extension method to check if a [String] is null or empty.
@@ -16,9 +18,11 @@ extension StringNullableExtensions on String? {
   /// text = "Hello";
   /// print(text.isNullOrEmpty); // Output: false
   /// ```
+  @useResult
   bool get isNullOrEmpty => this?.isEmpty ?? true;
 
   /// IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool
   /// Return true if the string is not null and not empty
+  @useResult
   bool get isNotNullOrEmpty => this?.isNotEmpty ?? false;
 }

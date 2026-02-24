@@ -5,7 +5,7 @@ enum EnumListTestEnum { value1, value2, value3 }
 
 void main() {
   group('mostOccurrences tests', () {
-    test('Test case 1: Normal case', () {
+    test('should return most common element', () {
       final List<EnumListTestEnum> list1 = <EnumListTestEnum>[
         EnumListTestEnum.value1,
         EnumListTestEnum.value2,
@@ -14,12 +14,12 @@ void main() {
         EnumListTestEnum.value3,
         EnumListTestEnum.value3,
       ];
-      final MapEntry<Enum, int> result = list1.mostOccurrences();
-      expect(result.key, EnumListTestEnum.value3);
-      expect(result.value, 3);
+      final MapEntry<Enum, int>? result = list1.mostOccurrences();
+      expect(result?.key, EnumListTestEnum.value3);
+      expect(result?.value, 3);
     });
 
-    test('Test case 2: All elements are the same', () {
+    test('should return the element when all are the same', () {
       final List<EnumListTestEnum> list2 = <EnumListTestEnum>[
         EnumListTestEnum.value1,
         EnumListTestEnum.value1,
@@ -27,31 +27,31 @@ void main() {
         EnumListTestEnum.value1,
         EnumListTestEnum.value1,
       ];
-      final MapEntry<Enum, int> result = list2.mostOccurrences();
-      expect(result.key, EnumListTestEnum.value1);
-      expect(result.value, 5);
+      final MapEntry<Enum, int>? result = list2.mostOccurrences();
+      expect(result?.key, EnumListTestEnum.value1);
+      expect(result?.value, 5);
     });
 
-    test('Test case 3: Each element appears only once', () {
+    test('should return frequency 1 when each element appears once', () {
       final List<EnumListTestEnum> list3 = <EnumListTestEnum>[
         EnumListTestEnum.value1,
         EnumListTestEnum.value2,
         EnumListTestEnum.value3,
       ];
-      final MapEntry<Enum, int> result = list3.mostOccurrences();
-      expect(result.value, 1);
+      final MapEntry<Enum, int>? result = list3.mostOccurrences();
+      expect(result?.value, 1);
     });
 
-    test('Test case 4: Empty list', () {
+    test('should return null for empty list', () {
       final List<EnumListTestEnum> list4 = <EnumListTestEnum>[];
-      expect(list4.mostOccurrences, throwsA(isA<Exception>()));
+      expect(list4.mostOccurrences(), isNull);
     });
 
-    test('Test case 5: List with one element', () {
+    test('should return the single element', () {
       final List<EnumListTestEnum> list5 = <EnumListTestEnum>[EnumListTestEnum.value1];
-      final MapEntry<Enum, int> result = list5.mostOccurrences();
-      expect(result.key, EnumListTestEnum.value1);
-      expect(result.value, 1);
+      final MapEntry<Enum, int>? result = list5.mostOccurrences();
+      expect(result?.key, EnumListTestEnum.value1);
+      expect(result?.value, 1);
     });
   });
 

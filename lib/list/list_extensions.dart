@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 /// Extension methods for [List].
 extension ListExtensions<T> on List<T> {
@@ -27,14 +28,27 @@ extension ListExtensions<T> on List<T> {
   /// [1, 2, 3].equalsIgnoringOrder([1, 2]); // false (different lengths)
   /// [1, 2, 3].equalsIgnoringOrder(null); // false
   /// ```
+  @useResult
   bool equalsIgnoringOrder(List<T>? other) {
     // Handle nulls (two nulls are equal, a null and a non-null are not).
-    if (other == null) return false; // this is non-null, other is null
+    if (other == null) {
+      return false;
+    }
+    // this is non-null, other is null
 
     // Quick exits for empty or identical lists.
-    if (isEmpty && other.isEmpty) return true; // Both empty
-    if (identical(this, other)) return true; // Identical references
-    if (length != other.length) return false; // Different lengths
+    if (isEmpty && other.isEmpty) {
+      return true;
+    }
+    // Both empty
+    if (identical(this, other)) {
+      return true;
+    }
+    // Identical references
+    if (length != other.length) {
+      return false;
+    }
+    // Different lengths
 
     // Build frequency maps for both lists to correctly handle duplicates.
     // This ensures [1, 1, 2] is NOT considered equal to [1, 2, 2].
@@ -74,6 +88,7 @@ extension ListExtensions<T> on List<T> {
   /// List<String> emptyList = [];
   /// String? topEmpty = emptyList.topOccurrence(); // Returns null
   /// ```
+  @useResult
   T? topOccurrence() {
     // Check if the list is empty. If it is, return null.
     if (isEmpty) {
@@ -140,6 +155,7 @@ extension ListExtensions<T> on List<T> {
   ///
   /// List<int> numbersLimitZero = numbers.limit(0); // Returns [1, 2, 3, 4, 5] (original list)
   /// ```
+  @useResult
   List<T> limit(int count) {
     if (isEmpty || count <= 0 || length <= count) {
       return this;
@@ -164,6 +180,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyList = [];
   /// int? lastEmptyItem = emptyList.lastOrNull; // Returns null
   /// ```
+  @useResult
   T? get lastOrNull {
     if (isEmpty) {
       return null;
@@ -194,6 +211,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyList = [];
   /// int? itemAtEmptyList = emptyList.itemAt(0); // Returns null (empty list)
   /// ```
+  @useResult
   T? itemAt(int? index) {
     // Check if index is null
     if (isEmpty || index == null) {
@@ -209,10 +227,6 @@ extension ListExtensions<T> on List<T> {
     // Return null if index is out of range
     return null;
   }
-
-  // /// Alias for [itemAt].
-  // @Deprecated('Use itemAt instead')
-  // T? safeIndex(int? index) => itemAt(index);
 
   /// Returns `null` if the list is empty, otherwise returns the list itself.
   ///
@@ -231,6 +245,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyList = [];
   /// List<int>? nullList = emptyList.nullIfEmpty(); // Returns null
   /// ```
+  @useResult
   List<T>? nullIfEmpty() => isEmpty ? null : this;
 
   /// Returns a new list containing at most the first [count] elements of this
@@ -254,6 +269,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> safeTakenZeroEmpty = numbers.takeSafe(0, ignoreZeroOrLess: false); // Returns []
   /// List<int> safeTakenNullCount = numbers.takeSafe(null); // Returns [1, 2, 3, 4, 5]
   /// ```
+  @useResult
   List<T> takeSafe(int? count, {bool ignoreZeroOrLess = true}) {
     // Return the unaltered list if the iterable is empty, count is null,
     // or ignoreZeroOrLess is true and count is less than or equal to zero
@@ -294,6 +310,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> numbersExcludeEmpty = numbers.exclude([]); // Returns [1, 2, 3, 4, 5] (no exclusion)
   /// List<int> emptyListExclude = [].exclude([1, 2]); // Returns [] (empty list remains empty)
   /// ```
+  @useResult
   List<T> exclude(List<T> items) {
     // nothing in list to process
     if (isEmpty) {
@@ -306,6 +323,7 @@ extension ListExtensions<T> on List<T> {
     }
 
     final Set<T> excludeSet = items.toSet();
+
     return where((T e) => !excludeSet.contains(e)).toList();
   }
 
@@ -335,6 +353,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyListContainsAny = [].containsAny([1, 2]); // Returns false (empty list)
   /// bool containsAnyNullList = numbers.containsAny(null); // Returns false (null inThis list)
   /// ```
+  @useResult
   bool containsAny(List<T>? inThis) {
     if (isEmpty) {
       return false;

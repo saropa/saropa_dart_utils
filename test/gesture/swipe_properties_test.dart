@@ -6,10 +6,10 @@ void main() {
   group('Swipe - Object', () {
     test('should create Swipe with correct direction and speed', () {
       const Swipe swipe = Swipe(
-        SwipeDirection.left,
-        SwipeSpeed.fast,
-        SwipeMagnitude.large,
-        SwipeAngle.horizontal,
+     direction:    SwipeDirection.left,
+     speed:          SwipeSpeed.fast,
+     magnitude:    SwipeMagnitude.large,
+    angle:          SwipeAngle.horizontal,
       );
 
       expect(swipe.direction, SwipeDirection.left);
@@ -86,10 +86,10 @@ void main() {
     test('should create Swipe with correct direction, speed, magnitude, and '
         'angle', () {
       const Swipe swipe = Swipe(
-        SwipeDirection.left,
-        SwipeSpeed.fast,
-        SwipeMagnitude.large,
-        SwipeAngle.horizontal,
+       direction:  SwipeDirection.left,
+       speed:      SwipeSpeed.fast,
+       magnitude:  SwipeMagnitude.large,
+      angle:       SwipeAngle.horizontal,
       );
 
       expect(swipe.direction, SwipeDirection.left);
@@ -103,10 +103,10 @@ void main() {
     test('should create Swipe with correct direction, speed, magnitude, '
         'and angle', () {
       const Swipe swipe = Swipe(
-        SwipeDirection.left,
-        SwipeSpeed.fast,
-        SwipeMagnitude.large,
-        SwipeAngle.horizontal,
+     direction:    SwipeDirection.left,
+     speed:        SwipeSpeed.fast,
+     magnitude:    SwipeMagnitude.large,
+    angle:         SwipeAngle.horizontal,
       );
 
       expect(swipe.direction, equals(SwipeDirection.left));

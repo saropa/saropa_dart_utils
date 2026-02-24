@@ -44,10 +44,11 @@ abstract final class Base64Utils {
       final List<int> gzipJson = io.gzip.encode(encodedJson);
 
       return base64.encode(gzipJson);
-    } catch (e, stackTrace) {
+    } on FormatException catch (e, stackTrace) {
       // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
       // ignore: saropa_lints/avoid_print_error
       debugPrint('Base64Utils.compressText failed: $e\n$stackTrace');
+
       return null;
     }
   }
@@ -83,10 +84,11 @@ abstract final class Base64Utils {
       final List<int> decodedGzip = io.gzip.decode(decodedBase64);
 
       return utf8.decode(decodedGzip);
-    } catch (e, stackTrace) {
+    } on FormatException catch (e, stackTrace) {
       // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
       // ignore: saropa_lints/avoid_print_error
       debugPrint('Base64Utils.decompressText failed: $e\n$stackTrace');
+
       return null;
     }
   }

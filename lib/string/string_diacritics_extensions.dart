@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// An extension on the String class to provide utility methods for handling
 /// diacritical marks (accents).
 extension StringDiacriticsExtensions on String {
@@ -11,11 +13,14 @@ extension StringDiacriticsExtensions on String {
   /// This is executed only once to initialize [_reverseAccentsMap].
   static Map<String, String> _createReverseMap() {
     final Map<String, String> reverseMap = <String, String>{};
-    _accentsMap.forEach((String baseChar, List<String> diacriticList) {
-      for (final String diacritic in diacriticList) {
-        reverseMap[diacritic] = baseChar;
-      }
-    });
+    _accentsMap.forEach(
+      (String baseChar, List<String> diacriticList) {
+        for (final String diacritic in diacriticList) {
+          reverseMap[diacritic] = baseChar;
+        }
+      },
+    );
+
     return reverseMap;
   }
 
@@ -25,6 +30,7 @@ extension StringDiacriticsExtensions on String {
   /// that can be removed by the `removeDiacritics` method.
   ///
   /// Returns `true` if a known diacritic character is found, `false` otherwise.
+  @useResult
   bool containsDiacritics() {
     // An empty string cannot contain diacritics.
     if (isEmpty) {
@@ -39,6 +45,7 @@ extension StringDiacriticsExtensions on String {
   /// equivalents (e.g., 'é' becomes 'e').
   ///
   /// This method is optimized to perform well by using a pre-computed map.
+  @useResult
   String removeDiacritics() {
     // If the string is empty, return an empty string immediately.
     if (isEmpty) {

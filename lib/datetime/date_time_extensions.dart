@@ -31,11 +31,15 @@ extension DateTimeExtensions on DateTime {
 
     final DateTime firstDayOfMonth = DateTime(year, month);
 
-    final int offset = (dayOfWeek - firstDayOfMonth.weekday + DateConstants.daysPerWeek) % DateConstants.daysPerWeek;
+    final int offset =
+        (dayOfWeek - firstDayOfMonth.weekday + DateConstants.daysPerWeek) %
+        DateConstants.daysPerWeek;
 
     final DateTime firstOccurrence = firstDayOfMonth.add(Duration(days: offset));
 
-    final DateTime nthOccurrence = firstOccurrence.add(Duration(days: (n - 1) * DateConstants.daysPerWeek));
+    final DateTime nthOccurrence = firstOccurrence.add(
+      Duration(days: (n - 1) * DateConstants.daysPerWeek),
+    );
     if (nthOccurrence.month != month) {
       return null;
     }
@@ -56,15 +60,15 @@ extension DateTimeExtensions on DateTime {
   /// against. If not provided, the current date is used.
   @useResult
   bool isUnder13({DateTime? today}) {
-    today ??= DateTime.now();
+    final DateTime resolvedToday = today ?? DateTime.now();
 
-    if (isAfter(today)) {
+    if (isAfter(resolvedToday)) {
       return false;
     }
 
     final DateTime thirteenthBirthday = addYears(DateConstants.coppaMinAge);
 
-    return today.isBefore(thirteenthBirthday);
+    return resolvedToday.isBefore(thirteenthBirthday);
   }
 
   /// Returns a list of [DateTime] objects for consecutive days.
@@ -76,11 +80,16 @@ extension DateTimeExtensions on DateTime {
   @useResult
   List<DateTime> generateDayList(int days, {bool isStartOfDay = true}) {
     DateTime currentDate = this;
-    return List<DateTime>.generate(days, (_) {
-      final DateTime result = currentDate;
-      currentDate = currentDate.nextDay(isStartOfDay: isStartOfDay);
-      return result;
-    });
+
+    return List<DateTime>.generate(
+      days,
+      (_) {
+        final DateTime result = currentDate;
+        currentDate = currentDate.nextDay(isStartOfDay: isStartOfDay);
+
+        return result;
+      },
+    );
   }
 
   /// Returns the previous day.
@@ -94,6 +103,7 @@ extension DateTimeExtensions on DateTime {
     if (isStartOfDay) {
       result = DateTime(result.year, result.month, result.day);
     }
+
     return result;
   }
 
@@ -108,6 +118,7 @@ extension DateTimeExtensions on DateTime {
     if (isStartOfDay) {
       result = DateTime(result.year, result.month, result.day);
     }
+
     return result;
   }
 
@@ -173,8 +184,11 @@ extension DateTimeExtensions on DateTime {
   DateTime? toDateInYear(int setYear) {
     if (month == DateTime.february && day == DateConstants.daysInFebLeapYear) {
       final bool isTargetLeap = DateTimeUtils.isLeapYear(year: setYear);
-      if (!isTargetLeap) return null;
+      if (!isTargetLeap) {
+        return null;
+      }
     }
+
     return DateTime(
       setYear,
       month,

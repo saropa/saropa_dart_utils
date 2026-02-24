@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// Extension methods for nullable [List<T>?].
 extension ListExtensionsNullable<T> on List<T>? {
   /// Checks if the nullable list is either `null` or empty.
@@ -19,6 +21,7 @@ extension ListExtensionsNullable<T> on List<T>? {
   /// List<double>? nonEmptyList = [1.0, 2.0];
   /// bool isNullOrEmpty3 = nonEmptyList.isListNullOrEmpty; // Returns false
   /// ```
+  @useResult
   bool get isListNullOrEmpty => this?.isEmpty ?? true;
 
   /// Checks if the nullable list is neither `null` nor empty.
@@ -40,5 +43,6 @@ extension ListExtensionsNullable<T> on List<T>? {
   /// List<double>? nonEmptyList = [1.0, 2.0];
   /// bool isNotEmpty3 = nonEmptyList.isNotListNullOrEmpty; // Returns true
   /// ```
+  @useResult
   bool get isNotListNullOrEmpty => this?.isNotEmpty ?? false;
 }

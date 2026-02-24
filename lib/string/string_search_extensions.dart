@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// ASCII code for uppercase 'A' (65).
 const int _asciiUpperA = 65;
 
@@ -23,48 +25,84 @@ extension StringSearchExtensions on String {
   /// Returns `true` if this string equals any item in [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  @useResult
   bool isEqualsAny(List<String>? list, {bool isCaseSensitive = true}) {
-    if (isEmpty || list == null || list.isEmpty) return false;
-    if (isCaseSensitive) return list.any((String item) => item == this);
+    if (isEmpty || list == null || list.isEmpty) {
+      return false;
+    }
+
+    if (isCaseSensitive) {
+      return list.any((String item) => item == this);
+    }
+
     final String find = toLowerCase();
+
     return list.any((String item) => item.toLowerCase() == find);
   }
 
   /// Returns true if this string contains any digits.
+  @useResult
   bool isContainsDigits() => _containsDigitsRegex.hasMatch(this);
 
   /// Returns `true` if this string contains any item from [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  @useResult
   bool isContainsAnyInList(List<String>? list, {bool isCaseSensitive = true}) {
-    if (isEmpty || list == null || list.isEmpty) return false;
-    if (isCaseSensitive) return list.any((String item) => contains(item));
+    if (isEmpty || list == null || list.isEmpty) {
+      return false;
+    }
+
+    if (isCaseSensitive) {
+      return list.any((String item) => contains(item));
+    }
+
     final String source = toLowerCase();
+
     return list.any((String item) => source.contains(item.toLowerCase()));
   }
 
   /// Returns `true` if this string is contained in any item from [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  @useResult
   bool isContainedInAny(List<String>? list, {bool isCaseSensitive = true}) {
-    if (isEmpty || list == null || list.isEmpty) return false;
-    if (isCaseSensitive) return list.any((String item) => item.contains(this));
+    if (isEmpty || list == null || list.isEmpty) {
+      return false;
+    }
+
+    if (isCaseSensitive) {
+      return list.any((String item) => item.contains(this));
+    }
+
     final String find = toLowerCase();
+
     return list.any((String item) => item.toLowerCase().contains(find));
   }
 
   /// Returns `true` if this string contains [find] (case-insensitive).
+  @useResult
   bool isContainsCaseInsensitive(String? find) {
-    if (isEmpty || find == null || find.isEmpty) return false;
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
     return toLowerCase().contains(find.toLowerCase());
   }
 
   /// Returns `true` if this string contains [find], handling `null` safely.
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  @useResult
   bool isContainsNullable(String? find, {bool isCaseSensitive = true}) {
-    if (isEmpty || find == null || find.isEmpty) return false;
-    if (isCaseSensitive) return contains(find);
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
+    if (isCaseSensitive) {
+      return contains(find);
+    }
+
     return toLowerCase().contains(find.toLowerCase());
   }
 
@@ -72,12 +110,16 @@ extension StringSearchExtensions on String {
   /// specified [matchType].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  @useResult
   bool isMatchAny(
     List<String>? list, {
     bool isCaseSensitive = true,
     SearchMatchType matchType = SearchMatchType.contains,
   }) {
-    if (isEmpty || list == null || list.isEmpty) return false;
+    if (isEmpty || list == null || list.isEmpty) {
+      return false;
+    }
+
     return switch (matchType) {
       SearchMatchType.startsWith => isStartsWithAny(list, isCaseSensitive: isCaseSensitive),
       SearchMatchType.exact => isEqualsAny(list, isCaseSensitive: isCaseSensitive),
@@ -88,9 +130,14 @@ extension StringSearchExtensions on String {
   /// Returns `true` if this string starts with any item in [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  @useResult
   bool isStartsWithAny(List<String>? list, {bool isCaseSensitive = true}) {
-    if (isEmpty || list == null || list.isEmpty) return false;
+    if (isEmpty || list == null || list.isEmpty) {
+      return false;
+    }
+
     final String find = isCaseSensitive ? this : toLowerCase();
+
     return list.any(
       (String item) =>
           isCaseSensitive ? find.startsWith(item) : find.startsWith(item.toLowerCase()),
@@ -101,20 +148,34 @@ extension StringSearchExtensions on String {
   ///
   /// If the first character is a Latin letter (A-Z), returns it uppercased;
   /// otherwise returns the first character as-is.
+  @useResult
   String getRepeatableLetter() {
-    if (isEmpty) return '';
+    if (isEmpty) {
+      return '';
+    }
+
     final String trimmed = trim();
-    if (trimmed.isEmpty) return '';
+    if (trimmed.isEmpty) {
+      return '';
+    }
+
     final String first = String.fromCharCode(trimmed.runes.first);
     final String upper = first.toUpperCase();
     final int code = upper.codeUnitAt(0);
-    if (code >= _asciiUpperA && code <= _asciiUpperZ) return upper;
+    if (code >= _asciiUpperA && code <= _asciiUpperZ) {
+      return upper;
+    }
+
     return first;
   }
 
   /// Returns true if this string does NOT contain [find].
+  @useResult
   bool isNotContains(String? find) {
-    if (isEmpty || find == null || find.isEmpty) return false;
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
     return !contains(find);
   }
 
@@ -122,8 +183,12 @@ extension StringSearchExtensions on String {
   ///
   /// Returns true if [condition] is true and the string contains [find],
   /// or if [condition] is false and the string does NOT contain [find].
+  @useResult
   bool isContainsConditional(String? find, {required bool condition}) {
-    if (isEmpty || find == null || find.isEmpty) return false;
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
     return condition ? contains(find) : !contains(find);
   }
 
@@ -132,11 +197,18 @@ extension StringSearchExtensions on String {
   ///
   /// When [isCaseSensitive] is `false` (default), comparison is
   /// case-insensitive.
+  @useResult
   bool isContainsAnyWord(List<String>? searchItems, {bool isCaseSensitive = false}) {
-    if (isEmpty || searchItems == null || searchItems.isEmpty) return false;
-    for (String item in searchItems) {
-      if (isContainsWord(item, isCaseSensitive: isCaseSensitive)) return true;
+    if (isEmpty || searchItems == null || searchItems.isEmpty) {
+      return false;
     }
+
+    for (String item in searchItems) {
+      if (isContainsWord(item, isCaseSensitive: isCaseSensitive)) {
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -144,20 +216,29 @@ extension StringSearchExtensions on String {
   ///
   /// When [isCaseSensitive] is `false` (default), comparison is
   /// case-insensitive.
+  @useResult
   bool isContainsWord(String? find, {bool isCaseSensitive = false}) {
-    if (isEmpty || find == null || find.isEmpty) return false;
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
     final String escapedFind = find.replaceAllMapped(
       RegExp('[.*+?^\${}()|[\\]\\\\]'),
       (Match m) => '\\${m.group(0) ?? ''}',
     );
     final String pattern = '\\b$escapedFind\\b';
     final RegExp regex = RegExp(pattern, caseSensitive: isCaseSensitive);
+
     return regex.hasMatch(this);
   }
 
   /// Returns true if this string does NOT start with [find].
+  @useResult
   bool isNotStartsWith(String? find) {
-    if (isEmpty || find == null || find.isEmpty) return false;
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
     return !startsWith(find);
   }
 
@@ -165,8 +246,12 @@ extension StringSearchExtensions on String {
   ///
   /// Returns true if [isPositiveSearch] is true and the string starts with [find],
   /// or if [isPositiveSearch] is false and the string does NOT start with [find].
+  @useResult
   bool isStartsWithConditional(String? find, {required bool isPositiveSearch}) {
-    if (isEmpty || find == null || find.isEmpty) return false;
+    if (isEmpty || find == null || find.isEmpty) {
+      return false;
+    }
+
     return isPositiveSearch ? startsWith(find) : isNotStartsWith(find);
   }
 }
