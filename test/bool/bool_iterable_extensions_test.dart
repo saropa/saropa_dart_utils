@@ -1,14 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/bool/bool_iterable_extensions.dart';
+import 'package:saropa_dart_utils/iterable/occurrence.dart';
 
 void main() {
   group('ListExtensions', () {
     test('mostOccurrences', () {
-      expect(<bool>[true, false, true].mostOccurrences(), equals((true, 2)));
+      expect(<bool>[true, false, true].mostOccurrences(), equals(const Occurrence<bool>(true, 2)));
     });
 
     test('leastOccurrences', () {
-      expect(<bool>[true, false, true].leastOccurrences(), equals((false, 1)));
+      expect(<bool>[true, false, true].leastOccurrences(), equals(const Occurrence<bool>(false, 1)));
     });
   });
 

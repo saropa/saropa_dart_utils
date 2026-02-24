@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saropa_dart_utils/string/between_result.dart';
 import 'package:saropa_dart_utils/string/string_between_extensions.dart';
 import 'package:saropa_dart_utils/string/string_search_extensions.dart';
 
@@ -455,31 +456,31 @@ void main() {
 
   group('betweenResult', () {
     test('1. Simple case with no nesting', () {
-      expect('(test)'.betweenResult('(', ')'), equals(('test', '')));
+      expect('(test)'.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('2. Nested delimiters', () {
-      expect('(a(test)b)'.betweenResult('(', ')'), equals(('a(test)b', '')));
+      expect('(a(test)b)'.betweenResult('(', ')'), equals(BetweenResult('a(test)b', '')));
     });
     test('3. Multiple nested delimiters', () {
-      expect('((a)(test)(b))'.betweenResult('(', ')'), equals(('(a)(test)(b)', '')));
+      expect('((a)(test)(b))'.betweenResult('(', ')'), equals(BetweenResult('(a)(test)(b)', '')));
     });
     test('4. Deeply nested delimiters', () {
-      expect('((((test))))'.betweenResult('(', ')'), equals(('(((test)))', '')));
+      expect('((((test))))'.betweenResult('(', ')'), equals(BetweenResult('(((test)))', '')));
     });
     test('5. Unbalanced nested delimiters (favoring outer)', () {
-      expect('((a(test)b)'.betweenResult('(', ')'), equals(('(a(test)b', '')));
+      expect('((a(test)b)'.betweenResult('(', ')'), equals(BetweenResult('(a(test)b', '')));
     });
     test('6. Using square brackets', () {
-      expect('[test]'.betweenResult('[', ']'), equals(('test', '')));
+      expect('[test]'.betweenResult('[', ']'), equals(BetweenResult('test', '')));
     });
     test('7. Using curly braces', () {
-      expect('{test}'.betweenResult('{', '}'), equals(('test', '')));
+      expect('{test}'.betweenResult('{', '}'), equals(BetweenResult('test', '')));
     });
     test('8. Using angle brackets', () {
-      expect('<test>'.betweenResult('<', '>'), equals(('test', '')));
+      expect('<test>'.betweenResult('<', '>'), equals(BetweenResult('test', '')));
     });
     test('9. Using mixed delimiters', () {
-      expect('(test]'.betweenResult('(', ']'), equals(('test', '')));
+      expect('(test]'.betweenResult('(', ']'), equals(BetweenResult('test', '')));
     });
     test('10. Empty input string', () {
       expect(''.betweenResult('(', ')'), isNull);
@@ -503,22 +504,22 @@ void main() {
       expect(')test('.betweenResult('(', ')'), isNull);
     });
     test('17. Whitespace around delimiters', () {
-      expect(' ( test ) '.betweenResult('(', ')'), equals(('test', '')));
+      expect(' ( test ) '.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('18. Whitespace inside delimiters', () {
-      expect('(  test  )'.betweenResult('(', ')'), equals(('test', '')));
+      expect('(  test  )'.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('19. Whitespace inside delimiters (trim:false)', () {
-      expect('(  test  )'.betweenResult('(', ')', trim: false), equals(('  test  ', '')));
+      expect('(  test  )'.betweenResult('(', ')', trim: false), equals(BetweenResult('  test  ', '')));
     });
     test('20. Whitespace outside delimiters', () {
-      expect('  (test)  '.betweenResult('(', ')'), equals(('test', '')));
+      expect('  (test)  '.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('21. No whitespace', () {
-      expect('(test)'.betweenResult('(', ')'), equals(('test', '')));
+      expect('(test)'.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('22. Trim set to false (outer whitespace)', () {
-      expect('  (test)  '.betweenResult('(', ')', trim: false), equals(('test', '    ')));
+      expect('  (test)  '.betweenResult('(', ')', trim: false), equals(BetweenResult('test', '    ')));
     });
     test('23. Real-world example with URL and description', () {
       expect(
@@ -526,7 +527,7 @@ void main() {
           '(',
           ')',
         ),
-        equals(('Federal Emergency Management Agency (FEMA)', 'https://www.usfa.fema.gov/')),
+        equals(BetweenResult('Federal Emergency Management Agency (FEMA)', 'https://www.usfa.fema.gov/')),
       );
     });
   });

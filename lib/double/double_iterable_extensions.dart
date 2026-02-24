@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'package:meta/meta.dart';
+import 'package:saropa_dart_utils/iterable/occurrence.dart';
 
 /// Extension on Iterable&lt;double&gt; to provide additional properties and
 ///  methods specifically for lists of doubles.
@@ -7,6 +9,7 @@ extension DoubleIterableExtensions on Iterable<double> {
   ///
   /// Returns the smallest element in the list based on the Comparable
   /// implementation.
+  @useResult
   double? smallestOccurrence() {
     // check if the list is empty before calling reduce
     if (isEmpty) {
@@ -20,6 +23,7 @@ extension DoubleIterableExtensions on Iterable<double> {
   ///
   /// Returns the biggest element in the list based on the Comparable
   /// implementation.
+  @useResult
   double? biggestOccurrence() {
     // check if the list is empty before calling reduce
     if (isEmpty) {
@@ -31,10 +35,11 @@ extension DoubleIterableExtensions on Iterable<double> {
 
   /// Finds the most common value in the list.
   ///
-  /// Returns a record (tuple) containing the most common value and its
+  /// Returns an [Occurrence] containing the most common value and its
   /// frequency.
   /// If the list is empty, returns null.
-  (double, int)? mostOccurrences() {
+  @useResult
+  Occurrence<double>? mostOccurrences() {
     if (isEmpty) {
       return null;
     }
@@ -60,16 +65,16 @@ extension DoubleIterableExtensions on Iterable<double> {
       return null;
     }
 
-    // Return a tuple with the most common value and its frequency.
-    return (mostCommonEntry.key, mostCommonEntry.value);
+    return Occurrence<double>(mostCommonEntry.key, mostCommonEntry.value);
   }
 
   /// Finds the least common value in the list.
   ///
-  /// Returns a record (tuple) containing the least common value and its
+  /// Returns an [Occurrence] containing the least common value and its
   /// frequency.
   /// If the list is empty, returns null.
-  (double, int)? leastOccurrences() {
+  @useResult
+  Occurrence<double>? leastOccurrences() {
     if (isEmpty) {
       return null;
     }
@@ -96,7 +101,6 @@ extension DoubleIterableExtensions on Iterable<double> {
       return null;
     }
 
-    // Return a tuple with the least common value and its frequency.
-    return (leastCommonEntry.key, leastCommonEntry.value);
+    return Occurrence<double>(leastCommonEntry.key, leastCommonEntry.value);
   }
 }

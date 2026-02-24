@@ -1,13 +1,17 @@
 import 'dart:collection';
 
-/// NOTE: Dart’s type system doesn’t consider int to be a subtype of
+import 'package:meta/meta.dart';
+import 'package:saropa_dart_utils/iterable/occurrence.dart';
+
+/// NOTE: Dart's type system doesn't consider int to be a subtype of
 ///       Comparable&lt;int&gt;, even though int does implement
 ///       Comparable&lt;num&gt;
 ///
 extension IntIterableExtensions on Iterable<int> {
-  /// Returns a record of the most common value and its frequency, or `null`
-  /// if the iterable is empty.
-  (int, int)? mostOccurrences() {
+  /// Returns an [Occurrence] of the most common value and its frequency,
+  /// or `null` if the iterable is empty.
+  @useResult
+  Occurrence<int>? mostOccurrences() {
     // check if the list is empty before calling reduce
     if (isEmpty) {
       return null;
@@ -33,14 +37,17 @@ extension IntIterableExtensions on Iterable<int> {
       }
     }
 
-    // Return a tuple with the most common value and its frequency.
-    // mostCommonEntry is guaranteed non-null since the list is non-empty.
-    return mostCommonEntry == null ? null : (mostCommonEntry.key, mostCommonEntry.value);
+    if (mostCommonEntry == null) {
+      return null;
+    }
+
+    return Occurrence<int>(mostCommonEntry.key, mostCommonEntry.value);
   }
 
-  /// Returns a record of the least common value and its frequency, or `null`
-  /// if the iterable is empty.
-  (int, int)? leastOccurrences() {
+  /// Returns an [Occurrence] of the least common value and its frequency,
+  /// or `null` if the iterable is empty.
+  @useResult
+  Occurrence<int>? leastOccurrences() {
     // check if the list is empty before calling reduce
     if (isEmpty) {
       return null;
@@ -65,8 +72,10 @@ extension IntIterableExtensions on Iterable<int> {
       }
     }
 
-    // Return a tuple with the least common value and its frequency.
-    // leastCommonEntry is guaranteed non-null since the list is non-empty.
-    return leastCommonEntry == null ? null : (leastCommonEntry.key, leastCommonEntry.value);
+    if (leastCommonEntry == null) {
+      return null;
+    }
+
+    return Occurrence<int>(leastCommonEntry.key, leastCommonEntry.value);
   }
 }
