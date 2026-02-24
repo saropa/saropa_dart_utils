@@ -1,6 +1,9 @@
 # prefer_extracting_function_callbacks
 
-## 2 violations | Severity: info
+## 1 remaining violation | Severity: info
+
+`map_extensions.dart` violation resolved 2026-02-24 by extracting
+`_writeFormattedValue` helper from `formatMap`.
 
 ### Rule Description
 Function callbacks passed as arguments should be extracted to named functions rather than defined inline. This improves readability and allows reuse.

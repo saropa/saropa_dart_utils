@@ -1,5 +1,9 @@
 # prefer_typedefs_for_callbacks
 
+## RESOLVED — 2026-02-24
+
+All 3 violations fixed by adding `ElementPredicate<T>` and `KeyExtractor<T, E>` typedefs.
+
 ## 3 violations | Severity: info
 
 ### Rule Description

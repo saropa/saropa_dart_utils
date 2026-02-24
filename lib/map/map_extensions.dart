@@ -5,6 +5,32 @@ import 'package:meta/meta.dart';
 /// [StringMapExtensions.formatMap].
 const String _listClosingBracket = '],\n';
 
+/// Writes a formatted representation of [value] to [buffer].
+void _writeFormattedValue({
+  required StringBuffer buffer,
+  required Object? value,
+  required String indent,
+}) {
+  final String doubleIndent = '$indent$indent';
+  switch (value) {
+    case final Map<String, dynamic> nestedMap:
+      buffer.write(nestedMap.formatMap());
+      buffer.write('\n');
+    case final List<dynamic> list:
+      buffer.write('[\n');
+      for (final dynamic listItem in list) {
+        buffer.write(doubleIndent);
+        buffer.write(listItem);
+        buffer.write(',\n');
+      }
+      buffer.write(indent);
+      buffer.write(_listClosingBracket);
+    default:
+      buffer.write(value);
+      buffer.write(',\n');
+  }
+}
+
 /// Extension methods for generic maps.
 extension MapExtensions<K, V> on Map<K, V> {
   /// Returns this map, or `null` if it is empty.
@@ -46,30 +72,16 @@ extension StringMapExtensions on Map<String, dynamic> {
 
     const String indent = '  ';
     final StringBuffer buffer = StringBuffer('{\n');
-    forEach(
-      (String mapKey, dynamic mapValue) {
-        buffer.write(indent);
-        buffer.write(mapKey);
-        buffer.write(': ');
-        if (mapValue is Map<String, dynamic>) {
-          buffer.write(mapValue.formatMap());
-          buffer.write('\n');
-        } else if (mapValue is List) {
-          buffer.write('[\n');
-          for (dynamic listItem in mapValue) {
-            buffer.write(indent);
-            buffer.write(indent);
-            buffer.write(listItem);
-            buffer.write(',\n');
-          }
-          buffer.write(indent);
-          buffer.write(_listClosingBracket);
-        } else {
-          buffer.write(mapValue);
-          buffer.write(',\n');
-        }
-      },
-    );
+    for (final MapEntry<String, dynamic> entry in entries) {
+      buffer.write(indent);
+      buffer.write(entry.key);
+      buffer.write(': ');
+      _writeFormattedValue(
+        buffer: buffer,
+        value: entry.value,
+        indent: indent,
+      );
+    }
     buffer.write('}');
 
     return buffer.toString();
