@@ -5,14 +5,14 @@ const String _kErrNonEmptyStringRequired = 'NonEmptyString requires non-empty va
 const String _kErrPositiveNumberRequired = 'PositiveNumber requires > 0';
 
 /// Wrapper that guarantees non-empty string (validated at construction).
-final class NonEmptyString {
-  const NonEmptyString._(this._value);
+final class TypedPositiveUtils {
+  const TypedPositiveUtils._(this._value);
   final String _value;
 
-  /// Creates a [NonEmptyString] if [value] is non-empty after trim; otherwise throws.
-  factory NonEmptyString(String value) {
+  /// Creates a [TypedPositiveUtils] if [value] is non-empty after trim; otherwise throws.
+  factory TypedPositiveUtils(String value) {
     if (value.trim().isEmpty) throw ArgumentError(_kErrNonEmptyStringRequired);
-    return NonEmptyString._(value);
+    return TypedPositiveUtils._(value);
   }
 
   /// The non-empty string value.
