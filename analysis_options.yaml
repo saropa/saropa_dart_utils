@@ -29,6 +29,7 @@ analyzer:
     - "lib/generated_plugin_registrant.dart"
     - "scripts/**"
     - "test/.test_coverage.dart"
+    - "tool/**"
 
   language:
     strict-casts: true

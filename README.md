@@ -229,6 +229,17 @@ String preview = longDescription.truncateWithEllipsis(100);
 String itemCount = "item".pluralize(cart.length);  // "1 item" or "5 items"
 ```
 
+## Finding opportunities in your project
+
+A CLI tool scans Dart files and suggests places where `saropa_dart_utils` can replace boilerplate (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`, `s ?? ''` → `s.orEmpty()`). Run it from this repo against your app:
+
+```bash
+# From saropa_dart_utils root (clone or add as dependency)
+dart run tool/suggest_saropa_utils.dart /path/to/your/flutter_app
+```
+
+Output lists file, line, a short snippet, and the suggested replacement. No edits are made; use the report to refactor manually.
+
 ## Documentation
 
 - [API Reference](https://pub.dev/documentation/saropa_dart_utils/latest/) — Full method documentation with examples
