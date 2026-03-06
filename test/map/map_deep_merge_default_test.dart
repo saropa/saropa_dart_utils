@@ -21,13 +21,13 @@ void main() {
   group('withDefault', () {
     test('returns default for missing key', () {
       final Map<String, int> m = <String, int>{'a': 1};
-      final DefaultMap<String, int> dm = m.withDefault(0);
+      final MapDefaultExtensions<String, int> dm = m.withDefault(0);
       expect(dm['a'], 1);
       expect(dm['b'], 0);
     });
     test('set writes through', () {
       final Map<String, int> m = <String, int>{};
-      final DefaultMap<String, int> dm = m.withDefault(0);
+      final MapDefaultExtensions<String, int> dm = m.withDefault(0);
       dm['x'] = 5;
       expect(m['x'], 5);
     });
