@@ -84,6 +84,12 @@ abstract final class DateConstants {
   /// Number of days in a week.
   static const int daysPerWeek = 7;
 
+  /// Days from start of week to end of week (0-based index of last weekday).
+  static const int lastDayOffsetInWeek = 6;
+
+  /// Number of months per quarter.
+  static const int monthsPerQuarter = 3;
+
   /// Offset used in the ISO 8601 week number formula.
   static const int isoWeekOffset = 10;
 

@@ -10,9 +10,20 @@ extension DateTimeBoundsExtensions on DateTime {
 
   /// End of day (23:59:59.999999).
   @useResult
-  DateTime get endOfDay => DateTime(year, month, day, 23, 59, 59, 999, 999);
+  DateTime get endOfDay => DateTime(
+        year,
+        month,
+        day,
+        DateConstants.maxHour,
+        DateConstants.maxMinuteOrSecond,
+        DateConstants.maxMinuteOrSecond,
+        DateConstants.maxMillisecondOrMicrosecond,
+        DateConstants.maxMillisecondOrMicrosecond,
+      );
 
   /// Start of week. [firstWeekday] 1 = Monday, 7 = Sunday (default Monday).
+  ///
+  /// Returns the [DateTime] at 00:00:00 on the first day of the week.
   @useResult
   DateTime startOfWeek({int firstWeekday = DateTime.monday}) {
     final int delta =
@@ -21,10 +32,21 @@ extension DateTimeBoundsExtensions on DateTime {
   }
 
   /// End of week (last day 23:59:59.999999). [firstWeekday] 1 = Monday.
+  ///
+  /// Returns the [DateTime] at 23:59:59.999999 on the last day of the week.
   @useResult
   DateTime endOfWeek({int firstWeekday = DateTime.monday}) {
     final DateTime start = startOfWeek(firstWeekday: firstWeekday);
-    return DateTime(start.year, start.month, start.day + 6, 23, 59, 59, 999, 999);
+    return DateTime(
+      start.year,
+      start.month,
+      start.day + DateConstants.lastDayOffsetInWeek,
+      DateConstants.maxHour,
+      DateConstants.maxMinuteOrSecond,
+      DateConstants.maxMinuteOrSecond,
+      DateConstants.maxMillisecondOrMicrosecond,
+      DateConstants.maxMillisecondOrMicrosecond,
+    );
   }
 
   /// Start of month (first day 00:00:00).
@@ -35,26 +57,49 @@ extension DateTimeBoundsExtensions on DateTime {
   @useResult
   DateTime get endOfMonth {
     final int lastDay = DateTimeUtils.monthDayCount(year: year, month: month);
-    return DateTime(year, month, lastDay, 23, 59, 59, 999, 999);
+    return DateTime(
+      year,
+      month,
+      lastDay,
+      DateConstants.maxHour,
+      DateConstants.maxMinuteOrSecond,
+      DateConstants.maxMinuteOrSecond,
+      DateConstants.maxMillisecondOrMicrosecond,
+      DateConstants.maxMillisecondOrMicrosecond,
+    );
   }
 
   /// Quarter (1–4).
   @useResult
-  int get quarter => ((month - 1) / 3).floor() + 1;
+  int get quarter =>
+      ((month - DateConstants.minMonth) / DateConstants.monthsPerQuarter)
+          .floor() +
+      DateConstants.minMonth;
 
   /// Start of quarter (first day of quarter month 00:00:00).
   @useResult
   DateTime get startOfQuarter {
-    final int qMonth = (quarter - 1) * 3 + 1;
+    final int qMonth =
+        (quarter - DateConstants.minMonth) * DateConstants.monthsPerQuarter +
+            DateConstants.minMonth;
     return DateTime(year, qMonth);
   }
 
   /// End of quarter (last day of quarter month 23:59:59.999999).
   @useResult
   DateTime get endOfQuarter {
-    final int qMonth = quarter * 3;
+    final int qMonth = quarter * DateConstants.monthsPerQuarter;
     final int lastDay = DateTimeUtils.monthDayCount(year: year, month: qMonth);
-    return DateTime(year, qMonth, lastDay, 23, 59, 59, 999, 999);
+    return DateTime(
+      year,
+      qMonth,
+      lastDay,
+      DateConstants.maxHour,
+      DateConstants.maxMinuteOrSecond,
+      DateConstants.maxMinuteOrSecond,
+      DateConstants.maxMillisecondOrMicrosecond,
+      DateConstants.maxMillisecondOrMicrosecond,
+    );
   }
 
   /// Start of year (Jan 1 00:00:00). Same as [DateTime.yearStart] in date_time_extensions.
@@ -63,8 +108,16 @@ extension DateTimeBoundsExtensions on DateTime {
 
   /// End of year (Dec 31 23:59:59.999999).
   @useResult
-  DateTime get endOfYear =>
-      DateTime(year, DateTime.december, DateConstants.decemberLastDay, 23, 59, 59, 999, 999);
+  DateTime get endOfYear => DateTime(
+        year,
+        DateTime.december,
+        DateConstants.decemberLastDay,
+        DateConstants.maxHour,
+        DateConstants.maxMinuteOrSecond,
+        DateConstants.maxMinuteOrSecond,
+        DateConstants.maxMillisecondOrMicrosecond,
+        DateConstants.maxMillisecondOrMicrosecond,
+      );
 
   /// True if Saturday or Sunday.
   @useResult
