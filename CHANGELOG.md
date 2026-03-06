@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.8] - 2026-02-24
 
+In this release we introduce typed result classes for common operations, split JSON utilities into focused modules, and bring the code in line with lints (named parameters, narrower exceptions, @useResult). We aimed for clearer structure and safer APIs.
+
 ### Added
 - **`Occurrence<T>` class** (`lib/iterable/occurrence.dart`): typed result for `mostOccurrences()` and `leastOccurrences()` methods, replacing record return types
 - **`BetweenResult` class** (`lib/string/between_result.dart`): typed result for `betweenResult()`, `betweenResultLast()`, and bracket-extraction methods, replacing record return types
@@ -70,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lint violations reduced from ~10,000 to ~30
 
 ## [1.0.7] - 2026-02-22
+
+We split the large string and date-time extension files into smaller modules (everything stays backward compatible), fixed a bunch of lints, and switched to proper test matchers. The codebase is easier to work in and the linter is quieter.
 
 ### Fixed
 - **Lint compliance**: Resolved 10 lint rule categories across 4 files:
@@ -110,6 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bug reports for 80+ saropa_lints rules with reproduction steps and suggestions in `bugs/`
 
 ## [1.0.6] - 2026-02-19
+
+We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji handling, and JSON/HTML edge cases. Behavior should be more reliable everywhere.
 
 ### Fixed (32 bugs resolved — full audit)
 
@@ -161,6 +167,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.6] - 2026-01-21
 
+We replaced magic numbers with named constants in date/time, string, and numeric code. The intent is clearer and the linter is happier.
+
 ### Changed
 - Extracted magic numbers into named constants across codebase for improved code clarity and linting compliance
 - Added 50+ descriptive constants with documentation to date/time, numeric, string, HTML, and UUID utilities
@@ -186,6 +194,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.5] - 2026-01-08
 
+We rewrote the README with before/after examples and real-world use cases so it’s easier to see what the library does and whether it fits your project.
+
 ### Changed
 
 - Rewrote README with compelling production-proven messaging
@@ -195,11 +205,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.4] - 2026-01-08
 
+We fixed a flaky date/time test that sometimes failed in CI so test runs are more reliable.
+
 ### Fixed
 
 - Fix flaky DateTime test race condition in CI
 
 ## [1.0.3] - 2026-01-07
+
+We updated the GitHub Actions publish workflow to use OIDC authentication so publishing to pub.dev works with the current GitHub setup.
 
 ### Changed
 
@@ -207,10 +221,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.2] - 2026-01-07
 
+We added a banner to the README so the project is easier to recognize at a glance.
+
 ### Changed
 - Added a banner to README.md
 
 ## [1.0.0] - 2026-01-07
+
+We shipped the first stable 1.0: switched to MIT, turned on the full saropa_lints tier, and added README badges for pub points, method count, and coverage.
 
 ### Changed
 - Migrated from GPL v3 to MIT license for broader adoption
@@ -224,6 +242,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.12] - 2026-01-05
 
+We switched to the saropa_lints package and custom_lint and trimmed the analysis config from 255 lines to 69. Same level of checking, less to maintain.
+
 ### Changed
 - Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
 - Added `custom_lint: ^0.8.0` for custom lint rule support
@@ -233,6 +253,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.11]
 
+In this release we added utilities for Base64 compression, UUID validation and formatting, HTML unescape and plain text, and double formatting (percentages, precision, clamping). We also added 103 tests for them.
+
 ### Added
 - `Base64Utils` - Text compression and decompression (`compressText`, `decompressText`)
 - `UuidUtils` - UUID validation and manipulation (`isUUID`, `addHyphens`, `removeHyphens`)
@@ -241,6 +263,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 103 test cases covering all new utilities
 
 ## [0.5.10] - 2025-12-11
+
+We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync so releases are safer and easier to script.
 
 ### Added
 - `-Version` parameter for CI/CD automation in publish script
@@ -260,6 +284,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Excluded example folder from parent analysis
 
 ## [0.5.9] - 2025-11-25
+
+We added an `allowEmpty` option to JSON validation and made string methods (substring, truncate, lastChars) use grapheme clusters so emoji and Unicode behave correctly. Note: indices are now grapheme-based, which is a breaking change.
 
 ### Added
 - `isJson`: `allowEmpty` parameter to optionally treat `{}` as valid JSON
@@ -282,12 +308,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.8] - 2025-11-25
 
+We made the publish script handle git tags and GitHub releases idempotently so you can re-run it after a partial run without it failing.
+
 ### Changed
 - `publish_pub_dev.ps1`: Added idempotent handling for git tags
 - `publish_pub_dev.ps1`: Added idempotent handling for GitHub releases
 - Prevents script failures when re-running after partial completion
 
 ## [0.5.7] - 2025-11-25
+
+We fixed string extraction (curly braces, line breaks), made word removal Unicode-aware, and improved the grammar/article rules. Text handling should be more accurate.
 
 ### Fixed
 - `extractCurlyBraces`: Switched to non-greedy matching for correct extraction order
@@ -302,6 +332,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.6]
 
+We added URL/URI extensions so you can check HTTPS, add or get query parameters, and replace the host—useful when building or validating links.
+
 ### Added
 - `UrlExtensions.isSecure` - Check if URI uses HTTPS scheme
 - `UrlExtensions.addQueryParameter` - Add or update query parameters
@@ -310,6 +342,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `UrlExtensions.replaceHost` - Create URI with different host
 
 ## [0.5.5] - 2025-11-25
+
+This release is packed with new stuff: JSON and map utilities, URL extensions, string extraction and search, date constants, and a lot of new DateTime and string helpers. We added tests too—over 2,850 in total.
 
 ### Added
 - `JsonUtils` - JSON parsing, type conversion, and validation
@@ -327,6 +361,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 2850 tests (all passing)
 
 ## [0.5.4]
+
+We fixed range and date logic (inclusive boundaries, year boundaries), list comparison, hex overflow, and string truncation, and added 110 tests to cover the fixes.
 
 ### Fixed
 - `isBetweenRange`: Properly forwards `inclusive` parameter
@@ -346,16 +382,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.3] - 2025-11-12
 
+We tuned regex usage in string utils and improved the docs for the random and list helpers. A small polish release.
+
 ### Changed
 - Enhanced `string_utils.dart` to optimize final regex usages
 - Improved documentation for `CommonRandom` and list generation
 
 ## [0.5.2] - 2025-08-19
 
+We renamed the string extension type to `StringExtensions` for consistency. Behavior is unchanged.
+
 ### Changed
 - Renamed `StringFormattingAndWrappingExtensions` to `StringExtensions`
 
 ## [0.5.1] - 2025-08-19
+
+We merged all string extension methods into one file and added a full test suite. Imports and structure are simpler now.
 
 ### Changed
 - Merged all string extension methods into `lib/string/string_extensions.dart`
@@ -369,6 +411,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.0] - 2025-08-19
 
+We added extensions for numbers (e.g. clamping), lists (order-agnostic comparison), and strings (safer number parsing), and refactored names and tests for consistency.
+
 ### Added
 - Extension methods for numbers, lists, and strings (`forceBetween`, order-agnostic list comparison, safer string number parsing)
 - Test files for new extensions
@@ -379,6 +423,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.4] - 2025-08-18
 
+We split the string code into smaller files and added unique-list and number-range utilities. Layout is clearer and there are a few new helpers.
+
 ### Changed
 - Split large string file into smaller, specific files
 - Updated tests and imports for new file structure
@@ -388,6 +434,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unique lists and number ranges utilities
 
 ## [0.4.3] - 2025-02-24
+
+We added framework-style extensions for primitives (num, string, etc.), set line length to 100, and removed the VGV spelling lists.
 
 ### Added
 - Framework extensions for primitives (num, string, etc.)
@@ -400,20 +448,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.2] - 2025-02-24
 
+We made minor improvements and fixes. A small maintenance release.
+
 ### Changed
 - Minor improvements and fixes
 
 ## [0.4.1] - 2025-02-13
+
+We made minor improvements and fixes. Another small maintenance release.
 
 ### Changed
 - Minor improvements and fixes
 
 ## [0.4.0] - 2025-02-13
 
+We did a major refactor of the library structure and APIs to set things up for the extensions and utilities that followed.
+
 ### Changed
 - Major refactoring release
 
 ## [0.3.18] - 2025-01-07
+
+We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date formatting so date handling works well out of the box.
 
 ### Added
 - `DateTimeRange` utils
@@ -425,20 +481,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.17] - 2025-01-07
 
+We made minor improvements. A small maintenance release.
+
 ### Changed
 - Minor improvements
 
 ## [0.3.16] - 2025-01-07
+
+We made minor improvements. Another small maintenance release.
 
 ### Changed
 - Minor improvements
 
 ## [0.3.15] - 2025-01-03
 
+We made minor improvements. Another small maintenance release.
+
 ### Changed
 - Minor improvements
 
 ## [0.3.13]
+
+We added a script to detect unused Flutter code and updated the Code of Conduct (logo, examples, survey). We also renamed the doc folder to docs and removed Codecov.
 
 ### Added
 - Unused flutter code detection script
@@ -455,6 +519,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.3]
 
+We added CommonRandom for reproducible randomness, a Code of Conduct for contributors, and some development helper scripts so the project is easier to work on and the expectations are clear.
+
 ### Added
 - `CommonRandom` class as drop-in replacement for `math.Random()`
 - Code of Conduct for Saropa contributors
@@ -465,10 +531,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.1]
 
+We moved the list extensions onto Iterable so they work with any iterable, not just lists. The API is more flexible now.
+
 ### Changed
 - Migrated `List` extensions to `Iterable`
 
 ## [0.2.0]
+
+We added enum helpers (byNameTry, sortedEnumValues) and list extensions (smallest, biggest, most/least occurrences), and bumped the SDK and collections dependency.
 
 ### Added
 - `Enum` methods: `byNameTry` and `sortedEnumValues`
@@ -480,6 +550,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0]
 
+We renamed nullable string utils to extensions and deprecated a few functions we plan to remove. Cleanup to make the API clearer.
+
 ### Changed
 - Renamed `string_nullable_utils.dart` to `string_nullable_extensions.dart`
 
@@ -487,6 +559,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Several functions in preparation for removal
 
 ## [0.0.11]
+
+We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart when the search is empty, and removed the deprecated string-nullable functions.
 
 ### Added
 - `DateConstants.unixEpochDate`
@@ -506,20 +580,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.10]
 
+We made removeStart accept a nullable search parameter so it’s easier to use in nullable contexts.
+
 ### Changed
 - `removeStart` parameter changed to nullable
 
 ## [0.0.9]
+
+We added an optional trimFirst parameter to removeStart so you can trim the result. A small string API improvement.
 
 ### Added
 - `trimFirst` parameter to `StringExtensions.removeStart`
 
 ## [0.0.8]
 
+We added an optional trimFirst parameter to nullIfEmpty so you have finer control over empty and whitespace handling.
+
 ### Added
 - `trimFirst` parameter to `StringExtensions.nullIfEmpty`
 
 ## [0.0.7]
+
+We renamed the strings folder to singular and deprecated the nullable string extensions. Naming and API cleanup.
 
 ### Changed
 - Renamed strings folder to singular
@@ -529,10 +611,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.6]
 
+We added swipe gesture properties for use in gesture-aware UIs—the groundwork for swipe handling.
+
 ### Added
 - Swipe gesture properties
 
 ## [0.0.5]
+
+We documented all methods, added example app usage and README examples, and extended the string extensions. The library should be easier to discover and use.
 
 ### Added
 - Documentation for all methods
@@ -541,6 +627,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - String extension methods
 
 ## [0.0.4]
+
+We added an example app, GitHub Actions, and contribution templates (PR, issue, contributing guide) so the project is ready for others to contribute.
 
 ### Added
 - Example App
@@ -551,15 +639,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.3]
 
+We added a random enum selection helper for when you need a random value from an enum.
+
 ### Added
 - Random enum method
 
 ## [0.0.2]
 
+We added string-to-bool conversion methods so you can parse "true"/"false" and similar strings safely.
+
 ### Added
 - String to bool conversion methods
 
 ## [0.0.1] - 2024-06-27
+
+First release. We included bool list methods to get started.
 
 ### Added
 - Initial release with bool list methods
