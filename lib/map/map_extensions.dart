@@ -32,7 +32,7 @@ void _writeFormattedValue({
 }
 
 /// Extension methods for generic maps.
-extension MapExtensions<K, V> on Map<K, V> {
+extension MapExt<K, V> on Map<K, V> {
   /// Returns this map, or `null` if it is empty.
   @useResult
   Map<K, V>? nullIfEmpty() => isEmpty ? null : this;
