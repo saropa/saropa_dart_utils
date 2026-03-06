@@ -4,8 +4,8 @@ library;
 import 'levenshtein_utils.dart';
 
 /// One candidate from fuzzy search with score and matched text.
-class FuzzyMatch {
-  const FuzzyMatch(int index, String text, double score)
+class FuzzySearchUtils {
+  const FuzzySearchUtils(int index, String text, double score)
     : _index = index,
       _text = text,
       _score = score;
@@ -20,14 +20,14 @@ class FuzzyMatch {
   double get score => _score;
 
   @override
-  String toString() => 'FuzzyMatch(index: $_index, text: $_text, score: $_score)';
+  String toString() => 'FuzzySearchUtils(index: $_index, text: $_text, score: $_score)';
 }
 
 /// Searches [candidates] for [query]; returns matches sorted by match score descending.
 ///
 /// Score combines token overlap and edit-distance ratio. [maxDistance] caps
 /// per-token edit distance; [minScore] excludes results below that threshold.
-List<FuzzyMatch> fuzzySearch(
+List<FuzzySearchUtils> fuzzySearch(
   String query,
   List<String> candidates, {
   int maxDistance = 2,
@@ -35,9 +35,9 @@ List<FuzzyMatch> fuzzySearch(
 }) {
   final String q = query.trim().toLowerCase();
   if (q.isEmpty)
-    return candidates.asMap().entries.map((e) => FuzzyMatch(e.key, e.value, 1.0)).toList();
+    return candidates.asMap().entries.map((e) => FuzzySearchUtils(e.key, e.value, 1.0)).toList();
   final List<String> qTokens = q.split(RegExp(r'\s+'));
-  final List<FuzzyMatch> out = <FuzzyMatch>[];
+  final List<FuzzySearchUtils> out = <FuzzySearchUtils>[];
   for (int i = 0; i < candidates.length; i++) {
     final String c = candidates[i];
     final String cLower = c.toLowerCase();
@@ -55,8 +55,8 @@ List<FuzzyMatch> fuzzySearch(
       score += best;
     }
     final double norm = score / qTokens.length;
-    if (norm >= minScore) out.add(FuzzyMatch(i, c, norm));
+    if (norm >= minScore) out.add(FuzzySearchUtils(i, c, norm));
   }
-  out.sort((FuzzyMatch a, FuzzyMatch b) => b.score.compareTo(a.score));
+  out.sort((FuzzySearchUtils a, FuzzySearchUtils b) => b.score.compareTo(a.score));
   return out;
 }

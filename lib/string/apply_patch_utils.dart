@@ -5,12 +5,12 @@ import 'myers_diff_utils.dart';
 import 'string_extensions.dart';
 
 /// Result of applying a patch.
-sealed class ApplyPatchResult {
-  const ApplyPatchResult();
+sealed class ApplyPatchUtils {
+  const ApplyPatchUtils();
 }
 
 /// Patch applied successfully; [text] is the result.
-final class ApplyPatchSuccess extends ApplyPatchResult {
+final class ApplyPatchSuccess extends ApplyPatchUtils {
   const ApplyPatchSuccess(String text) : _text = text;
   final String _text;
 
@@ -21,7 +21,7 @@ final class ApplyPatchSuccess extends ApplyPatchResult {
 }
 
 /// Patch could not be applied; [message] describes the conflict or error.
-final class ApplyPatchConflict extends ApplyPatchResult {
+final class ApplyPatchConflict extends ApplyPatchUtils {
   const ApplyPatchConflict(String message) : _message = message;
   final String _message;
 
@@ -36,7 +36,7 @@ final class ApplyPatchConflict extends ApplyPatchResult {
 /// Reconstructs text by taking lines from [baseText] for equal/delete and
 /// from [ops] for insert. Validates that equal segments match [baseText];
 /// returns [ApplyPatchConflict] if they do not.
-ApplyPatchResult applyPatch(String baseText, List<DiffOp> ops) {
+ApplyPatchUtils applyPatch(String baseText, List<DiffOp> ops) {
   final List<String> lines = _splitLines(baseText);
   int lineIndex = 0;
   final StringBuffer out = StringBuffer();

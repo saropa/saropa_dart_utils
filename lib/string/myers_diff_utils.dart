@@ -17,27 +17,6 @@ enum DiffOpKind {
   delete,
 }
 
-/// A single operation in a minimal edit script.
-///
-/// For line-based diff, [text] is one or more lines (may include newline).
-/// Adjacent equal/insert/delete ops with the same kind are merged
-/// so that [text] can represent a multi-line segment.
-class DiffOp {
-  const DiffOp(DiffOpKind kind, String text) : _kind = kind, _text = text;
-
-  final DiffOpKind _kind;
-
-  /// The kind of edit (equal, insert, or delete).
-  DiffOpKind get kind => _kind;
-  final String _text;
-
-  /// The segment text for this operation.
-  String get text => _text;
-
-  @override
-  String toString() => 'DiffOp($_kind, ${_text.length} chars)';
-}
-
 /// Myers-style minimal edit script between two strings (line-based).
 ///
 /// Splits [oldText] and [newText] by newlines, computes a minimal edit script,
@@ -73,6 +52,27 @@ abstract final class MyersDiffUtils {
   }
 
   MyersDiffUtils._();
+}
+
+/// A single operation in a minimal edit script.
+///
+/// For line-based diff, [text] is one or more lines (may include newline).
+/// Adjacent equal/insert/delete ops with the same kind are merged
+/// so that [text] can represent a multi-line segment.
+class DiffOp {
+  const DiffOp(DiffOpKind kind, String text) : _kind = kind, _text = text;
+
+  final DiffOpKind _kind;
+
+  /// The kind of edit (equal, insert, or delete).
+  DiffOpKind get kind => _kind;
+  final String _text;
+
+  /// The segment text for this operation.
+  String get text => _text;
+
+  @override
+  String toString() => 'DiffOp($_kind, ${_text.length} chars)';
 }
 
 class _Edit {
