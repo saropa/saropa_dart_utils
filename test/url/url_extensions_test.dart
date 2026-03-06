@@ -261,108 +261,108 @@ void main() {
     });
   });
 
-  group('UrlUtils.tryParse', () {
-    test('1. Valid URL', () => expect(UrlUtils.tryParse('https://example.com'), isNotNull));
-    test('2. Null input', () => expect(UrlUtils.tryParse(null), isNull));
-    test('3. Empty string', () => expect(UrlUtils.tryParse(''), isNull));
-    test('4. Invalid URL', () => expect(UrlUtils.tryParse('not a url'), isNotNull));
+  group('UrlExtensions.tryParse', () {
+    test('1. Valid URL', () => expect(UrlExtensions.tryParse('https://example.com'), isNotNull));
+    test('2. Null input', () => expect(UrlExtensions.tryParse(null), isNull));
+    test('3. Empty string', () => expect(UrlExtensions.tryParse(''), isNull));
+    test('4. Invalid URL', () => expect(UrlExtensions.tryParse('not a url'), isNotNull));
     test('5. With path', () {
-      final Uri? result = UrlUtils.tryParse('https://example.com/path');
+      final Uri? result = UrlExtensions.tryParse('https://example.com/path');
       expect(result, isNotNull);
       expect(result?.path, '/path');
     });
     test('6. With query', () {
-      final Uri? result = UrlUtils.tryParse('https://example.com?a=1');
+      final Uri? result = UrlExtensions.tryParse('https://example.com?a=1');
       expect(result, isNotNull);
       expect(result?.query, 'a=1');
     });
     test('7. File URL', () {
-      final Uri? result = UrlUtils.tryParse('file:///path/to/file');
+      final Uri? result = UrlExtensions.tryParse('file:///path/to/file');
       expect(result, isNotNull);
       expect(result?.scheme, 'file');
     });
     test('8. HTTP URL', () {
-      final Uri? result = UrlUtils.tryParse('http://example.com');
+      final Uri? result = UrlExtensions.tryParse('http://example.com');
       expect(result, isNotNull);
       expect(result?.scheme, 'http');
     });
     test('9. With port', () {
-      final Uri? result = UrlUtils.tryParse('https://example.com:8080');
+      final Uri? result = UrlExtensions.tryParse('https://example.com:8080');
       expect(result, isNotNull);
       expect(result?.port, 8080);
     });
     test('10. Unicode URL', () {
-      final Uri? result = UrlUtils.tryParse('https://example.com/你好');
+      final Uri? result = UrlExtensions.tryParse('https://example.com/你好');
       expect(result, isNotNull);
     });
   });
 
-  group('UrlUtils.isValidUrl', () {
-    test('1. Valid HTTPS', () => expect(UrlUtils.isValidUrl('https://example.com'), isTrue));
-    test('2. Valid HTTP', () => expect(UrlUtils.isValidUrl('http://example.com'), isTrue));
-    test('3. No scheme', () => expect(UrlUtils.isValidUrl('example.com'), isFalse));
-    test('4. No host', () => expect(UrlUtils.isValidUrl('https://'), isFalse));
-    test('5. Null input', () => expect(UrlUtils.isValidUrl(null), isFalse));
-    test('6. Empty string', () => expect(UrlUtils.isValidUrl(''), isFalse));
+  group('UrlExtensions.isValidUrl', () {
+    test('1. Valid HTTPS', () => expect(UrlExtensions.isValidUrl('https://example.com'), isTrue));
+    test('2. Valid HTTP', () => expect(UrlExtensions.isValidUrl('http://example.com'), isTrue));
+    test('3. No scheme', () => expect(UrlExtensions.isValidUrl('example.com'), isFalse));
+    test('4. No host', () => expect(UrlExtensions.isValidUrl('https://'), isFalse));
+    test('5. Null input', () => expect(UrlExtensions.isValidUrl(null), isFalse));
+    test('6. Empty string', () => expect(UrlExtensions.isValidUrl(''), isFalse));
     test(
       '7. File scheme',
-      () => expect(UrlUtils.isValidUrl('file:///path'), isFalse),
+      () => expect(UrlExtensions.isValidUrl('file:///path'), isFalse),
     ); // File URLs have empty host
-    test('8. FTP scheme', () => expect(UrlUtils.isValidUrl('ftp://example.com'), isTrue));
-    test('9. With path', () => expect(UrlUtils.isValidUrl('https://example.com/path'), isTrue));
-    test('10. With port', () => expect(UrlUtils.isValidUrl('https://example.com:8080'), isTrue));
-    test('11. Localhost', () => expect(UrlUtils.isValidUrl('http://localhost'), isTrue));
-    test('12. IP address', () => expect(UrlUtils.isValidUrl('http://192.168.1.1'), isTrue));
+    test('8. FTP scheme', () => expect(UrlExtensions.isValidUrl('ftp://example.com'), isTrue));
+    test('9. With path', () => expect(UrlExtensions.isValidUrl('https://example.com/path'), isTrue));
+    test('10. With port', () => expect(UrlExtensions.isValidUrl('https://example.com:8080'), isTrue));
+    test('11. Localhost', () => expect(UrlExtensions.isValidUrl('http://localhost'), isTrue));
+    test('12. IP address', () => expect(UrlExtensions.isValidUrl('http://192.168.1.1'), isTrue));
   });
 
-  group('UrlUtils.isValidHttpUrl', () {
-    test('1. Valid HTTPS', () => expect(UrlUtils.isValidHttpUrl('https://example.com'), isTrue));
-    test('2. Valid HTTP', () => expect(UrlUtils.isValidHttpUrl('http://example.com'), isTrue));
-    test('3. FTP scheme', () => expect(UrlUtils.isValidHttpUrl('ftp://example.com'), isFalse));
-    test('4. File scheme', () => expect(UrlUtils.isValidHttpUrl('file:///path'), isFalse));
-    test('5. No scheme', () => expect(UrlUtils.isValidHttpUrl('example.com'), isFalse));
-    test('6. Null input', () => expect(UrlUtils.isValidHttpUrl(null), isFalse));
-    test('7. Empty string', () => expect(UrlUtils.isValidHttpUrl(''), isFalse));
-    test('8. No host', () => expect(UrlUtils.isValidHttpUrl('https://'), isFalse));
-    test('9. With path', () => expect(UrlUtils.isValidHttpUrl('https://example.com/path'), isTrue));
-    test('10. With port', () => expect(UrlUtils.isValidHttpUrl('http://localhost:3000'), isTrue));
-    test('11. Localhost', () => expect(UrlUtils.isValidHttpUrl('http://localhost'), isTrue));
-    test('12. IP address', () => expect(UrlUtils.isValidHttpUrl('http://127.0.0.1'), isTrue));
+  group('UrlExtensions.isValidHttpUrl', () {
+    test('1. Valid HTTPS', () => expect(UrlExtensions.isValidHttpUrl('https://example.com'), isTrue));
+    test('2. Valid HTTP', () => expect(UrlExtensions.isValidHttpUrl('http://example.com'), isTrue));
+    test('3. FTP scheme', () => expect(UrlExtensions.isValidHttpUrl('ftp://example.com'), isFalse));
+    test('4. File scheme', () => expect(UrlExtensions.isValidHttpUrl('file:///path'), isFalse));
+    test('5. No scheme', () => expect(UrlExtensions.isValidHttpUrl('example.com'), isFalse));
+    test('6. Null input', () => expect(UrlExtensions.isValidHttpUrl(null), isFalse));
+    test('7. Empty string', () => expect(UrlExtensions.isValidHttpUrl(''), isFalse));
+    test('8. No host', () => expect(UrlExtensions.isValidHttpUrl('https://'), isFalse));
+    test('9. With path', () => expect(UrlExtensions.isValidHttpUrl('https://example.com/path'), isTrue));
+    test('10. With port', () => expect(UrlExtensions.isValidHttpUrl('http://localhost:3000'), isTrue));
+    test('11. Localhost', () => expect(UrlExtensions.isValidHttpUrl('http://localhost'), isTrue));
+    test('12. IP address', () => expect(UrlExtensions.isValidHttpUrl('http://127.0.0.1'), isTrue));
   });
 
-  group('UrlUtils.extractDomain', () {
+  group('UrlExtensions.extractDomain', () {
     test(
       '1. Simple domain',
-      () => expect(UrlUtils.extractDomain('https://example.com'), 'example.com'),
+      () => expect(UrlExtensions.extractDomain('https://example.com'), 'example.com'),
     );
     test(
       '2. With path',
-      () => expect(UrlUtils.extractDomain('https://example.com/path'), 'example.com'),
+      () => expect(UrlExtensions.extractDomain('https://example.com/path'), 'example.com'),
     );
     test(
       '3. Subdomain',
-      () => expect(UrlUtils.extractDomain('https://www.example.com'), 'www.example.com'),
+      () => expect(UrlExtensions.extractDomain('https://www.example.com'), 'www.example.com'),
     );
-    test('4. Null input', () => expect(UrlUtils.extractDomain(null), isNull));
-    test('5. Empty string', () => expect(UrlUtils.extractDomain(''), isNull));
-    test('6. Invalid URL', () => expect(UrlUtils.extractDomain('not a url'), isNull));
+    test('4. Null input', () => expect(UrlExtensions.extractDomain(null), isNull));
+    test('5. Empty string', () => expect(UrlExtensions.extractDomain(''), isNull));
+    test('6. Invalid URL', () => expect(UrlExtensions.extractDomain('not a url'), isNull));
     test(
       '7. With port',
-      () => expect(UrlUtils.extractDomain('https://example.com:8080'), 'example.com'),
+      () => expect(UrlExtensions.extractDomain('https://example.com:8080'), 'example.com'),
     );
     test(
       '8. IP address',
-      () => expect(UrlUtils.extractDomain('http://192.168.1.1'), '192.168.1.1'),
+      () => expect(UrlExtensions.extractDomain('http://192.168.1.1'), '192.168.1.1'),
     );
-    test('9. Localhost', () => expect(UrlUtils.extractDomain('http://localhost'), 'localhost'));
+    test('9. Localhost', () => expect(UrlExtensions.extractDomain('http://localhost'), 'localhost'));
     test(
       '10. Complex subdomain',
-      () => expect(UrlUtils.extractDomain('https://api.v2.example.com'), 'api.v2.example.com'),
+      () => expect(UrlExtensions.extractDomain('https://api.v2.example.com'), 'api.v2.example.com'),
     );
-    test('11. No scheme', () => expect(UrlUtils.extractDomain('example.com'), isNull));
+    test('11. No scheme', () => expect(UrlExtensions.extractDomain('example.com'), isNull));
     test(
       '12. With query',
-      () => expect(UrlUtils.extractDomain('https://example.com?a=1'), 'example.com'),
+      () => expect(UrlExtensions.extractDomain('https://example.com?a=1'), 'example.com'),
     );
   });
 
