@@ -2,8 +2,8 @@
 library;
 
 /// Single validation error with optional path and code.
-final class ValidationError {
-  const ValidationError(this.message, {String? code, String? path}) : _code = code, _path = path;
+final class ValidationErrorUtils {
+  const ValidationErrorUtils(this.message, {String? code, String? path}) : _code = code, _path = path;
   final String message;
   final String? _code;
 
@@ -20,14 +20,14 @@ final class ValidationError {
 
 /// Aggregates multiple validation errors (roadmap #684).
 final class ValidationErrors {
-  ValidationErrors([List<ValidationError>? list]) : _list = list ?? [];
-  final List<ValidationError> _list;
+  ValidationErrors([List<ValidationErrorUtils>? list]) : _list = list ?? [];
+  final List<ValidationErrorUtils> _list;
 
   /// Appends a single error.
-  void add(ValidationError e) => _list.add(e);
+  void add(ValidationErrorUtils e) => _list.add(e);
 
   /// Appends all errors from [e].
-  void addAll(Iterable<ValidationError> e) => _list.addAll(e);
+  void addAll(Iterable<ValidationErrorUtils> e) => _list.addAll(e);
 
   /// True when there are no errors.
   bool get isEmpty => _list.isEmpty;
@@ -36,7 +36,7 @@ final class ValidationErrors {
   bool get isNotEmpty => _list.isNotEmpty;
 
   /// Unmodifiable list of all errors.
-  List<ValidationError> get errors => List<ValidationError>.unmodifiable(_list);
+  List<ValidationErrorUtils> get errors => List<ValidationErrorUtils>.unmodifiable(_list);
 
   @override
   String toString() => 'ValidationErrors(errors: ${_list.length})';

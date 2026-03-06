@@ -31,9 +31,9 @@ void main() {
     test('yes', () => expect(parseBool('yes'), isTrue));
     test('no', () => expect(parseBool('no'), isFalse));
   });
-  group('SemVer.parse', () {
+  group('SemverUtils.parse', () {
     test('1.2.3', () {
-      final SemVer? v = SemVer.parse('1.2.3');
+      final SemverUtils? v = SemverUtils.parse('1.2.3');
       expect(v != null, isTrue);
       expect(v!.major, 1);
       expect(v.minor, 2);

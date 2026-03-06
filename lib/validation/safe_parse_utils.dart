@@ -9,13 +9,13 @@ typedef ParseFn<T extends Object> = T Function(String source);
 const String _kLogSafeParseFailed = 'safeParse failed';
 
 /// Result of a safe parse.
-sealed class ParseResult<T extends Object> {
+sealed class SafeParseUtils<T extends Object> {
   /// The parsed value if successful, or null if failed.
   T? get valueOrNull;
 }
 
 /// Successful parse result holding the parsed [value].
-final class ParseOk<T extends Object> extends ParseResult<T> {
+final class ParseOk<T extends Object> extends SafeParseUtils<T> {
   ParseOk(T value) : _value = value;
   final T _value;
 
@@ -30,7 +30,7 @@ final class ParseOk<T extends Object> extends ParseResult<T> {
 }
 
 /// Failed parse result with [message] and optional [details].
-final class ParseErr<T extends Object> extends ParseResult<T> {
+final class ParseErr<T extends Object> extends SafeParseUtils<T> {
   ParseErr(String message, [StackTrace? details]) : _message = message, _details = details;
   final String _message;
 
@@ -49,7 +49,7 @@ final class ParseErr<T extends Object> extends ParseResult<T> {
 }
 
 /// Parses [source] with [parse]; returns ParseOk or ParseErr.
-ParseResult<T> safeParse<T extends Object>(ParseFn<T> parse, String source) {
+SafeParseUtils<T> safeParse<T extends Object>(ParseFn<T> parse, String source) {
   try {
     return ParseOk<T>(parse(source));
   } on Object catch (e, st) {
