@@ -27,59 +27,46 @@ Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**pub.dev** - [saropa.saropa-log-capture](https://pub.dev/packages/saropa_dart_utils)
+**pub.dev** - [saropa_dart_utils](https://pub.dev/packages/saropa_dart_utils)
 
-**Published version**: See field "version": "x.y.z" in [package.json](./package.json)
+**Published version**: See field `version` in [pubspec.yaml](./pubspec.yaml)
 
 ## [Unreleased]
 
+Work in progress: a large expansion of the library (collections, graph, stats, validation, async, parsing, and many more string utilities), plus documentation and lint fixes. The changelog has been reorganized so you can see what’s included at a glance.
+
 ### Documentation
-- Lint-resolution details from `bugs/history/` are reflected in dartdoc (e.g. `substringSafe` bounds-safety, `escapeForRegex` non-null fallback), unit tests (e.g. `escapeForRegex` replacement never interpolates null, `substringSafe` out-of-bounds cases), and existing CHANGELOG entries (1.0.7, 1.0.8).
+- Lint-resolution details from `bugs/history/` reflected in dartdoc, unit tests, and CHANGELOG entries (1.0.7, 1.0.8).
+- Lint rule rationale in `analysis_options_custom.yaml`: `avoid_barrel_files`, `avoid_non_ascii_symbols`, `avoid_static_state`, `avoid_unmarked_public_class`; `avoid_default_tostring` satisfied by `Swipe.toString()`. Six more rules resolved: `avoid_collapsible_if`, `avoid_complex_conditions`, `avoid_redundant_else`, `avoid_medium_length_files`, `avoid_long_parameter_list`, `avoid_similar_names`.
 
 ### Fixed
 - **avoid_nullable_interpolation** in `string_regex_extensions.dart`: `escapeForRegex()` now uses `m.group(0) ?? ''` so the result never contains `\null`.
 
 ### Added
-- **Rest of roadmap (214–400):** Niche: `hash_utils`, `string_diff_utils`, `checksum_utils`, `natural_sort_utils`, `uuid_v4_utils`, `niche_more_utils` (hex dump, parseHexToBytes, bytesToHex, maskCreditCard, stripControlChars, isAsciiOnly, truncateToByteLength). String: `string_more_extensions` (stripSubstring, joinLines, wrapAtChars, capitalizeSentences, swapCase, removeRepeatedChars, countOccurrences, allIndicesOf, isPalindrome, reverseWords, firstNWords, lastNWords, padToWidth, stripHtmlComments), `string_lower_extensions` (truncateWithEllipsis, pad, repeatTimes, isWhitespaceOnly, ensurePrefix/Suffix, removePrefix/Suffix, orEmpty for `String?`). List: `list_lower_extensions` (swapAt, reversedCopy, insertAt, replaceAt, getOrNull, orDefault, firstOrCompute, singleOrNull, toSetFrom, toListFrom), `list_default_empty_extensions` (orEmpty for `List?`/`Map?`, secondOrNull, thirdOrNull). Object: `pipe_compose_utils` (pipe, compose, once), `nullable_more_extensions` (whenNonNull, mapNonNull, orElse, tryCast, isType, asTypeOr, firstOfType, toListIfNotNull). Parsing: `version_compare_utils`, `parsing_more_utils` (parseIntBase, isValidUrlLoose, isValidIpv4, parsePortFromHostPort, parseKeyValueLines, isValidHexString, parseDottedDecimal). Iterable: `iterable_more_extensions` (takeLast, dropLast, replaceFirst/ReplaceAllValues, cycle, padTo, unzip2, segmentBy, consecutivePairs, argMinBy, argMaxBy, allEqual, countBy, scan). Map: `map_more_extensions` (toMapWith, keysList, valuesList, findKeyByValue, renameKey, renameKeys, ensureKey, upsert). DateTime: `date_time_more_extensions` (isSameDay, isMorning/isAfternoon/isEvening, isWithinLastDays/Hours, durationBetween, monthsBetween, yearsBetween). Num: `num_more_extensions` (clampNonNegative, isInteger, truncateToDecimals, percentageChangeFrom, percentageOf, degreesToRadians, radiansToDegrees, normalizeAngle360/180, digitSum, isPowerOfTwo, nextPowerOfTwo, isqrt). URL/Path: `path_more_utils` (pathDirectory, pathBaseName, pathSeparator, isPathAbsolute, pathCollapseSeparators, pathAppend, parseBearerToken). Async: `async_more_utils` (race, allSettled, retryTimes). Testing: `debug_utils` (prettyPrint, dumpIterable, assertEqualsWithTolerance, rangeInt, rangeDouble, repeatValue, timed, retryUntil). All exported from barrel.
-- **Roadmap (400 ideas)** (`roadmap.md`): Candidate utility methods with progress tracking; tree-shaking rules and implementation status by section.
-- **LevenshteinUtils** (`lib/string/levenshtein_utils.dart`): `distance(a, b)`, `ratio(a, b)`, `fuzzyContains(source, target, maxDistance)` for edit distance and fuzzy substring match (roadmap #1, #2, #386).
-- **StringSlugExtensions** (`lib/string/string_slug_extensions.dart`): `toSlug()`, `toSlugWithMaxLength(maxLength)`, `sanitizeFilename(replacement, maxLength)` (roadmap #5, #6, #215).
-- **StringMaskExtensions** (`lib/string/string_mask_extensions.dart`): `mask(visibleCount, maskChar)`, `redactEmail()`, `redactPhone()` (roadmap #7, #8).
-- **StringTemplateExtensions** (`lib/string/string_template_extensions.dart`): `substituteTemplate(variables)` for `{{key}}` placeholders (roadmap #9).
-- **StringRegexExtensions** (`lib/string/string_regex_extensions.dart`): `escapeForRegex()` (roadmap #10, #186).
-- **StringWildcardExtensions** (`lib/string/string_wildcard_extensions.dart`): `wildcardMatch(pattern)` for `*` and `?` (roadmap #11).
-- **StringLineExtensions** (`lib/string/string_line_extensions.dart`): `normalizeLineBreaks([target])`, `stripBom()`, `splitIntoLines()` (roadmap #4, #14, #252).
-- **IterableExtensions** (chunks, partition, groupBy): `chunks(size)`, `partition(predicate)`, `groupBy(keyOf)` in `lib/iterable/iterable_extensions.dart` (roadmap #31, #33, #34).
-- **Tests**: `levenshtein_utils_test.dart`, `string_slug_extensions_test.dart`, `string_mask_extensions_test.dart`, `string_template_extensions_test.dart`, `string_regex_extensions_test.dart`, `string_wildcard_extensions_test.dart`, `string_line_extensions_test.dart`; added chunks/partition/groupBy tests in `iterable_extensions_test.dart`.
-- **String (roadmap 3, 12–30):** `wordWrap`, `truncateAtGrapheme` (string_wrap_extensions), `indentLines`, `dedent` (string_indent_extensions), `replaceFirstN`, `replaceLast` (string_replace_n_extensions), `highlightSubstring` (string_highlight_extensions), `wrapCsvQuotes` (string_csv_extensions), `stripAnsi` (string_ansi_extensions), `wordCount`, `breakLongWords` (string_words_extensions), `parseKeyValuePairs` (string_key_value_extensions), `splitKeepingDelimiter` (string_split_extensions), `normalizeUnicodeNfc/Nfd` (string_unicode_extensions), `toCamelCaseAcronyms`, `toSnakeCaseAcronyms` (string_case_acronym_extensions); **GlobUtils.match** (glob_utils); **SoundexUtils.encode/soundsLike** (soundex_utils); **ListStringExtensions** (list_string_extensions): `commonPrefix`, `commonSuffix`.
-- **Collections (roadmap 32, 36, 38, 39, 41–45, 49, 50, 53–55, 65, 67, 68):** `slidingWindow`, `flatten` (iterable_flatten_extensions), `distinctBy`, `sortBy`, `zipWithIndex`, `takeEveryNth`, `skipEveryNth`, `dedupeConsecutive` (iterable_extensions); `runLengthEncode` + `runLengthDecode` (run_length_utils); `binarySearchIndex`, `binarySearchInsertPoint`, `mergeSorted` (list_binary_search_extensions); `rotate` (list_rotate_extensions); `difference`, `intersection`, `union`, `interleave` (iterable_list_ops_extensions). Tests: run_length_utils_test, list_binary_search_extensions_test, list_rotate_extensions_test, iterable_list_ops_extensions_test.
 
-- **Map (roadmap 71–89):** `deepMerge` (map_deep_merge_extensions), `deepCopyMap`/`deepCopyList` (map_deep_utils), `flattenKeys`/`unflattenKeys` (map_flatten_extensions), `mapDiff` (map_diff_utils), `invert` (map_invert_extensions), `toEntriesList`/`mapFromEntries` (map_from_entries_extensions), `getNested`/`setNested` (map_nested_extensions), `mapValues`/`mapKeys`/`filterKeys`/`filterValues` (map_transform_extensions), `mergeAll` (map_merge_extensions), `withDefault`/`DefaultMap` (map_default_extensions). Tests: map_deep_utils_test, map_flatten_extensions_test, map_nested_extensions_test, map_diff_utils_test, map_invert_from_transform_merge_test, map_deep_merge_default_test.
-- **DateTime (roadmap 91–115):** `startOfDay`/`endOfDay`, `startOfWeek`/`endOfWeek`, `startOfMonth`/`endOfMonth`, `startOfQuarter`/`endOfQuarter`, `startOfYear`/`endOfYear`, `quarter`, `isWeekend`, `nextWeekday`, `sameTimeOn` (date_time_bounds_extensions); `businessDaysBetween`, `addBusinessDays` (date_time_business_days_utils); `formatDuration` (duration_format_utils), `parseDuration` (duration_parse_utils); `relativeTimeString` (date_time_relative_utils); `fiscalYear`/`startOfFiscalYear`/`endOfFiscalYear` (date_time_fiscal_extensions); `weekNumberInMonth`, `toIsoWeekString`, `parseIsoWeekString` (date_time_week_extensions); `timeZoneOffsetString` (date_time_timezone_extensions); `clampTo` (date_time_clamp_extensions); `minOrNull`/`maxOrNull`/`sortedByDate`, `dateRange` (date_time_list_extensions); `dateRangeOverlap` (date_time_overlap_utils). Tests: date_time_bounds_extensions_test, date_time_clamp_list_overlap_test, date_time_business_days_test, duration_format_parse_test, date_time_relative_fiscal_week_test.
-- **Number (roadmap 116–140):** `gcd`, `lcm` (math_utils); `roundToSignificantDigits`, `toCompactString` (num_format_extensions); `clampToInt` (num_clamp_extensions); `parseCompactNumber` (num_compact_parse_extensions); `variance`, `standardDeviation`, `median`, `percentile` (num_stats_utils); `isPrime`, `primeFactors` (num_prime_utils); `factorial` (num_factorial_utils); `modulo` (num_modulo_utils); `lerp`, `inverseLerp`, `mapRange` (num_lerp_utils); `roundToMultiple`, `floorToMultiple`, `ceilToMultiple` (num_round_multiple_extensions); `sum`, `count`, `average` (num_iterable_extensions); `minOf`, `maxOf`, `minOfMany`, `maxOfMany` (num_min_max_utils); `isInRangeExclusive`, `isInRangeInclusive` (num_range_inclusive_extensions); `parseNumberLocale`, `formatNumberLocale` (num_locale_utils); `divideSafe`, `safeDivide` (num_safe_division_extensions). Tests: num_clamp_compact_stats_test, num_prime_factorial_modulo_lerp_test, num_round_iterable_minmax_safe_test.
+New and expanded APIs (all exported from `package:saropa_dart_utils`):
 
-- **Regex (roadmap 186–193):** `regexEmailSimple`, `regexPhoneDigits`, `regexUrlLoose` (regex_common_utils), `matchAll`, `replaceAllWithCallback`, `namedGroupMap` (regex_match_utils). Escape for regex in string_regex_extensions. Tests: test/regex/regex_utils_test.dart.
-- **Caching (roadmap 194–198):** `LruCache` (lru_cache), `TtlCache` (ttl_cache), `memoize1`, `singleValueCache` (memoize_sync_utils), `SizeLimitCache` (size_limit_cache). Tests: test/caching/cache_test.dart.
-- **Object/Equality (roadmap 199–210):** `deepEquals` (existing), `copyWithDefaults` (copy_with_defaults_utils), `requireNonNull` (require_utils), `also`, `let` (pipe_utils), `coalesce` (coalesce_utils), `castOrNull` (cast_utils), `assertThat` (assert_utils), `identityEquals` (identity_utils), `shallowCopyList`, `shallowCopyMap` (shallow_copy_utils), `orDefault` (default_value_extensions). Tests: test/object/object_utils_test.dart.
-- **Niche (roadmap 211–213, 216–217, 220–221, 227):** `hexToRgb`, `rgbToHex`, `luminance`, `contrastRatio` (color_utils), `abbreviateName`, `initialsFromName` (name_utils), `padWithZeros`, `formatFileSize` (pad_format_utils), `randomAlphanumeric` (random_string_utils).
-- **Async (roadmap 176–184):** `debounce`, `throttle` (debounce_utils, throttle_utils), `retryWithBackoff` (retry_utils), `timeoutWithFallback` (timeout_fallback_utils), `memoizeFuture` (memoize_future_utils), `mapSequential` (sequential_async_utils), `mapBatched` (batch_async_utils), `cancelPrevious` (cancel_previous_utils), `delay` (delay_utils). Tests: test/async/async_utils_test.dart.
-
-- **URL/Path (roadmap 161–174):** `pathJoin`, `pathNormalize`, `pathRelative` (path_join_utils), `pathExtension`, `pathWithoutExtension`, `pathChangeExtension` (path_extension_utils), `urlEncodeComponent`, `urlDecodeComponent`, `safeDecodeUri` (url_encode_utils), `parseQueryString`, `buildQueryString`, `uriWithQueryParams` (url_query_utils), `buildUri`, `stripFragment` (url_build_utils), `isAbsoluteUrl`, `isRelativePath` (url_absolute_utils). Tests: test/url/path_url_test.dart.
-
-- **Parsing (roadmap 141, 144–155):** `parseCsvLine` (csv_parse_utils), `parseSizeToBytes`, `formatBytesToHuman` (size_parse_utils), `isValidEmail` (email_validation_utils), `normalizePhoneDigits`, `normalizePhoneE164` (phone_normalize_utils), `luhnCheck` (luhn_utils), `isValidIsbn10`, `isValidIsbn13` (isbn_utils), `SemVer.parse`/`compareTo` (semver_utils), `parseVersion` (version_parse_utils), `parseHexColor` (hex_color_utils), `parseBool` (parse_bool_utils), `parseListFromString` (parse_list_utils), `isNonEmptyAfterTrim` (validate_non_empty_utils). Tests: test/parsing/parsing_test.dart.
-
-- **Scanner tool** (`tool/suggest_saropa_utils.dart`): CLI that scans a Dart project for patterns that can be replaced with saropa_dart_utils (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`, `s ?? ''` → `s.orEmpty()`). Only `[path]`, `--help`, `--version`; with path = non-interactive report; without path = interactive Y/N/? prompts (directory, output format, apply). Files >512KB skipped. No file edits. Core logic in `tool/suggest_saropa_utils_lib.dart` (lineAtOffset, snippet, jsonString, scanContent) with defensive bounds and try/catch in CLI; unit tests in `test/tool/suggest_saropa_utils_test.dart`.
-
-### Documentation
-- **Lint rule rationale**: Documented why five saropa_lints rules are disabled or resolved: `avoid_barrel_files`, `avoid_non_ascii_symbols`, `avoid_static_state`, `avoid_unmarked_public_class` (excluded in `analysis_options_custom.yaml` with inline comments); `avoid_default_tostring` satisfied by `Swipe.toString()` in `lib/gesture/swipe_properties.dart`. See `analysis_options_custom.yaml`.
-- **Six more lint rules resolved (fix or suppress)**: `avoid_collapsible_if` (json_utils), `avoid_complex_conditions` (html_utils), `avoid_redundant_else` (four lib files), `avoid_medium_length_files` (string/datetime split), `avoid_long_parameter_list` (suppressed in date_time_utils), `avoid_similar_names` (suppressed in swipe_properties). Rationale in `analysis_options_custom.yaml`; bug files removed.
+- **Collections** (`lib/collections/`): lis_utils, lcs_substring_utils, sliding_window_aggregate_utils, reservoir_sampling_utils, interval_scheduling_utils, trie_utils, disjoint_set_utils, damerau_levenshtein_utils, knapsack_utils, bloom_filter_utils, nway_merge_utils, ring_buffer_utils, multiset_utils, online_mean_variance_utils, histogram_utils, difference_array_utils, bimap_utils, kmeans_utils, weighted_interval_utils, greedy_set_cover_utils, chunk_overlap_utils, pivot_unpivot_utils, run_detection_utils, stream_quantile_utils, inverted_index_utils, top_k_heap_utils, time_bucket_utils, multi_criteria_sort_utils, columnar_view_utils, window_functions_utils, balanced_partition_utils, bin_packing_utils, prefix_frequency_utils, rolling_hash_utils, dedup_set_expiry_utils, string_pool_utils, row_column_table_utils, priority_map_utils, seeded_shuffle_utils.
+- **Graph** (`lib/graph/`): graph_utils, bfs_dfs_utils, dijkstra_utils, astar_utils, connected_components_utils, line_simplify_utils, hierarchy_utils, floyd_warshall_utils, topological_sort_utils, mst_utils, critical_path_utils, bipartite_utils, tree_utils, graph_diff_utils, dag_scheduler_utils.
+- **Stats** (`lib/stats/`): robust_stats_utils, moving_average_utils, data_normalization_utils, quantile_summary_utils, correlation_utils, linear_regression_utils, bucketed_aggregate_utils, confidence_interval_utils, funnel_utils, outlier_mad_utils, percentile_rank_utils, retention_utils, sampling_utils, metric_rollup_utils, log_transform_utils, feature_encoding_utils.
+- **Validation** (`lib/validation/`): validation_error_utils, path_validator_utils, input_shaping_utils, guard_utils, cross_field_validation_utils, safe_temp_name_utils, password_strength_utils, pii_detector_utils, data_redaction_utils, safe_parse_utils, typed_positive_utils, ip_cidr_utils, jwt_structure_utils.
+- **String** (extensions + utils): levenshtein_utils, string_slug/mask/template/regex/wildcard/line/wrap/indent/replace_n/highlight/csv/ansi/words/key_value/split/unicode/case_acronym_extensions; glob_utils, soundex_utils; myers_diff_utils, diff_render_utils, apply_patch_utils, ngram_utils, slug_dedup_utils, fuzzy_search_utils, excerpt_utils, text_similarity_utils, sensitive_scrub_utils, text_chunk_utils, html_sanitizer_utils, tokenize_sentences_utils, markdown_plain_utils, search_query_parser_utils, code_block_extract_utils, url_extract_utils, safe_html_excerpt_utils, template_engine_utils, acronym_extract_utils, text_normalize_pipeline_utils, duplicate_doc_utils, human_name_parser_utils, search_index_utils, markdown_snippet_utils, text_fingerprint_utils, spelling_key_lookup_utils, email_quote_strip_utils, did_you_mean_utils.
+- **Async**: debounce_utils, delay_utils, memoize_future_utils, retry_utils, sequential_async_utils, throttle_utils, timeout_fallback_utils, batch_async_utils, cancel_previous_utils, async_semaphore_utils, async_mutex_utils, stream_buffer_utils, exponential_backoff_utils, retry_policy_utils, batch_flush_utils, circuit_breaker_utils, async_barrier_utils, timeout_policy_utils, race_cancel_utils, idempotent_async_utils, stream_window_utils, heartbeat_utils.
+- **Parsing**: csv_parse_utils, email_validation_utils, hex_color_utils, isbn_utils, luhn_utils, parse_bool_utils, parse_list_utils, phone_normalize_utils, semver_utils, size_parse_utils, validate_non_empty_utils, version_parse_utils, version_compare_utils, parsing_more_utils, config_precedence_utils, csv_dialect_utils, parser_error_utils, canonicalize_json_utils, changelog_section_utils, json_diff_patch_utils, nested_query_parser_utils, varint_utils.
+- **DateTime**: date_time_more_extensions, time_rounding_utils, relative_date_bucket_utils, period_split_utils, injectable_clock_utils (plus existing bounds, business days, duration format/parse, relative, fiscal, week, timezone, clamp, list, overlap).
+- **Map**: map_pick_omit_extensions, map_more_extensions (plus existing deep merge/deep/utils, default, diff, flatten, from_entries, invert, merge, nested, transform, nullable).
+- **List**: list_lower_extensions, list_default_empty_extensions (plus existing binary search, rotate, string, nullable, of_list, make_list, unique).
+- **Num**: num_more_extensions (plus existing math, clamp, compact_parse, format, iterable, lerp, locale, min_max, modulo, prime, factorial, range, round_multiple, safe_division, stats, utils).
+- **Object / pipe**: pipe_compose_utils, nullable_more_extensions (plus existing assert, cast, coalesce, copy_with_defaults, default_value_extensions, identity, pipe, require, shallow_copy).
+- **Niche**: hash_utils, string_diff_utils, checksum_utils, natural_sort_utils, uuid_v4_utils, niche_more_utils (plus color_utils, name_utils, pad_format_utils, random_string_utils).
+- **URL/Path**: path_more_utils (plus path_extension, path_join, url_absolute, url_build, url_encode, url_extensions, url_query).
+- **Caching**: lru_cache, memoize_sync_utils, size_limit_cache, ttl_cache.
+- **Regex**: regex_common_utils, regex_match_utils.
+- **Testing**: debug_utils (exported from barrel).
+- **Scanner tool** (`tool/suggest_saropa_utils.dart`): CLI to suggest saropa_dart_utils replacements (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`). Options: `[path]`, `--help`, `--version`. Core in `tool/suggest_saropa_utils_lib.dart`; tests in `test/tool/suggest_saropa_utils_test.dart`.
 
 ### Tests
-- **Swipe.toString()**: Added test in `swipe_properties_test.dart` that `toString()` includes direction, speed, magnitude, and angle.
-- **MapNullableExtensions**: Added unit tests for `isMapNullOrEmpty` and `isNotMapNullOrEmpty` (null, empty, non-empty, single-entry cases) in `test/map/map_extensions_test.dart`.
-- **GestureUtils**: Added `test/gesture/gesture_utils_test.dart` with tests for `getSwipeSpeed` (zero, negative, boundary values, NaN, ±infinity) and `swipeMagnitudeThresholds` constant.
-- **obscureText**: Added tests in `test/string/string_extensions_test.dart` for empty→null, non-null result, default/custom char, length jitter range, and `obscureLength: 0`.
-- **hasInvalidUnicode / removeInvalidUnicode**: Added tests that use the actual invalid code point (56327) so the detection and removal branches are covered; existing tests only used valid strings.
+- Swipe.toString(), MapNullableExtensions (isMapNullOrEmpty, isNotMapNullOrEmpty), GestureUtils (getSwipeSpeed, swipeMagnitudeThresholds), obscureText, hasInvalidUnicode/removeInvalidUnicode (invalid code point 56327). Additional tests for new collections, graph, stats, validation, string, and async modules.
 
 ## [1.0.8] - 2026-02-24
 
@@ -210,37 +197,16 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 - **`toMapStringDynamic`**: documented silent key collision behavior when `ensureUniqueKey: false`.
 - **`timeToEmoji`**: boundary was `>` instead of `>=` — 7:00am showed moon emoji instead of sun.
 
+### Changed
+- Extracted magic numbers into named constants across codebase (date/time, numeric, string, HTML, UUID); 50+ constants in `date_constants.dart`, `date_time_range_utils.dart`, `date_time_utils.dart`, `time_emoji_utils.dart`, `double_extensions.dart`, `hex_utils.dart`, `html_utils.dart`, `int_extensions.dart`, `int_string_extensions.dart`, `int_utils.dart`, `string_search_extensions.dart`, `string_utils.dart`, `uuid_utils.dart`; resolved `no_magic_number` lint violations.
+
+### Fixed
+- `DateTimeUtils.tomorrow()`: Removed nullable type from `minute` and `second` parameters to fix `avoid_nullable_parameters_with_default_values` lint warnings.
+
 ### Tests
 - 3,022 tests passing (added ~40 new tests covering all fixed bugs)
 - Fixed 8 pre-existing tests with incorrect expectations or wrong test names
 - Removed duplicate test cases in `date_time_range_utils_test.dart`
-
-## [1.0.6] - 2026-01-21
-
-We replaced magic numbers with named constants in date/time, string, and numeric code. The intent is clearer and the linter is happier.
-
-### Changed
-- Extracted magic numbers into named constants across codebase for improved code clarity and linting compliance
-- Added 50+ descriptive constants with documentation to date/time, numeric, string, HTML, and UUID utilities
-- Migrated date/time validation constants to public exports in `date_constants.dart` for cross-module reuse
-- Files updated:
-  - `datetime/date_constants.dart` - Added 15 date/time validation constants
-  - `datetime/date_time_range_utils.dart` - Uses shared month constants
-  - `datetime/date_time_utils.dart` - Uses shared date/time constants
-  - `datetime/time_emoji_utils.dart` - Uses day/night hour constants
-  - `double/double_extensions.dart` - Added percentage and base-10 constants
-  - `hex/hex_utils.dart` - Added hex radix and max length constants
-  - `html/html_utils.dart` - Added hex radix and Unicode limit constants
-  - `int/int_extensions.dart` - Added base-10 constant
-  - `int/int_string_extensions.dart` - Added ordinal number constants
-  - `int/int_utils.dart` - Added recursion depth constant
-  - `string/string_search_extensions.dart` - Added ASCII code constants
-  - `string/string_utils.dart` - Added alphabet position constants
-  - `uuid/uuid_utils.dart` - Added UUID format constants
-- Resolved `no_magic_number` linting violations in production code
-
-### Fixed
-- `DateTimeUtils.tomorrow()`: Removed nullable type from `minute` and `second` parameters to fix `avoid_nullable_parameters_with_default_values` lint warnings
 
 ## [1.0.5] - 2026-01-08
 
@@ -255,7 +221,7 @@ We rewrote the README with before/after examples and real-world use cases so it�
 
 ## [1.0.4] - 2026-01-08
 
-We fixed a flaky date/time test that sometimes failed in CI so test runs are more reliable.
+We fixed a flaky date/time test that sometimes failed in CI. Your test runs should be more reliable now.
 
 ### Fixed
 
@@ -263,7 +229,7 @@ We fixed a flaky date/time test that sometimes failed in CI so test runs are mor
 
 ## [1.0.3] - 2026-01-07
 
-We updated the GitHub Actions publish workflow to use OIDC authentication so publishing to pub.dev works with the current GitHub setup.
+We updated the GitHub Actions publish workflow to use OIDC authentication. Publishing to pub.dev works with the current GitHub setup again.
 
 ### Changed
 
@@ -271,14 +237,14 @@ We updated the GitHub Actions publish workflow to use OIDC authentication so pub
 
 ## [1.0.2] - 2026-01-07
 
-We added a banner to the README so the project is easier to recognize at a glance.
+We added a banner to the README so the project is easier to spot at a glance.
 
 ### Changed
 - Added a banner to README.md
 
 ## [1.0.0] - 2026-01-07
 
-We shipped the first stable 1.0: switched to MIT, turned on the full saropa_lints tier, and added README badges for pub points, method count, and coverage.
+First stable 1.0: we switched to the MIT license for broader use, turned on the full saropa_lints tier for quality, and added README badges so you can see pub points, method count, and coverage at a glance.
 
 ### Changed
 - Migrated from GPL v3 to MIT license for broader adoption
@@ -292,7 +258,7 @@ We shipped the first stable 1.0: switched to MIT, turned on the full saropa_lint
 
 ## [0.5.12] - 2026-01-05
 
-We switched to the saropa_lints package and custom_lint and trimmed the analysis config from 255 lines to 69. Same level of checking, less to maintain.
+We switched to the saropa_lints package and custom_lint, and trimmed the analysis config from 255 lines to 69. You get the same level of checking with less to maintain.
 
 ### Changed
 - Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
@@ -303,7 +269,7 @@ We switched to the saropa_lints package and custom_lint and trimmed the analysis
 
 ## [0.5.11]
 
-In this release we added utilities for Base64 compression, UUID validation and formatting, HTML unescape and plain text, and double formatting (percentages, precision, clamping). We also added 103 tests for them.
+We added utilities for Base64 compression, UUID validation and formatting, HTML unescape and plain text, and double formatting (percentages, precision, clamping). All of it is covered by 103 new tests.
 
 ### Added
 - `Base64Utils` - Text compression and decompression (`compressText`, `decompressText`)
@@ -314,7 +280,7 @@ In this release we added utilities for Base64 compression, UUID validation and f
 
 ## [0.5.10] - 2025-12-11
 
-We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync so releases are safer and easier to script.
+We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync. Releases are safer and easier to script from CI.
 
 ### Added
 - `-Version` parameter for CI/CD automation in publish script
@@ -335,7 +301,7 @@ We extended the publish script with version and branch parameters, dry-run valid
 
 ## [0.5.9] - 2025-11-25
 
-We added an `allowEmpty` option to JSON validation and made string methods (substring, truncate, lastChars) use grapheme clusters so emoji and Unicode behave correctly. Note: indices are now grapheme-based, which is a breaking change.
+We added an `allowEmpty` option to JSON validation and made string methods (substring, truncate, lastChars) use grapheme clusters so emoji and Unicode behave correctly. **Note:** indices are now grapheme-based—a breaking change if you relied on code-unit positions.
 
 ### Added
 - `isJson`: `allowEmpty` parameter to optionally treat `{}` as valid JSON
@@ -358,7 +324,7 @@ We added an `allowEmpty` option to JSON validation and made string methods (subs
 
 ## [0.5.8] - 2025-11-25
 
-We made the publish script handle git tags and GitHub releases idempotently so you can re-run it after a partial run without it failing.
+We made the publish script handle git tags and GitHub releases idempotently. You can re-run it after a partial run without it failing.
 
 ### Changed
 - `publish_pub_dev.ps1`: Added idempotent handling for git tags
@@ -367,7 +333,7 @@ We made the publish script handle git tags and GitHub releases idempotently so y
 
 ## [0.5.7] - 2025-11-25
 
-We fixed string extraction (curly braces, line breaks), made word removal Unicode-aware, and improved the grammar/article rules. Text handling should be more accurate.
+We fixed string extraction (curly braces, line breaks), made word removal Unicode-aware, and improved the grammar and article rules. Text handling should be more accurate now.
 
 ### Fixed
 - `extractCurlyBraces`: Switched to non-greedy matching for correct extraction order
@@ -382,7 +348,7 @@ We fixed string extraction (curly braces, line breaks), made word removal Unicod
 
 ## [0.5.6]
 
-We added URL/URI extensions so you can check HTTPS, add or get query parameters, and replace the host—useful when building or validating links.
+We added URL/URI extensions so you can check HTTPS, add or get query parameters, and replace the host. Handy when building or validating links.
 
 ### Added
 - `UrlExtensions.isSecure` - Check if URI uses HTTPS scheme
@@ -393,7 +359,7 @@ We added URL/URI extensions so you can check HTTPS, add or get query parameters,
 
 ## [0.5.5] - 2025-11-25
 
-This release is packed with new stuff: JSON and map utilities, URL extensions, string extraction and search, date constants, and a lot of new DateTime and string helpers. We added tests too—over 2,850 in total.
+A big release: JSON and map utilities, URL extensions, string extraction and search, date constants, and many new DateTime and string helpers. We added tests too—over 2,850 in total.
 
 ### Added
 - `JsonUtils` - JSON parsing, type conversion, and validation
@@ -412,7 +378,7 @@ This release is packed with new stuff: JSON and map utilities, URL extensions, s
 
 ## [0.5.4]
 
-We fixed range and date logic (inclusive boundaries, year boundaries), list comparison, hex overflow, and string truncation, and added 110 tests to cover the fixes.
+We fixed range and date logic (inclusive boundaries, year boundaries), list comparison, hex overflow, and string truncation. Added 110 tests so the fixes stay solid.
 
 ### Fixed
 - `isBetweenRange`: Properly forwards `inclusive` parameter
@@ -440,14 +406,14 @@ We tuned regex usage in string utils and improved the docs for the random and li
 
 ## [0.5.2] - 2025-08-19
 
-We renamed the string extension type to `StringExtensions` for consistency. Behavior is unchanged.
+We renamed the string extension type to `StringExtensions` for consistency. Behavior is unchanged; only the type name is different.
 
 ### Changed
 - Renamed `StringFormattingAndWrappingExtensions` to `StringExtensions`
 
 ## [0.5.1] - 2025-08-19
 
-We merged all string extension methods into one file and added a full test suite. Imports and structure are simpler now.
+We merged all string extension methods into one file and added a full test suite. Imports and structure are simpler.
 
 ### Changed
 - Merged all string extension methods into `lib/string/string_extensions.dart`
@@ -473,7 +439,7 @@ We added extensions for numbers (e.g. clamping), lists (order-agnostic compariso
 
 ## [0.4.4] - 2025-08-18
 
-We split the string code into smaller files and added unique-list and number-range utilities. Layout is clearer and there are a few new helpers.
+We split the string code into smaller files and added unique-list and number-range utilities. The layout is clearer and you get a few new helpers.
 
 ### Changed
 - Split large string file into smaller, specific files
@@ -498,14 +464,14 @@ We added framework-style extensions for primitives (num, string, etc.), set line
 
 ## [0.4.2] - 2025-02-24
 
-We made minor improvements and fixes. A small maintenance release.
+A small maintenance release: minor improvements and fixes.
 
 ### Changed
 - Minor improvements and fixes
 
 ## [0.4.1] - 2025-02-13
 
-We made minor improvements and fixes. Another small maintenance release.
+Another small maintenance release: minor improvements and fixes.
 
 ### Changed
 - Minor improvements and fixes
@@ -519,7 +485,7 @@ We did a major refactor of the library structure and APIs to set things up for t
 
 ## [0.3.18] - 2025-01-07
 
-We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date formatting so date handling works well out of the box.
+We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date formatting. Date handling works well out of the box now.
 
 ### Added
 - `DateTimeRange` utils
@@ -531,21 +497,21 @@ We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date
 
 ## [0.3.17] - 2025-01-07
 
-We made minor improvements. A small maintenance release.
+A small maintenance release: minor improvements.
 
 ### Changed
 - Minor improvements
 
 ## [0.3.16] - 2025-01-07
 
-We made minor improvements. Another small maintenance release.
+Another small maintenance release: minor improvements.
 
 ### Changed
 - Minor improvements
 
 ## [0.3.15] - 2025-01-03
 
-We made minor improvements. Another small maintenance release.
+Another small maintenance release: minor improvements.
 
 ### Changed
 - Minor improvements
@@ -569,7 +535,7 @@ We added a script to detect unused Flutter code and updated the Code of Conduct 
 
 ## [0.2.3]
 
-We added CommonRandom for reproducible randomness, a Code of Conduct for contributors, and some development helper scripts so the project is easier to work on and the expectations are clear.
+We added CommonRandom for reproducible randomness, a Code of Conduct for contributors, and development helper scripts. The project is easier to work on and expectations are clearer.
 
 ### Added
 - `CommonRandom` class as drop-in replacement for `math.Random()`
@@ -581,7 +547,7 @@ We added CommonRandom for reproducible randomness, a Code of Conduct for contrib
 
 ## [0.2.1]
 
-We moved the list extensions onto Iterable so they work with any iterable, not just lists. The API is more flexible now.
+We moved the list extensions onto Iterable so they work with any iterable, not just lists. The API is more flexible.
 
 ### Changed
 - Migrated `List` extensions to `Iterable`
@@ -661,7 +627,7 @@ We renamed the strings folder to singular and deprecated the nullable string ext
 
 ## [0.0.6]
 
-We added swipe gesture properties for use in gesture-aware UIs—the groundwork for swipe handling.
+We added swipe gesture properties for use in gesture-aware UIs. The groundwork for swipe handling.
 
 ### Added
 - Swipe gesture properties
@@ -678,7 +644,7 @@ We documented all methods, added example app usage and README examples, and exte
 
 ## [0.0.4]
 
-We added an example app, GitHub Actions, and contribution templates (PR, issue, contributing guide) so the project is ready for others to contribute.
+We added an example app, GitHub Actions, and contribution templates (PR, issue, contributing guide). The project is ready for others to contribute.
 
 ### Added
 - Example App
