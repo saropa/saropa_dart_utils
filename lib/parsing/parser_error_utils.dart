@@ -2,8 +2,8 @@
 library;
 
 /// Parser error with position and snippet.
-class ParserError {
-  const ParserError(String message, {int? line, int? column, String? snippet})
+class ParserErrorUtils {
+  const ParserErrorUtils(String message, {int? line, int? column, String? snippet})
     : _message = message,
       _line = line,
       _column = column,

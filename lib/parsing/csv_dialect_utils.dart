@@ -2,8 +2,8 @@
 library;
 
 /// Detected dialect: delimiter, hasHeader.
-class CsvDialect {
-  const CsvDialect({required String delimiter, required bool hasHeader})
+class CsvDialectUtils {
+  const CsvDialectUtils({required String delimiter, required bool hasHeader})
     : _delimiter = delimiter,
       _hasHeader = hasHeader;
   final String _delimiter;
@@ -14,14 +14,14 @@ class CsvDialect {
   bool get hasHeader => _hasHeader;
 
   @override
-  String toString() => 'CsvDialect(delimiter: $_delimiter, hasHeader: $_hasHeader)';
+  String toString() => 'CsvDialectUtils(delimiter: $_delimiter, hasHeader: $_hasHeader)';
 }
 
 /// Heuristic: count tabs vs commas in first line; if tabs win, delimiter is tab.
-CsvDialect detectCsvDialect(String sample) {
+CsvDialectUtils detectCsvDialect(String sample) {
   final String first = sample.split('\n').first;
   final int commas = ','.allMatches(first).length;
   final int tabs = '\t'.allMatches(first).length;
   final String delimiter = tabs >= commas ? '\t' : ',';
-  return CsvDialect(delimiter: delimiter, hasHeader: true);
+  return CsvDialectUtils(delimiter: delimiter, hasHeader: true);
 }

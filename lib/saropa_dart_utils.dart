@@ -36,6 +36,7 @@ export 'datetime/time_rounding_utils.dart';
 export 'datetime/relative_date_bucket_utils.dart';
 export 'datetime/period_split_utils.dart';
 export 'datetime/injectable_clock_utils.dart';
+export 'datetime/timebox_exception.dart';
 
 // Double extensions
 export 'double/double_extensions.dart';
@@ -312,7 +313,7 @@ export 'async/sequential_async_utils.dart';
 export 'async/throttle_utils.dart' hide VoidCallback;
 export 'async/timeout_fallback_utils.dart';
 export 'async/batch_async_utils.dart';
-export 'async/cancel_previous_utils.dart';
+export 'async/cancel_previous_exception.dart';
 export 'async/async_semaphore_utils.dart';
 export 'async/async_mutex_utils.dart';
 export 'async/stream_buffer_utils.dart';

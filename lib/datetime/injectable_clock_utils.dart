@@ -2,13 +2,13 @@
 library;
 
 /// Abstract clock; implementations provide a deterministic or live "now".
-abstract class Clock {
+abstract class InjectableClockUtils {
   /// Current time for this clock.
   DateTime now();
 }
 
 /// Live clock.
-class SystemClock implements Clock {
+class SystemClock implements InjectableClockUtils {
   static const String _kToStringPrefix = 'SystemClock()';
 
   @override
@@ -19,7 +19,7 @@ class SystemClock implements Clock {
 }
 
 /// Fixed clock for tests.
-class FixedClock implements Clock {
+class FixedClock implements InjectableClockUtils {
   FixedClock(this._now);
   final DateTime _now;
 
@@ -34,18 +34,18 @@ final _defaultClockHolder = _ClockHolder(SystemClock());
 
 /// Current clock used by code that depends on injectable time.
 /// Tests can set this to a [FixedClock] for deterministic "now".
-Clock get defaultClock => _defaultClockHolder.clock;
+InjectableClockUtils get defaultClock => _defaultClockHolder.clock;
 
 /// Sets the injectable clock (e.g. [FixedClock] in tests).
-set defaultClock(Clock value) => _defaultClockHolder.clock = value;
+set defaultClock(InjectableClockUtils value) => _defaultClockHolder.clock = value;
 
 class _ClockHolder {
   _ClockHolder(this._clock);
-  Clock _clock;
+  InjectableClockUtils _clock;
 
-  Clock get clock => _clock;
+  InjectableClockUtils get clock => _clock;
 
-  set clock(Clock value) => _clock = value;
+  set clock(InjectableClockUtils value) => _clock = value;
 
   @override
   String toString() => '_ClockHolder(clock: $_clock)';

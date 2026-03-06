@@ -52,7 +52,7 @@ final class ParseErr<T extends Object> extends ParseResult<T> {
 ParseResult<T> safeParse<T extends Object>(ParseFn<T> parse, String source) {
   try {
     return ParseOk<T>(parse(source));
-  } catch (e, st) {
+  } on Object catch (e, st) {
     if (kDebugMode) log(_kLogSafeParseFailed, error: e, stackTrace: st);
     return ParseErr<T>(e.toString(), st);
   }

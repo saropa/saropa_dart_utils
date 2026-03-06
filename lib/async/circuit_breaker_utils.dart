@@ -5,8 +5,8 @@ library;
 const Duration circuitBreakerDefaultResetTimeout = Duration(seconds: 30);
 
 /// Simple circuit breaker: after [failureThreshold] failures, open for [resetTimeout].
-class CircuitBreaker {
-  CircuitBreaker({
+class CircuitBreakerUtils {
+  CircuitBreakerUtils({
     int failureThreshold = 5,
     Duration resetTimeout = circuitBreakerDefaultResetTimeout,
   }) : _failureThreshold = failureThreshold,
@@ -55,5 +55,5 @@ class CircuitBreaker {
 
   @override
   String toString() =>
-      'CircuitBreaker(failureThreshold: $_failureThreshold, resetTimeout: $_resetTimeout, failures: $_failures, closed: $_isClosed)';
+      'CircuitBreakerUtils(failureThreshold: $_failureThreshold, resetTimeout: $_resetTimeout, failures: $_failures, closed: $_isClosed)';
 }

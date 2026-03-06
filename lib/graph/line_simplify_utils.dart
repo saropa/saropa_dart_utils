@@ -4,8 +4,8 @@ library;
 import 'dart:math' show pow;
 
 /// Point for polyline.
-class Point2 {
-  const Point2(double x, double y) : _x = x, _y = y;
+class LineSimplifyUtils {
+  const LineSimplifyUtils(double x, double y) : _x = x, _y = y;
   final double _x;
 
   /// X coordinate.
@@ -20,17 +20,17 @@ class Point2 {
 }
 
 /// Douglas–Peucker line simplification: returns indices of [points] to keep within [epsilon] tolerance.
-List<int> douglasPeuckerIndices(List<Point2> points, double epsilon) {
+List<int> douglasPeuckerIndices(List<LineSimplifyUtils> points, double epsilon) {
   if (points.length < 3) return List.generate(points.length, (int i) => i);
   return _douglasPeucker(points, 0, points.length - 1, epsilon);
 }
 
-List<int> _douglasPeucker(List<Point2> points, int start, int end, double epsilon) {
+List<int> _douglasPeucker(List<LineSimplifyUtils> points, int start, int end, double epsilon) {
   if (end <= start + 1) return <int>[start, end];
   double maxDist = 0;
   int maxIdx = start;
-  final Point2 a = points[start];
-  final Point2 b = points[end];
+  final LineSimplifyUtils a = points[start];
+  final LineSimplifyUtils b = points[end];
   for (int i = start + 1; i < end; i++) {
     final double d = _perpendicularDistance(points[i], a, b);
     if (d > maxDist) {
@@ -44,7 +44,7 @@ List<int> _douglasPeucker(List<Point2> points, int start, int end, double epsilo
   return <int>[...left.sublist(0, left.length - 1), ...right];
 }
 
-double _perpendicularDistance(Point2 p, Point2 a, Point2 b) {
+double _perpendicularDistance(LineSimplifyUtils p, LineSimplifyUtils a, LineSimplifyUtils b) {
   final double deltaX = b._x - a._x;
   final double deltaY = b._y - a._y;
   final double n = pow(deltaX, 2).toDouble() + pow(deltaY, 2).toDouble();

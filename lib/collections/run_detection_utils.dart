@@ -2,8 +2,8 @@
 library;
 
 /// One run: start index, length, constant value or null for increasing.
-class Run<T extends Object> {
-  const Run(int start, int length, T? value) : _start = start, _length = length, _value = value;
+class RunDetectionUtils<T extends Object> {
+  const RunDetectionUtils(int start, int length, T? value) : _start = start, _length = length, _value = value;
   final int _start;
 
   /// Start index in the source list.
@@ -18,18 +18,18 @@ class Run<T extends Object> {
   T? get value => _value;
 
   @override
-  String toString() => 'Run(start: $_start, length: $_length, value: ${_value ?? "-"})';
+  String toString() => 'RunDetectionUtils(start: $_start, length: $_length, value: ${_value ?? "-"})';
 }
 
 /// Detects runs of equal consecutive values in [list].
-List<Run<T>> runsEqual<T extends Object>(List<T> list) {
-  final List<Run<T>> out = [];
+List<RunDetectionUtils<T>> runsEqual<T extends Object>(List<T> list) {
+  final List<RunDetectionUtils<T>> out = [];
   int i = 0;
   while (i < list.length) {
     final T v = list[i];
     int j = i + 1;
     while (j < list.length && list[j] == v) j++;
-    out.add(Run<T>(i, j - i, v));
+    out.add(RunDetectionUtils<T>(i, j - i, v));
     i = j;
   }
   return out;

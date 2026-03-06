@@ -6,7 +6,7 @@ import 'dart:async'
         unawaited; // ignore: require_ios_deployment_target_consistency // ignore: require_ios_deployment_target_consistency
 
 /// Deduplicates in-flight calls: same [key] reuses the same future until it completes.
-class IdempotentAsync {
+class IdempotentAsyncUtils {
   final Map<Object, Future<Object?>> _inFlight = <Object, Future<Object?>>{};
 
   /// Runs [fn] for [key]; concurrent calls with the same key share one future.
@@ -20,5 +20,5 @@ class IdempotentAsync {
   }
 
   @override
-  String toString() => 'IdempotentAsync(inFlight: ${_inFlight.length})';
+  String toString() => 'IdempotentAsyncUtils(inFlight: ${_inFlight.length})';
 }

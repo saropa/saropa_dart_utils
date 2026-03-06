@@ -2,8 +2,8 @@
 library;
 
 /// Weighted directed edge.
-class Edge {
-  const Edge(int from, int to, [double weight = 1.0]) : _from = from, _to = to, _weight = weight;
+class GraphUtils {
+  const GraphUtils(int from, int to, [double weight = 1.0]) : _from = from, _to = to, _weight = weight;
   final int _from;
 
   /// Source node index.
@@ -18,16 +18,16 @@ class Edge {
   double get weight => _weight;
 
   @override
-  String toString() => 'Edge(from: $_from, to: $_to, weight: $_weight)';
+  String toString() => 'GraphUtils(from: $_from, to: $_to, weight: $_weight)';
 }
 
 /// Adjacency list: for each node, list of (neighbor, weight).
 typedef WeightedAdjacency = List<List<(int, double)>>;
 
 /// Builds [WeightedAdjacency] from [edges]; [nodeCount] = max node index + 1.
-WeightedAdjacency buildWeightedGraph(List<Edge> edges, int nodeCount) {
+WeightedAdjacency buildWeightedGraph(List<GraphUtils> edges, int nodeCount) {
   final WeightedAdjacency adj = List.generate(nodeCount, (_) => <(int, double)>[]);
-  for (final Edge e in edges) {
+  for (final GraphUtils e in edges) {
     if (e.from >= 0 && e.from < nodeCount && e.to >= 0 && e.to < nodeCount) {
       adj[e.from].add((e.to, e.weight));
     }

@@ -31,8 +31,9 @@ List<ExtractedLink> extractUrlsWithContext(String text, {int snippetLength = 40}
     final int start = (m.start - snippetLength).clamp(0, text.length);
     final int end = (m.end + snippetLength).clamp(0, text.length);
     // Extract snippet: substring from start to end, or empty if invalid range.
+    final String copy = text;
     final String raw = (start < m.start || m.end < end) && start < end && end <= text.length
-        ? text.replaceRange(end, text.length, '').replaceRange(0, start, '')
+        ? copy.replaceRange(end, text.length, '').replaceRange(0, start, '')
         : '';
     final String snippet = raw.trim();
     out.add(ExtractedLink(urlStr, snippet: snippet.isEmpty ? null : snippet));

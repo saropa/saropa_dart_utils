@@ -31,7 +31,7 @@ Map<String, Object?>? jwtPayload(String token) {
     final decoded = jsonDecode(json);
     if (decoded is! Map) return null;
     return Map<String, Object?>.from(decoded);
-  } catch (e, st) {
+  } on Object catch (e, st) {
     if (kDebugMode) log(_kLogJwtPayloadFailed, error: e, stackTrace: st);
     return null;
   }

@@ -2,8 +2,8 @@
 library;
 
 /// Node with id and optional parentId for tree building.
-class HierarchyNode {
-  const HierarchyNode(String id, [String? parentId]) : _id = id, _parentId = parentId;
+class HierarchyUtils {
+  const HierarchyUtils(String id, [String? parentId]) : _id = id, _parentId = parentId;
   final String _id;
 
   /// Unique node identifier.
@@ -14,7 +14,7 @@ class HierarchyNode {
   String? get parentId => _parentId;
 
   @override
-  String toString() => 'HierarchyNode(id: $_id, parentId: ${_parentId ?? ""})';
+  String toString() => 'HierarchyUtils(id: $_id, parentId: ${_parentId ?? ""})';
 }
 
 /// Flattens tree: [nodes] has (id, parentId). Returns list of (id, level). Root level = 0.
@@ -35,6 +35,6 @@ List<(String, int)> flattenHierarchy(List<HierarchyNode> nodes) {
 }
 
 /// Builds parent map from flat list: id -> parentId (roots have null).
-Map<String, String?> hierarchyFromParentIds(List<HierarchyNode> nodes) {
+Map<String, String?> hierarchyFromParentIds(List<HierarchyUtils> nodes) {
   return {for (final n in nodes) n.id: n.parentId};
 }

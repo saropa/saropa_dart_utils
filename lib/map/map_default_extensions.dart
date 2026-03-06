@@ -4,9 +4,9 @@ import 'package:meta/meta.dart';
 ///
 /// Wraps a [Map] and implements [Map] so that [operator []] returns
 /// [defaultValue] when the key is absent. Writes and [remove] write through.
-class DefaultMap<K extends Object, V extends Object> implements Map<K, V> {
+class MapDefaultExtensions<K extends Object, V extends Object> implements Map<K, V> {
   /// Creates a default map with the wrapped map and [defaultValue].
-  DefaultMap(this._source, this.defaultValue);
+  MapDefaultExtensions(this._source, this.defaultValue);
 
   final Map<K, V> _source;
 
@@ -87,7 +87,7 @@ class DefaultMap<K extends Object, V extends Object> implements Map<K, V> {
 
 /// Extension to wrap a map with a default value for missing keys.
 extension MapDefaultExtensions<K extends Object, V extends Object> on Map<K, V> {
-  /// Returns a [DefaultMap] view that returns [defaultValue] for missing keys.
+  /// Returns a [MapDefaultExtensions] view that returns [defaultValue] for missing keys.
   @useResult
-  DefaultMap<K, V> withDefault(V defaultValue) => DefaultMap<K, V>(this, defaultValue);
+  MapDefaultExtensions<K, V> withDefault(V defaultValue) => MapDefaultExtensions<K, V>(this, defaultValue);
 }

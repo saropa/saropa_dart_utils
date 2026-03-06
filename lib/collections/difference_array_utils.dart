@@ -2,8 +2,8 @@
 library;
 
 /// Difference array: apply [add] to range [l..r] in O(1), then recover array with [toArray].
-class DifferenceArray {
-  DifferenceArray(int length) : _d = List<int>.filled(length + 1, 0);
+class DifferenceArrayUtils {
+  DifferenceArrayUtils(int length) : _d = List<int>.filled(length + 1, 0);
   final List<int> _d;
 
   /// Adds [delta] to the logical range [l..r] (inclusive) in O(1).
@@ -25,5 +25,5 @@ class DifferenceArray {
   }
 
   @override
-  String toString() => 'DifferenceArray(length: ${_d.length - 1})';
+  String toString() => 'DifferenceArrayUtils(length: ${_d.length - 1})';
 }

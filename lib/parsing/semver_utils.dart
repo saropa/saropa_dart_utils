@@ -1,6 +1,6 @@
 /// Semver parse and compare. Roadmap #150.
-class SemVer {
-  SemVer(int major, int minor, int patch, [String pre = '', String build = ''])
+class SemverUtils {
+  SemverUtils(int major, int minor, int patch, [String pre = '', String build = ''])
     : _major = major,
       _minor = minor,
       _patch = patch,
@@ -22,7 +22,7 @@ class SemVer {
 
   String get build => _build;
 
-  static SemVer? parse(String s) {
+  static SemverUtils? parse(String s) {
     final RegExp re = RegExp(
       r'^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+([0-9A-Za-z.-]+))?$',
     );
@@ -36,10 +36,10 @@ class SemVer {
     final int? minorVal = int.tryParse(minorGroup);
     final int? patchVal = int.tryParse(patchGroup);
     if (majorVal == null || minorVal == null || patchVal == null) return null;
-    return SemVer(majorVal, minorVal, patchVal, m.group(4) ?? '', m.group(5) ?? '');
+    return SemverUtils(majorVal, minorVal, patchVal, m.group(4) ?? '', m.group(5) ?? '');
   }
 
-  int compareTo(SemVer other) {
+  int compareTo(SemverUtils other) {
     if (_major != other._major) return _major.compareTo(other._major);
     if (_minor != other._minor) return _minor.compareTo(other._minor);
     if (_patch != other._patch) return _patch.compareTo(other._patch);
@@ -50,5 +50,5 @@ class SemVer {
 
   @override
   String toString() =>
-      'SemVer($_major.$_minor.$_patch${_pre.isEmpty ? '' : '-$_pre'}${_build.isEmpty ? '' : '+$_build'})';
+      'SemverUtils($_major.$_minor.$_patch${_pre.isEmpty ? '' : '-$_pre'}${_build.isEmpty ? '' : '+$_build'})';
 }

@@ -2,8 +2,8 @@
 library;
 
 /// Tracks "seen" keys; after [expiry] they are forgotten. Not thread-safe.
-class DedupSetWithExpiry {
-  DedupSetWithExpiry(Duration expiry) : _expiry = expiry;
+class DedupSetExpiryUtils {
+  DedupSetExpiryUtils(Duration expiry) : _expiry = expiry;
   final Duration _expiry;
 
   /// Duration after which a key is forgotten.
@@ -31,5 +31,5 @@ class DedupSetWithExpiry {
   }
 
   @override
-  String toString() => 'DedupSetWithExpiry(expiry: $_expiry, seen: ${_seen.length})';
+  String toString() => 'DedupSetExpiryUtils(expiry: $_expiry, seen: ${_seen.length})';
 }

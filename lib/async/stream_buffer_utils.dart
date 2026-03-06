@@ -27,7 +27,6 @@ Stream<List<T>> bufferCount<T>(Stream<T> stream, int count) {
     },
     onCancel: () async {
       await sub?.cancel();
-      sub = null;
     },
   );
   return ctrl.stream;

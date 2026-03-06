@@ -2,6 +2,7 @@
 library;
 
 import 'dart:async' show Future; // ignore: require_ios_deployment_target_consistency
+import 'dart:developer' show log;
 import 'dart:math' show Random;
 
 /// Default delay between retry attempts.
@@ -25,7 +26,7 @@ Future<T> retryWithPolicy<T>(
     try {
       return await fn();
     } on Object catch (e, st) {
-      // ignore: saropa_lints/require_error_logging
+      log('retryWithPolicy attempt $attempt', error: e, stackTrace: st);
       attempt++;
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       onRetry?.call(e, attempt);
@@ -48,7 +49,7 @@ Future<T> retryWithBackoff<T>(
     try {
       return await fn();
     } on Object catch (e, st) {
-      // ignore: saropa_lints/require_error_logging
+      log('retryWithBackoff attempt $attempt', error: e, stackTrace: st);
       attempt++;
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       final int ms = base.inMilliseconds * (1 << attempt) + r.nextInt(jitter.inMilliseconds);

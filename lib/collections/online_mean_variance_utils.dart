@@ -4,7 +4,7 @@ library;
 import 'dart:math' show sqrt;
 
 /// Welford's online algorithm: add samples one by one, get mean and variance.
-class OnlineMeanVariance {
+class OnlineMeanVarianceUtils {
   /// Number of samples added.
   int get count => _n;
 
@@ -31,5 +31,5 @@ class OnlineMeanVariance {
   }
 
   @override
-  String toString() => 'OnlineMeanVariance(count: $_n, mean: $mean, variance: $variance)';
+  String toString() => 'OnlineMeanVarianceUtils(count: $_n, mean: $mean, variance: $variance)';
 }

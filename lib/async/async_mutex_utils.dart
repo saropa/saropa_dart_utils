@@ -5,7 +5,7 @@ import 'dart:async' show Completer; // ignore: require_ios_deployment_target_con
 import 'dart:developer' show log;
 
 /// Async mutex: only one holder at a time.
-class AsyncMutex {
+class AsyncMutexUtils {
   bool _isLocked = false;
   final List<Completer<void>> _waiters = [];
 
@@ -22,7 +22,7 @@ class AsyncMutex {
     try {
       await c.future;
     } on Object catch (e, st) {
-      log('AsyncMutex.acquire', error: e, stackTrace: st);
+      log('AsyncMutexUtils.acquire', error: e, stackTrace: st);
       if (!c.isCompleted) c.completeError(e, st);
       rethrow;
     }
@@ -55,5 +55,5 @@ class AsyncMutex {
   }
 
   @override
-  String toString() => 'AsyncMutex(locked: $_isLocked, waiters: ${_waiters.length})';
+  String toString() => 'AsyncMutexUtils(locked: $_isLocked, waiters: ${_waiters.length})';
 }
