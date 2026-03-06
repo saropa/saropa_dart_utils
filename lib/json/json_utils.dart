@@ -6,6 +6,7 @@ import 'package:saropa_dart_utils/map/map_extensions.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Utility class for JSON parsing and validation.
+/// For type conversions (lists, strings, numbers, dates), see [JsonTypeUtils].
 abstract final class JsonUtils {
   /// Returns a decoded `Map` from the given [jsonString], or `null` if
   /// decoding fails.

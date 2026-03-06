@@ -243,7 +243,9 @@ extension StringExtensions on String {
     return this;
   }
 
-  /// Safely gets a substring, preventing [RangeError].
+  /// Safely gets a substring, preventing [RangeError] (returns empty string
+  /// for out-of-bounds indices). Prefer this over [String.substring] when
+  /// indices may be invalid (e.g. user input or variable length).
   ///
   /// Uses grapheme clusters for proper Unicode support. [start] is the
   /// inclusive start index. [end] is the optional exclusive end index.
