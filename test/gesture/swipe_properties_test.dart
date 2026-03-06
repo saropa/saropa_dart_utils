@@ -5,14 +5,14 @@ import 'package:saropa_dart_utils/gesture/swipe_properties.dart';
 void main() {
   group('Swipe - Object', () {
     test('toString includes direction, speed, magnitude, and angle', () {
-      const Swipe swipe = Swipe(
+      const SwipeProperties swipe = SwipeProperties(
         direction: SwipeDirection.left,
         speed: SwipeSpeed.fast,
         magnitude: SwipeMagnitude.large,
         angle: SwipeAngle.horizontal,
       );
       final String s = swipe.toString();
-      expect(s, contains('Swipe('));
+      expect(s, contains('SwipeProperties('));
       expect(s, contains('direction:'));
       expect(s, contains('speed:'));
       expect(s, contains('magnitude:'));
@@ -20,7 +20,7 @@ void main() {
     });
 
     test('should create Swipe with correct direction and speed', () {
-      const Swipe swipe = Swipe(
+      const SwipeProperties swipe = SwipeProperties(
         direction: SwipeDirection.left,
         speed: SwipeSpeed.fast,
         magnitude: SwipeMagnitude.large,
@@ -100,7 +100,7 @@ void main() {
   group('Swipe - Extra', () {
     test('should create Swipe with correct direction, speed, magnitude, and '
         'angle', () {
-      const Swipe swipe = Swipe(
+      const SwipeProperties swipe = SwipeProperties(
         direction: SwipeDirection.left,
         speed: SwipeSpeed.fast,
         magnitude: SwipeMagnitude.large,
@@ -117,7 +117,7 @@ void main() {
   group('Swipe', () {
     test('should create Swipe with correct direction, speed, magnitude, '
         'and angle', () {
-      const Swipe swipe = Swipe(
+      const SwipeProperties swipe = SwipeProperties(
         direction: SwipeDirection.left,
         speed: SwipeSpeed.fast,
         magnitude: SwipeMagnitude.large,

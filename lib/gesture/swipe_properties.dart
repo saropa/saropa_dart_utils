@@ -113,13 +113,13 @@ class SwipeProperties {
   /// Meaningful string for debugging and logging (avoids default "Instance of 'Swipe'").
   @override
   String toString() =>
-      'Swipe(direction: $direction, speed: $speed, magnitude: $magnitude, angle: $angle)';
+      'SwipeProperties(direction: $direction, speed: $speed, magnitude: $magnitude, angle: $angle)';
 }
 
 /// The DragEndDetailsProperties extension adds additional properties to
 /// [DragEndDetails] instances, allowing you to easily determine the direction
 /// and speed of a swipe gesture.
-extension SwipeProperties on DragEndDetails {
+extension SwipePropsExt on DragEndDetails {
   /// Method to get the swipe direction.
   ///
   /// This method returns the direction of the swipe based on the velocity.
