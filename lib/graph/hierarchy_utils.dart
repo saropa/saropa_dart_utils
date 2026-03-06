@@ -18,7 +18,7 @@ class HierarchyUtils {
 }
 
 /// Flattens tree: [nodes] has (id, parentId). Returns list of (id, level). Root level = 0.
-List<(String, int)> flattenHierarchy(List<HierarchyNode> nodes) {
+List<(String, int)> flattenHierarchy(List<HierarchyUtils> nodes) {
   final Map<String, String?> parent = {for (final n in nodes) n.id: n.parentId};
   final List<(String, int)> out = <(String, int)>[];
   void visit(String id, int level) {
