@@ -12,6 +12,9 @@ Flags calls to `.toList()` where the result is used in a context that accepts an
 ### Affected Files
 5 lib files (specific files to be identified by running the analyzer).
 
+### Verification
+Run the linter for the 6 violations; remove `.toList()` where the consumer accepts `Iterable`.
+
 ### Recommended Action
 FIX -- Remove `.toList()` where the consumer accepts `Iterable`:
 

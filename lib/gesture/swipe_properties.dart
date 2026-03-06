@@ -110,6 +110,7 @@ class Swipe {
   /// The angle of the swipe.
   final SwipeAngle angle;
 
+  /// Meaningful string for debugging and logging (avoids default "Instance of 'Swipe'").
   @override
   String toString() =>
       'Swipe(direction: $direction, speed: $speed, magnitude: $magnitude, angle: $angle)';
@@ -176,16 +177,14 @@ extension SwipeProperties on DragEndDetails {
   /// This method returns the angle of the swipe based on the velocity.
   @useResult
   SwipeAngle get swipeAngle {
-    final double dx = velocity.pixelsPerSecond.dx;
+    final double velocityX = velocity.pixelsPerSecond.dx;
+    final double velocityY = velocity.pixelsPerSecond.dy;
 
-    //ignore:avoid_similar_names
-    final double dy = velocity.pixelsPerSecond.dy;
-
-    if (dx.abs() > dy.abs()) {
+    if (velocityX.abs() > velocityY.abs()) {
       return SwipeAngle.horizontal;
     }
 
-    if (dy.abs() > dx.abs()) {
+    if (velocityY.abs() > velocityX.abs()) {
       return SwipeAngle.vertical;
     }
 
@@ -204,4 +203,3 @@ extension SwipeProperties on DragEndDetails {
     angle: swipeAngle,
   );
 }
-

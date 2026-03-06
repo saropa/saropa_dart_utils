@@ -14,7 +14,7 @@ abstract final class JsonUtils {
   static Map<String, dynamic>? jsonDecodeToMap(String? jsonString) {
     if (jsonString == null || jsonString.isEmpty) return null;
 
-    final Object? decoded = jsonDecodeSafe(jsonString);
+    final dynamic decoded = jsonDecodeSafe(jsonString);
     if (decoded == null) return null;
 
     return MapUtils.toMapStringDynamic(decoded);
@@ -22,9 +22,7 @@ abstract final class JsonUtils {
 
   /// Safely decodes a JSON string, returning null on error.
   @useResult
-  // JSON decode returns any type; no single specific type applies
-  // ignore: no_object_declaration
-  static Object? jsonDecodeSafe(String? jsonString) {
+  static dynamic jsonDecodeSafe(String? jsonString) {
     final String? trimmed = jsonString?.trim();
     if (trimmed == null || trimmed.isEmpty || trimmed == 'null') return null;
     if (!isJson(trimmed)) return null;

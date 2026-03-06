@@ -159,6 +159,9 @@ extension StringManipulationExtensions on String {
   String removeNonNumbers() => replaceAll(_nonDigitRegex, '');
 
   /// Returns a new string with regex special characters escaped.
+  ///
+  /// Backslashes and other regex metacharacters are escaped so the string
+  /// can be used as a literal pattern.
   @useResult
   String escapeForRegex() => replaceAllMapped(
     _regexSpecialCharsRegex,
@@ -272,7 +275,8 @@ extension StringManipulationExtensions on String {
     return replaceAll(_lowerCaseOnlyRegex, '');
   }
 
-  /// Returns the substringSafe before the first occurrence of [find].
+  /// Returns the substring before the first occurrence of [find].
+  ///
   /// Returns the original string if [find] is not found.
   @useResult
   String getEverythingBefore(String find) {

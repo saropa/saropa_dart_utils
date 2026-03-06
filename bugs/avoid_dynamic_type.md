@@ -22,3 +22,9 @@ INVESTIGATE -- audit each usage of `dynamic`:
 1. **JSON-related** (`Map<String, dynamic>`, `jsonDecode` results): Legitimate, suppress with `// ignore: avoid_dynamic_type` inline comments
 2. **Generic methods** that could use `<T>` instead of `dynamic`: FIX by adding proper generics
 3. **Map/List utilities** that operate on heterogeneous data: Evaluate case-by-case
+
+---
+
+## Verification
+
+- **Status:** Not fixed. No project-level exclude; `dynamic` remains in json_utils, map_extensions, etc. for JSON and map APIs. Either add inline `// ignore: avoid_dynamic_type` at legitimate JSON/map sites or refactor to generics where possible. Run linter for current 72 locations.

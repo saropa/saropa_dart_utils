@@ -15,3 +15,9 @@ Hardcoded Duration values (e.g., `Duration(days: 1)`) should be extracted to nam
 
 ### Recommended Action
 INVESTIGATE -- extract repeated durations to named constants if used multiple times. For one-off uses where the meaning is clear (e.g., `Duration(days: 1)` for "one day"), consider whether a constant truly improves readability.
+
+---
+
+## Verification
+
+- **Status:** Partially addressed. Both files define `const Duration _oneDay = Duration(days: 1)`. Some inline `Duration(days: ...)` remain in date_time_extensions (e.g. offset and week calculations). Run linter for current violation list; extract or keep as-is per assessment.

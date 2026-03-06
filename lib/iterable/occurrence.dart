@@ -27,9 +27,7 @@ class Occurrence<T extends Object> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Occurrence<T> &&
-          value == other.value &&
-          count == other.count;
+      other is Occurrence<T> && value == other.value && count == other.count;
 
   @override
   int get hashCode => Object.hash(value, count);

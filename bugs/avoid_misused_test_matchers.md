@@ -33,3 +33,12 @@ FIX incrementally -- this is a large but mechanical change that can be done file
 - Replace `expect(x, 0)` with `expect(x, isZero)` where applicable
 
 Given the volume (373 occurrences), tackle this as a background improvement over multiple commits rather than a single large change.
+
+---
+
+## Current status (verification)
+
+- **Status:** Not implemented. Raw literal matchers still present in tests.
+- **Verified locations (sample):** `test/datetime/date_time_utils_test.dart`, `test/parsing/parsing_test.dart`, `test/num/num_utils_test.dart`, `test/datetime/date_time_clamp_list_overlap_test.dart`, `test/datetime/date_time_relative_fiscal_week_test.dart`, `test/string/string_wildcard_extensions_test.dart` (11), and others.
+- **Quick fix pattern:** Run find-and-replace per file: `expect(\([^,]+),\s*true\)` → `expect($1, isTrue)`; similarly `false` → `isFalse`, `null` → `isNull`. Ensure `package:flutter_test/flutter_test.dart` is imported (provides `isTrue`, `isFalse`, `isNull`).
+- **Priority:** Low — tests pass; improvement is for clearer failure messages when assertions fail.

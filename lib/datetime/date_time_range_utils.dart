@@ -30,7 +30,12 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1); // true (Jan 2024)
   /// ```
   @useResult
-  bool isNthDayOfMonthInRange({required int n, required int dayOfWeek, required int month, bool isInclusive = true}) {
+  bool isNthDayOfMonthInRange({
+    required int n,
+    required int dayOfWeek,
+    required int month,
+    bool isInclusive = true,
+  }) {
     // Validate month parameter
     if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
       return false;

@@ -12,6 +12,9 @@ Return type is nullable but the method never returns null. The linter detects me
 ### Affected Files
 14 lib files.
 
+### Verification
+Run the linter for the 29 violations; change return type from `T?` to `T` where the method never returns null.
+
 ### Recommended Action
 FIX -- audit return types and remove unnecessary nullability where the method provably never returns null. Considerations:
 1. **Public API impact**: Tightening a return type from `String?` to `String` is a non-breaking change (callers expecting nullable can still accept non-nullable).

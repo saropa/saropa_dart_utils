@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/iterable/iterable_extensions.dart';
+import 'package:saropa_dart_utils/iterable/iterable_flatten_extensions.dart';
 import 'package:saropa_dart_utils/iterable/occurrence.dart';
 
 // A helper class to test with custom comparable objects.
@@ -29,7 +30,10 @@ void main() {
     group('mostOccurrences()', () {
       // Your existing tests
       test('should find the most common string', () {
-        expect(<String>['apple', 'banana', 'apple'].mostOccurrences(), equals(Occurrence<String>('apple', 2)));
+        expect(
+          <String>['apple', 'banana', 'apple'].mostOccurrences(),
+          equals(Occurrence<String>('apple', 2)),
+        );
       });
 
       test('should find the most common DateTime', () {
@@ -60,7 +64,10 @@ void main() {
       test('should handle a tie and return one of the most common elements', () {
         final Occurrence<String>? result = <String>['a', 'b', 'b', 'c', 'c'].mostOccurrences();
         // In a tie, either ('b', 2) or ('c', 2) is a valid result.
-        expect(result, anyOf(equals(Occurrence<String>('b', 2)), equals(Occurrence<String>('c', 2))));
+        expect(
+          result,
+          anyOf(equals(Occurrence<String>('b', 2)), equals(Occurrence<String>('c', 2))),
+        );
       });
 
       test('should work with doubles', () {
@@ -286,6 +293,135 @@ void main() {
       test('12. Count duplicates that match', () {
         expect(<int>[1, 1, 1, 2, 2, 3].countWhere((int e) => e == 1), 3);
       });
+    });
+  });
+
+  group('chunks', () {
+    test('even split', () {
+      expect(<int>[1, 2, 3, 4].chunks(2).toList(), <List<int>>[
+        [1, 2],
+        [3, 4],
+      ]);
+    });
+    test('last chunk smaller', () {
+      expect(<int>[1, 2, 3, 4, 5].chunks(2).toList(), <List<int>>[
+        [1, 2],
+        [3, 4],
+        [5],
+      ]);
+    });
+    test('size 1', () {
+      expect(<int>[1, 2].chunks(1).toList(), <List<int>>[
+        [1],
+        [2],
+      ]);
+    });
+    test('size larger than list', () {
+      expect(<int>[1, 2].chunks(10).toList(), <List<int>>[
+        [1, 2],
+      ]);
+    });
+    test('empty', () {
+      expect(<int>[].chunks(2).toList(), <List<int>>[]);
+    });
+    test('size 0 throws', () {
+      expect(() => <int>[1].chunks(0), throwsArgumentError);
+    });
+  });
+
+  group('partition', () {
+    test('splits by predicate', () {
+      final (List<int> even, List<int> odd) = <int>[1, 2, 3, 4].partition((int x) => x.isEven);
+      expect(even, [2, 4]);
+      expect(odd, [1, 3]);
+    });
+    test('all match', () {
+      final (List<int> a, List<int> b) = <int>[2, 4].partition((int x) => x.isEven);
+      expect(a, [2, 4]);
+      expect(b, <int>[]);
+    });
+    test('none match', () {
+      final (List<int> a, List<int> b) = <int>[1, 3].partition((int x) => x.isEven);
+      expect(a, <int>[]);
+      expect(b, [1, 3]);
+    });
+    test('empty', () {
+      final (List<int> a, List<int> b) = <int>[].partition((int x) => true);
+      expect(a, <int>[]);
+      expect(b, <int>[]);
+    });
+  });
+
+  group('groupBy', () {
+    test('by length', () {
+      final Map<int, List<String>> m = <String>[
+        'a',
+        'ab',
+        'b',
+        'bc',
+      ].groupBy((String s) => s.length);
+      expect(m[1], ['a', 'b']);
+      expect(m[2], ['ab', 'bc']);
+    });
+    test('empty', () {
+      expect(<int>[].groupBy((int x) => x), <int, List<int>>{});
+    });
+    test('single key', () {
+      final Map<String, List<int>> m = <int>[1, 2, 3].groupBy((int x) => 'same');
+      expect(m['same'], [1, 2, 3]);
+    });
+  });
+
+  group('slidingWindow', () {
+    test('size 2', () {
+      expect(<int>[1, 2, 3, 4].slidingWindow(2).toList(), <List<int>>[
+        [1, 2],
+        [2, 3],
+        [3, 4],
+      ]);
+    });
+    test('size 0 throws', () => expect(() => <int>[1].slidingWindow(0), throwsArgumentError));
+  });
+
+  group('flatten', () {
+    test('one level', () {
+      expect(
+        <List<int>>[
+          [1, 2],
+          [3],
+        ].flatten().toList(),
+        [1, 2, 3],
+      );
+    });
+  });
+
+  group('distinctBy', () {
+    test('by key', () {
+      expect(<String>['a', 'ab', 'b'].distinctBy((String s) => s.length), ['a', 'ab']);
+    });
+  });
+
+  group('sortBy', () {
+    test('by length', () {
+      expect(<String>['aa', 'b', 'ccc'].sortBy((String s) => s.length), ['b', 'aa', 'ccc']);
+    });
+  });
+
+  group('zipWithIndex', () {
+    test('basic', () {
+      expect(<String>['a', 'b'].zipWithIndex().toList(), [(0, 'a'), (1, 'b')]);
+    });
+  });
+
+  group('takeEveryNth', () {
+    test('every 2', () {
+      expect(<int>[1, 2, 3, 4].takeEveryNth(2).toList(), [1, 3]);
+    });
+  });
+
+  group('dedupeConsecutive', () {
+    test('removes consecutive dupes', () {
+      expect(<int>[1, 1, 2, 2, 1].dedupeConsecutive().toList(), [1, 2, 1]);
     });
   });
 }

@@ -26,7 +26,10 @@ void main() {
       expect(result?.year, 1969);
     });
     test('8. Large timestamp', () {
-      final DateTime? result = JsonTypeUtils.toDateTimeEpochJson(2000000000, JsonEpochScale.seconds);
+      final DateTime? result = JsonTypeUtils.toDateTimeEpochJson(
+        2000000000,
+        JsonEpochScale.seconds,
+      );
       expect(result, isNotNull);
     });
     test('9. Milliseconds precision', () {
@@ -72,7 +75,8 @@ void main() {
     );
     test(
       '8. Custom separator',
-      () => expect(JsonTypeUtils.toStringListJson('a;b;c', separator: ';'), <String>['a', 'b', 'c']),
+      () =>
+          expect(JsonTypeUtils.toStringListJson('a;b;c', separator: ';'), <String>['a', 'b', 'c']),
     );
     test(
       '9. Single item',
@@ -85,7 +89,10 @@ void main() {
   });
 
   group('JsonTypeUtils.toIntListJson', () {
-    test('1. List of ints', () => expect(JsonTypeUtils.toIntListJson(<int>[1, 2, 3]), <int>[1, 2, 3]));
+    test(
+      '1. List of ints',
+      () => expect(JsonTypeUtils.toIntListJson(<int>[1, 2, 3]), <int>[1, 2, 3]),
+    );
     test('2. Null input', () => expect(JsonTypeUtils.toIntListJson(null), isNull));
     test(
       '3. Dynamic list',
@@ -163,7 +170,10 @@ void main() {
   });
 
   group('JsonTypeUtils.toListDynamic', () {
-    test('1. List input', () => expect(JsonTypeUtils.toListDynamic(<int>[1, 2, 3]), <int>[1, 2, 3]));
+    test(
+      '1. List input',
+      () => expect(JsonTypeUtils.toListDynamic(<int>[1, 2, 3]), <int>[1, 2, 3]),
+    );
     test('2. Null input', () => expect(JsonTypeUtils.toListDynamic(null), isNull));
     test('3. Non-list input', () => expect(JsonTypeUtils.toListDynamic('string'), isNull));
     test('4. Empty list', () => expect(JsonTypeUtils.toListDynamic(<dynamic>[]), <dynamic>[]));

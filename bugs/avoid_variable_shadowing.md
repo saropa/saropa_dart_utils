@@ -15,6 +15,9 @@ Flags variables that shadow (have the same name as) a variable from an outer sco
 
 4 lib files (specific files to be identified by running the analyzer).
 
+### Verification
+Run the linter for the 5 violations; rename inner variables to avoid shadowing outer scope.
+
 ### Recommended Action
 
 FIX -- Rename shadowed variables to eliminate ambiguity:

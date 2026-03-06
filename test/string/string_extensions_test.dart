@@ -1008,7 +1008,8 @@ void main() {
     });
     test('12. Multiple invalid chars removed', () {
       const int invalidRune = 56327;
-      final String withInvalid = 'a${String.fromCharCode(invalidRune)}b${String.fromCharCode(invalidRune)}c';
+      final String withInvalid =
+          'a${String.fromCharCode(invalidRune)}b${String.fromCharCode(invalidRune)}c';
       expect(withInvalid.removeInvalidUnicode(), 'abc');
     });
   });

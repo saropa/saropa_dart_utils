@@ -127,6 +127,7 @@ abstract final class HtmlUtils {
       codePoint = int.tryParse(hex, radix: _hexRadix);
     }
 
+    // Named booleans for clarity (avoid_complex_conditions).
     final bool isValidCodePoint =
         codePoint != null && codePoint > 0 && codePoint <= _maxUnicodeCodePoint;
     final bool isSurrogate =

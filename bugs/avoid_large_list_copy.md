@@ -12,6 +12,9 @@ Large list copy operation detected. The rule flags operations that create full c
 ### Affected Files
 8 lib files.
 
+### Verification
+Run the linter for the 19 violations; audit each `.toList()`/`List.from()`/spread for necessity or replace with lazy Iterable.
+
 ### Recommended Action
 FIX -- audit each list copy operation for necessity:
 1. **Return type is `List`**: If callers expect a `List`, a copy may be necessary for safety (avoiding mutation of the original). Consider returning `Iterable` instead where possible.

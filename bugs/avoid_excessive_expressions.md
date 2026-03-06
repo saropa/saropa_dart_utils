@@ -12,6 +12,9 @@ Flags functions or methods that contain too many expressions, indicating excessi
 ### Affected Files
 5 lib files (specific files to be identified by running the analyzer).
 
+### Verification
+Run the linter for current locations; refactor each flagged method into smaller helpers (≤20 lines, project limit).
+
 ### Recommended Action
 FIX -- Refactor complex methods into smaller, focused helper functions:
 

@@ -108,7 +108,7 @@ extension StringExtensions on String {
   @useResult
   String wrapSingleQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
-      return quoteEmpty ? "''" : '';
+      return quoteEmpty ? '\'\'' : '';
     }
 
     return "'$this'";
