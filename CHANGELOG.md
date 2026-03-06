@@ -31,6 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Published version**: See field "version": "x.y.z" in [package.json](./package.json)
 
+## [Unreleased]
+
+### Tests
+- **MapNullableExtensions**: Added unit tests for `isMapNullOrEmpty` and `isNotMapNullOrEmpty` (null, empty, non-empty, single-entry cases) in `test/map/map_extensions_test.dart`.
+- **GestureUtils**: Added `test/gesture/gesture_utils_test.dart` with tests for `getSwipeSpeed` (zero, negative, boundary values, NaN, ±infinity) and `swipeMagnitudeThresholds` constant.
+- **obscureText**: Added tests in `test/string/string_extensions_test.dart` for empty→null, non-null result, default/custom char, length jitter range, and `obscureLength: 0`.
+- **hasInvalidUnicode / removeInvalidUnicode**: Added tests that use the actual invalid code point (56327) so the detection and removal branches are covered; existing tests only used valid strings.
+
 ## [1.0.8] - 2026-02-24
 
 In this release we introduce typed result classes for common operations, split JSON utilities into focused modules, and bring the code in line with lints (named parameters, narrower exceptions, @useResult). We aimed for clearer structure and safer APIs.

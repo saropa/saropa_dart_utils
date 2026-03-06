@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/map/map_extensions.dart';
+import 'package:saropa_dart_utils/map/map_nullable_extensions.dart';
 
 // cspell: disable
 void main() {
@@ -721,5 +722,29 @@ void main() {
       expect(result?['a'], <String, dynamic>{'b': 1});
     });
     test('10. Number input', () => expect(MapUtils.toMapStringDynamic(42), isNull));
+  });
+
+  group('MapNullableExtensions', () {
+    test('1. null map isMapNullOrEmpty', () => expect((null as Map<dynamic, dynamic>?).isMapNullOrEmpty, isTrue));
+    test('2. null map isNotMapNullOrEmpty', () => expect((null as Map<dynamic, dynamic>?).isNotMapNullOrEmpty, isFalse));
+    test('3. empty map isMapNullOrEmpty', () => expect(<String, int>{}.isMapNullOrEmpty, isTrue));
+    test('4. empty map isNotMapNullOrEmpty', () => expect(<String, int>{}.isNotMapNullOrEmpty, isFalse));
+    test('5. non-empty map isMapNullOrEmpty', () {
+      final Map<String, int> map = <String, int>{'a': 1};
+      expect(map.isMapNullOrEmpty, isFalse);
+    });
+    test('6. non-empty map isNotMapNullOrEmpty', () {
+      final Map<String, int> map = <String, int>{'a': 1};
+      expect(map.isNotMapNullOrEmpty, isTrue);
+    });
+    test('7. single entry', () {
+      final Map<String, String> map = <String, String>{'k': 'v'};
+      expect(map.isMapNullOrEmpty, isFalse);
+      expect(map.isNotMapNullOrEmpty, isTrue);
+    });
+    test('8. dynamic map null', () {
+      final Map<dynamic, dynamic>? m = null;
+      expect(m.isMapNullOrEmpty, isTrue);
+    });
   });
 }

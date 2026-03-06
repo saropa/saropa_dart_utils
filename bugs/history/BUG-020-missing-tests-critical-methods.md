@@ -3,7 +3,19 @@
 **Multiple Files**
 **Severity:** 🔴 High
 **Category:** Missing Test Coverage
-**Status:** Open
+**Status:** Partially resolved (Unreleased)
+
+---
+
+## Resolution (Unreleased)
+
+Tests were added for several previously untested areas:
+- **MapNullableExtensions**: `isMapNullOrEmpty` and `isNotMapNullOrEmpty` covered in `map_extensions_test.dart`.
+- **GestureUtils**: `getSwipeSpeed` and `swipeMagnitudeThresholds` covered in new `gesture_utils_test.dart`.
+- **obscureText**: Empty, length jitter, custom char, and `obscureLength: 0` covered in `string_extensions_test.dart`.
+- **hasInvalidUnicode / removeInvalidUnicode**: Tests added using the library’s invalid code point (56327) so the “contains invalid” and “remove invalid” branches are exercised.
+
+Other methods listed below (e.g. getFirstDiffChar, isVowel, endsWithPunctuation, etc.) were already covered elsewhere in the test suite.
 
 ---
 
