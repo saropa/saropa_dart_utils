@@ -3,16 +3,6 @@ library;
 
 import 'string_extensions.dart';
 
-/// Parsed query term: phrase or word, optional negated.
-class QueryTerm {
-  const QueryTerm(this.text, {this.isNegated = false});
-  final String text;
-  final bool isNegated;
-
-  @override
-  String toString() => 'QueryTerm(text: $text, isNegated: $isNegated)';
-}
-
 /// Simple parser: "a b" = AND, "a OR b", quoted = phrase, -x = exclude.
 abstract final class SearchQueryParserUtils {
   SearchQueryParserUtils._();
@@ -53,4 +43,14 @@ abstract final class SearchQueryParserUtils {
     }
     return out.sublist(0, outIndex);
   }
+}
+
+/// Parsed query term: phrase or word, optional negated.
+class QueryTerm {
+  const QueryTerm(this.text, {this.isNegated = false});
+  final String text;
+  final bool isNegated;
+
+  @override
+  String toString() => 'QueryTerm(text: $text, isNegated: $isNegated)';
 }

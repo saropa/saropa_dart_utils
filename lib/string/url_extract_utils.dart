@@ -2,8 +2,8 @@
 library;
 
 /// One extracted link with optional label and surrounding snippet.
-class ExtractedLink {
-  const ExtractedLink(String url, {String? label, String? snippet})
+class UrlExtractUtils {
+  const UrlExtractUtils(String url, {String? label, String? snippet})
     : _url = url,
       _label = label,
       _snippet = snippet;
@@ -19,13 +19,13 @@ class ExtractedLink {
 
   @override
   String toString() =>
-      'ExtractedLink(url: $_url, label: ${_label ?? ''}, snippet: ${_snippet ?? ''})';
+      'UrlExtractUtils(url: $_url, label: ${_label ?? ''}, snippet: ${_snippet ?? ''})';
 }
 
 /// Extracts URLs from [text]; [snippetLength] chars of context before/after.
-List<ExtractedLink> extractUrlsWithContext(String text, {int snippetLength = 40}) {
+List<UrlExtractUtils> extractUrlsWithContext(String text, {int snippetLength = 40}) {
   final RegExp urlPattern = RegExp(r'https?://[^\s<>"\x27]+', caseSensitive: false);
-  final List<ExtractedLink> out = <ExtractedLink>[];
+  final List<UrlExtractUtils> out = <UrlExtractUtils>[];
   for (final Match m in urlPattern.allMatches(text)) {
     final String urlStr = m.group(0) ?? '';
     final int start = (m.start - snippetLength).clamp(0, text.length);
@@ -36,7 +36,7 @@ List<ExtractedLink> extractUrlsWithContext(String text, {int snippetLength = 40}
         ? copy.replaceRange(end, text.length, '').replaceRange(0, start, '')
         : '';
     final String snippet = raw.trim();
-    out.add(ExtractedLink(urlStr, snippet: snippet.isEmpty ? null : snippet));
+    out.add(UrlExtractUtils(urlStr, snippet: snippet.isEmpty ? null : snippet));
   }
   return out;
 }

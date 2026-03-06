@@ -2,8 +2,8 @@
 library;
 
 /// Parsed name parts.
-class ParsedName {
-  const ParsedName({String? first, String? middle, String? last, String? suffix})
+class HumanNameParserUtils {
+  const HumanNameParserUtils({String? first, String? middle, String? last, String? suffix})
     : _first = first,
       _middle = middle,
       _last = last,
@@ -23,20 +23,20 @@ class ParsedName {
 
   @override
   String toString() =>
-      'ParsedName(first: ${_first ?? ""}, middle: ${_middle ?? ""}, last: ${_last ?? ""}, suffix: ${_suffix ?? ""})';
+      'HumanNameParserUtils(first: ${_first ?? ""}, middle: ${_middle ?? ""}, last: ${_last ?? ""}, suffix: ${_suffix ?? ""})';
 }
 
 /// Simple split: "Last, First Middle" or "First Middle Last". Suffix: Jr., Sr., III, etc.
-ParsedName parseHumanName(String full) {
+HumanNameParserUtils parseHumanName(String full) {
   final String s = full.trim();
-  if (s.isEmpty) return const ParsedName();
+  if (s.isEmpty) return const HumanNameParserUtils();
   final RegExp suffixRe = RegExp(r',?\s+(Jr\.?|Sr\.?|III?|IV|II|I)$', caseSensitive: false);
   final String? suffix = suffixRe.firstMatch(s)?.group(1);
   String rest = s.replaceAll(suffixRe, '').trim();
   if (rest.contains(',')) {
     final List<String> parts = rest.split(',').map((e) => e.trim()).toList();
     if (parts.length >= 2) {
-      return ParsedName(
+      return HumanNameParserUtils(
         last: parts[0],
         first: parts[1],
         middle: parts.length > 2 ? parts[2] : null,
@@ -45,9 +45,9 @@ ParsedName parseHumanName(String full) {
     }
   }
   final List<String> tokens = rest.split(RegExp(r'\s+'));
-  if (tokens.isEmpty) return ParsedName(suffix: suffix);
-  if (tokens.length == 1) return ParsedName(first: tokens[0], suffix: suffix);
-  return ParsedName(
+  if (tokens.isEmpty) return HumanNameParserUtils(suffix: suffix);
+  if (tokens.length == 1) return HumanNameParserUtils(first: tokens[0], suffix: suffix);
+  return HumanNameParserUtils(
     first: tokens[0],
     last: tokens[tokens.length - 1],
     middle: tokens.length > 2 ? tokens.sublist(1, tokens.length - 1).join(' ') : null,
