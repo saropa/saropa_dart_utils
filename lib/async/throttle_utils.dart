@@ -11,7 +11,7 @@ VoidCallback throttle(VoidCallback fn, Duration interval) {
     final DateTime now = DateTime.now();
     final last = lastCall;
     if (last == null || now.difference(last) >= interval) {
-      lastCall = now;
+      lastCall = now; // ignore: avoid_unused_assignment - used on next invocation
       fn();
       return;
     }
