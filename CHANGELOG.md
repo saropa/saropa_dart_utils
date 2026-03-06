@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Scanner tool** (`tool/suggest_saropa_utils.dart`): CLI that scans a Dart project for patterns that can be replaced with saropa_dart_utils (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`, `s ?? ''` → `s.orEmpty()`). Run: `dart run tool/suggest_saropa_utils.dart [path]`. Errors on stderr; files >512KB skipped. Documented in README and CODEBASE_INDEX.
+
 ### Tests
 - **MapNullableExtensions**: Added unit tests for `isMapNullOrEmpty` and `isNotMapNullOrEmpty` (null, empty, non-empty, single-entry cases) in `test/map/map_extensions_test.dart`.
 - **GestureUtils**: Added `test/gesture/gesture_utils_test.dart` with tests for `getSwipeSpeed` (zero, negative, boundary values, NaN, ±infinity) and `swipeMagnitudeThresholds` constant.
