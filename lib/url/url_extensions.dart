@@ -163,7 +163,7 @@ extension UriNullableExtensions on Uri? {
 }
 
 /// Utility class for URL operations.
-abstract final class UrlUtils {
+abstract final class UrlExtensions {
   /// Returns [url] parsed as a URI, or `null` if parsing fails.
   @useResult
   static Uri? tryParse(String? url) {
