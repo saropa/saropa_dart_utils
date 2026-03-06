@@ -15,10 +15,8 @@ extension StringBetweenExtensions on String {
       return null;
     }
 
-    return ((betweenResult('(', ')') ??
-            betweenResult('[', ']')) ??
-        (betweenResult('<', '>') ??
-            betweenResult('{', '}')));
+    return ((betweenResult('(', ')') ?? betweenResult('[', ']')) ??
+        (betweenResult('<', '>') ?? betweenResult('{', '}')));
   }
 
   /// Returns a [BetweenResult] like `betweenBracketsResult` but searches from
@@ -29,10 +27,8 @@ extension StringBetweenExtensions on String {
       return null;
     }
 
-    return ((betweenResultLast('(', ')') ??
-            betweenResultLast('[', ']')) ??
-        (betweenResultLast('<', '>') ??
-            betweenResultLast('{', '}')));
+    return ((betweenResultLast('(', ')') ?? betweenResultLast('[', ']')) ??
+        (betweenResultLast('<', '>') ?? betweenResultLast('{', '}')));
   }
 
   /// Returns the content between the first matching bracket pair found, or
@@ -168,9 +164,7 @@ extension StringBetweenExtensions on String {
         final String content = substringSafe(startIndex + start.length);
         final String finalContent = trim ? content.trim() : content;
 
-        return finalContent.isEmpty
-            ? null
-            : BetweenResult(finalContent, null);
+        return finalContent.isEmpty ? null : BetweenResult(finalContent, null);
       }
 
       return null;
@@ -272,7 +266,10 @@ extension StringBetweenExtensions on String {
     }
 
     final int endIndex = end.isEmpty ? (endOptional ? length : -1) : lastIndexOf(end);
-    if (endIndex == -1 || endIndex <= startIndex || (startIndex + start.length) > endIndex) {
+    final bool noEnd = endIndex == -1;
+    final bool endBeforeStart = endIndex <= startIndex;
+    final bool contentOverlaps = (startIndex + start.length) > endIndex;
+    if (noEnd || endBeforeStart || contentOverlaps) {
       if (endOptional) {
         final String content = substringSafe(startIndex + start.length);
 

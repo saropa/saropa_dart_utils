@@ -12,6 +12,9 @@ Flags method calls whose return values are ignored. Ignoring return values may i
 ### Affected Files
 6 lib files (specific files to be identified by running the analyzer).
 
+### Verification
+Run the linter for the 11 violations; use return value, assign to `_`, or add `@useResult` on callee as appropriate.
+
 ### Recommended Action
 FIX -- Audit each of the 11 violations individually:
 

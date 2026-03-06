@@ -14,3 +14,9 @@ An if statement has too many branches (else-if chains), which makes the code har
 
 ### Recommended Action
 FIX -- convert the multi-branch if-else chain to a switch statement or switch expression. This improves readability and enables the compiler to check for exhaustiveness.
+
+---
+
+## Verification
+
+- **Status:** Not fixed. `lib/gesture/swipe_properties.dart` getter `swipeMagnitude` (lines ~153–172) still uses four consecutive `if (magnitude < ...)` checks and a final return. Convert to a switch on a discretized value or keep if chain and add `// ignore: avoid_if_with_many_branches` with a short comment if intentional.

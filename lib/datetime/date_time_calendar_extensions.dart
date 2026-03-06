@@ -13,8 +13,7 @@ extension DateTimeCalendarExtensions on DateTime {
   /// Returns:
   ///   int: The calculated age.
   @useResult
-  int calculateAgeFromNow({DateTime? now}) =>
-      calculateAgeFromDate(now ?? DateTime.now());
+  int calculateAgeFromNow({DateTime? now}) => calculateAgeFromDate(now ?? DateTime.now());
 
   /// Calculates the age based on a given date.
   ///

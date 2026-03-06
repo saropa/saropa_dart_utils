@@ -32,14 +32,11 @@ class BetweenResult {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BetweenResult &&
-          content == other.content &&
-          remaining == other.remaining;
+      other is BetweenResult && content == other.content && remaining == other.remaining;
 
   @override
   int get hashCode => Object.hash(content, remaining);
 
   @override
-  String toString() =>
-      'BetweenResult($content, ${remaining ?? 'null'})';
+  String toString() => 'BetweenResult($content, ${remaining ?? 'null'})';
 }

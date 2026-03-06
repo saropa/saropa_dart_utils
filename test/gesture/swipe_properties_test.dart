@@ -4,12 +4,27 @@ import 'package:saropa_dart_utils/gesture/swipe_properties.dart';
 
 void main() {
   group('Swipe - Object', () {
+    test('toString includes direction, speed, magnitude, and angle', () {
+      const Swipe swipe = Swipe(
+        direction: SwipeDirection.left,
+        speed: SwipeSpeed.fast,
+        magnitude: SwipeMagnitude.large,
+        angle: SwipeAngle.horizontal,
+      );
+      final String s = swipe.toString();
+      expect(s, contains('Swipe('));
+      expect(s, contains('direction:'));
+      expect(s, contains('speed:'));
+      expect(s, contains('magnitude:'));
+      expect(s, contains('angle:'));
+    });
+
     test('should create Swipe with correct direction and speed', () {
       const Swipe swipe = Swipe(
-     direction:    SwipeDirection.left,
-     speed:          SwipeSpeed.fast,
-     magnitude:    SwipeMagnitude.large,
-    angle:          SwipeAngle.horizontal,
+        direction: SwipeDirection.left,
+        speed: SwipeSpeed.fast,
+        magnitude: SwipeMagnitude.large,
+        angle: SwipeAngle.horizontal,
       );
 
       expect(swipe.direction, SwipeDirection.left);
@@ -86,10 +101,10 @@ void main() {
     test('should create Swipe with correct direction, speed, magnitude, and '
         'angle', () {
       const Swipe swipe = Swipe(
-       direction:  SwipeDirection.left,
-       speed:      SwipeSpeed.fast,
-       magnitude:  SwipeMagnitude.large,
-      angle:       SwipeAngle.horizontal,
+        direction: SwipeDirection.left,
+        speed: SwipeSpeed.fast,
+        magnitude: SwipeMagnitude.large,
+        angle: SwipeAngle.horizontal,
       );
 
       expect(swipe.direction, SwipeDirection.left);
@@ -103,10 +118,10 @@ void main() {
     test('should create Swipe with correct direction, speed, magnitude, '
         'and angle', () {
       const Swipe swipe = Swipe(
-     direction:    SwipeDirection.left,
-     speed:        SwipeSpeed.fast,
-     magnitude:    SwipeMagnitude.large,
-    angle:         SwipeAngle.horizontal,
+        direction: SwipeDirection.left,
+        speed: SwipeSpeed.fast,
+        magnitude: SwipeMagnitude.large,
+        angle: SwipeAngle.horizontal,
       );
 
       expect(swipe.direction, equals(SwipeDirection.left));

@@ -9,7 +9,10 @@ void main() {
     });
 
     test('leastOccurrences', () {
-      expect(<bool>[true, false, true].leastOccurrences(), equals(const Occurrence<bool>(false, 1)));
+      expect(
+        <bool>[true, false, true].leastOccurrences(),
+        equals(const Occurrence<bool>(false, 1)),
+      );
     });
   });
 

@@ -192,7 +192,7 @@ extension StringAnalysisExtensions on String {
   List<String>? extractCurlyBraces() {
     final List<String> matches = _curlyBracesRegex
         .allMatches(this)
-        .map((Match m) => m[0])
+        .map((Match m) => m.group(0))
         .whereType<String>()
         .toList();
 

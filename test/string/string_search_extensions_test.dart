@@ -510,7 +510,10 @@ void main() {
       expect('(  test  )'.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('19. Whitespace inside delimiters (trim:false)', () {
-      expect('(  test  )'.betweenResult('(', ')', trim: false), equals(BetweenResult('  test  ', '')));
+      expect(
+        '(  test  )'.betweenResult('(', ')', trim: false),
+        equals(BetweenResult('  test  ', '')),
+      );
     });
     test('20. Whitespace outside delimiters', () {
       expect('  (test)  '.betweenResult('(', ')'), equals(BetweenResult('test', '')));
@@ -519,7 +522,10 @@ void main() {
       expect('(test)'.betweenResult('(', ')'), equals(BetweenResult('test', '')));
     });
     test('22. Trim set to false (outer whitespace)', () {
-      expect('  (test)  '.betweenResult('(', ')', trim: false), equals(BetweenResult('test', '    ')));
+      expect(
+        '  (test)  '.betweenResult('(', ')', trim: false),
+        equals(BetweenResult('test', '    ')),
+      );
     });
     test('23. Real-world example with URL and description', () {
       expect(
@@ -527,7 +533,9 @@ void main() {
           '(',
           ')',
         ),
-        equals(BetweenResult('Federal Emergency Management Agency (FEMA)', 'https://www.usfa.fema.gov/')),
+        equals(
+          BetweenResult('Federal Emergency Management Agency (FEMA)', 'https://www.usfa.fema.gov/'),
+        ),
       );
     });
   });

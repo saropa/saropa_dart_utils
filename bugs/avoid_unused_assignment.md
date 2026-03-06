@@ -18,6 +18,9 @@ Variable is assigned but never read after assignment. The rule detects cases whe
 - `lib\string\string_between_extensions.dart`
 - `lib\string\string_extensions.dart`
 
+### Verification
+Run the linter for the 16 violations; remove dead assignments or use the value (return/pass). Use `_ =` for intentional discard.
+
 ### Recommended Action
 FIX -- audit each unused assignment:
 1. **Dead code**: Remove the assignment entirely if the value is never needed.

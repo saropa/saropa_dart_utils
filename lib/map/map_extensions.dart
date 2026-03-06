@@ -142,7 +142,11 @@ extension StringMapExtensions on Map<String, dynamic> {
     required String grandChildKey,
     required String greatGrandChildKey,
   }) {
-    final dynamic value = getGreatGrandchild(childKey: childKey, grandChildKey: grandChildKey, greatGrandChildKey: greatGrandChildKey);
+    final dynamic value = getGreatGrandchild(
+      childKey: childKey,
+      grandChildKey: grandChildKey,
+      greatGrandChildKey: greatGrandChildKey,
+    );
 
     return value is String ? value : null;
   }
@@ -208,7 +212,12 @@ abstract final class MapUtils {
   ///
   /// If [add] is `null`, toggles based on current presence.
   /// If [add] is `true`, adds the value. If `false`, removes it.
-  static void mapToggleValue<K, V>({required Map<K, List<V>> map, required K key, required V value, bool? add}) {
+  static void mapToggleValue<K, V>({
+    required Map<K, List<V>> map,
+    required K key,
+    required V value,
+    bool? add,
+  }) {
     if (value == null) return;
     final bool shouldAdd = add ?? !mapContainsValue(map: map, key: key, value: value);
     if (shouldAdd) {
@@ -247,7 +256,11 @@ abstract final class MapUtils {
   /// final map = <String, List<int>>{'scores': [100, 200, 100]};
   /// MapUtils.mapRemoveValue(map: map, key: 'scores', value: 100); // {'scores': [200]}
   /// ```
-  static void mapRemoveValue<K, V>({required Map<K, List<V>> map, required K key, required V value}) {
+  static void mapRemoveValue<K, V>({
+    required Map<K, List<V>> map,
+    required K key,
+    required V value,
+  }) {
     if (value == null) return;
     // Function is designed to mutate the map parameter
     // ignore: saropa_lints/avoid_parameter_mutation
@@ -260,7 +273,11 @@ abstract final class MapUtils {
 
   /// Returns `true` if the list at [key] within [map] contains [value].
   @useResult
-  static bool mapContainsValue<K, V>({required Map<K, List<V>> map, required K key, required V value}) {
+  static bool mapContainsValue<K, V>({
+    required Map<K, List<V>> map,
+    required K key,
+    required V value,
+  }) {
     if (value == null) {
       return false;
     }

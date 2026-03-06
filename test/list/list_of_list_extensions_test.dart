@@ -478,30 +478,26 @@ void main() {
     });
 
     group('clone', () {
-      test('Cloned list is equal to the original', () {
-        final List<List<int>> original = <List<int>>[
+      late List<List<int>> original;
+      late List<List<int>> cloned;
+
+      setUp(() {
+        original = <List<int>>[
           <int>[1, 2],
           <int>[3, 4],
         ];
-        final List<List<int>> cloned = original.clone();
+        cloned = original.clone();
+      });
+
+      test('Cloned list is equal to the original', () {
         expect(cloned, original);
       });
 
       test('Cloned list is a different instance from the original', () {
-        final List<List<int>> original = <List<int>>[
-          <int>[1, 2],
-          <int>[3, 4],
-        ];
-        final List<List<int>> cloned = original.clone();
         expect(identical(cloned, original), isFalse);
       });
 
       test('Inner lists of the cloned list are different instances', () {
-        final List<List<int>> original = <List<int>>[
-          <int>[1, 2],
-          <int>[3, 4],
-        ];
-        final List<List<int>> cloned = original.clone();
         expect(identical(cloned[0], original[0]), isFalse);
         expect(identical(cloned[1], original[1]), isFalse);
       });
@@ -521,10 +517,10 @@ void main() {
       });
 
       test('Modifying the original list does not affect the cloned list', () {
-        final List<List<int>> original = <List<int>>[
+        original = <List<int>>[
           <int>[1, 2],
         ];
-        final List<List<int>> cloned = original.clone();
+        cloned = original.clone();
         original[0][0] = 99;
         expect(original, <List<int>>[
           <int>[99, 2],

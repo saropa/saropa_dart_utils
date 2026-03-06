@@ -13,6 +13,9 @@ Flags ternary expressions (`condition ? a : b`) that are nested inside other ter
 - `lib\datetime\date_time_extensions.dart`
 - `lib\string\string_extensions.dart`
 
+### Verification
+No nested ternary found in current codebase grep; may be in split files or already fixed. Run linter for the 9 violations.
+
 ### Recommended Action
 FIX -- Refactor nested ternary expressions into `if-else` statements or early return guards:
 

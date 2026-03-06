@@ -281,10 +281,10 @@ extension StringTextExtensions on String {
 
     final String lastChar = base.lastChars(1).toLowerCase();
     if (lastChar == 's') {
-      return isLocaleUS ? "$base'" : "$base's";
+      return isLocaleUS ? '$base\'' : '$base\'s';
     }
 
-    return "$base's";
+    return '$base\'s';
   }
 
   /// Returns the plural form of this string based on [count].

@@ -13,6 +13,9 @@ Flags shorthand expressions (such as cascade operators `..`, null-aware operator
 - `lib\datetime\date_time_extensions.dart`
 - `lib\string\string_extensions.dart`
 
+### Verification
+Run the linter for the 9 violations; break nested cascade/null-aware into intermediate variables or separate statements.
+
 ### Recommended Action
 FIX -- Break nested shorthand expressions into separate statements or intermediate variables:
 

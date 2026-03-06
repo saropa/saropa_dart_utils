@@ -15,7 +15,10 @@ void main() {
     });
 
     test('mostOccurrences', () {
-      expect(<double>[3.5, 1.2, 4.8, 1.2, 5.9, 9.1, 1.2].mostOccurrences(), equals(Occurrence<double>(1.2, 3)));
+      expect(
+        <double>[3.5, 1.2, 4.8, 1.2, 5.9, 9.1, 1.2].mostOccurrences(),
+        equals(Occurrence<double>(1.2, 3)),
+      );
       expect(<double>[].mostOccurrences(), isNull);
     });
 

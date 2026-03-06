@@ -328,10 +328,21 @@ no_magic_number_in_tests: false
 no_magic_string_in_tests: false
 
 ## rules are wrong for a pure Dart utility library
-avoid_barrel_files: false
-avoid_non_ascii_symbols: false
-avoid_static_state: false
-avoid_unmarked_public_class: false
+# Aliases / rationale (was bugs/avoid_*.md; resolved so those files were removed):
+avoid_barrel_files: false       # Main library entry point (lib/saropa_dart_utils.dart) is required by Dart convention; barrel file is intentional.
+avoid_non_ascii_symbols: false # Library handles Unicode, emojis, diacritics; non-ASCII in source and tests is required.
+avoid_static_state: false      # Static final RegExp/constants are correct for a utility library; not Flutter widget state.
+avoid_unmarked_public_class: false  # Static-only utility classes; inheritance modifiers not needed for this API style.
+# avoid_default_tostring: fixed in code — Swipe class implements toString() (see lib/gesture/swipe_properties.dart).
+#
+# --- Rules FIXED in code or suppressed inline (bug files deleted; rationale below) ---
+# avoid_collapsible_if: FIXED — lib/json/json_utils.dart: nested ifs collapsed to single conditions.
+# avoid_complex_conditions: FIXED — lib/html/html_utils.dart: _decodeNumericEntity uses named booleans (isValidCodePoint, isSurrogate).
+# avoid_redundant_else: FIXED — bool_string_extensions, date_time_utils, swipe_properties, string_extensions: redundant else removed.
+# avoid_medium_length_files: FIXED — string and datetime logic split into multiple files (see BUG-033/034 resolution).
+# avoid_long_parameter_list: SUPPRESSED — lib/datetime/date_time_utils.dart line 377: isValidDateParts (8 named params) has // ignore with comment.
+# avoid_similar_names: SUPPRESSED — lib/gesture/swipe_properties.dart line 182: dx/dy in getter has //ignore:avoid_similar_names.
+#
 no_empty_string: false
 prefer_compute_for_heavy_work: false
 prefer_descriptive_test_name: false

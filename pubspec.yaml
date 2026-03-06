@@ -9,7 +9,7 @@ documentation: https://pub.dev/documentation/saropa_dart_utils/latest/
 
 environment:
   sdk: ">=3.9.0 <4.0.0" # detect: flutter doctor -v Dart version
-  flutter: ">=3.41.2" # run: flutter upgrade
+  flutter: ">=3.41.4" # run: flutter upgrade
 
 dependencies:
   # Provides grapheme (user-perceived character) cluster support for Dart strings.
@@ -42,9 +42,8 @@ dev_dependencies:
 
   # 1,000+ lint rules for Flutter and Dart. Free. Open source.
   # https://pub.dev/packages/saropa_lints/changelog
-  # BETA versions: https://pub.dev/packages/saropa_lints/versions
   # e.g. dart run saropa_lints:init --tier essential
-  saropa_lints: ^5.0.2
+  saropa_lints: ^6.2.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

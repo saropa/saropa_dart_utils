@@ -725,10 +725,19 @@ void main() {
   });
 
   group('MapNullableExtensions', () {
-    test('1. null map isMapNullOrEmpty', () => expect((null as Map<dynamic, dynamic>?).isMapNullOrEmpty, isTrue));
-    test('2. null map isNotMapNullOrEmpty', () => expect((null as Map<dynamic, dynamic>?).isNotMapNullOrEmpty, isFalse));
+    test(
+      '1. null map isMapNullOrEmpty',
+      () => expect((null as Map<dynamic, dynamic>?).isMapNullOrEmpty, isTrue),
+    );
+    test(
+      '2. null map isNotMapNullOrEmpty',
+      () => expect((null as Map<dynamic, dynamic>?).isNotMapNullOrEmpty, isFalse),
+    );
     test('3. empty map isMapNullOrEmpty', () => expect(<String, int>{}.isMapNullOrEmpty, isTrue));
-    test('4. empty map isNotMapNullOrEmpty', () => expect(<String, int>{}.isNotMapNullOrEmpty, isFalse));
+    test(
+      '4. empty map isNotMapNullOrEmpty',
+      () => expect(<String, int>{}.isNotMapNullOrEmpty, isFalse),
+    );
     test('5. non-empty map isMapNullOrEmpty', () {
       final Map<String, int> map = <String, int>{'a': 1};
       expect(map.isMapNullOrEmpty, isFalse);

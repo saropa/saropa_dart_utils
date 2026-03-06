@@ -17,6 +17,9 @@ Flags string literals that appear identically in multiple places within the same
 ### Affected Files
 5 lib files (specific files to be identified by running the analyzer).
 
+### Verification
+Run the linter to get exact file:line for the 6 violations; then extract to constants or suppress per case.
+
 ### Recommended Action
 INVESTIGATE -- Review each of the 6 violations:
 

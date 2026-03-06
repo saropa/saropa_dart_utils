@@ -68,7 +68,10 @@ void main() {
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
       );
-      expect(range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.thursday, month: 2), isTrue); // February 29, 2024
+      expect(
+        range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.thursday, month: 2),
+        isTrue,
+      ); // February 29, 2024
     });
 
     test('returns false for leap year day when not in range', () {
@@ -235,7 +238,12 @@ void main() {
         end: DateTime(2024, 1, 31),
       );
       expect(
-        range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1, isInclusive: false),
+        range.isNthDayOfMonthInRange(
+          n: 2,
+          dayOfWeek: DateTime.monday,
+          month: 1,
+          isInclusive: false,
+        ),
         isFalse,
       );
     });
