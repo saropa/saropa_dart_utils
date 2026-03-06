@@ -980,6 +980,11 @@ void main() {
     test('8. Accented characters', () => expect('café résumé'.hasInvalidUnicode, isFalse));
     test('9. Arabic text', () => expect('مرحبا'.hasInvalidUnicode, isFalse));
     test('10. Japanese text', () => expect('こんにちは'.hasInvalidUnicode, isFalse));
+    test('11. String containing invalid replacement code point (U+DC07)', () {
+      const int invalidRune = 56327;
+      final String withInvalid = 'a${String.fromCharCode(invalidRune)}b';
+      expect(withInvalid.hasInvalidUnicode, isTrue);
+    });
   });
 
   group('removeInvalidUnicode', () {
@@ -996,6 +1001,16 @@ void main() {
     test('8. Accented characters unchanged', () => expect('café'.removeInvalidUnicode(), 'café'));
     test('9. Arabic unchanged', () => expect('مرحبا'.removeInvalidUnicode(), 'مرحبا'));
     test('10. Japanese unchanged', () => expect('こんにちは'.removeInvalidUnicode(), 'こんにちは'));
+    test('11. Invalid replacement character removed', () {
+      const int invalidRune = 56327;
+      final String withInvalid = 'hello${String.fromCharCode(invalidRune)}world';
+      expect(withInvalid.removeInvalidUnicode(), 'helloworld');
+    });
+    test('12. Multiple invalid chars removed', () {
+      const int invalidRune = 56327;
+      final String withInvalid = 'a${String.fromCharCode(invalidRune)}b${String.fromCharCode(invalidRune)}c';
+      expect(withInvalid.removeInvalidUnicode(), 'abc');
+    });
   });
 
   group('isVowel', () {
@@ -1394,6 +1409,37 @@ void main() {
     test('8. Number match', () => expect('123'.isAny(<String>['123', '456']), isTrue));
     test('9. Whitespace match', () => expect(' '.isAny(<String>[' ', '\t']), isTrue));
     test('10. Partial no match', () => expect('hello'.isAny(<String>['hel', 'llo']), isFalse));
+  });
+
+  group('obscureText', () {
+    test('1. Empty string returns null', () => expect(''.obscureText(), isNull));
+    test('2. Non-empty returns non-null', () => expect('secret'.obscureText(), isNotNull));
+    test('3. Result contains only default char', () {
+      final String? result = 'password'.obscureText();
+      expect(result, isNotNull);
+      expect(result!.split('').every((String c) => c == '•'), isTrue);
+    });
+    test('4. Result length within jitter range (obscureLength 3)', () {
+      final String? result = 'abc'.obscureText(obscureLength: 3);
+      expect(result, isNotNull);
+      expect(result!.length, greaterThanOrEqualTo(1));
+      expect(result.length, lessThanOrEqualTo(6));
+    });
+    test('5. Custom char', () {
+      final String? result = 'x'.obscureText(char: '*');
+      expect(result, isNotNull);
+      expect(result!.split('').every((String c) => c == '*'), isTrue);
+    });
+    test('6. obscureLength 0 gives exact length', () {
+      final String? result = 'hello'.obscureText(obscureLength: 0);
+      expect(result, isNotNull);
+      expect(result, hasLength(5));
+    });
+    test('7. Single char input', () {
+      final String? result = 'a'.obscureText(obscureLength: 0);
+      expect(result, isNotNull);
+      expect(result, '•');
+    });
   });
 
   group('secondIndex', () {
