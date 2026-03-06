@@ -2,8 +2,8 @@
 library;
 
 /// Step name and count of users who reached it.
-class FunnelStep {
-  const FunnelStep(String name, int count) : _name = name, _count = count;
+class FunnelUtils {
+  const FunnelUtils(String name, int count) : _name = name, _count = count;
   final String _name;
 
   String get name => _name;
@@ -12,11 +12,11 @@ class FunnelStep {
   int get count => _count;
 
   @override
-  String toString() => 'FunnelStep(name: $_name, count: $_count)';
+  String toString() => 'FunnelUtils(name: $_name, count: $_count)';
 }
 
 /// Returns conversion rate from step i to i+1 (and overall to last step).
-List<double> funnelConversionRates(List<FunnelStep> steps) {
+List<double> funnelConversionRates(List<FunnelUtils> steps) {
   if (steps.length < 2) return [];
   final List<double> out = [];
   for (int i = 0; i < steps.length - 1; i++) {

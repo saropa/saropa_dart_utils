@@ -4,8 +4,8 @@ library;
 import 'package:collection/collection.dart';
 
 /// Pre-computed quantile summary for a list of numbers.
-class QuantileSummary {
-  QuantileSummary(List<num> values)
+class QuantileSummaryUtils {
+  QuantileSummaryUtils(List<num> values)
     : _sorted = List<double>.of(values.map((num x) => x.toDouble()))..sort();
 
   final List<double> _sorted;
@@ -30,5 +30,5 @@ class QuantileSummary {
   double get q3 => quantile(0.75);
 
   @override
-  String toString() => 'QuantileSummary(count: ${_sorted.length}, min: $min, max: $max)';
+  String toString() => 'QuantileSummaryUtils(count: ${_sorted.length}, min: $min, max: $max)';
 }
