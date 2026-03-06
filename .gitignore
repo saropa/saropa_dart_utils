@@ -85,5 +85,6 @@ CLAUDE_SETUP.md
 CODE_INDEX.md
 CODEBASE_INDEX.md
 *.bak
-/reports/.batches/
-/reports
+
+# Saropa lints / session reports (generated, do not commit)
+reports/
