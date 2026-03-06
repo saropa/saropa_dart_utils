@@ -78,8 +78,8 @@ enum SwipeAngle {
 /// It is used to encapsulate the details of a swipe gesture in a single object.
 /// This makes it easier to pass around the details of a swipe gesture and use
 /// them in different parts of your code.
-class Swipe {
-  /// Creates a new [Swipe] record.
+class SwipeProperties {
+  /// Creates a new [SwipeProperties] record.
   ///
   /// The [direction] parameter specifies the direction of the swipe.
   /// The [speed] parameter specifies the speed of the swipe.
@@ -88,10 +88,10 @@ class Swipe {
   ///
   /// Example:
   /// ```dart
-  /// var swipe = Swipe(SwipeDirection.left, SwipeSpeed.fast,
+  /// var swipe = SwipeProperties(SwipeDirection.left, SwipeSpeed.fast,
   ///   SwipeMagnitude.large, SwipeAngle.horizontal);
   /// ```
-  const Swipe({
+  const SwipeProperties({
     required this.direction,
     required this.speed,
     required this.magnitude,
@@ -193,10 +193,10 @@ extension SwipeProperties on DragEndDetails {
 
   /// Method to get a Swipe record for the swipe gesture.
   ///
-  /// This method returns a [Swipe] record that contains the direction
+  /// This method returns a [SwipeProperties] record that contains the direction
   /// and speed of the swipe.
   @useResult
-  Swipe get swipe => Swipe(
+  SwipeProperties get swipe => SwipeProperties(
     direction: swipeDirection,
     speed: swipeSpeed,
     magnitude: swipeMagnitude,

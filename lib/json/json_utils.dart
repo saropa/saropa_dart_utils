@@ -17,7 +17,7 @@ abstract final class JsonUtils {
     final dynamic decoded = jsonDecodeSafe(jsonString);
     if (decoded == null) return null;
 
-    return MapUtils.toMapStringDynamic(decoded);
+    return MapExtensions.toMapStringDynamic(decoded);
   }
 
   /// Safely decodes a JSON string, returning null on error.

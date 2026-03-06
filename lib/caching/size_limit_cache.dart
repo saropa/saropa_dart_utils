@@ -22,6 +22,7 @@ class SizeLimitCache<K extends Object, V extends Object> {
     if (_ttl != null) {
       final DateTime? exp = _expiresAt[key];
       if (exp != null && DateTime.now().isAfter(exp)) {
+        assert(exp != null); // use exp after null check
         _order.remove(key);
         _map.remove(key);
         _expiresAt.remove(key);

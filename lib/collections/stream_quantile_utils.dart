@@ -2,8 +2,8 @@
 library;
 
 /// Approximate percentile from a stream of values (single pass, fixed memory).
-class StreamQuantile {
-  StreamQuantile(double p) : _p = p;
+class StreamQuantileUtils {
+  StreamQuantileUtils(double p) : _p = p;
   final double _p;
 
   double get p => _p;
@@ -24,5 +24,5 @@ class StreamQuantile {
   }
 
   @override
-  String toString() => 'StreamQuantile(p: $_p, count: ${_buffer.length})';
+  String toString() => 'StreamQuantileUtils(p: $_p, count: ${_buffer.length})';
 }

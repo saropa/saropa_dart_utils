@@ -5,8 +5,8 @@ import 'dart:async' show Completer; // ignore: require_ios_deployment_target_con
 import 'dart:developer' show log;
 
 /// Semaphore: at most [permits] concurrent acquisitions.
-class AsyncSemaphore {
-  AsyncSemaphore(int permits) : _permits = permits, _available = permits;
+class AsyncSemaphoreUtils {
+  AsyncSemaphoreUtils(int permits) : _permits = permits, _available = permits;
   final int _permits;
 
   /// Maximum number of concurrent acquisitions allowed.
@@ -37,7 +37,7 @@ class AsyncSemaphore {
     try {
       await c.future;
     } on Object catch (e, st) {
-      log('AsyncSemaphore.acquire', error: e, stackTrace: st);
+      log('AsyncSemaphoreUtils.acquire', error: e, stackTrace: st);
       if (!c.isCompleted) c.completeError(e, st);
       rethrow;
     }
@@ -53,5 +53,5 @@ class AsyncSemaphore {
   }
 
   @override
-  String toString() => 'AsyncSemaphore(permits: $_permits, available: $_available)';
+  String toString() => 'AsyncSemaphoreUtils(permits: $_permits, available: $_available)';
 }

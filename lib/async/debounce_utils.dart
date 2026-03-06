@@ -11,7 +11,6 @@ VoidCallback debounce(VoidCallback fn, Duration delay) {
     final newTimer = Timer(
       delay,
       () {
-        timer = null;
         fn();
       },
     );

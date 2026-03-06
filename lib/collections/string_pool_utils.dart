@@ -5,8 +5,8 @@ library;
 ///
 /// Optional [maxSize] limits the pool; when exceeded, one arbitrary entry
 /// is evicted (FIFO by first intern after full). Omit for unbounded pooling.
-class StringPool {
-  StringPool({int? maxSize}) : _maxSize = maxSize, _order = maxSize != null ? <String>[] : null;
+class StringPoolUtils {
+  StringPoolUtils({int? maxSize}) : _maxSize = maxSize, _order = maxSize != null ? <String>[] : null;
 
   final int? _maxSize;
   final List<String>? _order;
@@ -29,5 +29,5 @@ class StringPool {
   int get size => _pool.length;
 
   @override
-  String toString() => 'StringPool(size: ${_pool.length})';
+  String toString() => 'StringPoolUtils(size: ${_pool.length})';
 }

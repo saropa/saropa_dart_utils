@@ -4,8 +4,8 @@ library;
 import 'package:collection/collection.dart';
 
 /// Interval with [start] and [end] (inclusive or exclusive per usage).
-class Interval {
-  const Interval(num start, num end) : _start = start, _end = end;
+class IntervalSchedulingUtils {
+  const IntervalSchedulingUtils(num start, num end) : _start = start, _end = end;
   final num _start;
 
   /// Start of the interval.
@@ -16,22 +16,22 @@ class Interval {
   num get end => _end;
 
   @override
-  String toString() => 'Interval(start: $_start, end: $_end)';
+  String toString() => 'IntervalSchedulingUtils(start: $_start, end: $_end)';
 }
 
 /// Returns a maximal set of non-overlapping intervals from [intervals],
 /// chosen by earliest end time (greedy).
 ///
-/// See [Interval] for the interval type.
-List<Interval> maxNonOverlappingIntervals(List<Interval> intervals) {
-  if (intervals.isEmpty) return <Interval>[];
-  final List<Interval> sorted = List<Interval>.of(intervals)
-    ..sort((Interval a, Interval b) => a.end.compareTo(b.end));
-  final Interval? firstInterval = sorted.firstOrNull;
-  if (firstInterval == null) return <Interval>[];
-  final List<Interval> out = <Interval>[firstInterval];
+/// See [IntervalSchedulingUtils] for the interval type.
+List<IntervalSchedulingUtils> maxNonOverlappingIntervals(List<IntervalSchedulingUtils> intervals) {
+  if (intervals.isEmpty) return <IntervalSchedulingUtils>[];
+  final List<IntervalSchedulingUtils> sorted = List<IntervalSchedulingUtils>.of(intervals)
+    ..sort((IntervalSchedulingUtils a, IntervalSchedulingUtils b) => a.end.compareTo(b.end));
+  final IntervalSchedulingUtils? firstInterval = sorted.firstOrNull;
+  if (firstInterval == null) return <IntervalSchedulingUtils>[];
+  final List<IntervalSchedulingUtils> out = <IntervalSchedulingUtils>[firstInterval];
   for (int i = 1; i < sorted.length; i++) {
-    final Interval lastInterval = out.lastOrNull ?? firstInterval;
+    final IntervalSchedulingUtils lastInterval = out.lastOrNull ?? firstInterval;
     if (sorted[i].start >= lastInterval.end) out.add(sorted[i]);
   }
   return out;

@@ -2,8 +2,8 @@
 library;
 
 /// Simple trie for string keys: insert, delete, prefix search.
-class Trie {
-  Trie() : _root = _Node();
+class TrieUtils {
+  TrieUtils() : _root = _Node();
 
   final _Node _root;
 
@@ -73,7 +73,7 @@ class Trie {
     return out;
   }
 
-  static const String _kToStringPrefix = 'Trie()';
+  static const String _kToStringPrefix = 'TrieUtils()';
 
   @override
   String toString() => _kToStringPrefix;

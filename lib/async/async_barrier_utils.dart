@@ -4,15 +4,15 @@ library;
 import 'dart:async' show Completer; // ignore: require_ios_deployment_target_consistency
 
 /// Barrier that completes when [count] signals received.
-class AsyncBarrier {
+class AsyncBarrierUtils {
   static const String _kErrCountAtLeastOne = 'count >= 1';
 
-  factory AsyncBarrier(int count) {
+  factory AsyncBarrierUtils(int count) {
     if (count < 1) throw ArgumentError(_kErrCountAtLeastOne);
-    return AsyncBarrier._(count);
+    return AsyncBarrierUtils._(count);
   }
 
-  AsyncBarrier._(int count) : _count = count, _remaining = count;
+  AsyncBarrierUtils._(int count) : _count = count, _remaining = count;
   final int _count;
 
   /// Total number of signals required for the barrier to complete.
@@ -34,5 +34,5 @@ class AsyncBarrier {
   }
 
   @override
-  String toString() => 'AsyncBarrier(count: $_count, remaining: $_remaining)';
+  String toString() => 'AsyncBarrierUtils(count: $_count, remaining: $_remaining)';
 }

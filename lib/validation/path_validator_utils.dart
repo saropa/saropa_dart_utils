@@ -2,13 +2,20 @@
 library;
 
 /// Returns true if [path] does not contain '..' segments that escape [root].
-bool isPathSafe(String path, String _) {
-  final String normalized = path.replaceAll(RegExp(r'[/\\]+'), '/').replaceFirst(RegExp(r'^/'), '');
-  final List<String> parts = normalized
+bool isPathSafe(String path, String root) {
+  final String pathNorm =
+      path.replaceAll(RegExp(r'[/\\]+'), '/').replaceFirst(RegExp(r'^/'), '');
+  final String rootNorm =
+      root.replaceAll(RegExp(r'[/\\]+'), '/').replaceFirst(RegExp(r'^/'), '');
+  final List<String> rootParts = rootNorm
       .split('/')
       .where((String s) => s.isNotEmpty && s != '.')
       .toList();
-  int depth = 0;
+  final List<String> parts = pathNorm
+      .split('/')
+      .where((String s) => s.isNotEmpty && s != '.')
+      .toList();
+  int depth = rootParts.length;
   for (final String p in parts) {
     if (p == '..') {
       depth--;

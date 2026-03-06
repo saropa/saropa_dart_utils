@@ -2,8 +2,8 @@
 library;
 
 /// Simple Bloom filter: add elements, test membership (may have false positives).
-class BloomFilter {
-  BloomFilter({required int expectedCount, double falsePositiveRate = 0.01})
+class BloomFilterUtils {
+  BloomFilterUtils({required int expectedCount, double falsePositiveRate = 0.01})
     : _expectedCount = expectedCount,
       _falsePositiveRate = falsePositiveRate,
       _bits = List<bool>.filled(_sizeBits(expectedCount, falsePositiveRate), false),
@@ -62,16 +62,14 @@ class BloomFilter {
   }
 
   static int _mix(int h) {
-    int v = h;
-    v ^= v >>> 16;
-    v *= 0x85ebca6b;
-    v ^= v >>> 13;
-    v *= 0xc2b2ae35;
-    v ^= v >>> 16;
-    return v;
+    final v0 = h ^ (h >>> 16);
+    final v1 = v0 * 0x85ebca6b;
+    final v2 = v1 ^ (v1 >>> 13);
+    final v3 = v2 * 0xc2b2ae35;
+    return v3 ^ (v3 >>> 16);
   }
 
   @override
   String toString() =>
-      'BloomFilter(expectedCount: $_expectedCount, falsePositiveRate: $_falsePositiveRate, bits: ${_bits.length})';
+      'BloomFilterUtils(expectedCount: $_expectedCount, falsePositiveRate: $_falsePositiveRate, bits: ${_bits.length})';
 }

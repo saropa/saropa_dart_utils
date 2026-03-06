@@ -34,11 +34,13 @@ enum DiffOutputFormat {
 
 /// Renders a list of [DiffOp] to a unified-diff-style string.
 ///
-/// [ops] is typically from [MyersDiffUtils.diffLines]. [contextLines] is
-/// unused for now; reserved for context hunk size.
+/// [ops] is typically from [MyersDiffUtils.diffLines]. [contextLines] limits
+/// how many unchanged lines are shown in a run of equal ops (first and last
+/// [contextLines] each); use a large value to show all.
 String renderUnifiedDiff(
   List<DiffOp> ops, {
   DiffOutputFormat format = DiffOutputFormat.plain,
+  // ignore: avoid_unused_parameters - reserved for context hunk size
   int contextLines = 3,
 }) {
   final StringBuffer out = StringBuffer();
@@ -55,7 +57,14 @@ String renderUnifiedDiff(
     if (!raw.endsWith('\n') && lines.isNotEmpty) {
       lines[lines.length - 1] = lines.last.replaceFirst(RegExp(r'\n$'), '');
     }
-    for (final String line in lines) {
+    final List<String> toEmit = op.kind == DiffOpKind.equal && lines.length > 2 * contextLines
+        ? <String>[
+            ...lines.take(contextLines),
+            '${_kDiffPrefixSpace} ... ${lines.length - 2 * contextLines} lines omitted ...\n',
+            ...lines.skip(lines.length - contextLines),
+          ]
+        : lines;
+    for (final String line in toEmit) {
       switch (op.kind) {
         case DiffOpKind.equal:
           out.write(_prefix(format, _kDiffPrefixSpace, line, null));

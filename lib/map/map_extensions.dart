@@ -161,7 +161,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 
     final dynamic value = this[key];
 
-    return MapUtils.toMapStringDynamic(value);
+    return MapExtensions.toMapStringDynamic(value);
   }
 
   /// Returns `true` after removing all keys in [removeKeysList] from this map.
@@ -201,7 +201,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 }
 
 /// Utility class for map operations.
-abstract final class MapUtils {
+abstract final class MapExtensions {
   /// Returns the total number of items across all iterable values in
   /// [inputMap].
   @useResult
@@ -236,8 +236,8 @@ abstract final class MapUtils {
   /// Example:
   /// ```dart
   /// final map = <String, List<int>>{};
-  /// MapUtils.mapAddValue(map: map, key: 'scores', value: 100); // {'scores': [100]}
-  /// MapUtils.mapAddValue(map: map, key: 'scores', value: 200); // {'scores': [100, 200]}
+  /// MapExtensions.mapAddValue(map: map, key: 'scores', value: 100); // {'scores': [100]}
+  /// MapExtensions.mapAddValue(map: map, key: 'scores', value: 200); // {'scores': [100, 200]}
   /// ```
   static void mapAddValue<K, V>({required Map<K, List<V>> map, required K key, required V value}) {
     if (value == null) return;
@@ -254,7 +254,7 @@ abstract final class MapUtils {
   /// Example:
   /// ```dart
   /// final map = <String, List<int>>{'scores': [100, 200, 100]};
-  /// MapUtils.mapRemoveValue(map: map, key: 'scores', value: 100); // {'scores': [200]}
+  /// MapExtensions.mapRemoveValue(map: map, key: 'scores', value: 100); // {'scores': [200]}
   /// ```
   static void mapRemoveValue<K, V>({
     required Map<K, List<V>> map,

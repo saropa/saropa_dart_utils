@@ -2,15 +2,15 @@
 library;
 
 /// Fixed-capacity ring buffer. When full, oldest is overwritten.
-class RingBuffer<T extends Object> {
+class RingBufferUtils<T extends Object> {
   static const String _kErrCapacityAtLeastOne = 'capacity >= 1';
 
-  factory RingBuffer(int capacity) {
+  factory RingBufferUtils(int capacity) {
     if (capacity < 1) throw ArgumentError(_kErrCapacityAtLeastOne);
-    return RingBuffer._(capacity);
+    return RingBufferUtils._(capacity);
   }
 
-  RingBuffer._(int capacity) : _capacity = capacity, _data = List<T?>.filled(capacity, null);
+  RingBufferUtils._(int capacity) : _capacity = capacity, _data = List<T?>.filled(capacity, null);
   final List<T?> _data;
   final int _capacity;
 
@@ -57,5 +57,5 @@ class RingBuffer<T extends Object> {
   }
 
   @override
-  String toString() => 'RingBuffer(capacity: $_capacity, length: $_len)';
+  String toString() => 'RingBufferUtils(capacity: $_capacity, length: $_len)';
 }

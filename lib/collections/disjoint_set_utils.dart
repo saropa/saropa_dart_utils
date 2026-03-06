@@ -2,8 +2,8 @@
 library;
 
 /// Union-find over integer elements 0 .. n-1.
-class DisjointSet {
-  DisjointSet(int n)
+class DisjointSetUtils {
+  DisjointSetUtils(int n)
     : _parent = List<int>.generate(n, (int i) => i),
       _rank = List<int>.filled(n, 0);
 
@@ -34,5 +34,5 @@ class DisjointSet {
   bool connected(int x, int y) => find(x) == find(y);
 
   @override
-  String toString() => 'DisjointSet(size: ${_parent.length})';
+  String toString() => 'DisjointSetUtils(size: ${_parent.length})';
 }

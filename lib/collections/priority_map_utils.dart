@@ -4,7 +4,7 @@ library;
 import 'package:collection/collection.dart';
 
 /// Map of priority (lower = higher priority) to queue of items.
-class PriorityMap<K extends Object, V extends Object> {
+class PriorityMapUtils<K extends Object, V extends Object> {
   final Map<K, List<V>> _queues = <K, List<V>>{};
 
   void add(K priority, V value) {
@@ -26,5 +26,5 @@ class PriorityMap<K extends Object, V extends Object> {
   bool get isEmpty => _queues.isEmpty;
 
   @override
-  String toString() => 'PriorityMap(priorities: ${_queues.length})';
+  String toString() => 'PriorityMapUtils(priorities: ${_queues.length})';
 }

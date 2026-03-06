@@ -20,7 +20,6 @@ VoidCallback throttle(VoidCallback fn, Duration interval) {
       interval,
       () {
         lastCall = DateTime.now();
-        timer = null;
         fn();
       },
     );

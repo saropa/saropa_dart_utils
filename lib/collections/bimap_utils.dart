@@ -2,7 +2,7 @@
 library;
 
 /// Simple bimap: forward and reverse lookup; keys and values must be unique.
-class Bimap<K extends Object, V extends Object> {
+class BimapUtils<K extends Object, V extends Object> {
   final Map<K, V> _forward = <K, V>{};
   final Map<V, K> _reverse = <V, K>{};
 
@@ -44,5 +44,5 @@ class Bimap<K extends Object, V extends Object> {
   int get length => _forward.length;
 
   @override
-  String toString() => 'Bimap(length: ${_forward.length})';
+  String toString() => 'BimapUtils(length: ${_forward.length})';
 }
