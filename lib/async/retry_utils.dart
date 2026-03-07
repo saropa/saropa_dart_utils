@@ -18,8 +18,8 @@ Future<T> retryWithBackoff<T>(
   while (true) {
     try {
       return await fn();
-    } on Object catch (e, st) {
-      dev.log('retry attempt $attempt failed', error: e, stackTrace: st);
+    } on Object catch (e) {
+      dev.log('retry attempt $attempt failed', error: e);
       attempt++;
       if (attempt >= maxAttempts) rethrow;
       final Duration delay = isExponential
