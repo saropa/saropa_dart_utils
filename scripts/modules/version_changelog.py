@@ -47,6 +47,18 @@ def bump_patch_version(version: str) -> str:
     return f"{major}.{minor}.{patch + 1}"
 
 
+def bump_minor_version(version: str) -> str:
+    """Bump the minor component (resets patch to 0)."""
+    major, minor, _ = parse_version(version)
+    return f"{major}.{minor + 1}.0"
+
+
+def bump_major_version(version: str) -> str:
+    """Bump the major component (resets minor and patch to 0)."""
+    major, _, _ = parse_version(version)
+    return f"{major + 1}.0.0"
+
+
 def update_changelog_unreleased(changelog_path: Path, new_version: str) -> None:
     """Replace [Unreleased] header with versioned header and today's date."""
     content = changelog_path.read_text(encoding="utf-8")

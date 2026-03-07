@@ -226,12 +226,16 @@ def run_analysis(project_dir: Path) -> bool:
         )
         return False
 
-    total = warning_count + info_count
-    if total > 0:
-        ui.print_warning(
-            f"Analysis found {warning_count} warning(s) and "
-            f"{info_count} info(s) (no errors)"
-        )
+    # Non-zero exit but no issues parsed — flutter itself errored
+    if warning_count == 0 and info_count == 0:
+        print(output)
+        ui.print_error("Analyzer exited with an error (not a lint issue)")
+        return False
+
+    ui.print_warning(
+        f"Analysis found {warning_count} warning(s) and "
+        f"{info_count} info(s) (no errors)"
+    )
     ui.print_success("No errors found — warnings/infos will not block publish")
     return True
 

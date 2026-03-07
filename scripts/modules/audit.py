@@ -2,7 +2,7 @@
 Publish audit phase: coverage, analyzer, docs, recursion, try/catch, quality checks.
 
 Writes a single report to reports/yyyymmdd/yyyymmdd_HHMMSS_publish_audit.txt
-and returns whether any errors or warnings were found.
+and returns a dict of findings (category -> count) for the caller to display.
 """
 
 from __future__ import annotations
@@ -415,10 +415,11 @@ def audit_other_quality(project_dir: Path, lib_root: Path) -> list[str]:
 # Run full audit and write report
 # -----------------------------------------------------------------------------
 
-def run_audit(project_dir: Path) -> tuple[bool, Path]:
+def run_audit(project_dir: Path) -> tuple[dict[str, int], Path]:
     """
     Run all audit checks and write report to reports/yyyymmdd/yyyymmdd_HHMMSS_publish_audit.txt.
-    Returns (has_errors_or_warnings, report_path).
+    Returns (findings_dict, report_path) where findings_dict maps category names to counts.
+    Empty dict means no issues found.
     """
     ui.print_header("AUDIT PHASE: QUALITY CHECKS")
 
@@ -430,8 +431,6 @@ def run_audit(project_dir: Path) -> tuple[bool, Path]:
     report_path = report_dir / report_name
 
     all_lines: list[str] = []
-    has_error = False
-    has_warning = False
 
     # 1. Coverage / test count
     ui.print_info("Audit 1/8: Code coverage (test count per method)...")
@@ -440,28 +439,20 @@ def run_audit(project_dir: Path) -> tuple[bool, Path]:
 
     # 2. Analyzer
     ui.print_info("Audit 2/8: Dart analyzer...")
-    ana_lines, err, warn, info = audit_analyzer(project_dir)
-    if err:
-        has_error = True
-    if warn:
-        has_warning = True
+    ana_lines, ana_err, ana_warn, ana_info = audit_analyzer(project_dir)
     all_lines.extend(_section(ana_lines, "2. ANALYZER (error / warning / info)"))
-    all_lines.append(f"  Total: {err} errors, {warn} warnings, {info} info")
+    all_lines.append(f"  Total: {ana_err} errors, {ana_warn} warnings, {ana_info} info")
     all_lines.append("")
 
     # 3. Doc headers
     ui.print_info("Audit 3/8: Multiline doc headers...")
     doc_lines, missing_docs = audit_doc_headers(lib_root)
-    if missing_docs:
-        has_warning = True
     all_lines.extend(_section(doc_lines, "3. MULTILINE DOC HEADERS"))
     all_lines.append("")
 
     # 4. Recursion / bad practices
     ui.print_info("Audit 4/8: Recursion and bad practices...")
     rec_lines, rec_issues = audit_recursion_and_bad(lib_root)
-    if rec_issues:
-        has_warning = True
     all_lines.extend(_section(rec_lines, "4. RECURSION & BAD PRACTICES"))
 
     # 5. Try/catch
@@ -472,8 +463,6 @@ def run_audit(project_dir: Path) -> tuple[bool, Path]:
     # 6. Duplicate Dart class names
     ui.print_info("Audit 6/8: Duplicate Dart class names...")
     dup_lines, dup_map = duplicate_classes.audit_duplicate_classes(project_dir)
-    if dup_map:
-        has_warning = True
     all_lines.extend(_section(dup_lines, "6. DUPLICATE DART CLASS NAMES"))
 
     # 7. Other quality
@@ -495,4 +484,19 @@ def run_audit(project_dir: Path) -> tuple[bool, Path]:
     report_path.write_text("\n".join(all_lines), encoding="utf-8")
     ui.print_success(f"Audit report written to {report_path}")
 
-    return (has_error or has_warning), report_path
+    # Build per-category summary for the caller
+    findings: dict[str, int] = {}
+    if ana_err:
+        findings["Analyzer errors"] = ana_err
+    if ana_warn:
+        findings["Analyzer warnings"] = ana_warn
+    if ana_info:
+        findings["Analyzer infos"] = ana_info
+    if missing_docs:
+        findings["Missing doc headers"] = len(missing_docs)
+    if rec_issues:
+        findings["Recursion / bad practices"] = len(rec_issues)
+    if dup_map:
+        findings["Duplicate class names"] = len(dup_map)
+
+    return findings, report_path
