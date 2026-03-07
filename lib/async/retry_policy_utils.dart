@@ -26,7 +26,7 @@ Future<T> retryWithPolicy<T>(
     try {
       return await fn();
     } on Object catch (e, st) {
-      log('retryWithPolicy attempt $attempt', error: e, stackTrace: st);
+      log('retryWithPolicy attempt $attempt', error: e);
       attempt++;
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       onRetry?.call(e, attempt);
@@ -49,7 +49,7 @@ Future<T> retryWithBackoff<T>(
     try {
       return await fn();
     } on Object catch (e, st) {
-      log('retryWithBackoff attempt $attempt', error: e, stackTrace: st);
+      log('retryWithBackoff attempt $attempt', error: e);
       attempt++;
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       final int ms = base.inMilliseconds * (1 << attempt) + r.nextInt(jitter.inMilliseconds);

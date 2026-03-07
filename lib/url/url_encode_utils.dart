@@ -10,8 +10,8 @@ String urlDecodeComponent(String value) => Uri.decodeComponent(value);
 String? safeDecodeUri(String value) {
   try {
     return Uri.decodeComponent(value);
-  } on Object catch (e, st) {
-    dev.log(_kLogSafeDecodeUriFailed, error: e, stackTrace: st);
+  } on Object catch (e) {
+    dev.log(_kLogSafeDecodeUriFailed, error: e);
     return null;
   }
 }

@@ -14,8 +14,8 @@ List<String> parseListFromString(String input, {String delimiter = ','}) {
       if (decoded is List<dynamic>) {
         return decoded.map((dynamic e) => e?.toString() ?? '').toList();
       }
-    } on Object catch (e, st) {
-      dev.log(_kLogParseListJsonFailed, error: e, stackTrace: st);
+    } on Object catch (e) {
+      dev.log(_kLogParseListJsonFailed, error: e);
     }
   }
   return s.split(delimiter).map((String x) => x.trim()).where((String x) => x.isNotEmpty).toList();

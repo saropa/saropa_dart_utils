@@ -1,6 +1,8 @@
 # Changelog
+
 <!-- cspell:ignore ints docstrings codepoint codepoints sublist -->
-``` text
+
+``````text
                                                 ....
                                        -+shdmNMMMMNmdhs+-
                                     -odMMMNyo/-..``.++:+o+/-
@@ -22,9 +24,10 @@
 Made by Saropa. All rights reserved.
 
 Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
-```
+``````
 
 <!-- cspell:disable -->
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -34,13 +37,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **avoid_stack_trace_in_production** linter: removed `stackTrace` from `dev.log()` calls in 7 files (`retry_policy_utils`, `retry_utils`, `timeout_fallback_utils`, `timeout_policy_utils`, `timebox_exception`, `parse_list_utils`, `url_encode_utils`). Error objects are still logged; stack traces are no longer exposed per OWASP M10.
+
+---
+
+## [1.0.8+1]
+
 A large expansion of the library (collections, graph, stats, validation, async, parsing, and many more string utilities), plus documentation and lint fixes.
 
 ### Documentation
+
 - Lint-resolution details from `bugs/history/` reflected in dartdoc, unit tests, and CHANGELOG entries (1.0.7, 1.0.8).
 - Lint rule rationale in `analysis_options_custom.yaml`: `avoid_barrel_files`, `avoid_non_ascii_symbols`, `avoid_static_state`, `avoid_unmarked_public_class`; `avoid_default_tostring` satisfied by `Swipe.toString()`. Six more rules resolved: `avoid_collapsible_if`, `avoid_complex_conditions`, `avoid_redundant_else`, `avoid_medium_length_files`, `avoid_long_parameter_list`, `avoid_similar_names`.
 
 ### Fixed
+
 - **avoid_nullable_interpolation** in `string_regex_extensions.dart`: `escapeForRegex()` now uses `m.group(0) ?? ''` so the result never contains `\null`.
 
 ### Added
@@ -67,6 +80,7 @@ New and expanded APIs (all exported from `package:saropa_dart_utils`):
 - **Scanner tool** (`tool/suggest_saropa_utils.dart`): CLI to suggest saropa_dart_utils replacements (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`). Options: `[path]`, `--help`, `--version`. Core in `tool/suggest_saropa_utils_lib.dart`; tests in `test/tool/suggest_saropa_utils_test.dart`.
 
 ### Tests
+
 - Swipe.toString(), MapNullableExtensions (isMapNullOrEmpty, isNotMapNullOrEmpty), GestureUtils (getSwipeSpeed, swipeMagnitudeThresholds), obscureText, hasInvalidUnicode/removeInvalidUnicode (invalid code point 56327). Additional tests for new collections, graph, stats, validation, string, and async modules.
 
 ## [1.0.8] - 2026-02-24
@@ -74,6 +88,7 @@ New and expanded APIs (all exported from `package:saropa_dart_utils`):
 In this release we introduce typed result classes for common operations, split JSON utilities into focused modules, and bring the code in line with lints (named parameters, narrower exceptions, @useResult). We aimed for clearer structure and safer APIs.
 
 ### Added
+
 - **`Occurrence<T>` class** (`lib/iterable/occurrence.dart`): typed result for `mostOccurrences()` and `leastOccurrences()` methods, replacing record return types
 - **`BetweenResult` class** (`lib/string/between_result.dart`): typed result for `betweenResult()`, `betweenResultLast()`, and bracket-extraction methods, replacing record return types
 - **`GestureUtils`** (`lib/gesture/gesture_utils.dart`): extracted swipe speed/magnitude classification into standalone utility class with public thresholds
@@ -85,6 +100,7 @@ In this release we introduce typed result classes for common operations, split J
 - **`Swipe.toString()`**: Added string representation for debugging
 
 ### Changed
+
 - **`json_utils.dart` split**: Extracted type conversions, epoch scale, and iterable encoding into 3 focused modules for modularity
 - **`Swipe` constructor**: Changed from positional to required named parameters (`prefer_all_named_parameters`)
 - **Boolean parameter renames** (`prefer_boolean_prefixes`): `testDecode` → `shouldTestDecode`, `allowEmpty` → `shouldAllowEmpty`, `cleanInput` → `shouldCleanInput`, `inclusive` → `isInclusive`, `startOfDay` → `isStartOfDay`, `roundUp` → `shouldRoundUp`
@@ -105,6 +121,7 @@ In this release we introduce typed result classes for common operations, split J
 - Updated `analysis_options.yaml` and `analysis_options_custom.yaml` lint configurations
 
 ### Tests
+
 - Added comprehensive test suite for `JsonTypeUtils` (60+ test cases)
 - Updated tests for renamed boolean parameters across json, datetime, gesture, and enum tests
 - Lint violations reduced from ~10,000 to ~30
@@ -114,6 +131,7 @@ In this release we introduce typed result classes for common operations, split J
 We split the large string and date-time extension files into smaller modules (everything stays backward compatible), fixed a bunch of lints, and switched to proper test matchers. The codebase is easier to work in and the linter is quieter.
 
 ### Fixed
+
 - **Lint compliance**: Resolved 10 lint rule categories across 4 files:
   - `avoid_nested_conditional_expressions` (5): refactored nested ternaries to if-else in wrap methods
   - `avoid_redundant_else` (2): removed redundant else in `getFirstDiffChar`, `toBoolNullable`
@@ -138,17 +156,21 @@ We split the large string and date-time extension files into smaller modules (ev
   - `avoid_god_class` (1): suppressed (constants namespace)
 
 ### Refactored
+
 - **`string_extensions.dart`** (1114 → 4 files): Split into `string_extensions.dart` (275), `string_analysis_extensions.dart` (195), `string_manipulation_extensions.dart` (286), `string_text_extensions.dart` (296). Re-exports maintain backward compatibility.
 - **`date_time_extensions.dart`** (818 → 4 files): Split into `date_time_extensions.dart` (185), `date_time_arithmetic_extensions.dart` (175), `date_time_comparison_extensions.dart` (164), `date_time_calendar_extensions.dart` (174). Re-exports maintain backward compatibility.
 - **`DateConstants`**: Moved 16 top-level constants into `DateConstants` class as `static const` members for proper namespacing and consistency with `MonthUtils`, `WeekdayUtils`, and `SerialDateUtils` patterns. Added private constructor to prevent instantiation.
 
 ### Changed
+
 - **Publish script** (`publish_pub_dev.ps1`): Hardened with smarter pre-checks — auto-fixes pubspec version when CHANGELOG is ahead, aborts early if version tag exists on remote, verifies `gh` auth status and publish workflow. Removed dead code, fixed docstrings and step numbering. Bumped to v2.2.
 
 ### Tests
+
 - Replaced 312 raw literal matchers with proper test matchers across 19 test files (`avoid_misused_test_matchers`): `expect(x, true)` → `isTrue`, `expect(x, false)` → `isFalse`, `expect(x, null)` → `isNull`, `expect(x.length, N)` → `hasLength(N)`
 
 ### Added
+
 - Bug reports for 80+ saropa_lints rules with reproduction steps and suggestions in `bugs/`
 
 ## [1.0.6] - 2026-02-19
@@ -158,6 +180,7 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 ### Fixed (32 bugs resolved — full audit)
 
 #### Critical / Logic Errors
+
 - **`getUtcTimeFromLocal`**: was adding offset instead of subtracting; used `floor()` instead of `truncate()` for negative fractional offsets (e.g. UTC-5:30). Return type narrowed from `DateTime?` to `DateTime` (never null).
 - **`isDateAfterToday`**: was an instance method that ignored `this` entirely, only checking the `dateToCheck` parameter. Removed the parameter — now correctly checks the receiver against today. Added injectable `{DateTime? now}` for testability.
 - **`randomElement`**: was using `DateTime.now().microsecondsSinceEpoch % length` (deterministic, biased). Now uses a module-level `Random` instance with `nextInt()`.
@@ -168,6 +191,7 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 - **`cleanJsonResponse`**: was unescaping `\"` before detecting outer quotes, corrupting strings like `"hello \"world\""`. Now detects outer quotes first.
 
 #### Medium
+
 - **`betweenResult`**: `endOptional` parameter was declared but never consulted — end-not-found always returned `null`. Now correctly returns the tail when `endOptional: true` is passed. Default changed to `false` to preserve backward compatibility.
 - **`isSameDateOrAfter` / `isSameDateOrBefore`**: replaced fragile cascaded year/month/day if-chains with clean `toDateOnly()` + `!isBefore` / `!isAfter`.
 - **`isJson('[]')`**: empty array was returning `true` without `allowEmpty: true`, inconsistent with empty object `{}` behavior. Now requires `allowEmpty: true` for both.
@@ -181,6 +205,7 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 - **`toFlattenedList`**: returned `null` for empty outer but `[]` for all-empty inners. Now returns `null` consistently for empty results.
 
 #### Low / Documentation
+
 - **`isYearCurrent`**: hardcoded `DateTime.now()` made it untestable. Converted from getter to method with `{DateTime? now}` injectable parameter.
 - **`isDateAfterToday`** / **`isToday`** etc.: same injectable `now` pattern applied for testability.
 - **`weekOfYear`**: added warning in docs that value can be 0 or 53 at year boundaries; recommend `weekNumber()` for ISO 8601 compliance.
@@ -199,12 +224,15 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 - **`timeToEmoji`**: boundary was `>` instead of `>=` — 7:00am showed moon emoji instead of sun.
 
 ### Changed
+
 - Extracted magic numbers into named constants across codebase (date/time, numeric, string, HTML, UUID); 50+ constants in `date_constants.dart`, `date_time_range_utils.dart`, `date_time_utils.dart`, `time_emoji_utils.dart`, `double_extensions.dart`, `hex_utils.dart`, `html_utils.dart`, `int_extensions.dart`, `int_string_extensions.dart`, `int_utils.dart`, `string_search_extensions.dart`, `string_utils.dart`, `uuid_utils.dart`; resolved `no_magic_number` lint violations.
 
 ### Fixed
+
 - `DateTimeUtils.tomorrow()`: Removed nullable type from `minute` and `second` parameters to fix `avoid_nullable_parameters_with_default_values` lint warnings.
 
 ### Tests
+
 - 3,022 tests passing (added ~40 new tests covering all fixed bugs)
 - Fixed 8 pre-existing tests with incorrect expectations or wrong test names
 - Removed duplicate test cases in `date_time_range_utils_test.dart`
@@ -241,6 +269,7 @@ We updated the GitHub Actions publish workflow to use OIDC authentication. Publi
 We added a banner to the README so the project is easier to spot at a glance.
 
 ### Changed
+
 - Added a banner to README.md
 
 ## [1.0.0] - 2026-01-07
@@ -248,10 +277,12 @@ We added a banner to the README so the project is easier to spot at a glance.
 First stable 1.0: we switched to the MIT license for broader use, turned on the full saropa_lints tier for quality, and added README badges so you can see pub points, method count, and coverage at a glance.
 
 ### Changed
+
 - Migrated from GPL v3 to MIT license for broader adoption
 - Upgraded saropa_lints from `recommended` to `insanity` tier (all 500+ rules enabled)
 
 ### Added
+
 - Pub points badge (dynamic from pub.dev)
 - Methods count badge (480+ methods)
 - Coverage badge (100%)
@@ -262,6 +293,7 @@ First stable 1.0: we switched to the MIT license for broader use, turned on the 
 We switched to the saropa_lints package and custom_lint, and trimmed the analysis config from 255 lines to 69. You get the same level of checking with less to maintain.
 
 ### Changed
+
 - Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
 - Added `custom_lint: ^0.8.0` for custom lint rule support
 - Configured `recommended` tier (~150 rules)
@@ -273,6 +305,7 @@ We switched to the saropa_lints package and custom_lint, and trimmed the analysi
 We added utilities for Base64 compression, UUID validation and formatting, HTML unescape and plain text, and double formatting (percentages, precision, clamping). All of it is covered by 103 new tests.
 
 ### Added
+
 - `Base64Utils` - Text compression and decompression (`compressText`, `decompressText`)
 - `UuidUtils` - UUID validation and manipulation (`isUUID`, `addHyphens`, `removeHyphens`)
 - `HtmlUtils` - HTML text processing (`unescape`, `removeHtmlTags`, `toPlainText`)
@@ -284,6 +317,7 @@ We added utilities for Base64 compression, UUID validation and formatting, HTML 
 We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync. Releases are safer and easier to script from CI.
 
 ### Added
+
 - `-Version` parameter for CI/CD automation in publish script
 - `-Branch` parameter to specify target branch
 - Pre-publish validation step (`flutter pub publish --dry-run`)
@@ -293,10 +327,12 @@ We extended the publish script with version and branch parameters, dry-run valid
 - Early CHANGELOG version validation
 
 ### Fixed
+
 - Step numbering in publish script (was skipping from 4 to 6)
 - `ErrorActionPreference` issue with try/catch for GitHub release check
 
 ### Changed
+
 - Dynamic package name and repo URL extraction from pubspec.yaml and git remote
 - Excluded example folder from parent analysis
 
@@ -305,10 +341,12 @@ We extended the publish script with version and branch parameters, dry-run valid
 We added an `allowEmpty` option to JSON validation and made string methods (substring, truncate, lastChars) use grapheme clusters so emoji and Unicode behave correctly. **Note:** indices are now grapheme-based—a breaking change if you relied on code-unit positions.
 
 ### Added
+
 - `isJson`: `allowEmpty` parameter to optionally treat `{}` as valid JSON
 - 16 test cases for `JsonUtils.isJson`
 
 ### Changed
+
 - `substringSafe`: Now uses `characters.getRange()` for proper UTF-16/emoji support
 - `truncateWithEllipsis`: Uses grapheme cluster length for accurate emoji handling
 - `truncateWithEllipsisPreserveWords`: Uses grapheme cluster length
@@ -316,11 +354,13 @@ We added an `allowEmpty` option to JSON validation and made string methods (subs
 - **Breaking**: Indices now refer to grapheme clusters, not code units
 
 ### Fixed
+
 - `MakeListExtensions`: Changed extension from `T` to `T?` for nullable types
 - `getUtcTimeFromLocal`: Fixed incorrect documentation
 - `getNthWeekdayOfMonthInYear`: Removed stale parameter references from docs
 
 ### Removed
+
 - `UniqueListExtensionsUniqueBy`: Removed unused `propertyComparer` generic parameter
 
 ## [0.5.8] - 2025-11-25
@@ -328,6 +368,7 @@ We added an `allowEmpty` option to JSON validation and made string methods (subs
 We made the publish script handle git tags and GitHub releases idempotently. You can re-run it after a partial run without it failing.
 
 ### Changed
+
 - `publish_pub_dev.ps1`: Added idempotent handling for git tags
 - `publish_pub_dev.ps1`: Added idempotent handling for GitHub releases
 - Prevents script failures when re-running after partial completion
@@ -337,6 +378,7 @@ We made the publish script handle git tags and GitHub releases idempotently. You
 We fixed string extraction (curly braces, line breaks), made word removal Unicode-aware, and improved the grammar and article rules. Text handling should be more accurate now.
 
 ### Fixed
+
 - `extractCurlyBraces`: Switched to non-greedy matching for correct extraction order
 - `removeSingleCharacterWords`: Made Unicode-aware for single-letter words beyond ASCII
 - `replaceLineBreaks`: Improved deduplication for arbitrary replacement strings
@@ -344,6 +386,7 @@ We fixed string extraction (curly braces, line breaks), made word removal Unicod
 - `possess`: Trims input before applying trailing 's' rules
 
 ### Changed
+
 - `repeat`: Optimized concatenation with `StringBuffer`
 - `lettersOnly`/`lowerCaseLettersOnly`: Simplified to regex-based ASCII filters
 
@@ -352,6 +395,7 @@ We fixed string extraction (curly braces, line breaks), made word removal Unicod
 We added URL/URI extensions so you can check HTTPS, add or get query parameters, and replace the host. Handy when building or validating links.
 
 ### Added
+
 - `UrlExtensions.isSecure` - Check if URI uses HTTPS scheme
 - `UrlExtensions.addQueryParameter` - Add or update query parameters
 - `UrlExtensions.hasQueryParameter` - Check if query parameter exists
@@ -363,6 +407,7 @@ We added URL/URI extensions so you can check HTTPS, add or get query parameters,
 A big release: JSON and map utilities, URL extensions, string extraction and search, date constants, and many new DateTime and string helpers. We added tests too—over 2,850 in total.
 
 ### Added
+
 - `JsonUtils` - JSON parsing, type conversion, and validation
 - `MapExtensions` - Map manipulation utilities
 - `UrlExtensions` - URI manipulation (`removeQuery`, `fileName`, `isValidUrl`, `isValidHttpUrl`, `tryParse`)
@@ -382,6 +427,7 @@ A big release: JSON and map utilities, URL extensions, string extraction and sea
 We fixed range and date logic (inclusive boundaries, year boundaries), list comparison, hex overflow, and string truncation. Added 110 tests so the fixes stay solid.
 
 ### Fixed
+
 - `isBetweenRange`: Properly forwards `inclusive` parameter
 - `isAnnualDateInRange`: Correctly handles date ranges spanning year boundaries
 - `isNthDayOfMonthInRange`: Cross-year range validation
@@ -395,6 +441,7 @@ We fixed range and date logic (inclusive boundaries, year boundaries), list comp
 - `convertDaysToYearsAndMonths`: Improved precision using average days
 
 ### Added
+
 - 110 new test cases for algorithm fixes
 
 ## [0.5.3] - 2025-11-12
@@ -402,6 +449,7 @@ We fixed range and date logic (inclusive boundaries, year boundaries), list comp
 We tuned regex usage in string utils and improved the docs for the random and list helpers. A small polish release.
 
 ### Changed
+
 - Enhanced `string_utils.dart` to optimize final regex usages
 - Improved documentation for `CommonRandom` and list generation
 
@@ -410,6 +458,7 @@ We tuned regex usage in string utils and improved the docs for the random and li
 We renamed the string extension type to `StringExtensions` for consistency. Behavior is unchanged; only the type name is different.
 
 ### Changed
+
 - Renamed `StringFormattingAndWrappingExtensions` to `StringExtensions`
 
 ## [0.5.1] - 2025-08-19
@@ -417,13 +466,16 @@ We renamed the string extension type to `StringExtensions` for consistency. Beha
 We merged all string extension methods into one file and added a full test suite. Imports and structure are simpler.
 
 ### Changed
+
 - Merged all string extension methods into `lib/string/string_extensions.dart`
 - Updated imports across dependent files
 
 ### Removed
+
 - Redundant string extension files and old test files
 
 ### Added
+
 - Comprehensive test suite for `string_extensions.dart`
 
 ## [0.5.0] - 2025-08-19
@@ -431,10 +483,12 @@ We merged all string extension methods into one file and added a full test suite
 We added extensions for numbers (e.g. clamping), lists (order-agnostic comparison), and strings (safer number parsing), and refactored names and tests for consistency.
 
 ### Added
+
 - Extension methods for numbers, lists, and strings (`forceBetween`, order-agnostic list comparison, safer string number parsing)
 - Test files for new extensions
 
 ### Changed
+
 - Refactored extension names for consistency
 - Updated test imports and structures
 
@@ -443,11 +497,13 @@ We added extensions for numbers (e.g. clamping), lists (order-agnostic compariso
 We split the string code into smaller files and added unique-list and number-range utilities. The layout is clearer and you get a few new helpers.
 
 ### Changed
+
 - Split large string file into smaller, specific files
 - Updated tests and imports for new file structure
 - Improved code analysis settings
 
 ### Added
+
 - Unique lists and number ranges utilities
 
 ## [0.4.3] - 2025-02-24
@@ -455,12 +511,15 @@ We split the string code into smaller files and added unique-list and number-ran
 We added framework-style extensions for primitives (num, string, etc.), set line length to 100, and removed the VGV spelling lists.
 
 ### Added
+
 - Framework extensions for primitives (num, string, etc.)
 
 ### Changed
+
 - Line length to 100
 
 ### Removed
+
 - VGV's spelling lists
 
 ## [0.4.2] - 2025-02-24
@@ -468,6 +527,7 @@ We added framework-style extensions for primitives (num, string, etc.), set line
 A small maintenance release: minor improvements and fixes.
 
 ### Changed
+
 - Minor improvements and fixes
 
 ## [0.4.1] - 2025-02-13
@@ -475,6 +535,7 @@ A small maintenance release: minor improvements and fixes.
 Another small maintenance release: minor improvements and fixes.
 
 ### Changed
+
 - Minor improvements and fixes
 
 ## [0.4.0] - 2025-02-13
@@ -482,6 +543,7 @@ Another small maintenance release: minor improvements and fixes.
 We did a major refactor of the library structure and APIs to set things up for the extensions and utilities that followed.
 
 ### Changed
+
 - Major refactoring release
 
 ## [0.3.18] - 2025-01-07
@@ -489,11 +551,13 @@ We did a major refactor of the library structure and APIs to set things up for t
 We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date formatting. Date handling works well out of the box now.
 
 ### Added
+
 - `DateTimeRange` utils
 - `DateTime` utils
 - Dependency to jiffy and intl for date processing
 
 ### Changed
+
 - Unused flutter code detection script logs warnings to file
 
 ## [0.3.17] - 2025-01-07
@@ -501,6 +565,7 @@ We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date
 A small maintenance release: minor improvements.
 
 ### Changed
+
 - Minor improvements
 
 ## [0.3.16] - 2025-01-07
@@ -508,6 +573,7 @@ A small maintenance release: minor improvements.
 Another small maintenance release: minor improvements.
 
 ### Changed
+
 - Minor improvements
 
 ## [0.3.15] - 2025-01-03
@@ -515,6 +581,7 @@ Another small maintenance release: minor improvements.
 Another small maintenance release: minor improvements.
 
 ### Changed
+
 - Minor improvements
 
 ## [0.3.13]
@@ -522,16 +589,19 @@ Another small maintenance release: minor improvements.
 We added a script to detect unused Flutter code and updated the Code of Conduct (logo, examples, survey). We also renamed the doc folder to docs and removed Codecov.
 
 ### Added
+
 - Unused flutter code detection script
 - TED talks video library to Code of Conduct
 
 ### Changed
+
 - H.O.N.E.S.T.I. acronym wording in Code of Conduct
 - Code of Conduct with Saropa logo, examples, survey, and exercise
 - Link to Code of Conduct in README.md
 - Renamed `doc` folder to `docs`
 
 ### Removed
+
 - Codecov integration
 
 ## [0.2.3]
@@ -539,11 +609,13 @@ We added a script to detect unused Flutter code and updated the Code of Conduct 
 We added CommonRandom for reproducible randomness, a Code of Conduct for contributors, and development helper scripts. The project is easier to work on and expectations are clearer.
 
 ### Added
+
 - `CommonRandom` class as drop-in replacement for `math.Random()`
 - Code of Conduct for Saropa contributors
 - Development helper scripts
 
 ### Changed
+
 - Updated changelog
 
 ## [0.2.1]
@@ -551,6 +623,7 @@ We added CommonRandom for reproducible randomness, a Code of Conduct for contrib
 We moved the list extensions onto Iterable so they work with any iterable, not just lists. The API is more flexible.
 
 ### Changed
+
 - Migrated `List` extensions to `Iterable`
 
 ## [0.2.0]
@@ -558,10 +631,12 @@ We moved the list extensions onto Iterable so they work with any iterable, not j
 We added enum helpers (byNameTry, sortedEnumValues) and list extensions (smallest, biggest, most/least occurrences), and bumped the SDK and collections dependency.
 
 ### Added
+
 - `Enum` methods: `byNameTry` and `sortedEnumValues`
 - List extensions for smallest, biggest, most, and least occurrences
 
 ### Changed
+
 - Bumped SDK requirements (sdk: ">=3.4.3 <4.0.0", flutter: ">=3.24.0")
 - Added collections package dependency
 
@@ -570,9 +645,11 @@ We added enum helpers (byNameTry, sortedEnumValues) and list extensions (smalles
 We renamed nullable string utils to extensions and deprecated a few functions we plan to remove. Cleanup to make the API clearer.
 
 ### Changed
+
 - Renamed `string_nullable_utils.dart` to `string_nullable_extensions.dart`
 
 ### Deprecated
+
 - Several functions in preparation for removal
 
 ## [0.0.11]
@@ -580,6 +657,7 @@ We renamed nullable string utils to extensions and deprecated a few functions we
 We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart when the search is empty, and removed the deprecated string-nullable functions.
 
 ### Added
+
 - `DateConstants.unixEpochDate`
 - `DateConstantExtensions.isUnixEpochDate`
 - `DateConstantExtensions.isUnixEpochDateTime`
@@ -590,9 +668,11 @@ We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart w
 - `IntExtensions.countDigits`
 
 ### Fixed
+
 - `StringExtensions.removeStart` returns input when search param is empty
 
 ### Removed
+
 - Deprecated functions in `StringNullableExtensions`
 
 ## [0.0.10]
@@ -600,6 +680,7 @@ We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart w
 We made removeStart accept a nullable search parameter so it’s easier to use in nullable contexts.
 
 ### Changed
+
 - `removeStart` parameter changed to nullable
 
 ## [0.0.9]
@@ -607,6 +688,7 @@ We made removeStart accept a nullable search parameter so it’s easier to use i
 We added an optional trimFirst parameter to removeStart so you can trim the result. A small string API improvement.
 
 ### Added
+
 - `trimFirst` parameter to `StringExtensions.removeStart`
 
 ## [0.0.8]
@@ -614,6 +696,7 @@ We added an optional trimFirst parameter to removeStart so you can trim the resu
 We added an optional trimFirst parameter to nullIfEmpty so you have finer control over empty and whitespace handling.
 
 ### Added
+
 - `trimFirst` parameter to `StringExtensions.nullIfEmpty`
 
 ## [0.0.7]
@@ -621,9 +704,11 @@ We added an optional trimFirst parameter to nullIfEmpty so you have finer contro
 We renamed the strings folder to singular and deprecated the nullable string extensions. Naming and API cleanup.
 
 ### Changed
+
 - Renamed strings folder to singular
 
 ### Deprecated
+
 - Nullable string extensions
 
 ## [0.0.6]
@@ -631,6 +716,7 @@ We renamed the strings folder to singular and deprecated the nullable string ext
 We added swipe gesture properties for use in gesture-aware UIs. The groundwork for swipe handling.
 
 ### Added
+
 - Swipe gesture properties
 
 ## [0.0.5]
@@ -638,6 +724,7 @@ We added swipe gesture properties for use in gesture-aware UIs. The groundwork f
 We documented all methods, added example app usage and README examples, and extended the string extensions. The library should be easier to discover and use.
 
 ### Added
+
 - Documentation for all methods
 - Code usage in Example App
 - Code usage in README.md
@@ -648,6 +735,7 @@ We documented all methods, added example app usage and README examples, and exte
 We added an example app, GitHub Actions, and contribution templates (PR, issue, contributing guide). The project is ready for others to contribute.
 
 ### Added
+
 - Example App
 - GitHub Actions setup
 - Pull request template
@@ -659,6 +747,7 @@ We added an example app, GitHub Actions, and contribution templates (PR, issue, 
 We added a random enum selection helper for when you need a random value from an enum.
 
 ### Added
+
 - Random enum method
 
 ## [0.0.2]
@@ -666,6 +755,7 @@ We added a random enum selection helper for when you need a random value from an
 We added string-to-bool conversion methods so you can parse "true"/"false" and similar strings safely.
 
 ### Added
+
 - String to bool conversion methods
 
 ## [0.0.1] - 2024-06-27
@@ -673,11 +763,12 @@ We added string-to-bool conversion methods so you can parse "true"/"false" and s
 First release. We included bool list methods to get started.
 
 ### Added
+
 - Initial release with bool list methods
 
 ---
 
-``` plain
+```plain
 
       Made by Saropa. All rights reserved.
 ```

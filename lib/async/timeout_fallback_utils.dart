@@ -11,12 +11,11 @@ Future<T> timeoutWithFallback<T>({
 }) async {
   try {
     return await future.timeout(timeout);
-  } on TimeoutException catch (e, st) {
+  } on TimeoutException catch (e) {
     dev.log(
       'Timeout after $timeout; returning fallback.',
       name: _kLogNameTimeoutWithFallback,
       error: e,
-      stackTrace: st,
     );
     return fallback;
   }

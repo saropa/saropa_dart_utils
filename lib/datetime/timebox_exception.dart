@@ -24,7 +24,7 @@ Future<T> timebox<T>(Future<T> Function() fn, Duration timeout, {T? onTimeout}) 
     if (!c.isCompleted) c.complete(result);
     return await c.future;
   } on Object catch (e, st) {
-    developer.log('Timebox caught error', name: 'timebox', error: e, stackTrace: st);
+    developer.log('Timebox caught error', name: 'timebox', error: e);
     if (!c.isCompleted) c.completeError(e, st);
     rethrow;
   } finally {

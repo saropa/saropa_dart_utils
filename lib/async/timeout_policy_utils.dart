@@ -8,9 +8,9 @@ import 'dart:developer' as developer;
 Future<T> withTimeout<T>(Future<T> Function() fn, Duration timeout, {T? fallback}) async {
   try {
     return await fn().timeout(timeout);
-  } on TimeoutException catch (e, st) {
+  } on TimeoutException catch (e) {
     if (fallback != null) return fallback;
-    developer.log('Timeout after $timeout', name: 'withTimeout', error: e, stackTrace: st);
+    developer.log('Timeout after $timeout', name: 'withTimeout', error: e);
     rethrow;
   }
 }
