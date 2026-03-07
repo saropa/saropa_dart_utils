@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
@@ -138,19 +136,22 @@ abstract final class DateTimeUtils {
     );
   }
 
-  /// Method to check if the device date format is month first.
+  /// Checks if the given [localeName] uses a month-first date format.
   ///
-  /// This method directly checks the device's locale to determine if the
-  /// date format is month-first.  It supports a limited number of locales
-  /// known to commonly use month-first formats.
+  /// Returns `true` if [localeName] matches a locale known to commonly
+  /// use month-first formats (e.g., `en_US`, `en_CA`), `false` otherwise.
   ///
-  /// Returns true if the locale is likely month-first (e.g., en_US, en_CA),
-  /// false otherwise.
-  /// Note: This method provides a simplified approximation and may not be
-  /// accurate for all locales or regions within those locales.  Date format
-  /// usage can be complex and vary.
+  /// This is a simplified approximation — date format conventions can vary
+  /// within a locale or region.
+  ///
+  /// Example:
+  /// ```dart
+  /// DateTimeUtils.isDateMonthFirst(localeName: 'en_US'); // true
+  /// DateTimeUtils.isDateMonthFirst(localeName: 'de_DE'); // false
+  /// ```
   @useResult
-  static bool isDeviceDateMonthFirst() => _monthFirstLocales.contains(Platform.localeName);
+  static bool isDateMonthFirst({required String localeName}) =>
+      _monthFirstLocales.contains(localeName);
 
   /// Average number of days per year, accounting for leap years.
   /// (365 * 3 + 366) / 4 = 365.25

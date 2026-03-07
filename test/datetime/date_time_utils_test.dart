@@ -85,6 +85,32 @@ void main() {
       });
     });
 
+    group('isDateMonthFirst', () {
+      test('should return true for en_US', () {
+        expect(DateTimeUtils.isDateMonthFirst(localeName: 'en_US'), isTrue);
+      });
+
+      test('should return true for en_CA', () {
+        expect(DateTimeUtils.isDateMonthFirst(localeName: 'en_CA'), isTrue);
+      });
+
+      test('should return true for en_PH', () {
+        expect(DateTimeUtils.isDateMonthFirst(localeName: 'en_PH'), isTrue);
+      });
+
+      test('should return false for de_DE', () {
+        expect(DateTimeUtils.isDateMonthFirst(localeName: 'de_DE'), isFalse);
+      });
+
+      test('should return false for en_GB', () {
+        expect(DateTimeUtils.isDateMonthFirst(localeName: 'en_GB'), isFalse);
+      });
+
+      test('should return false for empty string', () {
+        expect(DateTimeUtils.isDateMonthFirst(localeName: ''), isFalse);
+      });
+    });
+
     // Note: These tests use average days per year (365.25) and month (30.4375)
     // to account for leap years, providing more accurate calculations.
     group('convertDaysToYearsAndMonths', () {

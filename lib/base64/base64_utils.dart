@@ -1,8 +1,10 @@
 import 'dart:convert';
-import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+
+import 'gzip_codec_stub.dart'
+    if (dart.library.io) 'gzip_codec_io.dart';
 
 /// Utility class for Base64 encoding/decoding and text compression.
 ///
@@ -23,6 +25,7 @@ abstract final class Base64Utils {
   ///
   /// Returns `null` if:
   /// - The input [value] is empty
+  /// - Gzip is unavailable on the current platform (e.g., web)
   /// - An error occurs during compression
   ///
   /// Example:
@@ -41,7 +44,10 @@ abstract final class Base64Utils {
 
     try {
       final List<int> encodedJson = utf8.encode(value);
-      final List<int> gzipJson = io.gzip.encode(encodedJson);
+      final List<int>? gzipJson = gzipEncode(encodedJson);
+      if (gzipJson == null) {
+        return null;
+      }
 
       return base64.encode(gzipJson);
     } on FormatException catch (e, stackTrace) {
@@ -64,6 +70,7 @@ abstract final class Base64Utils {
   /// - The input [compressedBase64] is empty
   /// - The input is not valid Base64
   /// - The decoded data is not valid gzip
+  /// - Gzip is unavailable on the current platform (e.g., web)
   /// - An error occurs during decompression
   ///
   /// Example:
@@ -81,7 +88,10 @@ abstract final class Base64Utils {
 
     try {
       final Uint8List decodedBase64 = base64.decode(compressedBase64);
-      final List<int> decodedGzip = io.gzip.decode(decodedBase64);
+      final List<int>? decodedGzip = gzipDecode(decodedBase64);
+      if (decodedGzip == null) {
+        return null;
+      }
 
       return utf8.decode(decodedGzip);
     } on FormatException catch (e, stackTrace) {

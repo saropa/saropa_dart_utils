@@ -37,7 +37,7 @@ INVESTIGATE -- Review each hardcoded locale in `date_time_utils.dart`:
 
 ## Verification
 
-- **Status:** Not fixed. In `lib/datetime/date_time_utils.dart`, `_monthFirstLocales` still contains hardcoded locale strings (`'en_US'`, `'en_PH'`, etc.). `isDeviceDateMonthFirst()` uses `Platform.localeName` but the set of month-first locales is hardcoded. Make configurable or extract to documented constants.
+- **Status:** Partially fixed. `isDeviceDateMonthFirst()` was renamed to `isDateMonthFirst({required String localeName})` — the `dart:io` `Platform` dependency was removed and the locale is now a caller-provided parameter. The set of month-first locales (`_monthFirstLocales`) still uses hardcoded strings, which is intentional for this lookup table. The constants are documented with inline comments.
 
 3. **Document the default**: Add dartdoc explaining why a specific locale is the default.
 
