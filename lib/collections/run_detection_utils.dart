@@ -3,7 +3,10 @@ library;
 
 /// One run: start index, length, constant value or null for increasing.
 class RunDetectionUtils<T extends Object> {
-  const RunDetectionUtils(int start, int length, T? value) : _start = start, _length = length, _value = value;
+  const RunDetectionUtils(int start, int length, T? value)
+    : _start = start,
+      _length = length,
+      _value = value;
   final int _start;
 
   /// Start index in the source list.
@@ -18,7 +21,8 @@ class RunDetectionUtils<T extends Object> {
   T? get value => _value;
 
   @override
-  String toString() => 'RunDetectionUtils(start: $_start, length: $_length, value: ${_value ?? "-"})';
+  String toString() =>
+      'RunDetectionUtils(start: $_start, length: $_length, value: ${_value ?? "-"})';
 }
 
 /// Detects runs of equal consecutive values in [list].

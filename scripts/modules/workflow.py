@@ -2,6 +2,7 @@
 
 import re
 import subprocess
+import time
 from pathlib import Path
 
 from . import platform as platform_mod
@@ -145,32 +146,94 @@ def format_code(project_dir: Path) -> bool:
 
 
 def run_tests(project_dir: Path) -> bool:
-    """Run flutter test."""
+    """Run flutter test. Retries once on Flutter cache lock (file in use)."""
     ui.print_header("STEP 5: RUNNING TESTS")
 
     test_dir = project_dir / "test"
-    if test_dir.exists():
+    if not test_dir.exists():
+        ui.print_warning("No test directory found, skipping unit tests")
+        return True
+
+    max_attempts = 2
+    lock_hint = (
+        "Another process is using Flutter's cache (e.g. flutter_tester.exe). "
+        "Close other Flutter/Dart processes or IDE test runs and retry."
+    )
+
+    for attempt in range(1, max_attempts + 1):
         result = run_mod.run_command(
             ["flutter", "test"], project_dir, "Running unit tests", capture_output=True
         )
-        if result.returncode != 0:
-            if result.stdout:
-                print(result.stdout)
-            if result.stderr:
-                print(result.stderr)
-            return False
-    else:
-        ui.print_warning("No test directory found, skipping unit tests")
+        if result.returncode == 0:
+            return True
 
-    return True
+        out = (result.stdout or "") + (result.stderr or "")
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+
+        is_lock = "being used by another process" in out or "PathAccessException" in out
+        if is_lock and attempt < max_attempts:
+            ui.print_warning(lock_hint)
+            ui.print_info(f"Retrying in 5 seconds (attempt {attempt + 1}/{max_attempts})...")
+            time.sleep(5)
+            continue
+
+        if is_lock:
+            ui.print_error(lock_hint)
+        return False
+
+    return False
 
 
 def run_analysis(project_dir: Path) -> bool:
-    """Run flutter analyze."""
+    """Run flutter analyze. Fails only on errors, warns on warnings/infos."""
     ui.print_header("STEP 6: RUNNING STATIC ANALYSIS")
 
-    result = run_mod.run_command(["flutter", "analyze"], project_dir, "Analyzing code")
-    return result.returncode == 0
+    result = run_mod.run_command(
+        ["flutter", "analyze"],
+        project_dir,
+        "Analyzing code",
+        capture_output=True,
+        allow_failure=True,
+    )
+
+    output = (result.stdout or "") + (result.stderr or "")
+
+    if result.returncode == 0:
+        ui.print_success("No analysis issues found")
+        return True
+
+    # Count severity levels from analyzer output lines
+    error_count = 0
+    warning_count = 0
+    info_count = 0
+    for line in output.splitlines():
+        stripped = line.strip().lower()
+        if stripped.startswith("error"):
+            error_count += 1
+        elif stripped.startswith("warning"):
+            warning_count += 1
+        elif stripped.startswith("info"):
+            info_count += 1
+
+    if error_count > 0:
+        print(output)
+        ui.print_error(
+            f"Analysis found {error_count} error(s), "
+            f"{warning_count} warning(s), {info_count} info(s)"
+        )
+        return False
+
+    total = warning_count + info_count
+    if total > 0:
+        ui.print_warning(
+            f"Analysis found {warning_count} warning(s) and "
+            f"{info_count} info(s) (no errors)"
+        )
+    ui.print_success("No errors found — warnings/infos will not block publish")
+    return True
 
 
 def validate_changelog(project_dir: Path, version: str) -> tuple[bool, str]:

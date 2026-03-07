@@ -8,7 +8,8 @@ class SensitiveScrubUtils {
   final String replacement;
 
   @override
-  String toString() => 'SensitiveScrubUtils(pattern: ${pattern.pattern}, replacement: $replacement)';
+  String toString() =>
+      'SensitiveScrubUtils(pattern: ${pattern.pattern}, replacement: $replacement)';
 }
 
 const String _kScrubEmail = '[EMAIL]';
