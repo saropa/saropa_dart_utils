@@ -11,15 +11,15 @@ extension DateTimeBoundsExtensions on DateTime {
   /// End of day (23:59:59.999999).
   @useResult
   DateTime get endOfDay => DateTime(
-        year,
-        month,
-        day,
-        DateConstants.maxHour,
-        DateConstants.maxMinuteOrSecond,
-        DateConstants.maxMinuteOrSecond,
-        DateConstants.maxMillisecondOrMicrosecond,
-        DateConstants.maxMillisecondOrMicrosecond,
-      );
+    year,
+    month,
+    day,
+    DateConstants.maxHour,
+    DateConstants.maxMinuteOrSecond,
+    DateConstants.maxMinuteOrSecond,
+    DateConstants.maxMillisecondOrMicrosecond,
+    DateConstants.maxMillisecondOrMicrosecond,
+  );
 
   /// Start of week. [firstWeekday] 1 = Monday, 7 = Sunday (default Monday).
   ///
@@ -72,8 +72,7 @@ extension DateTimeBoundsExtensions on DateTime {
   /// Quarter (1–4).
   @useResult
   int get quarter =>
-      ((month - DateConstants.minMonth) / DateConstants.monthsPerQuarter)
-          .floor() +
+      ((month - DateConstants.minMonth) / DateConstants.monthsPerQuarter).floor() +
       DateConstants.minMonth;
 
   /// Start of quarter (first day of quarter month 00:00:00).
@@ -81,7 +80,7 @@ extension DateTimeBoundsExtensions on DateTime {
   DateTime get startOfQuarter {
     final int qMonth =
         (quarter - DateConstants.minMonth) * DateConstants.monthsPerQuarter +
-            DateConstants.minMonth;
+        DateConstants.minMonth;
     return DateTime(year, qMonth);
   }
 
@@ -109,15 +108,15 @@ extension DateTimeBoundsExtensions on DateTime {
   /// End of year (Dec 31 23:59:59.999999).
   @useResult
   DateTime get endOfYear => DateTime(
-        year,
-        DateTime.december,
-        DateConstants.decemberLastDay,
-        DateConstants.maxHour,
-        DateConstants.maxMinuteOrSecond,
-        DateConstants.maxMinuteOrSecond,
-        DateConstants.maxMillisecondOrMicrosecond,
-        DateConstants.maxMillisecondOrMicrosecond,
-      );
+    year,
+    DateTime.december,
+    DateConstants.decemberLastDay,
+    DateConstants.maxHour,
+    DateConstants.maxMinuteOrSecond,
+    DateConstants.maxMinuteOrSecond,
+    DateConstants.maxMillisecondOrMicrosecond,
+    DateConstants.maxMillisecondOrMicrosecond,
+  );
 
   /// True if Saturday or Sunday.
   @useResult

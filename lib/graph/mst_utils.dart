@@ -6,7 +6,8 @@ import 'graph_utils.dart';
 
 /// MST from [edges] (GraphUtils); returns (mst edges, total cost).
 (List<GraphUtils> edges, double cost) kruskalMST(int nodeCount, List<GraphUtils> edges) {
-  final List<GraphUtils> sorted = List<GraphUtils>.of(edges)..sort((a, b) => a.weight.compareTo(b.weight));
+  final List<GraphUtils> sorted = List<GraphUtils>.of(edges)
+    ..sort((a, b) => a.weight.compareTo(b.weight));
   final DisjointSetUtils ds = DisjointSetUtils(nodeCount);
   final List<GraphUtils> mst = [];
   double cost = 0;

@@ -89,5 +89,6 @@ class MapDefaultExtensions<K extends Object, V extends Object> implements Map<K,
 extension MapWithDefaultExt<K extends Object, V extends Object> on Map<K, V> {
   /// Returns a [MapDefaultExtensions] view that returns [defaultValue] for missing keys.
   @useResult
-  MapDefaultExtensions<K, V> withDefault(V defaultValue) => MapDefaultExtensions<K, V>(this, defaultValue);
+  MapDefaultExtensions<K, V> withDefault(V defaultValue) =>
+      MapDefaultExtensions<K, V>(this, defaultValue);
 }

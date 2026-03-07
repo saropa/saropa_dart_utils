@@ -309,14 +309,23 @@ void main() {
       () => expect(UrlExtensions.isValidUrl('file:///path'), isFalse),
     ); // File URLs have empty host
     test('8. FTP scheme', () => expect(UrlExtensions.isValidUrl('ftp://example.com'), isTrue));
-    test('9. With path', () => expect(UrlExtensions.isValidUrl('https://example.com/path'), isTrue));
-    test('10. With port', () => expect(UrlExtensions.isValidUrl('https://example.com:8080'), isTrue));
+    test(
+      '9. With path',
+      () => expect(UrlExtensions.isValidUrl('https://example.com/path'), isTrue),
+    );
+    test(
+      '10. With port',
+      () => expect(UrlExtensions.isValidUrl('https://example.com:8080'), isTrue),
+    );
     test('11. Localhost', () => expect(UrlExtensions.isValidUrl('http://localhost'), isTrue));
     test('12. IP address', () => expect(UrlExtensions.isValidUrl('http://192.168.1.1'), isTrue));
   });
 
   group('UrlExtensions.isValidHttpUrl', () {
-    test('1. Valid HTTPS', () => expect(UrlExtensions.isValidHttpUrl('https://example.com'), isTrue));
+    test(
+      '1. Valid HTTPS',
+      () => expect(UrlExtensions.isValidHttpUrl('https://example.com'), isTrue),
+    );
     test('2. Valid HTTP', () => expect(UrlExtensions.isValidHttpUrl('http://example.com'), isTrue));
     test('3. FTP scheme', () => expect(UrlExtensions.isValidHttpUrl('ftp://example.com'), isFalse));
     test('4. File scheme', () => expect(UrlExtensions.isValidHttpUrl('file:///path'), isFalse));
@@ -324,8 +333,14 @@ void main() {
     test('6. Null input', () => expect(UrlExtensions.isValidHttpUrl(null), isFalse));
     test('7. Empty string', () => expect(UrlExtensions.isValidHttpUrl(''), isFalse));
     test('8. No host', () => expect(UrlExtensions.isValidHttpUrl('https://'), isFalse));
-    test('9. With path', () => expect(UrlExtensions.isValidHttpUrl('https://example.com/path'), isTrue));
-    test('10. With port', () => expect(UrlExtensions.isValidHttpUrl('http://localhost:3000'), isTrue));
+    test(
+      '9. With path',
+      () => expect(UrlExtensions.isValidHttpUrl('https://example.com/path'), isTrue),
+    );
+    test(
+      '10. With port',
+      () => expect(UrlExtensions.isValidHttpUrl('http://localhost:3000'), isTrue),
+    );
     test('11. Localhost', () => expect(UrlExtensions.isValidHttpUrl('http://localhost'), isTrue));
     test('12. IP address', () => expect(UrlExtensions.isValidHttpUrl('http://127.0.0.1'), isTrue));
   });
@@ -354,7 +369,10 @@ void main() {
       '8. IP address',
       () => expect(UrlExtensions.extractDomain('http://192.168.1.1'), '192.168.1.1'),
     );
-    test('9. Localhost', () => expect(UrlExtensions.extractDomain('http://localhost'), 'localhost'));
+    test(
+      '9. Localhost',
+      () => expect(UrlExtensions.extractDomain('http://localhost'), 'localhost'),
+    );
     test(
       '10. Complex subdomain',
       () => expect(UrlExtensions.extractDomain('https://api.v2.example.com'), 'api.v2.example.com'),

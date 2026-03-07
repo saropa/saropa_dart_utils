@@ -3,7 +3,9 @@ library;
 
 /// Single validation error with optional path and code.
 final class ValidationErrorUtils {
-  const ValidationErrorUtils(this.message, {String? code, String? path}) : _code = code, _path = path;
+  const ValidationErrorUtils(this.message, {String? code, String? path})
+    : _code = code,
+      _path = path;
   final String message;
   final String? _code;
 

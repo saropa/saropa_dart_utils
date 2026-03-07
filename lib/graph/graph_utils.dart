@@ -3,7 +3,10 @@ library;
 
 /// Weighted directed edge.
 class GraphUtils {
-  const GraphUtils(int from, int to, [double weight = 1.0]) : _from = from, _to = to, _weight = weight;
+  const GraphUtils(int from, int to, [double weight = 1.0])
+    : _from = from,
+      _to = to,
+      _weight = weight;
   final int _from;
 
   /// Source node index.
