@@ -17,12 +17,14 @@ This script automates the complete release workflow for a Dart/Flutter package.
     - Try/catch usage per method
     - Other quality checks (file length, params, TODO, exports, etc.)
     - Report written to reports/yyyymmdd/yyyymmdd_HHMMSS_publish_audit.txt
-    - If any errors or warnings: prompt "Continue? [y/N]"
+    - Shows per-category findings with counts; prompt "Continue? [y/N]"
 
   Pre-checks (before numbered steps):
     - Validates pubspec.yaml and CHANGELOG.md versions are in sync
-    - If version tag already exists on remote and CHANGELOG.md has an
-      [Unreleased] section, offers to auto-bump to the next patch version
+    - If CHANGELOG.md has an [Unreleased] section, resolves it:
+      - If current version already has notes: offers patch/minor/major bump
+      - If no versioned section yet: converts [Unreleased] to version header
+    - Fails if version tag already exists on remote
 
   Numbered steps:
     1. Checks prerequisites (flutter, git, gh auth, publish workflow)
@@ -39,7 +41,7 @@ This script automates the complete release workflow for a Dart/Flutter package.
     12. Triggers GitHub Actions publish to pub.dev
     13. Creates GitHub release with release notes
 
-Version:   2.3
+Version:   2.4
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
@@ -160,6 +162,46 @@ def main() -> int:
                 ExitCode.CHANGELOG_FAILED,
             )
 
+    # Handle [Unreleased] section before proceeding
+    if vc.has_unreleased_section(changelog_path):
+        existing_notes = vc.validate_changelog_version(project_dir, version)
+        if existing_notes is not None:
+            # Version already has a CHANGELOG section, so [Unreleased] is for
+            # a newer version — offer to bump
+            patch_v = vc.bump_patch_version(version)
+            minor_v = vc.bump_minor_version(version)
+            major_v = vc.bump_major_version(version)
+            ui.print_warning(
+                f"CHANGELOG has [Unreleased] changes beyond v{version}."
+            )
+            ui.print_colored("  Choose version bump:", ui.Color.WHITE)
+            ui.print_colored(f"    1 = patch  → {patch_v}", ui.Color.CYAN)
+            ui.print_colored(f"    2 = minor  → {minor_v}", ui.Color.CYAN)
+            ui.print_colored(f"    3 = major  → {major_v}", ui.Color.CYAN)
+            ui.print_colored("    n = cancel", ui.Color.CYAN)
+            choice = input("  Enter 1, 2, 3, or n [1]: ").strip() or "1"
+            if choice == "1":
+                next_version = patch_v
+            elif choice == "2":
+                next_version = minor_v
+            elif choice == "3":
+                next_version = major_v
+            else:
+                ui.exit_with_error(
+                    "Resolve the [Unreleased] section in CHANGELOG.md "
+                    "before publishing.",
+                    ExitCode.CHANGELOG_FAILED,
+                )
+            vc.update_changelog_unreleased(changelog_path, next_version)
+            ui.print_success(f"CHANGELOG.md: [Unreleased] → [{next_version}]")
+            vc.update_pubspec_version(pubspec_path, next_version)
+            ui.print_success(f"pubspec.yaml: {version} → {next_version}")
+            version = next_version
+        else:
+            # No versioned section yet — [Unreleased] IS the release notes
+            vc.update_changelog_unreleased(changelog_path, version)
+            ui.print_success(f"CHANGELOG.md: [Unreleased] → [{version}]")
+
     tag_name = f"v{version}"
     res = subprocess.run(
         ["git", "ls-remote", "--tags", "origin", f"refs/tags/{tag_name}"],
@@ -171,37 +213,13 @@ def main() -> int:
         errors="replace",
     )
     if res.returncode == 0 and res.stdout.strip():
-        if vc.has_unreleased_section(changelog_path):
-            next_version = vc.bump_patch_version(version)
-            ui.print_warning(
-                f"Tag {tag_name} already exists on remote. "
-                "This version has already been released."
-            )
-            response = (
-                input(
-                    f"  Would you like to publish as v{next_version} instead? [y/N] "
-                )
-                .strip()
-                .lower()
-            )
-            if not response.startswith("y"):
-                ui.exit_with_error(
-                    "User cancelled version bump.", ExitCode.USER_CANCELLED
-                )
-            vc.update_changelog_unreleased(changelog_path, next_version)
-            ui.print_success(f"CHANGELOG.md: [Unreleased] → [{next_version}]")
-            vc.update_pubspec_version(pubspec_path, next_version)
-            ui.print_success(f"pubspec.yaml: {version} → {next_version}")
-            version = next_version
-            tag_name = f"v{version}"
-        else:
-            ui.exit_with_error(
-                f"Tag {tag_name} already exists on remote. "
-                "This version has already been released.\n"
-                "  Tip: Add an [Unreleased] section to CHANGELOG.md "
-                "to enable automatic version bumping.",
-                ExitCode.VALIDATION_FAILED,
-            )
+        ui.exit_with_error(
+            f"Tag {tag_name} already exists on remote. "
+            "This version has already been released.\n"
+            "  Tip: Add an [Unreleased] section to CHANGELOG.md "
+            "to enable automatic version bumping.",
+            ExitCode.VALIDATION_FAILED,
+        )
 
     ui.print_header("SAROPA DART UTILS PUBLISHER")
     ui.print_colored("  Package Information:", ui.Color.WHITE)
@@ -218,11 +236,16 @@ def main() -> int:
     # AUDIT PHASE (mode 1 only: run audit, then prompt if errors/warnings)
     # =========================================================================
     if mode == 1:
-        has_audit_issues, report_path = audit.run_audit(project_dir)
-        if has_audit_issues:
-            ui.print_warning("Audit reported errors or warnings. See report: " + str(report_path))
+        findings, report_path = audit.run_audit(project_dir)
+        if findings:
+            print()
+            ui.print_colored("  Audit findings:", ui.Color.YELLOW)
+            for category, count in findings.items():
+                ui.print_colored(f"      {category}: {count}", ui.Color.YELLOW)
+            print()
+            ui.print_info(f"Report: {report_path}")
             response = (
-                input("  Continue with publish anyway? [y/N] ").strip().lower()
+                input("  Continue with publish? [y/N] ").strip().lower()
             )
             if not response.startswith("y"):
                 ui.exit_with_error(
