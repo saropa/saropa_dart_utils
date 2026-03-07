@@ -2,20 +2,23 @@
 library;
 
 import 'dart:async' show Completer; // ignore: require_ios_deployment_target_consistency
-import 'dart:developer' show log;
+
+/// Callback that produces a future result.
+typedef AsyncAction<T> = Future<T> Function();
 
 /// Semaphore: at most [permits] concurrent acquisitions.
 class AsyncSemaphoreUtils {
-  AsyncSemaphoreUtils(int permits) : _permits = permits, _available = permits;
-  final int _permits;
+  AsyncSemaphoreUtils(this.permits) : _available = permits;
 
   /// Maximum number of concurrent acquisitions allowed.
-  int get permits => _permits;
+  final int permits;
   int _available;
   final List<void Function()> _waiters = [];
 
   /// Acquires a permit, runs [fn], then releases; ensures release on exception.
-  Future<T> run<T>(Future<T> Function() fn) async {
+  ///
+  /// Returns the result of [fn].
+  Future<T> run<T>(AsyncAction<T> fn) async {
     await acquire();
     try {
       return await fn();
@@ -37,7 +40,6 @@ class AsyncSemaphoreUtils {
     try {
       await c.future;
     } on Object catch (e, st) {
-      log('AsyncSemaphoreUtils.acquire', error: e, stackTrace: st);
       if (!c.isCompleted) c.completeError(e, st);
       rethrow;
     }
@@ -53,5 +55,5 @@ class AsyncSemaphoreUtils {
   }
 
   @override
-  String toString() => 'AsyncSemaphoreUtils(permits: $_permits, available: $_available)';
+  String toString() => 'AsyncSemaphoreUtils(permits: $permits, available: $_available)';
 }

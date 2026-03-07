@@ -2,7 +2,9 @@
 library;
 
 import 'dart:async' show Completer; // ignore: require_ios_deployment_target_consistency
-import 'dart:developer' show log;
+
+import 'package:saropa_dart_utils/async/async_semaphore_utils.dart'
+    show AsyncAction;
 
 /// Async mutex: only one holder at a time.
 class AsyncMutexUtils {
@@ -22,7 +24,6 @@ class AsyncMutexUtils {
     try {
       await c.future;
     } on Object catch (e, st) {
-      log('AsyncMutexUtils.acquire', error: e, stackTrace: st);
       if (!c.isCompleted) c.completeError(e, st);
       rethrow;
     }
@@ -45,7 +46,9 @@ class AsyncMutexUtils {
   }
 
   /// Acquires the mutex, runs [fn], then releases; ensures release on exception.
-  Future<T> run<T>(Future<T> Function() fn) async {
+  ///
+  /// Returns the result of [fn].
+  Future<T> run<T>(AsyncAction<T> fn) async {
     await acquire();
     try {
       return await fn();

@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
+import 'package:saropa_dart_utils/async/async_semaphore_utils.dart'
+    show AsyncAction;
+
 /// Default initial backoff delay.
 const Duration _defaultInitialDelay = Duration(milliseconds: 100);
 
-/// Supplier of a single async result.
-typedef FutureSupplier<T> = Future<T> Function();
-
 /// Retry with backoff (exponential or linear). Roadmap #178.
 Future<T> retryWithBackoff<T>(
-  FutureSupplier<T> fn, {
+  AsyncAction<T> fn, {
   int maxAttempts = 3,
   Duration initialDelay = _defaultInitialDelay,
   bool isExponential = true,

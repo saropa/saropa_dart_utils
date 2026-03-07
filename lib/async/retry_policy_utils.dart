@@ -8,10 +8,10 @@ import 'dart:math' show Random;
 /// Default delay between retry attempts.
 const Duration retryPolicyDefaultDelay = Duration(milliseconds: 100);
 
-/// Default base delay for exponential backoff in [retryWithBackoff].
+/// Default base delay for exponential backoff in [retryWithJitter].
 const Duration retryPolicyDefaultBackoffBase = Duration(milliseconds: 100);
 
-/// Default jitter range for [retryWithBackoff].
+/// Default jitter range for [retryWithJitter].
 const Duration retryPolicyDefaultBackoffJitter = Duration(milliseconds: 50);
 
 /// Retries [fn] up to [maxAttempts] with [delay] between attempts. Optional [onRetry].
@@ -36,7 +36,7 @@ Future<T> retryWithPolicy<T>(
 }
 
 /// Exponential backoff with jitter: delay = base * 2^attempt + random(0, jitter).
-Future<T> retryWithBackoff<T>(
+Future<T> retryWithJitter<T>(
   Future<T> Function() fn, {
   int maxAttempts = 3,
   Duration base = retryPolicyDefaultBackoffBase,
@@ -49,7 +49,7 @@ Future<T> retryWithBackoff<T>(
     try {
       return await fn();
     } on Object catch (e, st) {
-      log('retryWithBackoff attempt $attempt', error: e);
+      log('retryWithJitter attempt $attempt', error: e);
       attempt++;
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       final int ms = base.inMilliseconds * (1 << attempt) + r.nextInt(jitter.inMilliseconds);
