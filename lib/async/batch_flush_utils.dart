@@ -3,18 +3,17 @@ library;
 
 /// Collects items and flushes when [batchSize] reached or [flush] called.
 class BatchFlushUtils<T extends Object> {
-  BatchFlushUtils(int batchSize, this.onFlush) : _batchSize = batchSize, _buffer = [];
-  final int _batchSize;
+  BatchFlushUtils(this.batchSize, this.onFlush) : _buffer = [];
 
   /// Size at which the buffer is automatically flushed.
-  int get batchSize => _batchSize;
+  final int batchSize;
   final void Function(List<T> batch) onFlush;
   final List<T> _buffer;
 
   /// Appends [item]; flushes when buffer length reaches the batch size.
   void add(T item) {
     _buffer.add(item);
-    if (_buffer.length >= _batchSize) flush();
+    if (_buffer.length >= batchSize) flush();
   }
 
   /// Invokes [onFlush] with current buffer contents and clears the buffer.
@@ -28,5 +27,5 @@ class BatchFlushUtils<T extends Object> {
   int get length => _buffer.length;
 
   @override
-  String toString() => 'BatchFlushUtils(batchSize: $_batchSize, length: ${_buffer.length})';
+  String toString() => 'BatchFlushUtils(batchSize: $batchSize, length: ${_buffer.length})';
 }
