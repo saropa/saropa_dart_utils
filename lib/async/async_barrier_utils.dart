@@ -1,7 +1,8 @@
 /// Async barrier: wait for N events — roadmap #676.
 library;
 
-import 'dart:async' show Completer; // ignore: require_ios_deployment_target_consistency
+// ignore: require_ios_deployment_target_consistency
+import 'dart:async' show Completer;
 
 /// Barrier that completes when [count] signals received.
 final class AsyncBarrierUtils {
@@ -19,7 +20,8 @@ final class AsyncBarrierUtils {
   int _remaining;
   Completer<void>? _completer;
 
-  /// Decrements the remaining count; completes the barrier when count reaches zero.
+  /// Decrements the remaining count; completes
+  /// the barrier when count reaches zero.
   void signal() {
     _remaining--;
     if (_remaining <= 0) _completer?.complete();
@@ -28,10 +30,13 @@ final class AsyncBarrierUtils {
   /// Future that completes when the barrier has received [count] signals.
   Future<void> get future {
     final c = _completer ??= Completer<void>();
+
     if (_remaining <= 0 && !c.isCompleted) c.complete();
     return c.future;
   }
 
   @override
-  String toString() => 'AsyncBarrierUtils(count: $count, remaining: $_remaining)';
+  String toString() =>
+      'AsyncBarrierUtils('
+      'count: $count, remaining: $_remaining)';
 }

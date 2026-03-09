@@ -1,7 +1,8 @@
 /// Async mutex with tryLock — roadmap #652.
 library;
 
-import 'dart:async' show Completer; // ignore: require_ios_deployment_target_consistency
+// ignore: require_ios_deployment_target_consistency
+import 'dart:async' show Completer;
 
 import 'package:saropa_dart_utils/async/async_semaphore_utils.dart'
     show AsyncAction;
@@ -20,6 +21,7 @@ class AsyncMutexUtils {
       return;
     }
     final Completer<void> c = Completer<void>();
+
     _waiters.add(c);
     try {
       await c.future;
@@ -29,7 +31,8 @@ class AsyncMutexUtils {
     }
   }
 
-  /// Acquires the mutex immediately if not locked; returns false if already held.
+  /// Acquires the mutex immediately if not locked;
+  /// returns false if already held.
   bool tryLock() {
     if (_isLocked) return false;
     _isLocked = true;
@@ -45,7 +48,8 @@ class AsyncMutexUtils {
     _waiters.removeAt(0).complete();
   }
 
-  /// Acquires the mutex, runs [fn], then releases; ensures release on exception.
+  /// Acquires the mutex, runs [fn], then releases;
+  /// ensures release on exception.
   ///
   /// Returns the result of [fn].
   Future<T> run<T>(AsyncAction<T> fn) async {
@@ -58,5 +62,8 @@ class AsyncMutexUtils {
   }
 
   @override
-  String toString() => 'AsyncMutexUtils(locked: $_isLocked, waiters: ${_waiters.length})';
+  String toString() =>
+      'AsyncMutexUtils('
+      'locked: $_isLocked, '
+      'waiters: ${_waiters.length})';
 }
