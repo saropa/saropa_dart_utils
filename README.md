@@ -1,6 +1,6 @@
 ![saropa_dart_utils banner](https://raw.githubusercontent.com/saropa/saropa_dart_utils/main/assets/banner.png)
 
-# Saropa Dart Utils
+<!-- # Saropa Dart Utils -->
 
 **Stop writing the same utility functions in every Flutter project.** This library contains **400+ production-hardened extension methods and utilities** extracted from a real-world Flutter app with thousands of active users.
 
@@ -16,51 +16,65 @@
 These utilities aren't academic exercises—they're **dog-fooded daily** in [Saropa Contacts](https://app.saropa.com), a production Flutter app available on both Google Play and the App Store. Every method has been refined through real user feedback and edge cases you only discover in production.
 
 **What this means for you:**
+
 - Edge cases already handled (empty strings, nulls, Unicode, timezone issues)
 - Performance optimized for mobile devices
 - API design proven intuitive through actual usage
 - Bugs already found and fixed by real users
 
-## Why Developers Choose This Library
+## Why Choose This Library
 
-| Before | After |
-|--------|-------|
-| `text != null && text.isNotEmpty ? text : fallback` | `text.orDefault(fallback)` |
+| Before                                                           | After                        |
+| ---------------------------------------------------------------- | ---------------------------- |
+| `text != null && text.isNotEmpty ? text : fallback`              | `text.orDefault(fallback)`   |
 | `if (date != null && date.isAfter(start) && date.isBefore(end))` | `date.isBetween(start, end)` |
-| `list.length > index ? list[index] : null` | `list.itemAt(index)` |
-| `"${n}${n == 1 ? 'st' : n == 2 ? 'nd' : ...}"` | `n.ordinal()` |
-| Writing regex for email extraction | `text.between("@", ".")` |
+| `list.length > index ? list[index] : null`                       | `list.itemAt(index)`         |
+| `"${n}${n == 1 ? 'st' : n == 2 ? 'nd' : ...}"`                   | `n.ordinal()`                |
+| Writing regex for email extraction                               | `text.between("@", ".")`     |
 
 **One import. Zero boilerplate. Full null-safety.**
 
+<!-- cspell:disable -->
+
 ## What's Included
 
-| Category | Scope | Highlights |
-|----------|--------|-------------|
-| **String** | 110+ extensions, 30+ utils | Case conversion, truncation, wrapping, searching, grammar, diacritics, Unicode-safe ops; Levenshtein, slug/mask/template, diff (Myers), fuzzy search, excerpt, markdown, HTML sanitizer, name parsing |
-| **DateTime** | 50+ extensions, 10+ utils | Age calculation, range checks, date arithmetic, leap years, week numbers; bounds, business days, duration format/parse, fiscal, relative, time rounding, injectable clock |
-| **List/Iterable** | 40+ extensions | Safe access, deduplication, frequency analysis, order-independent comparison; chunks, partition, groupBy, run-length, binary search, rotate |
-| **Collections** | 38 modules | LIS, LCS, sliding window, reservoir sampling, trie, disjoint set, Damerau–Levenshtein, knapsack, bloom filter, n-way merge, ring buffer, multiset, histogram, k-means, weighted interval, string pool, seeded shuffle, and more |
-| **Graph** | 15 modules | BFS/DFS, Dijkstra, A*, connected components, topological sort, MST, critical path, bipartite, tree utils, DAG scheduler |
-| **Stats** | 16 modules | Robust stats, moving average, normalization, quantile summary, correlation, linear regression, confidence intervals, funnel, retention, sampling, outlier (MAD), feature encoding |
-| **Validation** | 12 modules | Validation errors, path/input shaping, guards, cross-field validation, safe temp names, password strength, PII detection, data redaction, safe parse, typed positives, IP/CIDR, JWT structure |
-| **Async** | 22 modules | Debounce, throttle, delay, retry (with backoff/policy), memoize future, sequential/batch, cancel previous, semaphore, mutex, stream buffer/window, exponential backoff, circuit breaker, barrier, timeout policy, race/cancel, idempotent, heartbeat |
-| **Number** | 25+ extensions, 15+ utils | Ordinals (1st, 2nd, 3rd), range clamping, digit ops; math (gcd, lcm), lerp, stats (variance, median, percentile), prime, factorial, locale format/parse, safe division |
-| **Map** | 15+ extensions, 5+ utils | Nested access, pretty printing, null-safe ops; deep merge/copy, flatten keys, diff, invert, pick/omit, transform |
-| **Parsing** | 22 modules | CSV, email, phone (E.164), Luhn, ISBN, SemVer, version compare, hex color, bool, list-from-string; config precedence, CSV dialect, canonicalize JSON, changelog section, JSON diff/patch, nested query, varint |
-| **Caching** | 4 modules | LRU cache, TTL cache, size-limited cache, memoize (sync) |
-| **URL/Path** | 8+ modules | Path join/extension/normalize, URL encode/query/build/absolute, path_more (directory, base name, bearer token) |
-| **Bool** | 8+ | Flexible string parsing ("yes"/"1"/"true"), iterable analysis |
-| **Niche** | 10+ | Color (hex/rgb, luminance, contrast), name (abbreviate, initials), pad/format, random string, hash, string diff, checksum, natural sort, UUID v4 |
-| **Object/Pipe** | 12+ | Pipe, compose, once; nullable (whenNonNull, mapNonNull, tryCast); assert, coalesce, require, shallow copy, copyWithDefaults |
-| **Utilities** | 25+ | JSON validation/type/iterables, Base64, UUID, Hex, HTML entities, gesture types, regex common/match, debug (testing) |
+| Category          | Scope                      | Highlights                                                                                                                                                                                                                                           |
+| ----------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **String**        | 110+ extensions, 30+ utils | Case conversion, truncation, wrapping, searching, grammar, diacritics, Unicode-safe ops; Levenshtein, slug/mask/template, diff (Myers), fuzzy search, excerpt, markdown, HTML sanitizer, name parsing                                                |
+| **DateTime**      | 50+ extensions, 10+ utils  | Age calculation, range checks, date arithmetic, leap years, week numbers; bounds, business days, duration format/parse, fiscal, relative, time rounding, injectable clock                                                                            |
+| **List/Iterable** | 40+ extensions             | Safe access, deduplication, frequency analysis, order-independent comparison; chunks, partition, groupBy, run-length, binary search, rotate                                                                                                          |
+| **Collections**   | 38 modules                 | LIS, LCS, sliding window, reservoir sampling, trie, disjoint set, Damerau–Levenshtein, knapsack, bloom filter, n-way merge, ring buffer, multiset, histogram, k-means, weighted interval, string pool, seeded shuffle, and more                      |
+| **Graph**         | 15 modules                 | BFS/DFS, Dijkstra, A\*, connected components, topological sort, MST, critical path, bipartite, tree utils, DAG scheduler                                                                                                                             |
+| **Stats**         | 16 modules                 | Robust stats, moving average, normalization, quantile summary, correlation, linear regression, confidence intervals, funnel, retention, sampling, outlier (MAD), feature encoding                                                                    |
+| **Validation**    | 12 modules                 | Validation errors, path/input shaping, guards, cross-field validation, safe temp names, password strength, PII detection, data redaction, safe parse, typed positives, IP/CIDR, JWT structure                                                        |
+| **Async**         | 22 modules                 | Debounce, throttle, delay, retry (with backoff/policy), memoize future, sequential/batch, cancel previous, semaphore, mutex, stream buffer/window, exponential backoff, circuit breaker, barrier, timeout policy, race/cancel, idempotent, heartbeat |
+| **Number**        | 25+ extensions, 15+ utils  | Ordinals (1st, 2nd, 3rd), range clamping, digit ops; math (gcd, lcm), lerp, stats (variance, median, percentile), prime, factorial, locale format/parse, safe division                                                                               |
+| **Map**           | 15+ extensions, 5+ utils   | Nested access, pretty printing, null-safe ops; deep merge/copy, flatten keys, diff, invert, pick/omit, transform                                                                                                                                     |
+| **Parsing**       | 22 modules                 | CSV, email, phone (E.164), Luhn, ISBN, SemVer, version compare, hex color, bool, list-from-string; config precedence, CSV dialect, canonicalize JSON, changelog section, JSON diff/patch, nested query, varint                                       |
+| **Caching**       | 4 modules                  | LRU cache, TTL cache, size-limited cache, memoize (sync)                                                                                                                                                                                             |
+| **URL/Path**      | 8+ modules                 | Path join/extension/normalize, URL encode/query/build/absolute, path_more (directory, base name, bearer token)                                                                                                                                       |
+| **Bool**          | 8+                         | Flexible string parsing ("yes"/"1"/"true"), iterable analysis                                                                                                                                                                                        |
+| **Niche**         | 10+                        | Color (hex/rgb, luminance, contrast), name (abbreviate, initials), pad/format, random string, hash, string diff, checksum, natural sort, UUID v4                                                                                                     |
+| **Object/Pipe**   | 12+                        | Pipe, compose, once; nullable (whenNonNull, mapNonNull, tryCast); assert, coalesce, require, shallow copy, copyWithDefaults                                                                                                                          |
+| **Utilities**     | 25+                        | JSON validation/type/iterables, Base64, UUID, Hex, HTML entities, gesture types, regex common/match, debug (testing)                                                                                                                                 |
+
+<!-- cspell:enable -->
 
 ## Installation
 
-```yaml
-dependencies:
-  saropa_dart_utils: ^1.0.8
+Run from your project directory:
+
+```bash
+flutter pub add saropa_dart_utils
 ```
+
+Or for a pure Dart project:
+
+```bash
+dart pub add saropa_dart_utils
+```
+
+Then import it:
 
 ```dart
 import 'package:saropa_dart_utils/saropa_dart_utils.dart';

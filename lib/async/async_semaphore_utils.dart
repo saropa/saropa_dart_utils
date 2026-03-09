@@ -1,7 +1,8 @@
 /// Async semaphore with permits (roadmap #651).
 library;
 
-import 'dart:async' show Completer; // ignore: require_ios_deployment_target_consistency
+// ignore: require_ios_deployment_target_consistency
+import 'dart:async' show Completer;
 
 /// Callback that produces a future result.
 typedef AsyncAction<T> = Future<T> Function();
@@ -15,7 +16,8 @@ class AsyncSemaphoreUtils {
   int _available;
   final List<void Function()> _waiters = [];
 
-  /// Acquires a permit, runs [fn], then releases; ensures release on exception.
+  /// Acquires a permit, runs [fn], then releases;
+  /// ensures release on exception.
   ///
   /// Returns the result of [fn].
   Future<T> run<T>(AsyncAction<T> fn) async {
@@ -36,6 +38,7 @@ class AsyncSemaphoreUtils {
       return;
     }
     final Completer<void> c = Completer<void>();
+
     _waiters.add(() => c.complete());
     try {
       await c.future;
@@ -46,7 +49,8 @@ class AsyncSemaphoreUtils {
     _available--;
   }
 
-  /// Releases one permit (increments available count); unblocks one waiter if any.
+  /// Releases one permit (increments available
+  /// count); unblocks one waiter if any.
   void release() {
     _available++;
     if (_waiters.isNotEmpty) {
@@ -55,5 +59,8 @@ class AsyncSemaphoreUtils {
   }
 
   @override
-  String toString() => 'AsyncSemaphoreUtils(permits: $permits, available: $_available)';
+  String toString() =>
+      'AsyncSemaphoreUtils('
+      'permits: $permits, '
+      'available: $_available)';
 }
