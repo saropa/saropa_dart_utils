@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
-import 'package:saropa_dart_utils/async/async_semaphore_utils.dart'
-    show AsyncAction;
+import 'package:saropa_dart_utils/async/async_semaphore_utils.dart' show AsyncAction;
 
 /// Default initial backoff delay.
 const Duration _defaultInitialDelay = Duration(milliseconds: 100);
