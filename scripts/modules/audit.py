@@ -36,6 +36,84 @@ def _cyan(s: str) -> str:
     return f"{Color.CYAN.value}{s}{Color.RESET.value}"
 
 
+# Reserved Dart keywords / built-ins that can appear in the "name" capture position
+# when the regex backtracks. Skipping these prevents control-flow keywords from being
+# treated as method names.
+_DART_KEYWORD_SKIP = frozenset(
+    [
+        "get", "set", "if", "for", "while", "switch", "return", "final", "true",
+        "false", "null", "bool", "int", "void", "Function", "async", "await",
+        "throw", "try", "catch", "else", "with", "class", "extension", "import",
+        "part", "typedef", "enum", "abstract", "extends", "implements", "on",
+        "fn", "dynamic", "var", "const", "static", "external", "operator",
+        "assert", "factory", "late", "covariant", "required", "this", "super",
+        "new", "rethrow", "yield", "is", "as", "in", "do", "break", "continue",
+        "case", "default", "deferred", "hide", "show", "library", "mixin",
+        "of", "sync", "Never", "Object", "Type", "Symbol",
+    ]
+)
+
+
+# Strict Dart declaration matcher.
+#
+# WHY: The previous regex made the declaration tail optional and was anchored only
+# to the start of a line, so it matched call sites inside method bodies (e.g.
+# `Duration(seconds: 1)`, `assert(x != null)`, `unawaited(future)`, `debugPrint(...)`)
+# as if they were method declarations. That produced ~80% false-positive findings
+# in the doc-header, recursion, and >3-params audits.
+#
+# This pattern only matches lines that LOOK like declarations:
+#   - Indent ≤ 3 spaces (top-level functions or class members; body call sites are
+#     at indent ≥ 4 in standard Dart formatting).
+#   - Optional annotation prefix (@override, @Deprecated('msg'), etc.).
+#   - Optional declaration modifiers (static/external/abstract/factory/...).
+#   - Either: optional return type + name + `(params)`     (method/function/ctor)
+#         or: required return type + `get` + getter name   (getter)
+#   - Mandatory declaration tail anchored to end-of-line: `{`, `=>`, or `;`
+#     (call sites end with `,`, `)`, `.`, or `;` after argument expressions, but
+#     `;` after `(...)` immediately followed by EOL is rare for body calls and
+#     common for abstract decls — the indent restriction handles the residue).
+#
+# Group 1: method/function/constructor name (supports `Foo.named` constructors).
+# Group 2: parameter list contents (None for getters).
+# Group 3: getter name (None for methods).
+_DECL_RE = re.compile(
+    r"^[ ]{0,3}"
+    r"(?:@\w+(?:\([^)]*\))?\s+)*"
+    r"(?:(?:static|external|abstract|factory|const|final|late|covariant|required)\s+)*"
+    r"(?:"
+        # Method / function / constructor branch.
+        # Return type is one or more "token + whitespace" pairs. The token
+        # charset deliberately EXCLUDES whitespace — otherwise a non-greedy
+        # `[\w<>?,.\s]+?` would gladly consume leading indent spaces and let
+        # an indent-4 body call site (e.g. `    _waiters.add(c);`) match by
+        # eating the 4th space as part of the "return type". Keeping `\s`
+        # only as the separator forces the line to start with a real token.
+        r"(?:(?:[\w<>?,.]+\s+)+)?"
+        r"([a-zA-Z_]\w*)"
+        r"(?:\.[a-zA-Z_]\w*)?"
+        r"\s*\(([^)]*)\)\s*"
+        r"(?:async\s*\*?|sync\s*\*)?\s*"
+        r"(?::[^;{]+)?\s*"
+        r"(?:\{|=>|;)"
+        r"|"
+        # Getter branch (required return type + `get` + name + body opener).
+        # Same rationale: token-based return type, no whitespace inside the
+        # type token.
+        r"(?:[\w<>?,.]+\s+)+get\s+"
+        r"([a-zA-Z_]\w*)\s*"
+        r"(?:=>|\{)"
+    r")"
+    r"[^\n]*$",
+    re.MULTILINE,
+)
+
+
+def _decl_name(m: re.Match[str]) -> str:
+    """Return the declaration name from a `_DECL_RE` match (method or getter)."""
+    return m.group(1) or m.group(3) or ""
+
+
 def _section(lines: list[str], title: str) -> list[str]:
     out = [
         "",
@@ -53,25 +131,14 @@ def _section(lines: list[str], title: str) -> list[str]:
 # -----------------------------------------------------------------------------
 
 def _find_public_members(lib_path: Path) -> list[str]:
-    """Extract public member names (methods, getters) from a Dart lib file."""
+    """Extract public member names (methods, getters, constructors) from a Dart lib file."""
     text = lib_path.read_text(encoding="utf-8")
-    members = []
-    # Match: optional return type + name + ( or get. Skip private (leading _).
-    # Lines like:   String toSlug() {   or   int get length =>   or   void foo(
-    _skip = (
-        "get", "set", "if", "for", "while", "switch", "return", "final", "true",
-        "false", "null", "bool", "int", "void", "Function", "async", "await",
-        "throw", "try", "catch", "else", "with", "class", "extension", "import",
-        "part", "typedef", "enum", "abstract", "extends", "implements", "on",
-        "fn", "dynamic", "var", "const", "static", "external", "operator",
-    )
-    for m in re.finditer(
-        r"^\s*(?:[\w<>,\s?]+\s+)?([a-zA-Z]\w*)\s*(?:\([^)]*\)|get\s)\s*(?:=>|async|{)?",
-        text,
-        re.MULTILINE,
-    ):
-        name = m.group(1)
-        if name in _skip:
+    members: list[str] = []
+    for m in _DECL_RE.finditer(text):
+        name = _decl_name(m)
+        # Reject keywords that the regex's backtracking could have placed in the name slot
+        # (e.g. when a return type is absent and a control-flow keyword sits at line start).
+        if not name or name in _DART_KEYWORD_SKIP:
             continue
         members.append(name)
     return members
@@ -201,19 +268,11 @@ def _method_ranges(content: str) -> list[tuple[int, int, str]]:
     i = 0
     while i < len(lines):
         line = lines[i]
-        m = re.match(
-            r"^\s*(?:[\w<>,\s?]+\s+)?([a-zA-Z]\w*)\s*(?:\([^)]*\)|get\s)\s*(?:=>|async|{)?",
-            line,
-        )
-        _skip = (
-            "get", "set", "if", "for", "while", "switch", "return", "final", "true",
-            "false", "null", "bool", "int", "void", "Function", "async", "await",
-            "throw", "try", "catch", "else", "with", "class", "extension", "import",
-            "part", "typedef", "enum", "abstract", "extends", "implements", "on",
-            "fn", "dynamic", "var", "const", "static", "external", "operator",
-        )
-        if m and m.group(1) not in _skip:
-            name = m.group(1)
+        # Use the same strict declaration matcher as `_find_public_members` so the
+        # method-range list is consistent with the member list (no call-site noise).
+        m = _DECL_RE.match(line)
+        name = _decl_name(m) if m else ""
+        if m and name and name not in _DART_KEYWORD_SKIP:
             decl_line_1based = i + 1
             depth = 0
             for j in range(i, len(lines)):
@@ -235,7 +294,16 @@ def _method_ranges(content: str) -> list[tuple[int, int, str]]:
 
 
 def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
-    """Check each method has a multiline doc header (at least 2 /// lines or 1 block)."""
+    """Check each method has at least one /// dartdoc line preceding it.
+
+    WHY: previously this required ≥2 `///` lines, which falsely flagged valid
+    one-line dartdocs like:
+        /// Number of failures before the circuit opens.
+        int get failureThreshold => _failureThreshold;
+    The Dart effective style guide does not require multi-line dartdoc; a single
+    `///` line is a complete, valid doc comment. We now flag only methods that
+    have ZERO doc lines.
+    """
     missing: list[str] = []
 
     for lib_path in lib_root.rglob("*.dart"):
@@ -249,16 +317,22 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
                 if l.startswith("///"):
                     doc_lines.append(l)
                     i -= 1
-                elif l == "" or l.startswith("//"):
+                # Skip blank lines, `//` comments, and annotations
+                # (`@override`, `@useResult`, `@Deprecated('msg')`, `@pragma(...)`)
+                # that legitimately appear between dartdoc and declaration.
+                # WHY: previously the walk aborted on `@useResult`, so well-documented
+                # getters like `anyTrue` (with 7 lines of `///` dartdoc above the
+                # `@useResult` line) were falsely reported as missing dartdoc.
+                elif l == "" or l.startswith("//") or l.startswith("@"):
                     i -= 1
                 else:
                     break
-            if len(doc_lines) < 2:
+            if not doc_lines:
                 missing.append(f"  {lib_path.name}:{start_line}  {name}")
 
     report_lines: list[str] = []
     if missing:
-        report_lines.append("Methods with missing or single-line doc header:")
+        report_lines.append("Methods with no dartdoc comment:")
         report_lines.extend(missing[:50])
         if len(missing) > 50:
             report_lines.append(f"  ... and {len(missing) - 50} more")
@@ -278,21 +352,30 @@ def audit_recursion_and_bad(lib_root: Path) -> tuple[list[str], list[str]]:
 
     for lib_path in lib_root.rglob("*.dart"):
         content = lib_path.read_text(encoding="utf-8")
+        lines_arr = content.splitlines()
         for start_line, end_line, name in _method_ranges(content):
-            # Extract body (simplified: lines between start and end)
-            lines_arr = content.splitlines()
-            body_lines = lines_arr[start_line - 1 : end_line]
-            body = "\n".join(body_lines)
-            # Recursion: same name followed by ( or space
-            if re.search(rf"\b{re.escape(name)}\s*\(", body):
+            # WHY: previously the body slice was `lines_arr[start_line - 1 : end_line]`,
+            # which included the declaration line itself. That meant the recursion regex
+            # `\bname\s*\(` always matched the declaration's own `name(` token, flagging
+            # every single method as recursive. We now skip the declaration line so only
+            # actual body lines are scanned.
+            #
+            # Trade-off: real recursion in single-line expression bodies (e.g.
+            # `int fact(int n) => n < 2 ? 1 : n * fact(n - 1);`) will no longer be
+            # detected, because the recursive call sits on the declaration line. That's
+            # acceptable — the previous behavior produced ~793 false positives, so the
+            # heuristic was useless in practice. Single-line recursion is rare enough
+            # that grep handles it when needed.
+            body = "\n".join(lines_arr[start_line:end_line])
+            # Recursion: same name followed by `(`. The name capture from `_method_ranges`
+            # may include a `.named` constructor suffix; strip it for the recursion check
+            # so we look for self-calls by base name.
+            base_name = name.split(".", 1)[0]
+            if re.search(rf"\b{re.escape(base_name)}\s*\(", body):
                 issues.append(f"  {lib_path.name}:{start_line}  possible recursion: {name}()")
             # Empty catch: catch (_) { } or catch (e) { }
             if re.search(r"catch\s*\([^)]+\)\s*\{\s*\}", body):
                 issues.append(f"  {lib_path.name}:{start_line}  empty catch block: {name}")
-            # Bare catch without type
-            if re.search(r"catch\s*\([^)]*\)\s*\{", body) and " on " not in body:
-                # Could be catch (e) or catch (_)
-                pass  # already reported if empty; otherwise just note in "other"
     if issues:
         report_lines.append("Potential recursion or bad practices:")
         report_lines.extend(issues[:30])
@@ -371,19 +454,23 @@ def audit_other_quality(project_dir: Path, lib_root: Path) -> list[str]:
     lines.append(f"Lines over 120 characters: {long_line_count}")
 
     # Parameter count > 3
+    # WHY: previously this used a loose regex anchored only to start-of-line, which
+    # matched call sites inside method bodies (e.g. body `DateTime(y, m, d, h, m, s, ms, us)`
+    # was reported as "DateTime() has 8 params"). Use the strict declaration regex so
+    # only actual method/function/constructor declarations are counted.
     many_params: list[str] = []
     for p in lib_root.rglob("*.dart"):
         content = p.read_text(encoding="utf-8")
-        for m in re.finditer(
-            r"^\s*(?:[\w<>,\s?]+\s+)?(\w+)\s*\(([^)]*)\)",
-            content,
-            re.MULTILINE,
-        ):
+        for m in _DECL_RE.finditer(content):
             params = m.group(2)
-            if params.strip():
-                n = len([x for x in params.split(",") if x.strip()])
-                if n > 3:
-                    many_params.append(f"  {p.name}: {m.group(1)}() has {n} params")
+            if not params or not params.strip():
+                continue
+            name = _decl_name(m)
+            if name in _DART_KEYWORD_SKIP:
+                continue
+            n = len([x for x in params.split(",") if x.strip()])
+            if n > 3:
+                many_params.append(f"  {p.name}: {name}() has {n} params")
     lines.append("")
     lines.append(f"Methods with >3 parameters: {len(many_params)}")
     lines.extend(many_params[:15])
