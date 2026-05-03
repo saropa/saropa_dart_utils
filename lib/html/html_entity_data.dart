@@ -1,0 +1,346 @@
+// HTML5 named character reference mappings for entity decoding.
+//
+// Contains 278 commonly-used HTML5 entities including both semicolon-terminated
+// (e.g., `&amp;`) and legacy non-terminated forms (e.g., `&amp`) per the
+// HTML5 specification.
+//
+// Original entity data derived from html_unescape package v2.0.0
+// by Filip Hracek (BSD-3-Clause license).
+// https://pub.dev/packages/html_unescape
+//
+// Modernized: converted from parallel List<String> arrays to a single
+// const Map<String, String> for O(1) lookup. Added commonly-used entities
+// beyond Latin-1 (trade, euro, typographic quotes, dashes, etc.) that the
+// original basic set omitted.
+
+// cspell:ignore Diacritical brvbar percnt midast verbar yacute curren uacute
+// cspell:ignore otilde ugrave commat oslash plusmn lbrack middot rbrack lowbar
+// cspell:ignore frac iquest Agrave Aacute Atilde oacute Egrave Eacute Igrave
+// cspell:ignore Iacute Ntilde Ograve Otilde Oslash Ugrave Uacute Yacute agrave
+// cspell:ignore aacute atilde ccedil egrave eacute igrave iacute ntilde ograve
+// cspell:ignore Ccedil ecirc ocirc thorn strns iexcl szlig cedil ucirc aelig
+// cspell:ignore raquo laquo Acirc angst AElig aring THORN Ecirc Icirc acirc
+// cspell:ignore fjlig Ocirc macr lsqb rsqb bsol Auml Aring auml ouml Euml
+// cspell:ignore Iuml rcub lcub nvgt lpar QUOT rpar Uuml vert nvlt ETH ordm
+// cspell:ignore ordf iuml euml uuml rdquo ldquo rsquo lsquo mdash ndash hellip
+
+/// Length of the longest key in [htmlNamedEntities].
+///
+/// Used to bound the substring search window when scanning for named entities.
+const int htmlEntityMaxKeyLength = 18;
+
+/// Longest legacy entity (without trailing semicolon) in [htmlNamedEntities].
+///
+/// Entities like `&divide` (7 chars) are the longest non-terminated forms.
+/// Used to limit the fallback search for semicolon-less entities.
+const int htmlEntityMaxLegacyLength = 7;
+
+/// HTML5 named character reference map.
+///
+/// Keys are entity strings (e.g., `'&amp;'`), values are the decoded
+/// Unicode characters. Ordered longest-key-first for documentation clarity.
+///
+/// Includes:
+/// - 268 entities from the HTML5 "basic" set (Latin-1 supplement + ASCII)
+/// - 10 additional commonly-used entities beyond Latin-1 (typographic
+///   quotes, dashes, bullet, ellipsis, trade, euro)
+const Map<String, String> htmlNamedEntities = <String, String>{
+  // -- Longest keys first (18 chars) --
+  '&DiacriticalGrave;': '`',
+  '&NonBreakingSpace;': '\u00A0',
+  '&DiacriticalAcute;': '\u00B4',
+
+  // -- 14-char keys --
+  '&VerticalLine;': '|',
+
+  // -- 10-11 char keys --
+  '&centerdot;': '\u00B7',
+  '&DoubleDot;': '\u00A8',
+  '&PlusMinus;': '\u00B1',
+  '&CenterDot;': '\u00B7',
+
+  // -- 9-char keys --
+  '&UnderBar;': '_',
+  '&circledR;': '\u00AE',
+
+  // -- 8-char keys --
+  '&Cedilla;': '\u00B8',
+  '&NewLine;': '\n',
+
+  // -- 7-char keys (with semicolons) --
+  '&brvbar;': '\u00A6',
+  '&percnt;': '%',
+  '&midast;': '*',
+  '&lbrace;': '{',
+  '&verbar;': '|',
+  '&period;': '.',
+  '&rbrace;': '}',
+  '&yacute;': '\u00FD',
+  '&curren;': '\u00A4',
+  '&uacute;': '\u00FA',
+  '&otilde;': '\u00F5',
+  '&equals;': '=',
+  '&ugrave;': '\u00F9',
+  '&commat;': '@',
+  '&oslash;': '\u00F8',
+  '&plusmn;': '\u00B1',
+  '&divide;': '\u00F7',
+  '&lbrack;': '[',
+  '&dollar;': '\$',
+  '&middot;': '\u00B7',
+  '&rbrack;': ']',
+  '&Oacute;': '\u00D3',
+  '&lowbar;': '_',
+  '&frac14;': '\u00BC',
+  '&frac12;': '\u00BD',
+  '&frac34;': '\u00BE',
+  '&iquest;': '\u00BF',
+  '&Agrave;': '\u00C0',
+  '&Aacute;': '\u00C1',
+  '&Atilde;': '\u00C3',
+  '&oacute;': '\u00F3',
+  '&Egrave;': '\u00C8',
+  '&Eacute;': '\u00C9',
+  '&Igrave;': '\u00CC',
+  '&Iacute;': '\u00CD',
+  '&Ntilde;': '\u00D1',
+  '&Ograve;': '\u00D2',
+  '&Otilde;': '\u00D5',
+  '&Oslash;': '\u00D8',
+  '&Ugrave;': '\u00D9',
+  '&Uacute;': '\u00DA',
+  '&Yacute;': '\u00DD',
+  '&agrave;': '\u00E0',
+  '&aacute;': '\u00E1',
+  '&atilde;': '\u00E3',
+  '&ccedil;': '\u00E7',
+  '&egrave;': '\u00E8',
+  '&eacute;': '\u00E9',
+  '&igrave;': '\u00EC',
+  '&iacute;': '\u00ED',
+  '&ntilde;': '\u00F1',
+  '&ograve;': '\u00F2',
+  '&Ccedil;': '\u00C7',
+  '&hellip;': '\u2026',
+  '&lsquo;': '\u2018',
+  '&rsquo;': '\u2019',
+  '&ldquo;': '\u201C',
+  '&rdquo;': '\u201D',
+
+  // -- 6-char keys (with semicolons) --
+  '&ecirc;': '\u00EA',
+  '&acute;': '\u00B4',
+  '&ocirc;': '\u00F4',
+  '&pound;': '\u00A3',
+  '&colon;': ':',
+  '&laquo;': '\u00AB',
+  '&icirc;': '\u00EE',
+  '&thorn;': '\u00FE',
+  '&strns;': '\u00AF',
+  '&iexcl;': '\u00A1',
+  '&szlig;': '\u00DF',
+  '&micro;': '\u00B5',
+  '&cedil;': '\u00B8',
+  '&ucirc;': '\u00FB',
+  '&aelig;': '\u00E6',
+  '&comma;': ',',
+  '&raquo;': '\u00BB',
+  '&quest;': '?',
+  '&Acirc;': '\u00C2',
+  '&Aring;': '\u00C5',
+  '&angst;': '\u00C5',
+  '&AElig;': '\u00C6',
+  '&aring;': '\u00E5',
+  '&THORN;': '\u00DE',
+  '&Ecirc;': '\u00CA',
+  '&Icirc;': '\u00CE',
+  '&acirc;': '\u00E2',
+  '&grave;': '`',
+  '&Ocirc;': '\u00D4',
+  '&fjlig;': 'f',
+  '&times;': '\u00D7',
+  '&Ucirc;': '\u00DB',
+  '&trade;': '\u2122',
+  '&ndash;': '\u2013',
+  '&mdash;': '\u2014',
+
+  // -- 5-char keys (with semicolons) --
+  '&macr;': '\u00AF',
+  '&sup2;': '\u00B2',
+  '&lsqb;': '[',
+  '&semi;': ';',
+  '&sup3;': '\u00B3',
+  '&bsol;': '\\',
+  '&plus;': '+',
+  '&Auml;': '\u00C4',
+  '&sect;': '\u00A7',
+  '&copy;': '\u00A9',
+  '&rsqb;': ']',
+  '&yuml;': '\u00FF',
+  '&para;': '\u00B6',
+  '&cent;': '\u00A2',
+  '&Euml;': '\u00CB',
+  '&auml;': '\u00E4',
+  '&nbsp;': '\u00A0',
+  '&uuml;': '\u00FC',
+  '&ouml;': '\u00F6',
+  '&Iuml;': '\u00CF',
+  '&rcub;': '}',
+  '&COPY;': '\u00A9',
+  '&apos;': "'",
+  '&sup1;': '\u00B9',
+  '&ordf;': '\u00AA',
+  '&ordm;': '\u00BA',
+  '&iuml;': '\u00EF',
+  '&Ouml;': '\u00D6',
+  '&euml;': '\u00EB',
+  '&nvgt;': '>',
+  '&lpar;': '(',
+  '&QUOT;': '"',
+  '&lcub;': '{',
+  '&half;': '\u00BD',
+  '&rpar;': ')',
+  '&Uuml;': '\u00DC',
+  '&vert;': '|',
+  '&excl;': '!',
+  '&nvlt;': '<',
+  '&quot;': '"',
+  '&bull;': '\u2022',
+  '&euro;': '\u20AC',
+
+  // -- 4-char keys (with semicolons) --
+  '&bne;': '=',
+  '&ETH;': '\u00D0',
+  '&AMP;': '&',
+  '&amp;': '&',
+  '&ast;': '*',
+  '&num;': '#',
+  '&shy;': '\u00AD',
+  '&div;': '\u00F7',
+  '&deg;': '\u00B0',
+  '&REG;': '\u00AE',
+  '&reg;': '\u00AE',
+  '&not;': '\u00AC',
+  '&eth;': '\u00F0',
+  '&Dot;': '\u00A8',
+  '&die;': '\u00A8',
+  '&uml;': '\u00A8',
+  '&sol;': '/',
+  '&yen;': '\u00A5',
+  '&Tab;': '\t',
+  '&Hat;': '^',
+  '&pm;': '\u00B1',
+  '&GT;': '>',
+  '&gt;': '>',
+  '&LT;': '<',
+  '&lt;': '<',
+
+  // -- Legacy entities WITHOUT trailing semicolons --
+  // HTML5 spec requires browsers to recognize these even without `;`.
+  '&curren': '\u00A4',
+  '&brvbar': '\u00A6',
+  '&oacute': '\u00F3',
+  '&ograve': '\u00F2',
+  '&ugrave': '\u00F9',
+  '&ntilde': '\u00F1',
+  '&oslash': '\u00F8',
+  '&iacute': '\u00ED',
+  '&yacute': '\u00FD',
+  '&divide': '\u00F7',
+  '&Egrave': '\u00C8',
+  '&igrave': '\u00EC',
+  '&plusmn': '\u00B1',
+  '&eacute': '\u00E9',
+  '&egrave': '\u00E8',
+  '&ccedil': '\u00E7',
+  '&middot': '\u00B7',
+  '&uacute': '\u00FA',
+  '&frac14': '\u00BC',
+  '&frac12': '\u00BD',
+  '&frac34': '\u00BE',
+  '&iquest': '\u00BF',
+  '&Agrave': '\u00C0',
+  '&Aacute': '\u00C1',
+  '&Atilde': '\u00C3',
+  '&Eacute': '\u00C9',
+  '&Igrave': '\u00CC',
+  '&atilde': '\u00E3',
+  '&Iacute': '\u00CD',
+  '&acirc': '\u00E2',
+  '&ecirc': '\u00EA',
+  '&icirc': '\u00EE',
+  '&Ntilde': '\u00D1',
+  '&Ograve': '\u00D2',
+  '&aacute': '\u00E1',
+  '&Oacute': '\u00D3',
+  '&Otilde': '\u00D5',
+  '&agrave': '\u00E0',
+  '&otilde': '\u00F5',
+  '&Oslash': '\u00D8',
+  '&Ugrave': '\u00D9',
+  '&Uacute': '\u00DA',
+  '&Yacute': '\u00DD',
+  '&Ccedil': '\u00C7',
+  '&Acirc': '\u00C2',
+  '&aring': '\u00E5',
+  '&ocirc': '\u00F4',
+  '&acute': '\u00B4',
+  '&Aring': '\u00C5',
+  '&AElig': '\u00C6',
+  '&micro': '\u00B5',
+  '&times': '\u00D7',
+  '&Ecirc': '\u00CA',
+  '&thorn': '\u00FE',
+  '&ucirc': '\u00FB',
+  '&Icirc': '\u00CE',
+  '&cedil': '\u00B8',
+  '&iexcl': '\u00A1',
+  '&Ocirc': '\u00D4',
+  '&pound': '\u00A3',
+  '&raquo': '\u00BB',
+  '&laquo': '\u00AB',
+  '&Ucirc': '\u00DB',
+  '&szlig': '\u00DF',
+  '&THORN': '\u00DE',
+  '&aelig': '\u00E6',
+  '&sup2': '\u00B2',
+  '&sup3': '\u00B3',
+  '&Ouml': '\u00D6',
+  '&quot': '"',
+  '&yuml': '\u00FF',
+  '&ouml': '\u00F6',
+  '&Iuml': '\u00CF',
+  '&Euml': '\u00CB',
+  '&auml': '\u00E4',
+  '&Auml': '\u00C4',
+  '&sup1': '\u00B9',
+  '&ordm': '\u00BA',
+  '&para': '\u00B6',
+  '&nbsp': '\u00A0',
+  '&uuml': '\u00FC',
+  '&euml': '\u00EB',
+  '&macr': '\u00AF',
+  '&Uuml': '\u00DC',
+  '&ordf': '\u00AA',
+  '&iuml': '\u00EF',
+  '&COPY': '\u00A9',
+  '&copy': '\u00A9',
+  '&cent': '\u00A2',
+  '&sect': '\u00A7',
+  '&QUOT': '"',
+  '&ETH': '\u00D0',
+  '&AMP': '&',
+  '&amp': '&',
+  '&deg': '\u00B0',
+  '&REG': '\u00AE',
+  '&reg': '\u00AE',
+  '&shy': '\u00AD',
+  '&not': '\u00AC',
+  '&uml': '\u00A8',
+  '&yen': '\u00A5',
+  '&eth': '\u00F0',
+  '&GT': '>',
+  '&gt': '>',
+  '&LT': '<',
+  '&lt': '<',
+};

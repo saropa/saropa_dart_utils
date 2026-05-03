@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
-import 'gzip_codec_stub.dart'
-    if (dart.library.io) 'gzip_codec_io.dart';
+import 'gzip_codec_stub.dart' if (dart.library.io) 'gzip_codec_io.dart';
 
 /// Utility class for Base64 encoding/decoding and text compression.
 ///

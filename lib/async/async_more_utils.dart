@@ -1,8 +1,7 @@
 import 'dart:async'; // ignore: require_ios_deployment_target_consistency
 
 import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:saropa_dart_utils/async/async_semaphore_utils.dart'
-    show AsyncAction;
+import 'package:saropa_dart_utils/async/async_semaphore_utils.dart' show AsyncAction;
 
 /// Async More: race, allSettled, retry N times. Roadmap #346-348.
 Future<T> race<T>(List<Future<T>> futures) => Future.any(futures);
@@ -12,8 +11,7 @@ Future<T> race<T>(List<Future<T>> futures) => Future.any(futures);
 Future<List<Object?>> allSettled<T>(
   List<Future<T>> futures,
 ) async {
-  final List<Object?> results =
-      List<Object?>.filled(futures.length, null);
+  final List<Object?> results = List<Object?>.filled(futures.length, null);
 
   for (final (i, future) in futures.indexed) {
     try {

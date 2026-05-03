@@ -88,3 +88,6 @@ CODEBASE_INDEX.md
 
 # Saropa lints / session reports (generated, do not commit)
 reports/
+
+# Saropa Log Capture (index & cache)
+.saropa/

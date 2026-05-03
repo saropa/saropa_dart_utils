@@ -4,8 +4,7 @@ library;
 // ignore: require_ios_deployment_target_consistency
 import 'dart:async' show Completer;
 
-import 'package:saropa_dart_utils/async/async_semaphore_utils.dart'
-    show AsyncAction;
+import 'package:saropa_dart_utils/async/async_semaphore_utils.dart' show AsyncAction;
 
 /// Async mutex: only one holder at a time.
 class AsyncMutexUtils {
