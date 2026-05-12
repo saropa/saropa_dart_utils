@@ -35,7 +35,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Published version**: See field `version` in [pubspec.yaml](./pubspec.yaml)
 
-## [1.1.0] - 2026-05-03
+---
+
+## [Unreleased]
+
+### Added
+
+- **`reports/organize_reports.py`** — local copy of shared report organizer script, tracked in git via `.gitignore` negation pattern while keeping generated report files ignored.
+
+---
+
+## [1.1.0]
 
 ### Breaking
 

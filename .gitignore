@@ -87,7 +87,10 @@ CODEBASE_INDEX.md
 *.bak
 
 # Saropa lints / session reports (generated, do not commit)
-reports/
+# Ignore everything inside reports/ but keep the directory itself unignored
+# so that negation patterns (like the organizer script) can work.
+reports/*
+!reports/organize_reports.py
 
 # Saropa Log Capture (index & cache)
 .saropa/
