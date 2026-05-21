@@ -94,3 +94,6 @@ reports/*
 
 # Saropa Log Capture (index & cache)
 .saropa/
+
+# Personal task-completion workflow guide (not part of the published package)
+bugs/FINISH_GUIDE.md
