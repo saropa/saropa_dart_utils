@@ -9,15 +9,21 @@ This script automates the complete release workflow for a Dart/Flutter package.
     2 = Audit only (run audit, write report, exit)
     3 = Build only (skip audit, run publish workflow only)
 
-  Audit phase (when chosen):
+  Audit phase (when chosen) - runs BEFORE the publish steps to alert on
+  quality issues. Every check's full results are written to the report (the
+  log); the top 10 of each category are echoed to the terminal:
     - Code coverage: methods by unit test count (color-coded bar chart)
-    - Analyzer: error / warning / info counts
+    - Analyzer: error / warning / info messages
     - Multiline doc headers per method
+    - Inline code comments per method (branches / loops / variables)
+    - Per-parameter unit test coverage (tests vs. parameter count)
     - Recursion and bad practices (empty catch, etc.)
     - Try/catch usage per method
+    - Duplicate Dart class names
     - Other quality checks (file length, params, TODO, exports, etc.)
     - Report written to reports/yyyymmdd/yyyymmdd_HHMMSS_publish_audit.txt
-    - Shows per-category findings with counts; prompt "Continue? [y/N]"
+    - If issues remain, prompts ignore / retry / abort:
+        ignore = publish anyway, retry = re-run checks, abort = cancel
 
   Pre-checks (before numbered steps):
     - Validates pubspec.yaml and CHANGELOG.md versions are in sync
@@ -41,7 +47,7 @@ This script automates the complete release workflow for a Dart/Flutter package.
     12. Triggers GitHub Actions publish to pub.dev
     13. Creates GitHub release with release notes
 
-Version:   2.4
+Version:   2.5
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
@@ -80,6 +86,80 @@ from modules import workflow
 
 SCRIPT_VERSION = constants.SCRIPT_VERSION
 ExitCode = constants.ExitCode
+
+# How many detail lines per category to echo to the terminal. The full lists are
+# always written to the on-disk audit report; the terminal shows only the worst
+# few so the operator gets a signal without scrolling past hundreds of lines.
+TERMINAL_FINDINGS_LIMIT = 10
+
+
+def _display_findings_top10(findings: dict[str, list[str]]) -> None:
+    """Print the top N detail lines of each finding category to the terminal.
+
+    `findings` maps a category name to its full, worst-first detail list. We
+    print the category total, then the first `TERMINAL_FINDINGS_LIMIT` details,
+    and a pointer to the report when more were truncated.
+    """
+    for category, items in findings.items():
+        # Header line carries the full count even though we list only the top N.
+        ui.print_colored(f"    {category}: {len(items)}", ui.Color.YELLOW)
+        for detail in items[:TERMINAL_FINDINGS_LIMIT]:
+            ui.print_colored(f"  {detail}", ui.Color.WHITE)
+        if len(items) > TERMINAL_FINDINGS_LIMIT:
+            hidden = len(items) - TERMINAL_FINDINGS_LIMIT
+            ui.print_colored(
+                f"        ... and {hidden} more (see report)", ui.Color.CYAN
+            )
+
+
+def run_audit_phase(project_dir: Path) -> None:
+    """Run the pre-publish quality audit and act on the operator's choice.
+
+    Loops so "retry" can re-run every check after the operator fixes issues in
+    another window. On each pass: run the audit (which also writes the full log
+    to disk), and if any quality issues remain, show the top 10 of each category
+    and prompt ignore / retry / abort:
+      - ignore: proceed with publishing despite the findings.
+      - retry:  re-run all checks (pick this after fixing issues).
+      - abort:  cancel publication (the default, since it is the safe choice).
+    Returns normally only when the audit is clean or the operator ignores it;
+    aborting exits the process via `ui.exit_with_error`.
+    """
+    while True:
+        findings, report_path = audit.run_audit(project_dir)
+        if not findings:
+            ui.print_success("Audit found no quality issues.")
+            return
+
+        print()
+        ui.print_colored(
+            f"  Quality issues found (top {TERMINAL_FINDINGS_LIMIT} per category):",
+            ui.Color.YELLOW,
+        )
+        _display_findings_top10(findings)
+        print()
+        ui.print_info(f"Full report: {report_path}")
+
+        ui.print_colored("  Choose an action:", ui.Color.WHITE)
+        ui.print_colored("    i = ignore (publish anyway)", ui.Color.CYAN)
+        ui.print_colored(
+            "    r = retry  (re-run checks after you fix the issues)",
+            ui.Color.CYAN,
+        )
+        ui.print_colored("    a = abort  (cancel publication)", ui.Color.CYAN)
+        # Default to abort: an empty Enter must not silently ship a flagged build.
+        action = input("  Enter i, r, or a [a]: ").strip().lower() or "a"
+
+        if action.startswith("i"):
+            ui.print_success("Ignoring audit findings; continuing with publish.")
+            return
+        if action.startswith("r"):
+            ui.print_info("Re-running quality checks...")
+            continue
+        # Anything else (including the default) aborts publication.
+        ui.exit_with_error(
+            "User aborted publication after audit.", ExitCode.AUDIT_FAILED
+        )
 
 
 def main() -> int:
@@ -233,25 +313,10 @@ def main() -> int:
     vc.display_changelog(project_dir)
 
     # =========================================================================
-    # AUDIT PHASE (mode 1 only: run audit, then prompt if errors/warnings)
+    # AUDIT PHASE (mode 1 only: run quality checks, then ignore/retry/abort)
     # =========================================================================
     if mode == 1:
-        findings, report_path = audit.run_audit(project_dir)
-        if findings:
-            print()
-            ui.print_colored("  Audit findings:", ui.Color.YELLOW)
-            for category, count in findings.items():
-                ui.print_colored(f"      {category}: {count}", ui.Color.YELLOW)
-            print()
-            ui.print_info(f"Report: {report_path}")
-            response = (
-                input("  Continue with publish? [y/N] ").strip().lower()
-            )
-            if not response.startswith("y"):
-                ui.exit_with_error(
-                    "User chose not to continue after audit.", ExitCode.AUDIT_FAILED
-                )
-            ui.print_success("Continuing with publish.")
+        run_audit_phase(project_dir)
 
     # =========================================================================
     # WORKFLOW STEPS (mode 1 and 3)

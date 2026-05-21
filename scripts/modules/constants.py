@@ -3,7 +3,7 @@
 from enum import Enum
 
 
-SCRIPT_VERSION = "2.4"
+SCRIPT_VERSION = "2.5"
 
 
 class ExitCode(Enum):

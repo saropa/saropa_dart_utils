@@ -231,30 +231,59 @@ def audit_coverage(project_dir: Path, lib_root: Path, test_root: Path) -> tuple[
 # 2. Analyzer: error, warning, info counts
 # -----------------------------------------------------------------------------
 
-def audit_analyzer(project_dir: Path) -> tuple[list[str], int, int, int]:
-    """Run dart analyze --format machine and count ERROR, WARNING, INFO."""
+def audit_analyzer(
+    project_dir: Path,
+) -> tuple[list[str], list[str], list[str], list[str]]:
+    """Run dart analyze --format machine and bucket findings by severity.
+
+    Returns (report_lines, errors, warnings, infos) where each severity list
+    holds formatted "file:line  CODE  message" detail strings. WHY return the
+    detail strings rather than bare counts: the caller now prints the top 10 of
+    each category to the terminal, so it needs the actual messages, not just a
+    tally. Counts are derivable as len() of each list.
+
+    Machine format is pipe-delimited:
+        SEVERITY|TYPE|CODE|FILE|LINE|COL|LENGTH|MESSAGE
+    """
     result = run_mod.run_capture(
         ["dart", "analyze", "--format", "machine"], project_dir
     )
-    err, warn, info = 0, 0, 0
-    report_lines: list[str] = []
+    errors: list[str] = []
+    warnings: list[str] = []
+    infos: list[str] = []
     for line in (result.stdout or "").splitlines():
         if not line.strip():
             continue
         parts = line.split("|")
-        if len(parts) >= 1:
-            sev = parts[0].strip()
-            if sev == "ERROR":
-                err += 1
-            elif sev == "WARNING":
-                warn += 1
-            elif sev == "INFO":
-                info += 1
-    report_lines.append(f"  Errors:   {err}")
-    report_lines.append(f"  Warnings: {warn}")
-    report_lines.append(f"  Info:     {info}")
-    report_lines.append("")
-    return report_lines, err, warn, info
+        # Need all 8 machine-format fields to build a detail line; anything
+        # shorter is a malformed/partial line we skip rather than misparse.
+        if len(parts) < 8:
+            continue
+        sev = parts[0].strip()
+        code = parts[2].strip()
+        file_path = parts[3].strip()
+        line_no = parts[4].strip()
+        message = parts[7].strip()
+        # Show a repo-relative path so report lines stay readable; fall back to
+        # the bare filename if the analyzer emits a path outside project_dir.
+        try:
+            location = Path(file_path).relative_to(project_dir)
+        except ValueError:
+            location = Path(file_path).name
+        detail = f"  {location}:{line_no}  {code}  {message}"
+        if sev == "ERROR":
+            errors.append(detail)
+        elif sev == "WARNING":
+            warnings.append(detail)
+        elif sev == "INFO":
+            infos.append(detail)
+    report_lines = [
+        f"  Errors:   {len(errors)}",
+        f"  Warnings: {len(warnings)}",
+        f"  Info:     {len(infos)}",
+        "",
+    ]
+    return report_lines, errors, warnings, infos
 
 
 # -----------------------------------------------------------------------------
@@ -499,14 +528,211 @@ def audit_other_quality(project_dir: Path, lib_root: Path) -> list[str]:
 
 
 # -----------------------------------------------------------------------------
+# 7. Inline code-comment density per method
+# -----------------------------------------------------------------------------
+
+# Keywords that introduce a branch or a loop. Each is a decision/iteration point
+# that project policy says must carry an explanatory inline comment.
+_BRANCH_KEYWORDS = ("if", "else", "switch", "case", "for", "while", "do")
+# Functional iteration calls count as loops for comment purposes (a `.map(...)`
+# transform is an algorithm step that deserves a "why" just like a `for`).
+_ITER_CALLS_RE = re.compile(
+    r"\.(?:forEach|map|where|fold|reduce|expand|every|any)\s*\("
+)
+# A local variable declaration. A leading binding keyword is the reliable signal
+# and avoids the false positives a general "Type name =" pattern would produce.
+_VAR_DECL_RE = re.compile(r"^\s*(?:final|var|const|late)\b")
+# A real inline comment line: starts with // but is NOT a dartdoc (///, which is
+# API documentation, counted separately) and NOT a // ignore: lint directive
+# (tooling instruction, not an explanation of the logic).
+_COMMENT_LINE_RE = re.compile(r"^\s*//(?!/)(?!\s*ignore)")
+
+# Below this many comment-worthy constructs a method is trivial enough to be
+# self-documenting, so we don't demand inline comments.
+_MIN_CONSTRUCTS_FOR_COMMENT = 3
+# Target density: roughly one explanatory comment per three decision points.
+# A method below this ratio is flagged as under-commented.
+_MIN_COMMENT_RATIO = 0.34
+
+
+def _count_constructs_and_comments(body: list[str]) -> tuple[int, int]:
+    """Count comment-worthy constructs and real inline comments in a method body.
+
+    Constructs = branch/loop keywords + functional iteration calls + local
+    variable declarations. Comments = standalone `//` lines plus trailing inline
+    `code // note` comments. Pure comment lines are not also counted as code.
+    """
+    constructs = 0
+    comments = 0
+    for raw in body:
+        stripped = raw.strip()
+        # A standalone comment line contributes a comment and no constructs.
+        if _COMMENT_LINE_RE.match(raw):
+            comments += 1
+            continue
+        # A trailing comment on a code line (`x = 1; // why`) still counts.
+        if "//" in stripped and not stripped.startswith("//"):
+            comments += 1
+        # A local binding (final/var/const/late) is one comment-worthy variable.
+        if _VAR_DECL_RE.match(raw):
+            constructs += 1
+        # Each branch/loop keyword occurrence is a separate decision point;
+        # `else if` legitimately counts as two (an else and a nested if).
+        for keyword in _BRANCH_KEYWORDS:
+            constructs += len(re.findall(rf"\b{keyword}\b", stripped))
+        # Functional iteration calls are loop-equivalent algorithm steps.
+        constructs += len(_ITER_CALLS_RE.findall(stripped))
+    return constructs, comments
+
+
+def audit_code_comments(
+    project_dir: Path, lib_root: Path
+) -> tuple[list[str], list[str]]:
+    """Flag methods whose logic lacks inline comments.
+
+    Requirement: comment each variable, branch, iteration and algorithm step.
+    Enforcing one-comment-per-line literally would flag nearly every method, so
+    we use a density heuristic (see `_count_constructs_and_comments`): a method
+    is reported only when it has at least `_MIN_CONSTRUCTS_FOR_COMMENT`
+    comment-worthy constructs AND its comment-to-construct ratio is below
+    `_MIN_COMMENT_RATIO`. Results are ranked by comment shortfall (constructs
+    minus comments) descending, so the top 10 are the most complex,
+    least-explained methods.
+    """
+    # (shortfall, detail) so we can rank worst-first before dropping the score.
+    ranked: list[tuple[int, str]] = []
+    for lib_path in lib_root.rglob("*.dart"):
+        content = lib_path.read_text(encoding="utf-8")
+        lines_arr = content.splitlines()
+        for start_line, end_line, name in _method_ranges(content):
+            # Skip the declaration line itself (index start_line-1); scan only
+            # the body so a signature's own keywords aren't miscounted.
+            body = lines_arr[start_line:end_line]
+            constructs, comments = _count_constructs_and_comments(body)
+            # Trivial methods are exempt from the inline-comment requirement.
+            if constructs < _MIN_CONSTRUCTS_FOR_COMMENT:
+                continue
+            ratio = comments / constructs
+            if ratio < _MIN_COMMENT_RATIO:
+                shortfall = constructs - comments
+                rel = lib_path.relative_to(project_dir)
+                ranked.append(
+                    (
+                        shortfall,
+                        f"  {rel}:{start_line}  {name}  "
+                        f"{constructs} constructs, {comments} comments",
+                    )
+                )
+    ranked.sort(key=lambda x: -x[0])
+    issues = [detail for _shortfall, detail in ranked]
+
+    report_lines: list[str] = []
+    if issues:
+        report_lines.append("Methods with logic but sparse inline comments:")
+        report_lines.extend(issues[:50])
+        if len(issues) > 50:
+            report_lines.append(f"  ... and {len(issues) - 50} more")
+    else:
+        report_lines.append(
+            "All non-trivial methods have adequate inline comments."
+        )
+    return report_lines, issues
+
+
+# -----------------------------------------------------------------------------
+# 8. Per-parameter unit test coverage
+# -----------------------------------------------------------------------------
+
+def _members_with_params(lib_path: Path) -> list[tuple[str, int, int]]:
+    """Return (name, param_count, line_1based) for each declaration in a file."""
+    text = lib_path.read_text(encoding="utf-8")
+    out: list[tuple[str, int, int]] = []
+    for m in _DECL_RE.finditer(text):
+        name = _decl_name(m)
+        # Same keyword guard as `_find_public_members`: reject control-flow words
+        # the regex backtracking can place in the name slot.
+        if not name or name in _DART_KEYWORD_SKIP:
+            continue
+        params = m.group(2)  # None for getters (the getter branch has no params)
+        param_count = (
+            len([x for x in params.split(",") if x.strip()])
+            if params and params.strip()
+            else 0
+        )
+        # Match start offset -> 1-based line via newline count up to the match.
+        line_no = text.count("\n", 0, m.start()) + 1
+        out.append((name, param_count, line_no))
+    return out
+
+
+def audit_param_test_coverage(
+    project_dir: Path, lib_root: Path, test_root: Path
+) -> tuple[list[str], list[str]]:
+    """Flag methods whose tests don't cover each parameter variation.
+
+    Requirement: every method needs unit tests for each possible variation of
+    its params. True combinatorial coverage is unbounded, so we apply a floor:
+    a method with N parameters should be referenced by at least N+1 test blocks
+    (one happy-path plus one exercising each parameter). Methods below the floor
+    are ranked by deficit (required minus actual) descending, so the top 10 are
+    the least-tested relative to their parameter surface.
+    """
+    # (deficit, detail) so we can rank worst-first before dropping the score.
+    ranked: list[tuple[int, str]] = []
+    for lib_path in lib_root.rglob("*.dart"):
+        members = _members_with_params(lib_path)
+        if not members:
+            continue
+        names = [name for name, _pc, _ln in members]
+        test_path = _lib_to_test_path(lib_path, lib_root, test_root)
+        # No test file means zero coverage for every member in this lib file.
+        counts = _count_tests_per_member(test_path, names) if test_path else {}
+        for name, param_count, line_no in members:
+            # Zero-arg methods/getters have no parameter variations to cover.
+            if param_count < 1:
+                continue
+            test_count = counts.get(name, 0)
+            required = param_count + 1  # happy path + one test per parameter
+            if test_count < required:
+                deficit = required - test_count
+                rel = lib_path.relative_to(project_dir)
+                ranked.append(
+                    (
+                        deficit,
+                        f"  {rel}:{line_no}  {name}()  "
+                        f"{param_count} params, {test_count} tests "
+                        f"(want >= {required})",
+                    )
+                )
+    ranked.sort(key=lambda x: -x[0])
+    issues = [detail for _deficit, detail in ranked]
+
+    report_lines: list[str] = []
+    if issues:
+        report_lines.append(
+            "Methods under-tested relative to parameter count:"
+        )
+        report_lines.extend(issues[:50])
+        if len(issues) > 50:
+            report_lines.append(f"  ... and {len(issues) - 50} more")
+    else:
+        report_lines.append("All methods meet the per-parameter test floor.")
+    return report_lines, issues
+
+
+# -----------------------------------------------------------------------------
 # Run full audit and write report
 # -----------------------------------------------------------------------------
 
-def run_audit(project_dir: Path) -> tuple[dict[str, int], Path]:
+def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
     """
     Run all audit checks and write report to reports/yyyymmdd/yyyymmdd_HHMMSS_publish_audit.txt.
-    Returns (findings_dict, report_path) where findings_dict maps category names to counts.
-    Empty dict means no issues found.
+
+    Returns (findings, report_path) where `findings` maps each category name to
+    the FULL list of its detail strings (worst-first where the check ranks them).
+    The caller derives the count as len() and prints the top 10 of each to the
+    terminal; the complete lists live in the on-disk report (the audit log).
+    An empty dict means no quality issues were found.
     """
     ui.print_header("AUDIT PHASE: QUALITY CHECKS")
 
@@ -520,70 +746,115 @@ def run_audit(project_dir: Path) -> tuple[dict[str, int], Path]:
     all_lines: list[str] = []
 
     # 1. Coverage / test count
-    ui.print_info("Audit 1/8: Code coverage (test count per method)...")
+    ui.print_info("Audit 1/10: Code coverage (test count per method)...")
     cov_lines, _ = audit_coverage(project_dir, lib_root, test_root)
     all_lines.extend(_section(cov_lines, "1. UNIT TEST COVERAGE (methods by test count)"))
 
     # 2. Analyzer
-    ui.print_info("Audit 2/8: Dart analyzer...")
-    ana_lines, ana_err, ana_warn, ana_info = audit_analyzer(project_dir)
+    ui.print_info("Audit 2/10: Dart analyzer...")
+    ana_lines, ana_errors, ana_warnings, ana_infos = audit_analyzer(project_dir)
     all_lines.extend(_section(ana_lines, "2. ANALYZER (error / warning / info)"))
-    all_lines.append(f"  Total: {ana_err} errors, {ana_warn} warnings, {ana_info} info")
+    all_lines.append(
+        f"  Total: {len(ana_errors)} errors, "
+        f"{len(ana_warnings)} warnings, {len(ana_infos)} info"
+    )
+    all_lines.append("")
+    # Persist the individual analyzer messages so the report is a full log, not
+    # just the totals (the terminal only shows the top 10 of each).
+    if ana_errors:
+        all_lines.append("  Errors:")
+        all_lines.extend(ana_errors)
+    if ana_warnings:
+        all_lines.append("  Warnings:")
+        all_lines.extend(ana_warnings)
+    if ana_infos:
+        all_lines.append("  Info:")
+        all_lines.extend(ana_infos)
     all_lines.append("")
 
     # 3. Doc headers
-    ui.print_info("Audit 3/8: Multiline doc headers...")
+    ui.print_info("Audit 3/10: Multiline doc headers...")
     doc_lines, missing_docs = audit_doc_headers(lib_root)
     all_lines.extend(_section(doc_lines, "3. MULTILINE DOC HEADERS"))
     all_lines.append("")
 
-    # 4. Recursion / bad practices
-    ui.print_info("Audit 4/8: Recursion and bad practices...")
+    # 4. Inline code-comment density
+    ui.print_info("Audit 4/10: Inline code comments (branches/loops/vars)...")
+    comment_lines, comment_issues = audit_code_comments(project_dir, lib_root)
+    all_lines.extend(_section(comment_lines, "4. INLINE CODE COMMENTS (per method)"))
+
+    # 5. Per-parameter unit test coverage
+    ui.print_info("Audit 5/10: Per-parameter unit test coverage...")
+    param_lines, param_issues = audit_param_test_coverage(
+        project_dir, lib_root, test_root
+    )
+    all_lines.extend(
+        _section(param_lines, "5. PER-PARAMETER UNIT TEST COVERAGE")
+    )
+
+    # 6. Recursion / bad practices
+    ui.print_info("Audit 6/10: Recursion and bad practices...")
     rec_lines, rec_issues = audit_recursion_and_bad(lib_root)
-    all_lines.extend(_section(rec_lines, "4. RECURSION & BAD PRACTICES"))
+    all_lines.extend(_section(rec_lines, "6. RECURSION & BAD PRACTICES"))
 
-    # 5. Try/catch
-    ui.print_info("Audit 5/8: Try/catch usage...")
+    # 7. Try/catch
+    ui.print_info("Audit 7/10: Try/catch usage...")
     try_lines, _ = audit_try_catch(lib_root)
-    all_lines.extend(_section(try_lines, "5. TRY/CATCH ERROR HANDLING (per method)"))
+    all_lines.extend(_section(try_lines, "7. TRY/CATCH ERROR HANDLING (per method)"))
 
-    # 6. Duplicate Dart class names
-    ui.print_info("Audit 6/8: Duplicate Dart class names...")
+    # 8. Duplicate Dart class names
+    ui.print_info("Audit 8/10: Duplicate Dart class names...")
     dup_lines, dup_map = duplicate_classes.audit_duplicate_classes(project_dir)
-    all_lines.extend(_section(dup_lines, "6. DUPLICATE DART CLASS NAMES"))
+    all_lines.extend(_section(dup_lines, "8. DUPLICATE DART CLASS NAMES"))
 
-    # 7. Other quality
-    ui.print_info("Audit 7/8: Other quality checks...")
+    # 9. Other quality
+    ui.print_info("Audit 9/10: Other quality checks...")
     other_lines = audit_other_quality(project_dir, lib_root)
-    all_lines.extend(_section(other_lines, "7. OTHER QUALITY CHECKS"))
+    all_lines.extend(_section(other_lines, "9. OTHER QUALITY CHECKS"))
 
-    # 8. Summary and recommendations
-    ui.print_info("Audit 8/8: Summary...")
+    # 10. Summary and recommendations
+    ui.print_info("Audit 10/10: Summary...")
     summary = [
         "Recommendations:",
         "  - Fix all analyzer errors before publishing.",
         "  - Consider fixing analyzer warnings and adding docs for methods with 0-1 tests.",
+        "  - Add inline comments to flagged branch/loop/variable-heavy methods.",
+        "  - Add per-parameter tests for under-tested methods.",
         "  - Review methods with try/catch for proper error handling.",
         "  - Address recursion/empty-catch and file length if policy requires.",
     ]
-    all_lines.extend(_section(summary, "8. SUMMARY & RECOMMENDATIONS"))
+    all_lines.extend(_section(summary, "10. SUMMARY & RECOMMENDATIONS"))
 
     report_path.write_text("\n".join(all_lines), encoding="utf-8")
     ui.print_success(f"Audit report written to {report_path}")
 
-    # Build per-category summary for the caller
-    findings: dict[str, int] = {}
-    if ana_err:
-        findings["Analyzer errors"] = ana_err
-    if ana_warn:
-        findings["Analyzer warnings"] = ana_warn
-    if ana_info:
-        findings["Analyzer infos"] = ana_info
+    # Duplicate class names as ranked detail strings (most occurrences first) so
+    # the caller can show the worst 10 alongside the other categories.
+    dup_details = [
+        f"  {name}  (in: {', '.join(files)})"
+        for name, files in sorted(
+            dup_map.items(), key=lambda item: (-len(item[1]), item[0])
+        )
+    ]
+
+    # Build per-category findings for the caller. Each value is the full detail
+    # list (already worst-first where the check ranks); the caller shows top 10.
+    findings: dict[str, list[str]] = {}
+    if ana_errors:
+        findings["Analyzer errors"] = ana_errors
+    if ana_warnings:
+        findings["Analyzer warnings"] = ana_warnings
+    if ana_infos:
+        findings["Analyzer infos"] = ana_infos
     if missing_docs:
-        findings["Missing doc headers"] = len(missing_docs)
+        findings["Missing doc headers"] = missing_docs
+    if comment_issues:
+        findings["Sparse code comments"] = comment_issues
+    if param_issues:
+        findings["Thin per-parameter tests"] = param_issues
     if rec_issues:
-        findings["Recursion / bad practices"] = len(rec_issues)
-    if dup_map:
-        findings["Duplicate class names"] = len(dup_map)
+        findings["Recursion / bad practices"] = rec_issues
+    if dup_details:
+        findings["Duplicate class names"] = dup_details
 
     return findings, report_path
