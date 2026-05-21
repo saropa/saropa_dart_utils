@@ -3,7 +3,21 @@
 **File:** `lib/list/list_extensions.dart`
 **Severity:** 🟡 Medium
 **Category:** API Design / Unexpected Behavior
-**Status:** Open
+**Status:** Fixed (Unreleased) — documented, non-breaking
+
+---
+
+## Resolution (Unreleased)
+
+Kept the existing behavior (changing the `takeSafe(0)` default is a breaking
+change for a published package). The dartdoc already calls out the non-standard
+default explicitly and points callers to `ignoreZeroOrLess: false` for Dart
+`take(0)` semantics. Added tests in `test/list/list_extensions_test.dart` pinning
+the bare-default behavior (`takeSafe(0)`/`takeSafe(-1)` return the original list)
+and a test contrasting `take(0)` (empty) with `takeSafe(0)`.
+
+A breaking alternative (default `ignoreZeroOrLess: false`, or `count == 0` →
+empty list) remains available for a future major version if desired.
 
 ---
 

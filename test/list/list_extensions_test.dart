@@ -483,6 +483,27 @@ void main() {
         final List<String> list = <String>['a', 'b', 'c', 'd'];
         expect(list.takeSafe(2), <String>['a', 'b']);
       });
+
+      // BUG-023: lock in the documented (non-standard) default for count 0/<0.
+      // Unlike Dart's take(0) which yields [], takeSafe(0) returns the original
+      // list by default because ignoreZeroOrLess defaults to true.
+      test('Bare takeSafe(0) returns original list by default', () {
+        final List<int> list = <int>[1, 2, 3];
+        expect(list.takeSafe(0), <int>[1, 2, 3]);
+      });
+
+      test('Bare takeSafe(-1) returns original list by default', () {
+        final List<int> list = <int>[1, 2, 3];
+        expect(list.takeSafe(-1), <int>[1, 2, 3]);
+      });
+
+      test('Dart take(0) differs from takeSafe(0) default', () {
+        final List<int> list = <int>[1, 2, 3];
+        expect(list.take(0).toList(), isEmpty);
+        expect(list.takeSafe(0), isNot(isEmpty));
+        // Opt in to take()-style semantics with ignoreZeroOrLess: false.
+        expect(list.takeSafe(0, ignoreZeroOrLess: false), isEmpty);
+      });
     });
 
     group('exclude', () {

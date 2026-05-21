@@ -1,9 +1,29 @@
 # BUG-024: `weekOfYear` and `numOfWeeks()` Have ISO 8601 Week Calculation Errors
 
-**File:** `lib/datetime/date_time_extensions.dart`
+**File:** `lib/datetime/date_time_calendar_extensions.dart` (methods live here, not
+in `date_time_extensions.dart`)
 **Severity:** 🟡 Medium
 **Category:** Logic Error / Edge Case
-**Status:** Open
+**Status:** Fixed (Unreleased) — `weekNumber()` is ISO-compliant and tested
+
+---
+
+## Resolution (Unreleased)
+
+The ISO 8601-compliant path is `weekNumber()`, which rolls year-boundary dates
+into the correct week/year. Added exact boundary tests in
+`test/datetime/date_time_extensions_test.dart` ("weekNumber / numOfWeeks - ISO
+8601 edge cases") verifying:
+
+- `DateTime(2010, 1, 1).weekNumber()` == 53 (week 53 of 2009)
+- `DateTime(2012, 12, 31).weekNumber()` == 1 (week 1 of 2013)
+- `DateTime(year, 1, 4).weekNumber()` == 1 for every year 2000–2030
+- `numOfWeeks` returns 53 for 53-week years (2015, 2020, 2009, 2026) and 52 for
+  ordinary years (2014, 2021, 2023)
+
+`weekOfYear` is intentionally retained as a raw approximation (can be 0 or 53);
+its dartdoc directs callers to `weekNumber()`. Changing `weekOfYear` itself would
+be breaking and is unnecessary now that the compliant accessor is fully tested.
 
 ---
 

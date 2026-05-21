@@ -58,6 +58,26 @@ void main() {
         expect(0.123.length(), 5);
         expect((-123.45).length(), 7); // Includes negative sign and decimal point
       });
+
+      // BUG-030: Dart's double.toString() switches to scientific notation for
+      // magnitudes >= 1e21, so length() counts the scientific string, not the
+      // decimal digits. These tests pin that documented behavior.
+      test('Large whole double below 1e21 stays in decimal notation', () {
+        // 1e20 -> "100000000000000000000.0" (23 chars): 21 digits plus the
+        // trailing ".0" double formatting, not scientific notation.
+        expect(1e20.length(), 23);
+      });
+
+      test('Magnitude >= 1e21 uses scientific notation', () {
+        // 1e21 -> "1e+21" (5 chars).
+        expect(1e21.length(), 5);
+        expect((-1e21).length(), 6); // includes the '-'
+      });
+
+      test('BigInt is the workaround for true digit count of large integers', () {
+        // Documents the recommended escape hatch from the dartdoc.
+        expect(BigInt.from(1e21).toString(), hasLength(22)); // "1000000000000000000000"
+      });
     });
   });
 

@@ -2219,6 +2219,43 @@ void main() {
       });
     });
 
+    // BUG-024: exact ISO 8601 boundary assertions for weekNumber()/numOfWeeks().
+    // weekOfYear stays a raw approximation (can be 0 or 53); weekNumber() is the
+    // standards-compliant value that rolls dates into the correct year's week.
+    group('weekNumber / numOfWeeks - ISO 8601 edge cases', () {
+      test('Jan 1 2010 (Friday) belongs to week 53 of 2009', () {
+        expect(DateTime(2010, 1, 1).weekNumber(), 53);
+      });
+
+      test('Dec 31 2012 (Monday) belongs to week 1 of 2013', () {
+        expect(DateTime(2012, 12, 31).weekNumber(), 1);
+      });
+
+      test('Jan 4 is always in week 1 (2000-2030)', () {
+        for (int year = 2000; year <= 2030; year++) {
+          expect(
+            DateTime(year, 1, 4).weekNumber(),
+            1,
+            reason: 'Jan 4 $year must be ISO week 1',
+          );
+        }
+      });
+
+      test('numOfWeeks reports 53 for 53-week years', () {
+        // Years where Jan 1 (or Dec 31) is a Thursday, or leap years starting Wed.
+        expect(DateTime(2015).numOfWeeks(2015), 53);
+        expect(DateTime(2020).numOfWeeks(2020), 53);
+        expect(DateTime(2009).numOfWeeks(2009), 53);
+        expect(DateTime(2026).numOfWeeks(2026), 53);
+      });
+
+      test('numOfWeeks reports 52 for ordinary years', () {
+        expect(DateTime(2014).numOfWeeks(2014), 52);
+        expect(DateTime(2021).numOfWeeks(2021), 52);
+        expect(DateTime(2023).numOfWeeks(2023), 52);
+      });
+    });
+
     group('toSerialString', () {
       test('1. Basic date time', () {
         expect(DateTime(2023, 6, 15, 12, 30, 45).toSerialString, '20230615T123045');

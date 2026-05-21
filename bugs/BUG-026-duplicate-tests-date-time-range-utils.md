@@ -3,7 +3,25 @@
 **File:** `test/datetime/date_time_range_utils_test.dart`
 **Severity:** 🟢 Low
 **Category:** Test Quality
-**Status:** Open
+**Status:** Fixed (Unreleased)
+
+---
+
+## Resolution (Unreleased)
+
+Removed the duplicate "5th Monday of February doesn't exist" test (the second
+copy, `returns false for February when asking for a day that does not exist`),
+which had an identical range and call to `returns false when nth occurrence does
+not exist`. Left a comment at the removal site pointing to the surviving test.
+
+Also corrected a misleading test name in the same file: `returns true for 5th
+Saturday of December 2024 (does not exist)` asserted `isFalse`, so it was renamed
+to `returns false for 5th Saturday of December 2024 (does not exist)` with a
+clarifying comment.
+
+The vaguer "Duplicate 2" claim (lines ~101/~183) was not a true duplicate — those
+tests cover different months/weekdays (6th Friday of April vs 5th Saturday of
+December) and were left in place.
 
 ---
 

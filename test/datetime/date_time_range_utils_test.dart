@@ -159,7 +159,9 @@ void main() {
       expect(range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.tuesday, month: 2), isTrue);
     });
 
-    test('returns true for 5th Saturday of December 2024 (does not exist)', () {
+    test('returns false for 5th Saturday of December 2024 (does not exist)', () {
+      // December 2024 has only four Saturdays (7, 14, 21, 28), so the 5th
+      // occurrence is absent and the result must be false.
       final DateTimeRange<DateTime> range = DateTimeRange(
         start: DateTime(2024),
         end: DateTime(2024, 12, 31),
@@ -178,16 +180,9 @@ void main() {
       ); // February has a Thursday on Feb.29
     });
 
-    test('returns false for February when asking for a day that does not exist', () {
-      final DateTimeRange<DateTime> range = DateTimeRange(
-        start: DateTime(2023),
-        end: DateTime(2023, 12, 31),
-      );
-      expect(
-        range.isNthDayOfMonthInRange(n: 5, dayOfWeek: DateTime.monday, month: 2),
-        isFalse,
-      ); // February never has a fifth Monday
-    });
+    // BUG-026: the "5th Monday of February doesn't exist" scenario is already
+    // covered by 'returns false when nth occurrence does not exist' above with
+    // an identical range and call; the duplicate test was removed here.
 
     // Cross-year range tests (Fix 3: algorithm fix for cross-year validation)
     test('January month in range spanning Nov to Feb', () {

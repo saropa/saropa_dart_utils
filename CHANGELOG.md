@@ -1,32 +1,30 @@
 # Changelog
 
-<!-- cspell:ignore ints docstrings codepoint codepoints sublist -->
+<!-- cspell:disable -->
 
-``````text
-                                                ....
-                                       -+shdmNMMMMNmdhs+-
-                                    -odMMMNyo/-..``.++:+o+/-
-                                 /dMMMMMM/               `````
-                                dMMMMMMMMNdhhhdddmmmNmmddhs+-
-                                /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/
-                              . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+
-                              o     ..~~~::~+==+~:/+sdNMMMMMMMMMMMo
-                              m                        .+NMMMMMMMMMN
-                              m+                         :MMMMMMMMMm
-                              /N:                        :MMMMMMMMM/
-                               oNs.                    +NMMMMMMMMo
-                                :dNy/.              ./smMMMMMMMMm:
-                                 /dMNmhyso+++oosydNNMMMMMMMMMd/
-                                    .odMMMMMMMMMMMMMMMMMMMMdo-
-                                       -+shdNNMMMMNNdhs+-
-                                               ``
+```text
+                                    ....
+                             -+shdmNMMMMNmdhs+-
+                          -odMMMNyo/-..``.++:+o+/-
+                       /dMMMMMM/               `````
+                      dMMMMMMMMNdhhhdddmmmNmmddhs+-
+                      /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/
+                    . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+
+                    o     ..~~~::~+==+~:/+sdNMMMMMMMMMMMo
+                    m                        .+NMMMMMMMMMN
+                    m+                         :MMMMMMMMMm
+                    /N:                        :MMMMMMMMM/
+                     oNs.                    +NMMMMMMMMo
+                      :dNy/.              ./smMMMMMMMMm:
+                       /dMNmhyso+++oosydNNMMMMMMMMMd/
+                          .odMMMMMMMMMMMMMMMMMMMMdo-
+                             -+shdNNMMMMNNdhs+-
+                                     ``
 
 Made by Saropa. All rights reserved.
 
 Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
-``````
-
-<!-- cspell:disable -->
+```
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -37,15 +35,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [1.1.1] - Unreleased
 
 ### Added
 
 - **`reports/organize_reports.py`** — local copy of shared report organizer script, tracked in git via `.gitignore` negation pattern while keeping generated report files ignored.
+- **`scripts/publish.py` pre-publish quality audit (v2.5)** — the audit phase now runs two additional checks before publishing and reports the top 10 of every category to the terminal (full results logged to the report file): inline code-comment density per method (flags branch/loop/variable-heavy methods that lack `//` explanations) and per-parameter unit test coverage (flags methods tested by fewer than `params + 1` test blocks). Analyzer findings now include the actual messages, not just counts. The post-audit prompt changed from `Continue? [y/N]` to **ignore / retry / abort**, where `retry` re-runs all checks after fixes and `abort` (the default) cancels.
 
 ### Fixed
 
 - **`parseVersion`** — removed invalid named positional fields from record return type `(int major, int minor, int patch)` → `(int, int, int)` to fix `invalid_field_name` analyzer error.
+- **Lint cleanup** — cleared `saropa_lints` diagnostics across several files:
+  - `string_extensions.dart` — `prefer_single_quotes` in `wrapWith` interpolation.
+  - `parsing/hex_color_utils.dart`, `parsing/luhn_utils.dart` — `move_variable_closer_to_its_usage`: relocated function-local consts to their use sites to tighten scope.
+  - `map/map_diff_utils.dart` — `move_variable_closer_to_its_usage`: moved `removed` declaration to just before the second loop (its only use).
+  - `map/map_extensions.dart` — `prefer_cascade_over_chained` on consecutive `StringBuffer.write` calls; `avoid_ignoring_return_values` and `document_analyzer_ignore_rationale` on the recursive `removeKeys` and `update`/`putIfAbsent` suppressions.
+  - `iterable/occurrence.dart`, `string/between_result.dart`, `iterable/iterable_extensions.dart`, `list/unique_list_extensions.dart` — `document_analyzer_ignore_rationale`: added inline rationale to existing `// ignore:` directives.
+- **`MapExtensions.toMapStringDynamic`** (BUG-010) — added `throwOnDuplicate` parameter so callers can detect when two source keys collapse to the same `String` (e.g. `int` `1` and `String` `'1'`) instead of silently losing a value. Collision policy is now explicit: `throwOnDuplicate` throws `ArgumentError`, `ensureUniqueKey` keeps the first value, default keeps the last. Behavior is unchanged for existing callers.
+- **`UuidUtils.addHyphens`** (BUG-017) — confirmed hex-content validation (32-char non-hex strings now return `null` instead of producing a fake UUID) and added regression tests for non-hex, mixed-case, and punctuation inputs.
+
+### Documentation
+
+- **`String.between`** (BUG-029) — documented that an empty `end` delimiter is treated as "not found", so the `endOptional` rules apply (returns the tail after `start` by default, empty string when `endOptional: false`).
+- **`String.betweenResult`** (BUG-021) — clarified in tests that it returns the *outermost* match (first `start` to last `end`), contrasting with `between()` which returns the first balanced pair.
+
+### Tests
+
+- **`List.takeSafe`** (BUG-023) — added tests pinning the documented non-standard default (`takeSafe(0)` returns the original list; opt into Dart `take(0)` semantics with `ignoreZeroOrLess: false`).
+- **`DateTime.weekNumber` / `numOfWeeks`** (BUG-024) — added exact ISO 8601 boundary tests (Jan 1 2010 → week 53 of 2009, Dec 31 2012 → week 1 of 2013, Jan 4 always week 1, 53-week-year detection).
+- **`num.length()`** (BUG-030) — added tests for scientific-notation behavior at magnitudes ≥ 1e21 and the `BigInt` workaround for true digit counts.
+- **`date_time_range_utils_test`** (BUG-026) — removed a duplicate "5th Monday of February doesn't exist" test and corrected a test name that said "returns true" while asserting `isFalse`.
+- **BUG-020** — verified the previously-flagged methods (`getFirstDiffChar`, `hasInvalidUnicode`, `removeInvalidUnicode`, `collapseMultilineString`, `splitCapitalizedUnicode`, `isVowel`, `pluralize`, `endsWithPunctuation`, `endsWithAny`, `removeSingleCharacterWords`) all have dedicated test groups.
 
 ---
 

@@ -3,7 +3,18 @@
 **Multiple Files**
 **Severity:** 🔴 High
 **Category:** Missing Test Coverage
-**Status:** Partially resolved (Unreleased)
+**Status:** Fixed (Unreleased)
+
+---
+
+**Resolution note (2026-05-21):** All methods listed in this report now have
+dedicated test groups in `test/string/string_extensions_test.dart`:
+`getFirstDiffChar` (line 959), `hasInvalidUnicode` (972), `removeInvalidUnicode`
+(990), `isVowel` (1017), `removeSingleCharacterWords` (1147), `endsWithAny`
+(1367), `endsWithPunctuation` (1389), `pluralize` (1558), `collapseMultilineString`
+(1620), and `splitCapitalizedUnicode` (688). Verified via grep that each method
+name resolves to a `group(...)` block exercising happy-path, empty, Unicode, and
+edge-case inputs. No remaining zero-coverage methods from this list.
 
 ---
 

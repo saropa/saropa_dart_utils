@@ -177,9 +177,22 @@ void main() {
     test('4. Empty string', () => expect(''.betweenResult('(', ')'), isNull));
     test('5. Empty start', () => expect('hello'.betweenResult('', ')'), isNull));
     test('6. Empty end', () => expect('hello'.betweenResult('(', ''), isNull));
-    test('7. Multiple delimiters', () {
+    test('7. Multiple delimiters returns outermost match (BUG-021)', () {
+      // betweenResult uses indexOf for start but lastIndexOf for end, so it
+      // returns the OUTERMOST span: first '(' to last ')'. This is intentional
+      // and documented; use between() for the first balanced pair instead.
       final BetweenResult? result = '(first) (second)'.betweenResult('(', ')');
-      expect(result?.content, 'first) (second');
+      expect(
+        result?.content,
+        'first) (second',
+        reason: 'betweenResult spans the first start to the last end (outermost)',
+      );
+    });
+
+    test('8a. between() returns the first balanced pair, contrasting outermost', () {
+      // Documents the difference flagged in BUG-021: between() is first-match.
+      expect('(first) (second)'.between('(', ')'), 'first');
+      expect('<b>bold</b> and <i>italic</i>'.between('<', '>'), 'b');
     });
     test('8. With whitespace', () {
       final BetweenResult? result = 'hello ( world ) test'.betweenResult('(', ')');
@@ -258,6 +271,22 @@ void main() {
       '14. Nested delimiters',
       () => expect('((inner))'.between('(', ')'), '(inner'),
     ); // Finds first )
+
+    // BUG-029: an empty end delimiter behaves like a not-found delimiter.
+    test('15. Empty end with endOptional default returns tail after start', () {
+      expect('Hello World'.between('Hello ', ''), 'World');
+    });
+
+    test('16. Empty end with endOptional false returns empty string', () {
+      expect('Hello World'.between('Hello ', '', endOptional: false), '');
+    });
+
+    test('17. Empty end matches non-matching end delimiter behavior', () {
+      expect(
+        'Hello World'.between('Hello ', ''),
+        'Hello World'.between('Hello ', 'NOMATCH'),
+      );
+    });
   });
 
   group('betweenLast', () {

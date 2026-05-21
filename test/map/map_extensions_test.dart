@@ -724,6 +724,63 @@ void main() {
     test('10. Number input', () => expect(MapExtensions.toMapStringDynamic(42), isNull));
   });
 
+  group('MapExtensions.toMapStringDynamic key collision (BUG-010)', () {
+    test('1. ensureUniqueKey true keeps first colliding value', () {
+      final Map<dynamic, dynamic> map = <dynamic, dynamic>{1: 'int', '1': 'string'};
+      final Map<String, dynamic>? result = MapExtensions.toMapStringDynamic(
+        map,
+        ensureUniqueKey: true,
+      );
+      expect(result?['1'], 'int');
+      expect(result, hasLength(1));
+    });
+
+    test('2. default (last wins) overwrites with last colliding value', () {
+      final Map<dynamic, dynamic> map = <dynamic, dynamic>{1: 'int', '1': 'string'};
+      final Map<String, dynamic>? result = MapExtensions.toMapStringDynamic(map);
+      expect(result?['1'], 'string');
+      expect(result, hasLength(1));
+    });
+
+    test('3. throwOnDuplicate throws ArgumentError on collision', () {
+      final Map<dynamic, dynamic> map = <dynamic, dynamic>{1: 'int', '1': 'string'};
+      expect(
+        () => MapExtensions.toMapStringDynamic(map, throwOnDuplicate: true),
+        throwsArgumentError,
+      );
+    });
+
+    test('4. throwOnDuplicate does not throw when keys are distinct', () {
+      final Map<dynamic, dynamic> map = <dynamic, dynamic>{1: 'one', 2: 'two', 'three': 3};
+      final Map<String, dynamic>? result = MapExtensions.toMapStringDynamic(
+        map,
+        throwOnDuplicate: true,
+      );
+      expect(result, hasLength(3));
+    });
+
+    test('5. throwOnDuplicate takes precedence over ensureUniqueKey', () {
+      final Map<dynamic, dynamic> map = <dynamic, dynamic>{1: 'int', '1': 'string'};
+      expect(
+        () => MapExtensions.toMapStringDynamic(
+          map,
+          ensureUniqueKey: true,
+          throwOnDuplicate: true,
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    test('6. no collision with distinct keys preserves all entries', () {
+      final Map<dynamic, dynamic> map = <dynamic, dynamic>{1: 'one', 2: 'two', 'three': 3};
+      final Map<String, dynamic>? result = MapExtensions.toMapStringDynamic(map);
+      expect(result, hasLength(3));
+      expect(result?['1'], 'one');
+      expect(result?['2'], 'two');
+      expect(result?['three'], 3);
+    });
+  });
+
   group('MapNullableExtensions', () {
     test(
       '1. null map isMapNullOrEmpty',

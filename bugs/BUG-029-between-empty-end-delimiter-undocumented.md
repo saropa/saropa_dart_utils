@@ -3,7 +3,22 @@
 **File:** `lib/string/string_between_extensions.dart`
 **Severity:** 🟢 Low
 **Category:** Documentation / Edge Case
-**Status:** Open
+**Status:** Fixed (Unreleased) — documented (Option B)
+
+---
+
+## Resolution (Unreleased)
+
+Chose Option B (document, don't change behavior). `between`'s dartdoc now states
+that an empty `end` is treated as "not found", so the `endOptional` rules apply:
+default `endOptional: true` returns the tail after `start`; `endOptional: false`
+returns an empty string. Added tests 15–17 in
+`test/string/string_between_extensions_test.dart` verifying the tail return, the
+empty-string return, and that empty `end` matches non-matching-`end` behavior.
+
+Note: `between` returns a non-nullable `String` (empty on no match), not `null`,
+so the original report's `isNull` expectations were corrected to `''` to match the
+actual contract.
 
 ---
 

@@ -3,7 +3,23 @@
 **File:** `lib/num/num_extensions.dart`
 **Severity:** 🟢 Low
 **Category:** Documentation / Edge Case
-**Status:** Open
+**Status:** Fixed (Unreleased) — documented
+
+---
+
+## Resolution (Unreleased)
+
+`length()`'s dartdoc already documents that magnitudes ≥ 1e21 are formatted in
+scientific notation by Dart's `toString()`, so the count reflects the scientific
+string, and points to `BigInt.from(n).toString().length` for the true digit count.
+Added tests in `test/num/num_extensions_test.dart` ("length") confirming:
+
+- `1e20.length()` == 23 (`"100000000000000000000.0"` — decimal, with the double
+  `.0` suffix; the original report's "5 / 21" estimates were both wrong)
+- `1e21.length()` == 5 (`"1e+21"`) and `(-1e21).length()` == 6
+- `BigInt.from(1e21).toString()` has length 22 (the documented workaround)
+
+The threshold is ≥ 1e21 (not 1e20 as the report's reproduction stated).
 
 ---
 

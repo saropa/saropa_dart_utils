@@ -19,9 +19,10 @@ void _writeFormattedValue({
     case final List<dynamic> list:
       buffer.write('[\n');
       for (final dynamic listItem in list) {
-        buffer.write(doubleIndent);
-        buffer.write(listItem);
-        buffer.write(',\n');
+        buffer
+          ..write(doubleIndent)
+          ..write(listItem)
+          ..write(',\n');
       }
       buffer.write(indent);
       buffer.write(_listClosingBracket);
@@ -73,9 +74,10 @@ extension StringMapExtensions on Map<String, dynamic> {
     const String indent = '  ';
     final StringBuffer buffer = StringBuffer('{\n');
     for (final MapEntry<String, dynamic> entry in entries) {
-      buffer.write(indent);
-      buffer.write(entry.key);
-      buffer.write(': ');
+      buffer
+        ..write(indent)
+        ..write(entry.key)
+        ..write(': ');
       _writeFormattedValue(
         buffer: buffer,
         value: entry.value,
@@ -176,11 +178,10 @@ extension StringMapExtensions on Map<String, dynamic> {
 
     removeWhere((String key, _) => removeKeysList.contains(key));
     if (recurseChildValues) {
-      // ignore: require_future_error_handling
+      // ignore: require_future_error_handling -- updateAll is synchronous; no future to handle
       updateAll(
         (String _, dynamic value) {
-          // Recursive call mutates child map in-place; return value not needed
-          // ignore: unused_result
+          // ignore: unused_result, saropa_lints/avoid_ignoring_return_values -- recursive in-place mutation; bool result intentionally discarded
           if (value is Map<String, dynamic>) value.removeKeys(removeKeysList);
 
           return value;
@@ -241,8 +242,7 @@ abstract final class MapExtensions {
   /// ```
   static void mapAddValue<K, V>({required Map<K, List<V>> map, required K key, required V value}) {
     if (value == null) return;
-    // Function is designed to mutate the map parameter
-    // ignore: saropa_lints/avoid_parameter_mutation
+    // ignore: saropa_lints/avoid_parameter_mutation -- function is designed to mutate the map parameter
     map.update(key, (List<V> list) => [...list, value], ifAbsent: () => <V>[value]);
   }
 
@@ -262,8 +262,7 @@ abstract final class MapExtensions {
     required V value,
   }) {
     if (value == null) return;
-    // Function is designed to mutate the map parameter
-    // ignore: saropa_lints/avoid_parameter_mutation
+    // ignore: saropa_lints/avoid_parameter_mutation -- function is designed to mutate the map parameter
     map.update(
       key,
       (List<V> list) => list.where((V v) => v != value).toList(),
@@ -288,14 +287,22 @@ abstract final class MapExtensions {
   /// Returns [json] as a `Map<String, dynamic>`, or `null` if conversion is
   /// not possible.
   ///
-  /// All keys are converted to `String` via `toString()`. If the source map
-  /// contains keys that produce the same string (e.g. `1` and `'1'` both
-  /// become `'1'`), the last value wins by default. Pass
-  /// [ensureUniqueKey] as `true` to keep the first value instead.
+  /// All keys are converted to `String` via `toString()`. Two distinct source
+  /// keys can collapse to the same string (e.g. the `int` `1` and the `String`
+  /// `'1'` both become `'1'`); without handling, one value is silently lost.
+  /// The collision policy is explicit:
+  /// - [throwOnDuplicate] `true`: throws [ArgumentError] on the first collision
+  ///   so callers can detect lossy input instead of dropping data silently.
+  /// - [ensureUniqueKey] `true`: keeps the **first** colliding value.
+  /// - both `false` (default): the **last** colliding value wins (matches
+  ///   Dart's `Map.map` overwrite behavior).
+  ///
+  /// [throwOnDuplicate] takes precedence over [ensureUniqueKey].
   @useResult
   static Map<String, dynamic>? toMapStringDynamic(
     dynamic json, {
     bool ensureUniqueKey = false,
+    bool throwOnDuplicate = false,
   }) {
     if (json == null) {
       return null;
@@ -306,21 +313,28 @@ abstract final class MapExtensions {
     }
 
     if (json is Map<dynamic, dynamic>) {
-      if (ensureUniqueKey) {
-        final Map<String, dynamic> result = <String, dynamic>{};
-        json.forEach(
-          (dynamic key, dynamic value) {
-            // ignore: require_future_error_handling
-            result.putIfAbsent(key.toString(), () => value);
-          },
-        );
-
-        return result;
+      final Map<String, dynamic> result = <String, dynamic>{};
+      for (final MapEntry<dynamic, dynamic> entry in json.entries) {
+        final String key = entry.key.toString();
+        // Detect string-key collisions before overwriting so any data loss is a
+        // deliberate, caller-chosen outcome rather than a silent surprise.
+        if (result.containsKey(key)) {
+          if (throwOnDuplicate) {
+            throw ArgumentError(
+              'Duplicate key after toString() conversion: "$key" '
+              '(from ${entry.key.runtimeType})',
+            );
+          }
+          // Keep the first occurrence; skip this colliding value.
+          if (ensureUniqueKey) {
+            continue;
+          }
+          // Otherwise fall through and let the last value win.
+        }
+        result[key] = entry.value;
       }
 
-      return json.map(
-        (dynamic key, dynamic value) => MapEntry<String, dynamic>(key.toString(), value),
-      );
+      return result;
     }
 
     return null;

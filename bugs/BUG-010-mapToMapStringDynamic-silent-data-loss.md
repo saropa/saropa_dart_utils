@@ -3,7 +3,23 @@
 **File:** `lib/map/map_extensions.dart`
 **Severity:** 🔴 High
 **Category:** Data Loss / Logic Error
-**Status:** Open
+**Status:** Fixed (Unreleased)
+
+---
+
+## Resolution (Unreleased)
+
+Added a `throwOnDuplicate` parameter to `toMapStringDynamic`. The conversion now
+loops over entries and detects when two source keys collapse to the same string:
+
+- `throwOnDuplicate: true` throws `ArgumentError` (callers can detect lossy input).
+- `ensureUniqueKey: true` keeps the first colliding value.
+- both `false` (default) keeps the last value — unchanged for existing callers.
+
+Tests added in `test/map/map_extensions_test.dart`
+("MapExtensions.toMapStringDynamic key collision (BUG-010)") covering first-wins,
+last-wins, throw-on-collision, precedence, and the no-collision happy path. The
+empty-map case still returns `{}` (not `null`) to preserve existing behavior.
 
 ---
 

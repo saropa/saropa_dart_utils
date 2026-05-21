@@ -223,6 +223,11 @@ extension StringBetweenExtensions on String {
   /// If [endOptional] is `true` (default) and [end] is not found, returns
   /// content after [start]. When [trim] is `true` (default), the result is
   /// trimmed. Returns an empty string if no match is found.
+  ///
+  /// An empty [end] is treated the same as a delimiter that is *not found*: it
+  /// never matches, so the [endOptional] rules apply. With the default
+  /// `endOptional: true` this returns everything after [start]; with
+  /// `endOptional: false` it returns an empty string. (BUG-029)
   @useResult
   String between(String start, String end, {bool endOptional = true, bool trim = true}) {
     if (isEmpty || start.isEmpty) {

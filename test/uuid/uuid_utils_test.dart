@@ -109,6 +109,34 @@ void main() {
         expect(UuidUtils.addHyphens('a' * 31), isNull);
         expect(UuidUtils.addHyphens('a' * 33), isNull);
       });
+
+      // BUG-017: a 32-char string is no longer enough; content must be hex.
+      test('returns null for non-hex 32-char string', () {
+        expect(UuidUtils.addHyphens('z' * 32), isNull);
+      });
+
+      test('returns null when a single non-hex char is present', () {
+        // Last char 'z' is not a hex digit.
+        expect(UuidUtils.addHyphens('550e8400e29b41d4a71644665544000z'), isNull);
+      });
+
+      test('returns null for 32-char string with punctuation', () {
+        expect(UuidUtils.addHyphens('thisIsNotAValidUuidButHasLen32!!'), isNull);
+      });
+
+      test('accepts uppercase hex', () {
+        expect(
+          UuidUtils.addHyphens('550E8400E29B41D4A716446655440000'),
+          equals('550E8400-E29B-41D4-A716-446655440000'),
+        );
+      });
+
+      test('accepts mixed-case hex', () {
+        expect(
+          UuidUtils.addHyphens('550e8400E29B41d4A716446655440000'),
+          equals('550e8400-E29B-41d4-A716-446655440000'),
+        );
+      });
     });
 
     group('removeHyphens', () {

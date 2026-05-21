@@ -3,7 +3,17 @@
 **File:** `lib/uuid/uuid_utils.dart`
 **Severity:** 🟡 Medium
 **Category:** Logic Error / Validation Gap
-**Status:** Open
+**Status:** Fixed (Unreleased)
+
+---
+
+## Resolution (Unreleased)
+
+`addHyphens` validates hex content via `_hexOnly32Regex` (`^[0-9a-fA-F]{32}$`)
+before inserting hyphens, so 32-char non-hex strings now return `null` instead of
+producing a fake UUID. Regression tests added in `test/uuid/uuid_utils_test.dart`
+for non-hex (`'z' * 32`), a single trailing non-hex char, punctuation, uppercase,
+and mixed-case input.
 
 ---
 

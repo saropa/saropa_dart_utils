@@ -1,9 +1,25 @@
 # BUG-021: `betweenResult()` Returns Outermost Match Instead of First Match — Unexpected Behavior
 
-**File:** `lib/string/string_search_extensions.dart`
+**File:** `lib/string/string_between_extensions.dart` (method lives here, not in
+`string_search_extensions.dart`)
 **Severity:** 🟡 Medium
 **Category:** Logic Error / Unexpected Behavior
-**Status:** Open
+**Status:** Fixed (Unreleased) — documented, non-breaking
+
+---
+
+## Resolution (Unreleased)
+
+Chose Option B (no breaking change to a published package). `betweenResult`'s
+dartdoc already states it uses `indexOf` for `start` and `lastIndexOf` for `end`
+(outermost match). The first-balanced-pair behavior is already provided by the
+existing `between()` method, so no new `betweenFirst()` was added (it would
+duplicate `between()`). Updated `test/string/string_between_extensions_test.dart`
+test 7 with an explanatory comment + `reason:`, and added test "8a" contrasting
+`between()` (first pair) against `betweenResult()` (outermost).
+
+A breaking alternative (make `betweenResult` first-match) remains available if
+the maintainers want it in a major version bump.
 
 ---
 
