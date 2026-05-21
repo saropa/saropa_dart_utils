@@ -98,7 +98,7 @@ extension StringExtensions on String {
       return null;
     }
 
-    return '${before ?? ""}$this${after ?? ""}';
+    return '${before ?? ''}$this${after ?? ''}';
   }
 
   /// Returns this string wrapped in single quotes: `'string'`.

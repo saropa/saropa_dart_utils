@@ -5,7 +5,6 @@
   bool Function(V a, V b)? equals,
 }) {
   final Map<K, V> added = <K, V>{};
-  final Map<K, V> removed = <K, V>{};
   final Map<K, V> changed = <K, V>{};
   final bool Function(V a, V b) eq = equals ?? (V a, V b) => a == b;
   for (final K k in after.keys) {
@@ -18,6 +17,7 @@
       if (beforeVal != null && !eq(beforeVal, afterVal)) changed[k] = afterVal;
     }
   }
+  final Map<K, V> removed = <K, V>{};
   for (final K k in before.keys) {
     if (!after.containsKey(k)) {
       final V? v = before[k];

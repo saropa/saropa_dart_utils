@@ -12,8 +12,7 @@ import 'package:meta/meta.dart';
 /// print(result?.remaining); // 'hello test'
 /// ```
 @immutable
-// Manual == is simpler than adding equatable dependency for one class.
-// ignore: require_extend_equatable
+// ignore: require_extend_equatable -- manual == is simpler than an equatable dependency for one class
 class BetweenResult {
   /// Creates a [BetweenResult] with the given [content] and [remaining].
   const BetweenResult(this.content, this.remaining);
@@ -25,8 +24,7 @@ class BetweenResult {
   ///
   /// May be `null` when no content remains after the match (e.g. when
   /// the end delimiter is optional and not found).
-  // remaining is genuinely null when endOptional triggers without a match.
-  // ignore: avoid_unnecessary_nullable_fields
+  // ignore: avoid_unnecessary_nullable_fields -- remaining is genuinely null when endOptional triggers without a match
   final String? remaining;
 
   @override

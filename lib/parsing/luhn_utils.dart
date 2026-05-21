@@ -1,10 +1,6 @@
 /// Luhn check (credit card / ID validation). Roadmap #148.
 bool luhnCheck(String digits) {
   const int minLength = 2;
-  const int modBase = 10;
-  const int doubleDigitThreshold = 9;
-  const int doubleDigitAdjust = 9;
-
   final String digitsOnly = digits.replaceAll(RegExp(r'\D'), '');
   if (digitsOnly.length < minLength) return false;
   int sum = 0;
@@ -14,11 +10,14 @@ bool luhnCheck(String digits) {
     if (digit == null) return false;
     int value = digit;
     if (isAlternate) {
+      const int doubleDigitThreshold = 9;
+      const int doubleDigitAdjust = 9;
       value *= 2;
       if (value > doubleDigitThreshold) value -= doubleDigitAdjust;
     }
     sum += value;
     isAlternate = !isAlternate;
   }
+  const int modBase = 10;
   return sum % modBase == 0;
 }

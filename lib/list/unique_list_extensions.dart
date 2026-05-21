@@ -40,7 +40,7 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
 
       // Since we iterate backwards, the first time we see a key, it's the
       // last occurrence in the list. putIfAbsent ensures we only store it once.
-      // ignore: require_future_error_handling
+      // ignore: require_future_error_handling -- putIfAbsent is synchronous; no future to handle
       lastIndices.putIfAbsent(key, () => i);
     }
 

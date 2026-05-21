@@ -12,8 +12,7 @@ import 'package:meta/meta.dart';
 /// print(result?.count); // 2
 /// ```
 @immutable
-// Manual == is simpler than adding equatable dependency for one class.
-// ignore: require_extend_equatable
+// ignore: require_extend_equatable -- manual == is simpler than an equatable dependency for one class
 class Occurrence<T extends Object> {
   /// Creates an [Occurrence] with the given [value] and [count].
   const Occurrence(this.value, this.count);

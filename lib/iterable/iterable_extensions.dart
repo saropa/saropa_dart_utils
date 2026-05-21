@@ -32,7 +32,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
     for (final T item in this) {
       // Update the frequency of the current integer in the map, or set it to
       //   1 if it's not in the map yet.
-      // ignore: require_future_error_handling
+      // ignore: require_future_error_handling -- update is synchronous; no future to handle
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
@@ -67,7 +67,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
     for (final T item in this) {
       // Update the frequency of the current integer in the map,
       // or set it to 1 if it's not in the map yet.
-      // ignore: require_future_error_handling
+      // ignore: require_future_error_handling -- update is synchronous; no future to handle
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
