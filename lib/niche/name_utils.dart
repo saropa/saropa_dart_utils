@@ -5,7 +5,7 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 String abbreviateName(String name) {
   final List<String> parts = name.trim().split(RegExp(r'\s+'));
   if (parts.isEmpty) return '';
-  if (parts.length == 1) return parts[0];
+  if (parts.length == 1) return parts.firstOrNull ?? '';
   final first = parts.firstOrNull;
   final last = parts.lastOrNull;
   if (first == null || last == null) return '';

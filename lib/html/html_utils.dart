@@ -73,10 +73,14 @@ abstract final class HtmlUtils {
     while (offset < length) {
       final int ampIndex = text.indexOf('&', offset);
       if (ampIndex == -1) {
+        // Bounds safe: offset is always ≤ length (loop guard above)
+        // ignore: avoid_string_substring
         buffer.write(text.substring(offset));
         break;
       }
       if (ampIndex > offset) {
+        // Bounds safe: offset < ampIndex (guarded by ampIndex > offset)
+        // ignore: avoid_string_substring
         buffer.write(text.substring(offset, ampIndex));
       }
       // Decode the entity at ampIndex, advance past it
@@ -135,6 +139,8 @@ abstract final class HtmlUtils {
     if (digitStart >= semiIndex) return null;
 
     // Parse digits and validate as a Unicode scalar value
+    // Bounds safe: digitStart < semiIndex (guarded above), semiIndex < length
+    // ignore: avoid_string_substring
     final String digits = text.substring(digitStart, semiIndex);
     final int? codePoint = int.tryParse(digits, radix: isHex ? 16 : 10);
     if (codePoint == null || !_isValidScalarValue(codePoint)) return null;
@@ -166,6 +172,8 @@ abstract final class HtmlUtils {
     final int searchBound = min(text.length, offset + htmlEntityMaxKeyLength);
     final int semiIndex = text.indexOf(';', offset + 2);
     if (semiIndex > 0 && semiIndex < searchBound) {
+      // Bounds safe: offset < semiIndex+1 ≤ length (indexOf found ';')
+      // ignore: avoid_string_substring
       final String candidate = text.substring(offset, semiIndex + 1);
       final String? value = htmlNamedEntities[candidate];
       if (value != null) {
@@ -184,6 +192,8 @@ abstract final class HtmlUtils {
   ) {
     final int legacyBound = min(text.length, offset + htmlEntityMaxLegacyLength);
     for (int end = legacyBound; end >= offset + 3; end--) {
+      // Bounds safe: offset+3 ≤ end ≤ legacyBound ≤ length
+      // ignore: avoid_string_substring
       final String candidate = text.substring(offset, end);
       final String? value = htmlNamedEntities[candidate];
       if (value != null) {
