@@ -37,7 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.1.1] - Unreleased
+## [1.1.2]
+
+- Version bump for publishing.
+
+---
+
+## [1.1.1]
 
 ### Fixed
 
