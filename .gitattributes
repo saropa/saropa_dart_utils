@@ -6,3 +6,8 @@
 *.css text eol=lf
 *.js text eol=lf
 *.md text eol=lf
+
+# Dart sources are LF-only. dartdoc's _stripDocImports crashes on CRLF + @docImport
+# (it indexes the \r-stripped comment with offsets that still count \r), so pinning
+# eol=lf makes the working tree deterministic regardless of core.autocrlf / core.eol.
+*.dart text eol=lf

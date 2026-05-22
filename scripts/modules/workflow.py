@@ -1,6 +1,7 @@
 """Publish workflow steps: prerequisites, git, format, test, analyze, release."""
 
 import re
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -271,14 +272,137 @@ def validate_changelog(project_dir: Path, version: str) -> tuple[bool, str]:
     return True, release_notes
 
 
+# dartdoc (through at least 9.0.4) crashes with a `RangeError` inside
+# `_stripDocImports` when a doc comment contains an `@docImport` directive AND the
+# source file uses CRLF (\r\n) line endings. dartdoc strips the `\r` from the
+# comment text but computes the directive's slice index from the analyzer's source
+# offsets, which still count the `\r` — so the index overshoots the stripped
+# string (the reported "Invalid value ... 0..9089: 9202" is exactly that overshoot,
+# the gap being the number of CRLF newlines in the comment). The Flutter framework
+# now uses `@docImport` in 500+ files; if the Flutter SDK was cloned with git
+# `core.autocrlf=true`, every Flutter `.dart` file is CRLF on disk and `dart doc`
+# dies while precaching Flutter's docs — long before it ever reaches this package's
+# own comments. It is therefore a LOCAL environment fault, not a package defect:
+# pub.dev rebuilds docs on Linux (LF), so the published package is unaffected.
+_DARTDOC_CRLF_FRAME = "_stripDocImports"
+
+
+def _is_dartdoc_crlf_crash(output: str) -> bool:
+    """True when `dart doc` output is the known CRLF/@docImport RangeError crash."""
+    if not output:
+        return False
+    # The frame name is the precise signature; fall back to the RangeError-in-
+    # comment-processing combo in case a dartdoc version shifts the frame label.
+    if _DARTDOC_CRLF_FRAME in output:
+        return True
+    return "RangeError" in output and "documentation_comment.dart" in output
+
+
+def _flutter_sdk_root() -> Path | None:
+    """Locate the Flutter SDK root from the `flutter` launcher on PATH.
+
+    `flutter` resolves to `<sdk>/bin/flutter(.bat)`, so the SDK root is two levels
+    up. Returns None when Flutter is not on PATH (the diagnostic just omits the
+    SDK-specific remediation in that case).
+    """
+    launcher = shutil.which("flutter")
+    if not launcher:
+        return None
+    return Path(launcher).resolve().parent.parent
+
+
+def _flutter_sdk_has_crlf(sdk_root: Path) -> bool:
+    """True when a representative Flutter framework `.dart` file is CRLF on disk.
+
+    We probe one well-known framework file rather than scanning the whole SDK: if
+    the checkout was line-ending-polluted at clone time, every tracked file shares
+    the same conversion, so one probe is a reliable signal.
+    """
+    probe = (
+        sdk_root / "packages" / "flutter" / "lib" / "src" / "widgets" / "framework.dart"
+    )
+    try:
+        return b"\r\n" in probe.read_bytes()
+    except OSError:
+        return False
+
+
+def _report_dartdoc_crlf_bug() -> None:
+    """Explain the known dartdoc CRLF/@docImport crash and the one-time SDK fix.
+
+    Called only after `dart doc` failed with the `_stripDocImports` RangeError. We
+    let the publish continue (the package is fine) but tell the operator exactly
+    why local docs failed and how to clear it permanently.
+    """
+    ui.print_warning("dart doc hit the known dartdoc RangeError in _stripDocImports.")
+    ui.print_info(
+        "Cause: CRLF line endings in the Flutter SDK source + @docImport directives "
+        "trip a dartdoc offset bug while precaching Flutter's own docs."
+    )
+    ui.print_info(
+        "This is a LOCAL environment issue, not a package defect: pub.dev rebuilds "
+        "docs on Linux (LF), so publishing is unaffected."
+    )
+
+    sdk_root = _flutter_sdk_root()
+    if sdk_root and _flutter_sdk_has_crlf(sdk_root):
+        sdk = sdk_root.as_posix()
+        ui.print_warning(f"Flutter SDK has CRLF .dart files: {sdk}")
+        ui.print_colored(
+            "  One-time fix (renormalizes the SDK checkout to LF):", ui.Color.WHITE
+        )
+        # Use `input`, NOT `false`: on Windows `core.autocrlf=false` falls back to
+        # `core.eol=native` (CRLF), so it would re-introduce CRLF on the reset below.
+        # `input` normalizes commits to LF and never converts on checkout.
+        ui.print_colored("      git config --global core.autocrlf input", ui.Color.CYAN)
+        ui.print_colored(f'      git -C "{sdk}" rm --cached -rq .', ui.Color.CYAN)
+        ui.print_colored(f'      git -C "{sdk}" reset --hard', ui.Color.CYAN)
+        ui.print_colored(
+            "  (reset --hard discards uncommitted SDK edits; check `git status` first.)",
+            ui.Color.WHITE,
+        )
+    # Local doc validation is skipped until the SDK is renormalized; flag it so the
+    # operator knows this step gave no signal about THIS package's own dartdoc.
+    ui.print_warning("Local doc validation skipped (SDK crash precedes this package).")
+    ui.print_success("Continuing with publish.")
+
+
 def generate_docs(project_dir: Path) -> bool:
-    """Generate documentation with dart doc."""
+    """Generate documentation with dart doc.
+
+    Returns True on success, and also True (with a clear diagnostic) when the only
+    failure is the known dartdoc CRLF/@docImport `RangeError` originating in the
+    Flutter SDK source — that crash is a local-environment fault and must not abort
+    a publish, since pub.dev rebuilds the docs server-side on LF. Any OTHER
+    `dart doc` failure is a real problem and returns False so the caller aborts.
+    """
     ui.print_header("STEP 8: GENERATING DOCUMENTATION")
 
-    result = run_mod.run_command(
-        ["dart", "doc"], project_dir, "Generating documentation", capture_output=True
-    )
-    return result.returncode == 0
+    # Use run_capture (not run_command) so we own the messaging: on the CRLF crash
+    # we suppress dartdoc's alarming stack trace and the misleading "failed" line,
+    # and explain the real, harmless cause instead.
+    ui.print_info("Generating documentation...")
+    ui.print_colored("      $ dart doc", ui.Color.WHITE)
+    result = run_mod.run_capture(["dart", "doc"], project_dir)
+    if result.returncode == 0:
+        ui.print_success("Documentation generated")
+        return True
+
+    combined = f"{result.stdout or ''}\n{result.stderr or ''}"
+    if not _is_dartdoc_crlf_crash(combined):
+        # An unrecognized doc failure: surface dartdoc's output and fail hard so a
+        # genuine documentation problem still blocks the release.
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+        ui.print_error(
+            f"Documentation generation failed (exit code {result.returncode})"
+        )
+        return False
+
+    _report_dartdoc_crlf_bug()
+    return True
 
 
 def pre_publish_validation(project_dir: Path) -> bool:
