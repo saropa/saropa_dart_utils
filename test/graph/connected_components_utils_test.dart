@@ -40,7 +40,9 @@ void main() {
 
     test('single node returns one component', () {
       final List<List<int>> result = connectedComponents(buildGraph(<(int, int)>[], 1));
-      expect(result, <List<int>>[<int>[0]]);
+      expect(result, <List<int>>[
+        <int>[0],
+      ]);
     });
 
     test('empty graph returns no components', () {

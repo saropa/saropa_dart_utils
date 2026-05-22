@@ -37,7 +37,9 @@ void main() {
     test('single element yields single-key map', () {
       expect(
         <int>[5].groupByTransform((int x) => x.isEven, (int x) => x * 2),
-        <bool, List<int>>{false: <int>[10]},
+        <bool, List<int>>{
+          false: <int>[10],
+        },
       );
     });
 
@@ -47,7 +49,9 @@ void main() {
         2,
         3,
       ].groupByTransform((int _) => 'k', (int x) => x);
-      expect(result, <String, List<int>>{'k': <int>[1, 2, 3]});
+      expect(result, <String, List<int>>{
+        'k': <int>[1, 2, 3],
+      });
     });
   });
 }

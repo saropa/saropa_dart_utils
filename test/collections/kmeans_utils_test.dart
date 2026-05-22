@@ -27,11 +27,14 @@ void main() {
     });
 
     test('should put everything in cluster 0 when k is 1', () {
-      expect(kmeans2D([
-        (1.0, 1.0),
-        (2.0, 2.0),
-        (3.0, 3.0),
-      ], 1), [0, 0, 0]);
+      expect(
+        kmeans2D([
+          (1.0, 1.0),
+          (2.0, 2.0),
+          (3.0, 3.0),
+        ], 1),
+        [0, 0, 0],
+      );
     });
 
     test('should return empty list for empty points', () {
@@ -56,10 +59,14 @@ void main() {
     });
 
     test('should respect maxIterations parameter without error', () {
-      final List<int> result = kmeans2D([
-        (0.0, 0.0),
-        (1.0, 1.0),
-      ], 2, maxIterations: 1);
+      final List<int> result = kmeans2D(
+        [
+          (0.0, 0.0),
+          (1.0, 1.0),
+        ],
+        2,
+        maxIterations: 1,
+      );
       expect(result, hasLength(2));
     });
   });

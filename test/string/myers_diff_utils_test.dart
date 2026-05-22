@@ -25,7 +25,10 @@ void main() {
     });
 
     test('toString should report kind and char length', () {
-      expect(const DiffOp(DiffOpKind.equal, 'abcd').toString(), 'DiffOp(DiffOpKind.equal, 4 chars)');
+      expect(
+        const DiffOp(DiffOpKind.equal, 'abcd').toString(),
+        'DiffOp(DiffOpKind.equal, 4 chars)',
+      );
     });
   });
 

@@ -11,8 +11,10 @@ void main() {
       });
 
       test('should expose custom falsePositiveRate', () {
-        final BloomFilterUtils filter =
-            BloomFilterUtils(expectedCount: 50, falsePositiveRate: 0.05);
+        final BloomFilterUtils filter = BloomFilterUtils(
+          expectedCount: 50,
+          falsePositiveRate: 0.05,
+        );
         expect(filter.expectedCount, 50);
         expect(filter.falsePositiveRate, 0.05);
       });

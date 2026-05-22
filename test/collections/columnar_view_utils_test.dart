@@ -60,11 +60,14 @@ void main() {
     });
 
     test('should handle single row', () {
-      expect(toColumnar([
-        {'x': 10},
-      ]), {
-        'x': [10],
-      });
+      expect(
+        toColumnar([
+          {'x': 10},
+        ]),
+        {
+          'x': [10],
+        },
+      );
     });
   });
 }

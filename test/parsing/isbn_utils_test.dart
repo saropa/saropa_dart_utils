@@ -45,6 +45,9 @@ void main() {
 
     test('empty string invalid', () => expect(isValidIsbn13(''), isFalse));
 
-    test('X check digit not allowed in ISBN-13', () => expect(isValidIsbn13('978030640615X'), isFalse));
+    test(
+      'X check digit not allowed in ISBN-13',
+      () => expect(isValidIsbn13('978030640615X'), isFalse),
+    );
   });
 }

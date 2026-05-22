@@ -102,8 +102,14 @@ void main() {
   group('segmentBy', () {
     test('starts new segment when predicate false', () {
       // Split where next is not consecutive (+1).
-      final List<List<int>> result =
-          <int>[1, 2, 3, 5, 6, 9].segmentBy((int a, int b) => b == a + 1);
+      final List<List<int>> result = <int>[
+        1,
+        2,
+        3,
+        5,
+        6,
+        9,
+      ].segmentBy((int a, int b) => b == a + 1);
       expect(result, <List<int>>[
         <int>[1, 2, 3],
         <int>[5, 6],

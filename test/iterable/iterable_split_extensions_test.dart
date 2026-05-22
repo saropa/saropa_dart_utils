@@ -42,29 +42,25 @@ void main() {
 
   group('splitAtFirstWhere', () {
     test('matching element goes into the second list', () {
-      final (List<int>, List<int>) result =
-          <int>[1, 2, 3, 4].splitAtFirstWhere((int x) => x == 3);
+      final (List<int>, List<int>) result = <int>[1, 2, 3, 4].splitAtFirstWhere((int x) => x == 3);
       expect(result.$1, <int>[1, 2]);
       expect(result.$2, <int>[3, 4]);
     });
 
     test('splits at FIRST match only', () {
-      final (List<int>, List<int>) result =
-          <int>[1, 5, 2, 5].splitAtFirstWhere((int x) => x == 5);
+      final (List<int>, List<int>) result = <int>[1, 5, 2, 5].splitAtFirstWhere((int x) => x == 5);
       expect(result.$1, <int>[1]);
       expect(result.$2, <int>[5, 2, 5]);
     });
 
     test('no match puts everything in the first list', () {
-      final (List<int>, List<int>) result =
-          <int>[1, 2, 3].splitAtFirstWhere((int x) => x > 10);
+      final (List<int>, List<int>) result = <int>[1, 2, 3].splitAtFirstWhere((int x) => x > 10);
       expect(result.$1, <int>[1, 2, 3]);
       expect(result.$2, <int>[]);
     });
 
     test('match at first element yields empty first list', () {
-      final (List<int>, List<int>) result =
-          <int>[7, 8].splitAtFirstWhere((int x) => x == 7);
+      final (List<int>, List<int>) result = <int>[7, 8].splitAtFirstWhere((int x) => x == 7);
       expect(result.$1, <int>[]);
       expect(result.$2, <int>[7, 8]);
     });

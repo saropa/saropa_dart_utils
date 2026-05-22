@@ -13,7 +13,9 @@ void main() {
       expect(batcher, hasLength(2));
 
       batcher.add(3);
-      expect(flushed, <List<int>>[<int>[1, 2, 3]]);
+      expect(flushed, <List<int>>[
+        <int>[1, 2, 3],
+      ]);
       expect(batcher, hasLength(0)); // buffer cleared after flush
     });
 
@@ -24,7 +26,9 @@ void main() {
       batcher.add(1);
       batcher.add(2);
       batcher.flush();
-      expect(flushed, <List<int>>[<int>[1, 2]]);
+      expect(flushed, <List<int>>[
+        <int>[1, 2],
+      ]);
       expect(batcher, hasLength(0));
     });
 
@@ -45,7 +49,10 @@ void main() {
         ..add(3)
         ..add(4); // flush -> [3, 4]
       // First batch must be unaffected by subsequent adds.
-      expect(flushed, <List<int>>[<int>[1, 2], <int>[3, 4]]);
+      expect(flushed, <List<int>>[
+        <int>[1, 2],
+        <int>[3, 4],
+      ]);
     });
 
     test('toString reports batchSize and current length', () {

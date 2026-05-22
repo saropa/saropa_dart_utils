@@ -6,13 +6,20 @@ void main() {
     test('emits lists of exactly [count] elements', () async {
       final Stream<int> src = Stream<int>.fromIterable(<int>[1, 2, 3, 4]);
       final List<List<int>> out = await bufferCount<int>(src, 2).toList();
-      expect(out, <List<int>>[<int>[1, 2], <int>[3, 4]]);
+      expect(out, <List<int>>[
+        <int>[1, 2],
+        <int>[3, 4],
+      ]);
     });
 
     test('flushes a trailing partial buffer on done', () async {
       final Stream<int> src = Stream<int>.fromIterable(<int>[1, 2, 3, 4, 5]);
       final List<List<int>> out = await bufferCount<int>(src, 2).toList();
-      expect(out, <List<int>>[<int>[1, 2], <int>[3, 4], <int>[5]]);
+      expect(out, <List<int>>[
+        <int>[1, 2],
+        <int>[3, 4],
+        <int>[5],
+      ]);
     });
 
     test('emits nothing for an empty source', () async {
@@ -28,7 +35,9 @@ void main() {
     test('a count larger than the element total yields one final buffer', () async {
       final Stream<int> src = Stream<int>.fromIterable(<int>[1, 2]);
       final List<List<int>> out = await bufferCount<int>(src, 10).toList();
-      expect(out, <List<int>>[<int>[1, 2]]);
+      expect(out, <List<int>>[
+        <int>[1, 2],
+      ]);
     });
   });
 }

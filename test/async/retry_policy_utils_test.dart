@@ -25,11 +25,15 @@ void main() {
 
     test('retries until success', () async {
       int calls = 0;
-      final int r = await retryWithPolicy<int>(() async {
-        calls++;
-        if (calls < 3) throw Exception('fail');
-        return 42;
-      }, maxAttempts: 5, delay: Duration.zero);
+      final int r = await retryWithPolicy<int>(
+        () async {
+          calls++;
+          if (calls < 3) throw Exception('fail');
+          return 42;
+        },
+        maxAttempts: 5,
+        delay: Duration.zero,
+      );
       expect(r, 42);
       expect(calls, 3);
     });
@@ -37,10 +41,14 @@ void main() {
     test('rethrows after maxAttempts failures', () async {
       int calls = 0;
       await expectLater(
-        retryWithPolicy<int>(() async {
-          calls++;
-          throw StateError('always');
-        }, maxAttempts: 3, delay: Duration.zero),
+        retryWithPolicy<int>(
+          () async {
+            calls++;
+            throw StateError('always');
+          },
+          maxAttempts: 3,
+          delay: Duration.zero,
+        ),
         throwsA(isA<StateError>()),
       );
       expect(calls, 3);

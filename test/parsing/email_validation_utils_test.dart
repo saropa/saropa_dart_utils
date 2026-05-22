@@ -28,7 +28,10 @@ void main() {
       expect(isValidEmail('user@localhost'), isTrue);
     });
 
-    test('space inside address invalid', () => expect(isValidEmail('user name@example.com'), isFalse));
+    test(
+      'space inside address invalid',
+      () => expect(isValidEmail('user name@example.com'), isFalse),
+    );
 
     test('over 254 characters invalid', () {
       final String long = '${'a' * 250}@e.com';

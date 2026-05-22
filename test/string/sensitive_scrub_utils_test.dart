@@ -22,7 +22,10 @@ void main() {
     });
 
     test('should mask an email address', () {
-      expect(scrubSensitive('contact me@x.com please', defaultScrubRules), 'contact [EMAIL] please');
+      expect(
+        scrubSensitive('contact me@x.com please', defaultScrubRules),
+        'contact [EMAIL] please',
+      );
     });
 
     test('should mask a phone-like number', () {

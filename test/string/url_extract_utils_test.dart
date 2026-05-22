@@ -37,8 +37,9 @@ void main() {
     });
 
     test('should extract multiple URLs in order', () {
-      final List<UrlExtractUtils> links =
-          extractUrlsWithContext('a http://one.com b https://two.com c');
+      final List<UrlExtractUtils> links = extractUrlsWithContext(
+        'a http://one.com b https://two.com c',
+      );
       expect(
         links.map((UrlExtractUtils l) => l.url).toList(),
         <String>['http://one.com', 'https://two.com'],
@@ -46,8 +47,7 @@ void main() {
     });
 
     test('should include surrounding context in the snippet', () {
-      final List<UrlExtractUtils> links =
-          extractUrlsWithContext('please visit https://x.com soon');
+      final List<UrlExtractUtils> links = extractUrlsWithContext('please visit https://x.com soon');
       expect(links.single.snippet, contains('https://x.com'));
       expect(links.single.snippet, contains('visit'));
     });

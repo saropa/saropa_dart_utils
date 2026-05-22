@@ -15,9 +15,12 @@ void main() {
     });
 
     test('should return empty list for empty universe', () {
-      expect(greedySetCover([
-        <Object>{1, 2},
-      ], <Object>{}), <int>[]);
+      expect(
+        greedySetCover([
+          <Object>{1, 2},
+        ], <Object>{}),
+        <int>[],
+      );
     });
 
     test('should select a single covering set', () {

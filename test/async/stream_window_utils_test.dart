@@ -6,13 +6,19 @@ void main() {
     test('emits windows of exactly [count] elements', () async {
       final Stream<int> src = Stream<int>.fromIterable(<int>[1, 2, 3, 4, 5, 6]);
       final List<List<int>> out = await windowCount<int>(src, 3).toList();
-      expect(out, <List<int>>[<int>[1, 2, 3], <int>[4, 5, 6]]);
+      expect(out, <List<int>>[
+        <int>[1, 2, 3],
+        <int>[4, 5, 6],
+      ]);
     });
 
     test('flushes a trailing partial window on done', () async {
       final Stream<int> src = Stream<int>.fromIterable(<int>[1, 2, 3, 4]);
       final List<List<int>> out = await windowCount<int>(src, 3).toList();
-      expect(out, <List<int>>[<int>[1, 2, 3], <int>[4]]);
+      expect(out, <List<int>>[
+        <int>[1, 2, 3],
+        <int>[4],
+      ]);
     });
 
     test('emits nothing for an empty source', () async {

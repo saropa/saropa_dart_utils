@@ -20,7 +20,8 @@ void main() {
       final Object? result = canonicalizeJson(<String, Object?>{
         'z': <String, Object?>{'y': 1, 'x': 2},
       });
-      final Map<String, Object?> inner = (result! as Map<String, Object?>)['z']! as Map<String, Object?>;
+      final Map<String, Object?> inner =
+          (result! as Map<String, Object?>)['z']! as Map<String, Object?>;
       expect(inner.keys.toList(), <String>['x', 'y']);
     });
 
@@ -49,7 +50,10 @@ void main() {
 
     test('bool passes through unchanged', () => expect(canonicalizeJson(true), isTrue));
 
-    test('empty map yields empty map', () => expect(canonicalizeJson(<String, Object?>{}), <String, Object?>{}));
+    test(
+      'empty map yields empty map',
+      () => expect(canonicalizeJson(<String, Object?>{}), <String, Object?>{}),
+    );
 
     test('empty list yields empty list', () => expect(canonicalizeJson(<Object?>[]), <Object?>[]));
   });

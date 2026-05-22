@@ -62,8 +62,7 @@ void main() {
         [1, 1],
         [2, 0],
       ];
-      final List<List<int>> sorted =
-          sortByCriteria(data, thenBy<List<int>>(byFirst, bySecond));
+      final List<List<int>> sorted = sortByCriteria(data, thenBy<List<int>>(byFirst, bySecond));
       expect(sorted, [
         [1, 1],
         [1, 2],

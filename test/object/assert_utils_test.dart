@@ -15,7 +15,11 @@ void main() {
       expect(
         () => assertThat(false),
         throwsA(
-          isA<AssertionError>().having((AssertionError e) => e.message, 'message', 'Assertion failed'),
+          isA<AssertionError>().having(
+            (AssertionError e) => e.message,
+            'message',
+            'Assertion failed',
+          ),
         ),
       );
     });
@@ -24,7 +28,11 @@ void main() {
       expect(
         () => assertThat(false, 'custom failure'),
         throwsA(
-          isA<AssertionError>().having((AssertionError e) => e.message, 'message', 'custom failure'),
+          isA<AssertionError>().having(
+            (AssertionError e) => e.message,
+            'message',
+            'custom failure',
+          ),
         ),
       );
     });

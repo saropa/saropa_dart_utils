@@ -67,8 +67,9 @@ void main() {
 
     test('should preserve the original index of each candidate', () {
       final List<FuzzySearchUtils> result = fuzzySearch('apple', <String>['xyz', 'apple']);
-      final FuzzySearchUtils appleMatch =
-          result.firstWhere((FuzzySearchUtils m) => m.text == 'apple');
+      final FuzzySearchUtils appleMatch = result.firstWhere(
+        (FuzzySearchUtils m) => m.text == 'apple',
+      );
       expect(appleMatch.index, 1);
     });
   });

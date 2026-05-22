@@ -37,8 +37,9 @@ void main() {
     });
 
     test('should return the single interval unchanged', () {
-      final List<IntervalSchedulingUtils> result =
-          maxNonOverlappingIntervals([const IntervalSchedulingUtils(0, 10)]);
+      final List<IntervalSchedulingUtils> result = maxNonOverlappingIntervals([
+        const IntervalSchedulingUtils(0, 10),
+      ]);
       expect(result, hasLength(1));
       expect(result.first.start, 0);
       expect(result.first.end, 10);

@@ -53,7 +53,8 @@ void main() {
       // the late-finishing fn() future is still pending, and that completion
       // error escapes to the zone, failing the test even though the matcher
       // would otherwise pass.
-      skip: 'possible bug: timebox leaks an unhandled async error on timeout '
+      skip:
+          'possible bug: timebox leaks an unhandled async error on timeout '
           '(zone-level uncaught TimeboxException from the Timer callback)',
     );
 
@@ -71,7 +72,8 @@ void main() {
       // Same leak as above: the rethrown StateError is delivered both through
       // the returned future AND as an unhandled completeError on c, so an
       // uncaught error reaches the zone and fails the test.
-      skip: 'possible bug: timebox leaks an unhandled async error when fn throws '
+      skip:
+          'possible bug: timebox leaks an unhandled async error when fn throws '
           '(error delivered twice: returned future + completer)',
     );
   });

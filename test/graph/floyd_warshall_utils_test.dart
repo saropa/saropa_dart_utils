@@ -53,7 +53,9 @@ void main() {
 
     test('single node graph: 1x1 zero matrix', () {
       final WeightedAdjacency g = buildWeightedGraph(<GraphUtils>[], 1);
-      expect(floydWarshall(g), <List<double>>[<double>[0]]);
+      expect(floydWarshall(g), <List<double>>[
+        <double>[0],
+      ]);
     });
 
     test('empty graph returns empty matrix', () {

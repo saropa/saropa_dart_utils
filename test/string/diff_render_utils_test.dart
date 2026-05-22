@@ -51,8 +51,8 @@ void main() {
       expect(
         renderUnifiedDiff(ops, format: DiffOutputFormat.html),
         '<span class="diff-context">  ctx\n</span>'
-            '<span class="diff-add">+ new\n</span>'
-            '<span class="diff-remove">- old\n</span>',
+        '<span class="diff-add">+ new\n</span>'
+        '<span class="diff-remove">- old\n</span>',
       );
     });
 

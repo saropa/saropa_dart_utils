@@ -27,7 +27,10 @@ void main() {
 
     test('toString should render present parts', () {
       const HumanNameParserUtils name = HumanNameParserUtils(first: 'John', last: 'Public');
-      expect(name.toString(), 'HumanNameParserUtils(first: John, middle: , last: Public, suffix: )');
+      expect(
+        name.toString(),
+        'HumanNameParserUtils(first: John, middle: , last: Public, suffix: )',
+      );
     });
   });
 

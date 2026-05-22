@@ -28,8 +28,7 @@ void main() {
 
     test('should use the keyOf projection', () {
       // Sort by string length: 'ccc'(idx2),'bb'(idx1) are the two longest.
-      final List<int> result =
-          topKIndices(['a', 'bb', 'ccc', 'd'], 2, (String s) => s.length);
+      final List<int> result = topKIndices(['a', 'bb', 'ccc', 'd'], 2, (String s) => s.length);
       expect(result.toSet(), {1, 2});
     });
 

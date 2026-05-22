@@ -38,7 +38,9 @@ void main() {
         ..set('x', 1);
       await Future<void>.delayed(const Duration(milliseconds: 40));
       c.set('x', 2); // refresh expiry to 60ms from now
-      await Future<void>.delayed(const Duration(milliseconds: 40)); // 80ms total, 40ms since refresh
+      await Future<void>.delayed(
+        const Duration(milliseconds: 40),
+      ); // 80ms total, 40ms since refresh
       expect(c.get('x'), 2); // still valid because expiry was reset
     });
 
@@ -52,7 +54,8 @@ void main() {
     });
 
     test('toString reports ttl and length', () {
-      final TtlCache<String, int> c = TtlCache<String, int>(const Duration(seconds: 2))..set('a', 1);
+      final TtlCache<String, int> c = TtlCache<String, int>(const Duration(seconds: 2))
+        ..set('a', 1);
       expect(c.toString(), 'TtlCache(ttl: 0:00:02.000000, length: 1)');
     });
   });

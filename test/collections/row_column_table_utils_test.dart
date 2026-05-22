@@ -31,21 +31,27 @@ void main() {
     });
 
     test('should handle a single column', () {
-      expect(columnarToRows({
-        'a': [10, 20],
-      }), [
-        {'a': 10},
-        {'a': 20},
-      ]);
+      expect(
+        columnarToRows({
+          'a': [10, 20],
+        }),
+        [
+          {'a': 10},
+          {'a': 20},
+        ],
+      );
     });
 
     test('should preserve null cell values', () {
-      expect(columnarToRows({
-        'a': [null, 5],
-      }), [
-        {'a': null},
-        {'a': 5},
-      ]);
+      expect(
+        columnarToRows({
+          'a': [null, 5],
+        }),
+        [
+          {'a': null},
+          {'a': 5},
+        ],
+      );
     });
 
     test('should return empty list when first column is empty', () {
