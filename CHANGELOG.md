@@ -33,39 +33,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Published version**: See field `version` in [pubspec.yaml](./pubspec.yaml)
 
+**Older versions**: Entries for **0.5.9 and earlier** live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
+
 ---
 
 ## [1.1.1] - Unreleased
 
-### Added
+### Fixed
+
+- **`parseVersion`** — removed invalid named positional fields from record return type `(int major, int minor, int patch)` → `(int, int, int)` to fix `invalid_field_name` analyzer error.
+- **`MapExtensions.toMapStringDynamic`** (BUG-010) — added `throwOnDuplicate` parameter so callers can detect when two source keys collapse to the same `String` (e.g. `int` `1` and `String` `'1'`) instead of silently losing a value. Collision policy is now explicit: `throwOnDuplicate` throws `ArgumentError`, `ensureUniqueKey` keeps the first value, default keeps the last. Behavior is unchanged for existing callers.
+
+<details><summary>Maintenance</summary>
+
+**Tooling**
 
 - **`reports/organize_reports.py`** — local copy of shared report organizer script, tracked in git via `.gitignore` negation pattern while keeping generated report files ignored.
 - **`scripts/publish.py` pre-publish quality audit (v2.5)** — the audit phase now runs two additional checks before publishing and reports the top 10 of every category to the terminal (full results logged to the report file): inline code-comment density per method (flags branch/loop/variable-heavy methods that lack `//` explanations) and per-parameter unit test coverage (flags methods tested by fewer than `params + 1` test blocks). Analyzer findings now include the actual messages, not just counts. The post-audit prompt changed from `Continue? [y/N]` to **ignore / retry / abort**, where `retry` re-runs all checks after fixes and `abort` (the default) cancels.
 
-### Fixed
+**Lint**
 
-- **`parseVersion`** — removed invalid named positional fields from record return type `(int major, int minor, int patch)` → `(int, int, int)` to fix `invalid_field_name` analyzer error.
 - **Lint cleanup** — cleared `saropa_lints` diagnostics across several files:
   - `string_extensions.dart` — `prefer_single_quotes` in `wrapWith` interpolation.
   - `parsing/hex_color_utils.dart`, `parsing/luhn_utils.dart` — `move_variable_closer_to_its_usage`: relocated function-local consts to their use sites to tighten scope.
   - `map/map_diff_utils.dart` — `move_variable_closer_to_its_usage`: moved `removed` declaration to just before the second loop (its only use).
   - `map/map_extensions.dart` — `prefer_cascade_over_chained` on consecutive `StringBuffer.write` calls; `avoid_ignoring_return_values` and `document_analyzer_ignore_rationale` on the recursive `removeKeys` and `update`/`putIfAbsent` suppressions.
   - `iterable/occurrence.dart`, `string/between_result.dart`, `iterable/iterable_extensions.dart`, `list/unique_list_extensions.dart` — `document_analyzer_ignore_rationale`: added inline rationale to existing `// ignore:` directives.
-- **`MapExtensions.toMapStringDynamic`** (BUG-010) — added `throwOnDuplicate` parameter so callers can detect when two source keys collapse to the same `String` (e.g. `int` `1` and `String` `'1'`) instead of silently losing a value. Collision policy is now explicit: `throwOnDuplicate` throws `ArgumentError`, `ensureUniqueKey` keeps the first value, default keeps the last. Behavior is unchanged for existing callers.
+
+**Verified**
+
 - **`UuidUtils.addHyphens`** (BUG-017) — confirmed hex-content validation (32-char non-hex strings now return `null` instead of producing a fake UUID) and added regression tests for non-hex, mixed-case, and punctuation inputs.
 
-### Documentation
+**Documentation**
 
+- **CHANGELOG split** — moved entries for `0.5.9` and earlier into `CHANGELOG_HISTORY.md`, and collapsed non-user-facing items (lint, tests, refactoring, documentation, tooling) into per-version `Maintenance` blocks.
 - **`String.between`** (BUG-029) — documented that an empty `end` delimiter is treated as "not found", so the `endOptional` rules apply (returns the tail after `start` by default, empty string when `endOptional: false`).
 - **`String.betweenResult`** (BUG-021) — clarified in tests that it returns the *outermost* match (first `start` to last `end`), contrasting with `between()` which returns the first balanced pair.
 
-### Tests
+**Tests**
 
 - **`List.takeSafe`** (BUG-023) — added tests pinning the documented non-standard default (`takeSafe(0)` returns the original list; opt into Dart `take(0)` semantics with `ignoreZeroOrLess: false`).
 - **`DateTime.weekNumber` / `numOfWeeks`** (BUG-024) — added exact ISO 8601 boundary tests (Jan 1 2010 → week 53 of 2009, Dec 31 2012 → week 1 of 2013, Jan 4 always week 1, 53-week-year detection).
 - **`num.length()`** (BUG-030) — added tests for scientific-notation behavior at magnitudes ≥ 1e21 and the `BigInt` workaround for true digit counts.
 - **`date_time_range_utils_test`** (BUG-026) — removed a duplicate "5th Monday of February doesn't exist" test and corrected a test name that said "returns true" while asserting `isFalse`.
 - **BUG-020** — verified the previously-flagged methods (`getFirstDiffChar`, `hasInvalidUnicode`, `removeInvalidUnicode`, `collapseMultilineString`, `splitCapitalizedUnicode`, `isVowel`, `pluralize`, `endsWithPunctuation`, `endsWithAny`, `removeSingleCharacterWords`) all have dedicated test groups.
+
+**Restored**
+
+- **Deleted bug reports and lint assessments recovered from git history** into `plans/history/<deletion-date>/`. Restored 41 files keyed by the date they were deleted: `plans/history/2026.03.06/` holds 25 resolved bug reports (`BUG-001`…`BUG-034`, the subset not still open in `bugs/`), 11 lint-rule assessments, `INDEX.md`, `20260223_legitimate_fixes_report.md`, and `verify_documented_parameters_exist.md`; `plans/history/2026.02.22/` holds `avoid_very_long_length_files.md` and an earlier `verify_documented_parameters_exist.md`. Files whose content survives as renamed descendants in `plans/history/` (e.g. `avoid_duplicate_cascades`, `prefer_iterable_of`, `prefer_parentheses_with_if_null`) were not duplicated.
+
+</details>
 
 ---
 
@@ -81,27 +98,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **AsyncBarrierUtils**: fixed `StateError` when accessing `.future` after barrier already completed (double-complete guard).
+- **retryWithBackoff name collision**: renamed `retryWithBackoff` in `retry_policy_utils.dart` to `retryWithJitter` to avoid conflict with `retry_utils.dart`.
+
+<details><summary>Maintenance</summary>
+
+**Lint**
+
 - **avoid_platform_specific_imports** linter: removed `dart:io` from `date_time_utils.dart` (locale parameter) and `base64_utils.dart` (conditional imports for gzip).
 - **avoid_stack_trace_in_production** linter: removed `stackTrace` from `dev.log()` calls in 7 files (`retry_policy_utils`, `retry_utils`, `timeout_fallback_utils`, `timeout_policy_utils`, `timebox_exception`, `parse_list_utils`, `url_encode_utils`). Error objects are still logged; stack traces are no longer exposed per OWASP M10.
 - **ambiguous_export**: resolved `AsyncAction` name collision between `async_semaphore_utils.dart` and `async_mutex_utils.dart`; mutex now imports from semaphore.
+
+**Refactoring**
+
 - **Typedef duplication**: consolidated `AsyncProducer`, `FutureSupplier`, and `AsyncAction` (all `Future<T> Function()`) into single `AsyncAction` typedef in `async_semaphore_utils.dart`.
-- **AsyncBarrierUtils**: fixed `StateError` when accessing `.future` after barrier already completed (double-complete guard).
-- **retryWithBackoff name collision**: renamed `retryWithBackoff` in `retry_policy_utils.dart` to `retryWithJitter` to avoid conflict with `retry_utils.dart`.
+
+</details>
 
 ---
 
 ## [1.0.8+1]
 
 A large expansion of the library (collections, graph, stats, validation, async, parsing, and many more string utilities), plus documentation and lint fixes.
-
-### Documentation
-
-- Lint-resolution details from `bugs/history/` reflected in dartdoc, unit tests, and CHANGELOG entries (1.0.7, 1.0.8).
-- Lint rule rationale in `analysis_options_custom.yaml`: `avoid_barrel_files`, `avoid_non_ascii_symbols`, `avoid_static_state`, `avoid_unmarked_public_class`; `avoid_default_tostring` satisfied by `Swipe.toString()`. Six more rules resolved: `avoid_collapsible_if`, `avoid_complex_conditions`, `avoid_redundant_else`, `avoid_medium_length_files`, `avoid_long_parameter_list`, `avoid_similar_names`.
-
-### Fixed
-
-- **avoid_nullable_interpolation** in `string_regex_extensions.dart`: `escapeForRegex()` now uses `m.group(0) ?? ''` so the result never contains `\null`.
 
 ### Added
 
@@ -126,9 +144,22 @@ New and expanded APIs (all exported from `package:saropa_dart_utils`):
 - **Testing**: debug_utils (exported from barrel).
 - **Scanner tool** (`tool/suggest_saropa_utils.dart`): CLI to suggest saropa_dart_utils replacements (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`). Options: `[path]`, `--help`, `--version`. Core in `tool/suggest_saropa_utils_lib.dart`; tests in `test/tool/suggest_saropa_utils_test.dart`.
 
-### Tests
+### Fixed
+
+- **avoid_nullable_interpolation** in `string_regex_extensions.dart`: `escapeForRegex()` now uses `m.group(0) ?? ''` so the result never contains `\null`.
+
+<details><summary>Maintenance</summary>
+
+**Documentation**
+
+- Lint-resolution details from `bugs/history/` reflected in dartdoc, unit tests, and CHANGELOG entries (1.0.7, 1.0.8).
+- Lint rule rationale in `analysis_options_custom.yaml`: `avoid_barrel_files`, `avoid_non_ascii_symbols`, `avoid_static_state`, `avoid_unmarked_public_class`; `avoid_default_tostring` satisfied by `Swipe.toString()`. Six more rules resolved: `avoid_collapsible_if`, `avoid_complex_conditions`, `avoid_redundant_else`, `avoid_medium_length_files`, `avoid_long_parameter_list`, `avoid_similar_names`.
+
+**Tests**
 
 - Swipe.toString(), MapNullableExtensions (isMapNullOrEmpty, isNotMapNullOrEmpty), GestureUtils (getSwipeSpeed, swipeMagnitudeThresholds), obscureText, hasInvalidUnicode/removeInvalidUnicode (invalid code point 56327). Additional tests for new collections, graph, stats, validation, string, and async modules.
+
+</details>
 
 ## [1.0.8] - 2026-02-24
 
@@ -148,36 +179,52 @@ In this release we introduce typed result classes for common operations, split J
 
 ### Changed
 
-- **`json_utils.dart` split**: Extracted type conversions, epoch scale, and iterable encoding into 3 focused modules for modularity
 - **`Swipe` constructor**: Changed from positional to required named parameters (`prefer_all_named_parameters`)
 - **Boolean parameter renames** (`prefer_boolean_prefixes`): `testDecode` → `shouldTestDecode`, `allowEmpty` → `shouldAllowEmpty`, `cleanInput` → `shouldCleanInput`, `inclusive` → `isInclusive`, `startOfDay` → `isStartOfDay`, `roundUp` → `shouldRoundUp`
 - **Exception narrowing** (`avoid_catch_all`): Replaced bare `catch (e)` with specific exception types (`on FormatException`)
 - **`dynamic` → `Object?`**: Replaced `dynamic` return types in JSON decode methods (`avoid_dynamic_type`)
+- Added `T extends Object` constraint to `GeneralIterableExtensions` generic parameter
+
+<details><summary>Maintenance</summary>
+
+**Refactoring**
+
+- **`json_utils.dart` split**: Extracted type conversions, epoch scale, and iterable encoding into 3 focused modules for modularity
 - **Abstract final classes**: Converted static-only utility classes to `abstract final` to prevent instantiation and inheritance
+- **Lint compliance**: Extracted `_writeFormattedValue` helper from `formatMap` using Dart 3 switch pattern matching
+- **Lint compliance**: Eliminated logic duplication — `inRange` now delegates to `isBetween`; replaced inline leap-year math with `DateTimeUtils.isLeapYear()` reuse
+- **Lint compliance**: Extracted hardcoded `Duration` constants (`_oneDay`, `_oneMicrosecond`) per `avoid_hardcoded_durations`
+- **Refactoring**: Extracted helper methods in `date_time_utils.dart` (`_pluralLabel`, `_joinWithAnd`, `_buildDurationParts`) and replaced switch statements with constant set lookups
+
+**Lint**
+
 - **Lint compliance**: Resolved `prefer_all_named_parameters` across `isNthDayOfMonthInRange`, `getGreatGrandchild`, `getGreatGrandchildString`, `mapToggleValue`, `mapAddValue`, `mapRemoveValue`, `mapContainsValue`
 - **Lint compliance**: Resolved `prefer_class_over_record_return` across 5 extension files by replacing record types with named classes
 - **Lint compliance**: Resolved `prefer_parentheses_with_if_null` in `string_between_extensions.dart`
 - **Lint compliance**: Resolved `prefer_typedefs_for_callbacks` and `prefer_extracting_function_callbacks` in unique list and map extensions
-- **Lint compliance**: Extracted `_writeFormattedValue` helper from `formatMap` using Dart 3 switch pattern matching
-- **Lint compliance**: Eliminated logic duplication — `inRange` now delegates to `isBetween`; replaced inline leap-year math with `DateTimeUtils.isLeapYear()` reuse
 - **Lint compliance**: Used `List.generate` for pre-allocated day lists (`require_list_preallocate`)
-- **Lint compliance**: Extracted hardcoded `Duration` constants (`_oneDay`, `_oneMicrosecond`) per `avoid_hardcoded_durations`
 - **Lint compliance**: Avoided parameter mutation — use local `resolvedNow` instead of reassigning `now`
-- **Refactoring**: Extracted helper methods in `date_time_utils.dart` (`_pluralLabel`, `_joinWithAnd`, `_buildDurationParts`) and replaced switch statements with constant set lookups
-- Added `T extends Object` constraint to `GeneralIterableExtensions` generic parameter
 - Updated `analysis_options.yaml` and `analysis_options_custom.yaml` lint configurations
 
-### Tests
+**Tests**
 
 - Added comprehensive test suite for `JsonTypeUtils` (60+ test cases)
 - Updated tests for renamed boolean parameters across json, datetime, gesture, and enum tests
 - Lint violations reduced from ~10,000 to ~30
+
+</details>
 
 ## [1.0.7] - 2026-02-22
 
 We split the large string and date-time extension files into smaller modules (everything stays backward compatible), fixed a bunch of lints, and switched to proper test matchers. The codebase is easier to work in and the linter is quieter.
 
 ### Fixed
+
+- **Performance**: cached `toLowerCase()` call in `toBoolNullable`, extracted inline RegExp to top-level finals in `lowerCaseLettersOnly` and `removeSingleCharacterWords`
+
+<details><summary>Maintenance</summary>
+
+**Lint**
 
 - **Lint compliance**: Resolved 10 lint rule categories across 4 files:
   - `avoid_nested_conditional_expressions` (5): refactored nested ternaries to if-else in wrap methods
@@ -188,9 +235,8 @@ We split the large string and date-time extension files into smaller modules (ev
   - `prefer_correct_identifier_length` (1): renamed `r` to `deduplicateRegex` in `replaceLineBreaks`
   - `missing_use_result_annotation` (1): added `@useResult` to `makeNonBreaking`
   - `no_magic_string` (1): extracted grammar article prefixes to named constants
-  - `avoid_long_length_files` (2): split oversized files (see Refactored below)
+  - `avoid_long_length_files` (2): split oversized files (see Refactoring below)
   - `avoid_very_long_length_files` (1): split `string_extensions.dart` (1114 lines)
-- **Performance**: cached `toLowerCase()` call in `toBoolNullable`, extracted inline RegExp to top-level finals in `lowerCaseLettersOnly` and `removeSingleCharacterWords`
 - **Lint compliance (prior)**: Resolved 59 high-priority warnings across 9 saropa_lints rules:
   - `avoid_type_casts` (7): replaced `as` casts with `is` checks in map/json utils
   - `verify_documented_parameters_exist` (31): fixed stale dartdoc references
@@ -202,23 +248,22 @@ We split the large string and date-time extension files into smaller modules (ev
   - `avoid_wildcard_cases_with_sealed_classes` (1): narrowed `num` to `int`
   - `avoid_god_class` (1): suppressed (constants namespace)
 
-### Refactored
+**Refactoring**
 
 - **`string_extensions.dart`** (1114 → 4 files): Split into `string_extensions.dart` (275), `string_analysis_extensions.dart` (195), `string_manipulation_extensions.dart` (286), `string_text_extensions.dart` (296). Re-exports maintain backward compatibility.
 - **`date_time_extensions.dart`** (818 → 4 files): Split into `date_time_extensions.dart` (185), `date_time_arithmetic_extensions.dart` (175), `date_time_comparison_extensions.dart` (164), `date_time_calendar_extensions.dart` (174). Re-exports maintain backward compatibility.
 - **`DateConstants`**: Moved 16 top-level constants into `DateConstants` class as `static const` members for proper namespacing and consistency with `MonthUtils`, `WeekdayUtils`, and `SerialDateUtils` patterns. Added private constructor to prevent instantiation.
 
-### Changed
+**Build/tooling**
 
 - **Publish script** (`publish_pub_dev.ps1`): Hardened with smarter pre-checks — auto-fixes pubspec version when CHANGELOG is ahead, aborts early if version tag exists on remote, verifies `gh` auth status and publish workflow. Removed dead code, fixed docstrings and step numbering. Bumped to v2.2.
+- Bug reports for 80+ saropa_lints rules with reproduction steps and suggestions in `bugs/`
 
-### Tests
+**Tests**
 
 - Replaced 312 raw literal matchers with proper test matchers across 19 test files (`avoid_misused_test_matchers`): `expect(x, true)` → `isTrue`, `expect(x, false)` → `isFalse`, `expect(x, null)` → `isNull`, `expect(x.length, N)` → `hasLength(N)`
 
-### Added
-
-- Bug reports for 80+ saropa_lints rules with reproduction steps and suggestions in `bugs/`
+</details>
 
 ## [1.0.6] - 2026-02-19
 
@@ -270,54 +315,74 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 - **`toMapStringDynamic`**: documented silent key collision behavior when `ensureUniqueKey: false`.
 - **`timeToEmoji`**: boundary was `>` instead of `>=` — 7:00am showed moon emoji instead of sun.
 
-### Changed
+<details><summary>Maintenance</summary>
+
+**Refactoring**
 
 - Extracted magic numbers into named constants across codebase (date/time, numeric, string, HTML, UUID); 50+ constants in `date_constants.dart`, `date_time_range_utils.dart`, `date_time_utils.dart`, `time_emoji_utils.dart`, `double_extensions.dart`, `hex_utils.dart`, `html_utils.dart`, `int_extensions.dart`, `int_string_extensions.dart`, `int_utils.dart`, `string_search_extensions.dart`, `string_utils.dart`, `uuid_utils.dart`; resolved `no_magic_number` lint violations.
 
-### Fixed
+**Lint**
 
 - `DateTimeUtils.tomorrow()`: Removed nullable type from `minute` and `second` parameters to fix `avoid_nullable_parameters_with_default_values` lint warnings.
 
-### Tests
+**Tests**
 
 - 3,022 tests passing (added ~40 new tests covering all fixed bugs)
 - Fixed 8 pre-existing tests with incorrect expectations or wrong test names
 - Removed duplicate test cases in `date_time_range_utils_test.dart`
 
+</details>
+
 ## [1.0.5] - 2026-01-08
 
 We rewrote the README with before/after examples and real-world use cases so it’s easier to see what the library does and whether it fits your project.
 
-### Changed
+<details><summary>Maintenance</summary>
+
+**Documentation**
 
 - Rewrote README with compelling production-proven messaging
 - Added before/after code comparison table
 - Added real-world use cases section
 - Improved About section with library origin story
 
+</details>
+
 ## [1.0.4] - 2026-01-08
 
 We fixed a flaky date/time test that sometimes failed in CI. Your test runs should be more reliable now.
 
-### Fixed
+<details><summary>Maintenance</summary>
+
+**Tests**
 
 - Fix flaky DateTime test race condition in CI
+
+</details>
 
 ## [1.0.3] - 2026-01-07
 
 We updated the GitHub Actions publish workflow to use OIDC authentication. Publishing to pub.dev works with the current GitHub setup again.
 
-### Changed
+<details><summary>Maintenance</summary>
+
+**Build/tooling**
 
 - Fix GitHub Actions publish workflow for OIDC authentication
+
+</details>
 
 ## [1.0.2] - 2026-01-07
 
 We added a banner to the README so the project is easier to spot at a glance.
 
-### Changed
+<details><summary>Maintenance</summary>
+
+**Documentation**
 
 - Added a banner to README.md
+
+</details>
 
 ## [1.0.0] - 2026-01-07
 
@@ -326,26 +391,37 @@ First stable 1.0: we switched to the MIT license for broader use, turned on the 
 ### Changed
 
 - Migrated from GPL v3 to MIT license for broader adoption
+
+<details><summary>Maintenance</summary>
+
+**Lint**
+
 - Upgraded saropa_lints from `recommended` to `insanity` tier (all 500+ rules enabled)
 
-### Added
+**Documentation**
 
 - Pub points badge (dynamic from pub.dev)
 - Methods count badge (480+ methods)
 - Coverage badge (100%)
 - Organized badge assets into `assets/badges/` folder
 
+</details>
+
 ## [0.5.12] - 2026-01-05
 
 We switched to the saropa_lints package and custom_lint, and trimmed the analysis config from 255 lines to 69. You get the same level of checking with less to maintain.
 
-### Changed
+<details><summary>Maintenance</summary>
+
+**Build/tooling**
 
 - Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
 - Added `custom_lint: ^0.8.0` for custom lint rule support
 - Configured `recommended` tier (~150 rules)
 - Simplified `analysis_options.yaml` from 255 lines to 69 lines
 - Removed manually flattened flutter_lints/recommended/core rules
+
+</details>
 
 ## [0.5.11]
 
@@ -357,13 +433,22 @@ We added utilities for Base64 compression, UUID validation and formatting, HTML 
 - `UuidUtils` - UUID validation and manipulation (`isUUID`, `addHyphens`, `removeHyphens`)
 - `HtmlUtils` - HTML text processing (`unescape`, `removeHtmlTags`, `toPlainText`)
 - `DoubleExtensions` - Double formatting (`hasDecimals`, `toPercentage`, `formatDouble`, `forceBetween`, `toPrecision`, `formatPrecision`)
+
+<details><summary>Maintenance</summary>
+
+**Tests**
+
 - 103 test cases covering all new utilities
+
+</details>
 
 ## [0.5.10] - 2025-12-11
 
 We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync. Releases are safer and easier to script from CI.
 
-### Added
+<details><summary>Maintenance</summary>
+
+**Build/tooling**
 
 - `-Version` parameter for CI/CD automation in publish script
 - `-Branch` parameter to specify target branch
@@ -372,446 +457,16 @@ We extended the publish script with version and branch parameters, dry-run valid
 - Working tree status check with user confirmation
 - Remote sync check to prevent publishing when behind remote
 - Early CHANGELOG version validation
-
-### Fixed
-
 - Step numbering in publish script (was skipping from 4 to 6)
 - `ErrorActionPreference` issue with try/catch for GitHub release check
-
-### Changed
-
 - Dynamic package name and repo URL extraction from pubspec.yaml and git remote
 - Excluded example folder from parent analysis
 
-## [0.5.9] - 2025-11-25
+</details>
 
-We added an `allowEmpty` option to JSON validation and made string methods (substring, truncate, lastChars) use grapheme clusters so emoji and Unicode behave correctly. **Note:** indices are now grapheme-based—a breaking change if you relied on code-unit positions.
+---
 
-### Added
-
-- `isJson`: `allowEmpty` parameter to optionally treat `{}` as valid JSON
-- 16 test cases for `JsonUtils.isJson`
-
-### Changed
-
-- `substringSafe`: Now uses `characters.getRange()` for proper UTF-16/emoji support
-- `truncateWithEllipsis`: Uses grapheme cluster length for accurate emoji handling
-- `truncateWithEllipsisPreserveWords`: Uses grapheme cluster length
-- `lastChars`: Uses grapheme cluster length
-- **Breaking**: Indices now refer to grapheme clusters, not code units
-
-### Fixed
-
-- `MakeListExtensions`: Changed extension from `T` to `T?` for nullable types
-- `getUtcTimeFromLocal`: Fixed incorrect documentation
-- `getNthWeekdayOfMonthInYear`: Removed stale parameter references from docs
-
-### Removed
-
-- `UniqueListExtensionsUniqueBy`: Removed unused `propertyComparer` generic parameter
-
-## [0.5.8] - 2025-11-25
-
-We made the publish script handle git tags and GitHub releases idempotently. You can re-run it after a partial run without it failing.
-
-### Changed
-
-- `publish_pub_dev.ps1`: Added idempotent handling for git tags
-- `publish_pub_dev.ps1`: Added idempotent handling for GitHub releases
-- Prevents script failures when re-running after partial completion
-
-## [0.5.7] - 2025-11-25
-
-We fixed string extraction (curly braces, line breaks), made word removal Unicode-aware, and improved the grammar and article rules. Text handling should be more accurate now.
-
-### Fixed
-
-- `extractCurlyBraces`: Switched to non-greedy matching for correct extraction order
-- `removeSingleCharacterWords`: Made Unicode-aware for single-letter words beyond ASCII
-- `replaceLineBreaks`: Improved deduplication for arbitrary replacement strings
-- `grammarArticle`: Enhanced heuristics for silent 'h', "you"-sound words, and `one-` prefixes
-- `possess`: Trims input before applying trailing 's' rules
-
-### Changed
-
-- `repeat`: Optimized concatenation with `StringBuffer`
-- `lettersOnly`/`lowerCaseLettersOnly`: Simplified to regex-based ASCII filters
-
-## [0.5.6]
-
-We added URL/URI extensions so you can check HTTPS, add or get query parameters, and replace the host. Handy when building or validating links.
-
-### Added
-
-- `UrlExtensions.isSecure` - Check if URI uses HTTPS scheme
-- `UrlExtensions.addQueryParameter` - Add or update query parameters
-- `UrlExtensions.hasQueryParameter` - Check if query parameter exists
-- `UrlExtensions.getQueryParameter` - Get query parameter value
-- `UrlExtensions.replaceHost` - Create URI with different host
-
-## [0.5.5] - 2025-11-25
-
-A big release: JSON and map utilities, URL extensions, string extraction and search, date constants, and many new DateTime and string helpers. We added tests too—over 2,850 in total.
-
-### Added
-
-- `JsonUtils` - JSON parsing, type conversion, and validation
-- `MapExtensions` - Map manipulation utilities
-- `UrlExtensions` - URI manipulation (`removeQuery`, `fileName`, `isValidUrl`, `isValidHttpUrl`, `tryParse`)
-- `StringBetweenExtensions` - Content extraction (`between`, `betweenLast`, `removeBetween`, etc.)
-- `StringCharacterExtensions` - Character operations (`splitByCharacterCount`, `charAtOrNull`)
-- `StringSearchExtensions` - Search utilities (`containsAnyIgnoreCase`, `indexOfAll`, `lastIndexOfPattern`)
-- `MonthUtils`, `WeekdayUtils`, `SerialDateUtils` - Date constant lookups
-- DateTime extensions: `mostRecentSunday`, `mostRecentWeekday`, `dayOfYear`, `weekOfYear`, `numOfWeeks`, `weekNumber`, `toSerialString`, `toSerialStringDay`
-- String extensions: `removeSingleCharacterWords`, `removeLeadingAndTrailing`, `firstWord`, `secondWord`, `endsWithAny`, `endsWithPunctuation`, `isAny`, `extractCurlyBraces`, `obscureText`, `hasInvalidUnicode`, `isVowel`, `hasAnyDigits`
-- Iterable/Num extensions: `randomElement`, `containsAll`, `toDoubleOrNull`, `toIntOrNull`
-- `DateTimeUtils.isValidDateParts` - Comprehensive date part validation
-- `convertDaysToYearsAndMonths` - `includeRemainingDays` option
-- 2850 tests (all passing)
-
-## [0.5.4]
-
-We fixed range and date logic (inclusive boundaries, year boundaries), list comparison, hex overflow, and string truncation. Added 110 tests so the fixes stay solid.
-
-### Fixed
-
-- `isBetweenRange`: Properly forwards `inclusive` parameter
-- `isAnnualDateInRange`: Correctly handles date ranges spanning year boundaries
-- `isNthDayOfMonthInRange`: Cross-year range validation
-- `inRange` and `isNowInRange`: Default to inclusive boundary semantics
-- `equalsIgnoringOrder`: Correctly compares duplicate counts
-- `hexToInt`: Case-sensitive overflow check
-- `toUpperLatinOnly`: O(n²) → O(n) using StringBuffer
-- `upperCaseLettersOnly`: O(n²) → O(n) using StringBuffer
-- `truncateWithEllipsisPreserveWords`: Returns truncated content when first word exceeds cutoff
-- `containsIgnoreCase`: Empty string is contained in any string
-- `convertDaysToYearsAndMonths`: Improved precision using average days
-
-### Added
-
-- 110 new test cases for algorithm fixes
-
-## [0.5.3] - 2025-11-12
-
-We tuned regex usage in string utils and improved the docs for the random and list helpers. A small polish release.
-
-### Changed
-
-- Enhanced `string_utils.dart` to optimize final regex usages
-- Improved documentation for `CommonRandom` and list generation
-
-## [0.5.2] - 2025-08-19
-
-We renamed the string extension type to `StringExtensions` for consistency. Behavior is unchanged; only the type name is different.
-
-### Changed
-
-- Renamed `StringFormattingAndWrappingExtensions` to `StringExtensions`
-
-## [0.5.1] - 2025-08-19
-
-We merged all string extension methods into one file and added a full test suite. Imports and structure are simpler.
-
-### Changed
-
-- Merged all string extension methods into `lib/string/string_extensions.dart`
-- Updated imports across dependent files
-
-### Removed
-
-- Redundant string extension files and old test files
-
-### Added
-
-- Comprehensive test suite for `string_extensions.dart`
-
-## [0.5.0] - 2025-08-19
-
-We added extensions for numbers (e.g. clamping), lists (order-agnostic comparison), and strings (safer number parsing), and refactored names and tests for consistency.
-
-### Added
-
-- Extension methods for numbers, lists, and strings (`forceBetween`, order-agnostic list comparison, safer string number parsing)
-- Test files for new extensions
-
-### Changed
-
-- Refactored extension names for consistency
-- Updated test imports and structures
-
-## [0.4.4] - 2025-08-18
-
-We split the string code into smaller files and added unique-list and number-range utilities. The layout is clearer and you get a few new helpers.
-
-### Changed
-
-- Split large string file into smaller, specific files
-- Updated tests and imports for new file structure
-- Improved code analysis settings
-
-### Added
-
-- Unique lists and number ranges utilities
-
-## [0.4.3] - 2025-02-24
-
-We added framework-style extensions for primitives (num, string, etc.), set line length to 100, and removed the VGV spelling lists.
-
-### Added
-
-- Framework extensions for primitives (num, string, etc.)
-
-### Changed
-
-- Line length to 100
-
-### Removed
-
-- VGV's spelling lists
-
-## [0.4.2] - 2025-02-24
-
-A small maintenance release: minor improvements and fixes.
-
-### Changed
-
-- Minor improvements and fixes
-
-## [0.4.1] - 2025-02-13
-
-Another small maintenance release: minor improvements and fixes.
-
-### Changed
-
-- Minor improvements and fixes
-
-## [0.4.0] - 2025-02-13
-
-We did a major refactor of the library structure and APIs to set things up for the extensions and utilities that followed.
-
-### Changed
-
-- Major refactoring release
-
-## [0.3.18] - 2025-01-07
-
-We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date formatting. Date handling works well out of the box now.
-
-### Added
-
-- `DateTimeRange` utils
-- `DateTime` utils
-- Dependency to jiffy and intl for date processing
-
-### Changed
-
-- Unused flutter code detection script logs warnings to file
-
-## [0.3.17] - 2025-01-07
-
-A small maintenance release: minor improvements.
-
-### Changed
-
-- Minor improvements
-
-## [0.3.16] - 2025-01-07
-
-Another small maintenance release: minor improvements.
-
-### Changed
-
-- Minor improvements
-
-## [0.3.15] - 2025-01-03
-
-Another small maintenance release: minor improvements.
-
-### Changed
-
-- Minor improvements
-
-## [0.3.13]
-
-We added a script to detect unused Flutter code and updated the Code of Conduct (logo, examples, survey). We also renamed the doc folder to docs and removed Codecov.
-
-### Added
-
-- Unused flutter code detection script
-- TED talks video library to Code of Conduct
-
-### Changed
-
-- H.O.N.E.S.T.I. acronym wording in Code of Conduct
-- Code of Conduct with Saropa logo, examples, survey, and exercise
-- Link to Code of Conduct in README.md
-- Renamed `doc` folder to `docs`
-
-### Removed
-
-- Codecov integration
-
-## [0.2.3]
-
-We added CommonRandom for reproducible randomness, a Code of Conduct for contributors, and development helper scripts. The project is easier to work on and expectations are clearer.
-
-### Added
-
-- `CommonRandom` class as drop-in replacement for `math.Random()`
-- Code of Conduct for Saropa contributors
-- Development helper scripts
-
-### Changed
-
-- Updated changelog
-
-## [0.2.1]
-
-We moved the list extensions onto Iterable so they work with any iterable, not just lists. The API is more flexible.
-
-### Changed
-
-- Migrated `List` extensions to `Iterable`
-
-## [0.2.0]
-
-We added enum helpers (byNameTry, sortedEnumValues) and list extensions (smallest, biggest, most/least occurrences), and bumped the SDK and collections dependency.
-
-### Added
-
-- `Enum` methods: `byNameTry` and `sortedEnumValues`
-- List extensions for smallest, biggest, most, and least occurrences
-
-### Changed
-
-- Bumped SDK requirements (sdk: ">=3.4.3 <4.0.0", flutter: ">=3.24.0")
-- Added collections package dependency
-
-## [0.1.0]
-
-We renamed nullable string utils to extensions and deprecated a few functions we plan to remove. Cleanup to make the API clearer.
-
-### Changed
-
-- Renamed `string_nullable_utils.dart` to `string_nullable_extensions.dart`
-
-### Deprecated
-
-- Several functions in preparation for removal
-
-## [0.0.11]
-
-We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart when the search is empty, and removed the deprecated string-nullable functions.
-
-### Added
-
-- `DateConstants.unixEpochDate`
-- `DateConstantExtensions.isUnixEpochDate`
-- `DateConstantExtensions.isUnixEpochDateTime`
-- `IntStringExtensions.ordinal`
-- `StringUtils.getNthLatinLetterLower`
-- `StringUtils.getNthLatinLetterUpper`
-- `IntUtils.findGreatestCommonDenominator`
-- `IntExtensions.countDigits`
-
-### Fixed
-
-- `StringExtensions.removeStart` returns input when search param is empty
-
-### Removed
-
-- Deprecated functions in `StringNullableExtensions`
-
-## [0.0.10]
-
-We made removeStart accept a nullable search parameter so it’s easier to use in nullable contexts.
-
-### Changed
-
-- `removeStart` parameter changed to nullable
-
-## [0.0.9]
-
-We added an optional trimFirst parameter to removeStart so you can trim the result. A small string API improvement.
-
-### Added
-
-- `trimFirst` parameter to `StringExtensions.removeStart`
-
-## [0.0.8]
-
-We added an optional trimFirst parameter to nullIfEmpty so you have finer control over empty and whitespace handling.
-
-### Added
-
-- `trimFirst` parameter to `StringExtensions.nullIfEmpty`
-
-## [0.0.7]
-
-We renamed the strings folder to singular and deprecated the nullable string extensions. Naming and API cleanup.
-
-### Changed
-
-- Renamed strings folder to singular
-
-### Deprecated
-
-- Nullable string extensions
-
-## [0.0.6]
-
-We added swipe gesture properties for use in gesture-aware UIs. The groundwork for swipe handling.
-
-### Added
-
-- Swipe gesture properties
-
-## [0.0.5]
-
-We documented all methods, added example app usage and README examples, and extended the string extensions. The library should be easier to discover and use.
-
-### Added
-
-- Documentation for all methods
-- Code usage in Example App
-- Code usage in README.md
-- String extension methods
-
-## [0.0.4]
-
-We added an example app, GitHub Actions, and contribution templates (PR, issue, contributing guide). The project is ready for others to contribute.
-
-### Added
-
-- Example App
-- GitHub Actions setup
-- Pull request template
-- Issue template
-- Contributing guide
-
-## [0.0.3]
-
-We added a random enum selection helper for when you need a random value from an enum.
-
-### Added
-
-- Random enum method
-
-## [0.0.2]
-
-We added string-to-bool conversion methods so you can parse "true"/"false" and similar strings safely.
-
-### Added
-
-- String to bool conversion methods
-
-## [0.0.1] - 2024-06-27
-
-First release. We included bool list methods to get started.
-
-### Added
-
-- Initial release with bool list methods
+**Older versions** (0.5.9 and earlier): see [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
 
 ---
 
