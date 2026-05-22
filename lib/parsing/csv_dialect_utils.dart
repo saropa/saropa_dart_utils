@@ -23,9 +23,10 @@ class CsvDialectUtils {
 
 /// Detects the dialect of a CSV/TSV [sample] by inspecting its first line.
 ///
-/// Counts tabs versus commas in the first line; if tabs are at least as common
-/// as commas, the delimiter is tab, otherwise comma. The first row is always
-/// reported as a header. An empty [sample] yields a comma delimiter.
+/// Counts tabs versus commas in the first line; if the line contains tabs and
+/// they are at least as common as commas, the delimiter is tab, otherwise
+/// comma. The first row is always reported as a header. A first line with no
+/// tabs (including an empty [sample]) yields a comma delimiter.
 ///
 /// Example:
 /// ```dart
@@ -36,6 +37,8 @@ CsvDialectUtils detectCsvDialect(String sample) {
   final String first = sample.split('\n').first;
   final int commas = ','.allMatches(first).length;
   final int tabs = '\t'.allMatches(first).length;
-  final String delimiter = tabs >= commas ? '\t' : ',';
+  // Comma is the default: only pick tab when tabs are actually present (so an
+  // empty or comma-only line yields ',', not '\t' from the 0 >= 0 tie).
+  final String delimiter = tabs > 0 && tabs >= commas ? '\t' : ',';
   return CsvDialectUtils(delimiter: delimiter, hasHeader: true);
 }

@@ -25,7 +25,10 @@ final class AsyncBarrierUtils {
   /// the barrier when count reaches zero.
   void signal() {
     _remaining--;
-    if (_remaining <= 0) _completer?.complete();
+    // Guard isCompleted: signalling more than [count] times must be a no-op, not
+    // a "Future already completed" throw from completing the same completer twice.
+    final Completer<void>? c = _completer;
+    if (_remaining <= 0 && c != null && !c.isCompleted) c.complete();
   }
 
   /// Future that completes when the barrier has received [count] signals.

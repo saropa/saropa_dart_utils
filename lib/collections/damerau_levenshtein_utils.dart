@@ -7,12 +7,13 @@ int damerauLevenshteinDistance(String a, String b) {
   final int bLen = b.length;
   if (aLen == 0) return bLen;
   if (bLen == 0) return aLen;
-  // Optimal string alignment variant: every cell reads only the current row and
-  // the row immediately above (the transposition term uses prevRow[j-2], still
-  // that same prior row), so two rolling rows give O(bLen) space rather than
-  // the full O(aLen*bLen) matrix.
-  final List<int> prevRow = List.filled(bLen + 1, 0);
-  final List<int> currRow = List.filled(bLen + 1, 0);
+  // Optimal string alignment (OSA) variant. The transposition term reads
+  // d[i-2][j-2] (the row TWO above), so we keep THREE rolling rows: two rows are
+  // insufficient for OSA and would score an adjacent swap as 2 instead of 1.
+  // This still gives O(bLen) space rather than the full O(aLen*bLen) matrix.
+  final List<int> prevPrevRow = List.filled(bLen + 1, 0); // row i-2
+  final List<int> prevRow = List.filled(bLen + 1, 0); // row i-1
+  final List<int> currRow = List.filled(bLen + 1, 0); // row i
   // Base case: transforming an empty prefix of `a` into b[0..j) costs j insertions.
   for (int j = 0; j <= bLen; j++) {
     prevRow[j] = j;
@@ -28,15 +29,20 @@ int damerauLevenshteinDistance(String a, String b) {
       if (prevRow[j] + 1 < best) best = prevRow[j] + 1;
       if (prevRow[j - 1] + cost < best) best = prevRow[j - 1] + cost;
       // Transposition of two adjacent characters: only valid when the last two
-      // chars of each prefix are swapped (a[i-1]==b[j-2] && a[i-2]==b[j-1]).
-      // Skipped when i==1 or j==1 since there is no second-prior char to swap.
+      // chars of each prefix are swapped (a[i-1]==b[j-2] && a[i-2]==b[j-1]). The
+      // cost builds on d[i-2][j-2] (prevPrevRow), not d[i-1][j-2]. Skipped when
+      // i==1 or j==1 since there is no second-prior char to swap.
       if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1]) {
-        final int transCost = prevRow[j - 2] + 1;
+        final int transCost = prevPrevRow[j - 2] + 1;
         if (transCost < best) best = transCost;
       }
       currRow[j] = best;
     }
+    // Rotate the rolling rows downward: row i-2 <- row i-1, row i-1 <- row i.
+    // (Copy values rather than swapping references so the three lists keep their
+    // identities and currRow can be overwritten next iteration.)
     for (int k = 0; k <= bLen; k++) {
+      prevPrevRow[k] = prevRow[k];
       prevRow[k] = currRow[k];
     }
   }

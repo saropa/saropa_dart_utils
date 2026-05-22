@@ -30,7 +30,10 @@ abstract final class SearchQueryParserUtils {
           // "OR" is dropped, not emitted as a term: this parser treats every gap
           // between terms as AND, so the explicit OR keyword is a no-op separator.
           if (word.toUpperCase() != 'OR') {
-            out[outIndex++] = QueryTerm(word, isNegated: word.startsWith('-'));
+            // Strip the leading '-' from the stored text (consistent with the
+            // trailing-words branch below); the negation is captured separately.
+            final String term = word.startsWith('-') ? word.replaceRange(0, 1, '') : word;
+            out[outIndex++] = QueryTerm(term, isNegated: word.startsWith('-'));
           }
         }
       }

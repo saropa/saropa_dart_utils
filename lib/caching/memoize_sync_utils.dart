@@ -5,7 +5,17 @@ V Function(A) memoize1<A, V>(V Function(A) fn) {
 }
 
 /// Returns a function that computes once and returns cached value.
+///
+/// A `null` result is cached too: a `computed` flag (not `??=`) gates the call,
+/// so a `null`-returning [compute] still runs only once.
 T Function() singleValueCache<T>(T Function() compute) {
-  T? cached;
-  return () => cached ??= compute();
+  bool computed = false;
+  late T cached;
+  return () {
+    if (!computed) {
+      cached = compute();
+      computed = true;
+    }
+    return cached;
+  };
 }
