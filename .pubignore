@@ -1,0 +1,18 @@
+# Files excluded from the published pub.dev tarball (gitignore syntax).
+#
+# pub.dev publishes everything git-tracked unless listed here. The directories
+# below are repo-internal — dev tooling, planning docs, bug reports, the test
+# suite, and coverage artifacts. None are consumed by users of the library, and
+# they bloated the package (plans/ alone is 130 files). Excluding them shrinks
+# the download and keeps the pub.dev "files" view focused on the API surface.
+#
+# Deliberately KEPT in the package: lib/, example/ (pub.dev renders it),
+# assets/ (small), and README/CHANGELOG/LICENSE/pubspec (required or useful).
+
+/test/
+/plans/
+/tool/
+/bugs/
+/reports/
+/scripts/
+/coverage/
