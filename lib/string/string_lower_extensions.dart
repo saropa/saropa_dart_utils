@@ -3,14 +3,12 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Lower priority string: truncate with ellipsis, pad, repeat, isWhitespaceOnly. Roadmap #231-234, 391-395.
 extension StringLowerExtensions on String {
-  /// Truncates to [maxLength] and appends [ellipsis] if shortened.
-  @useResult
-  String truncateWithEllipsis(int maxLength, [String ellipsis = '...']) {
-    if (maxLength <= 0) return '';
-    if (length <= maxLength) return this;
-    if (ellipsis.length >= maxLength) return ellipsis.substringSafe(0, maxLength);
-    return substringSafe(0, maxLength - ellipsis.length) + ellipsis;
-  }
+  // truncateWithEllipsis intentionally lives only on StringExtensions
+  // (string_extensions.dart): that version counts grapheme clusters so emoji and
+  // combining marks truncate correctly. A second, code-unit-based copy here
+  // collided with it (ambiguous_extension_member_access for barrel consumers) and
+  // silently produced different output for multi-byte strings. Removed under
+  // BUG-002 — do not re-add a same-named String method here.
 
   /// Pads this string on the left to [length] with [pad].
   @useResult

@@ -89,6 +89,12 @@ void main() {
     );
     test('9. With Unicode', () => expect('你好世界'.truncateWithEllipsis(2), '你好…'));
     test('10. Truncate exactly at end', () => expect('abcdef'.truncateWithEllipsis(5), 'abcde…'));
+    // BUG-002 regression: locks in grapheme-cluster counting so the removed
+    // code-unit copy can't be reintroduced. Each 👋 is one grapheme but two
+    // UTF-16 code units; a code-unit truncation would cut after one emoji.
+    test('11. Emoji counts as single graphemes', () {
+      expect('👋👋👋👋'.truncateWithEllipsis(2), '👋👋…');
+    });
   });
 
   group('truncateWithEllipsisPreserveWords', () {

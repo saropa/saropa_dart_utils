@@ -15,8 +15,6 @@ final RegExp _alphaNumericOnlyWithSpaceRegex = RegExp('[^A-Za-z0-9 ]');
 
 final RegExp _nonDigitRegex = RegExp(r'\D');
 
-final RegExp _regexSpecialCharsRegex = RegExp(r'[.*+?^${}()|[\]\\]');
-
 final RegExp _lineBreakRegex = RegExp('\n');
 
 /// Extensions on [String] for character manipulation, removal, and cleaning.
@@ -158,15 +156,12 @@ extension StringManipulationExtensions on String {
   @useResult
   String removeNonNumbers() => replaceAll(_nonDigitRegex, '');
 
-  /// Returns a new string with regex special characters escaped.
-  ///
-  /// Backslashes and other regex metacharacters are escaped so the string
-  /// can be used as a literal pattern.
-  @useResult
-  String escapeForRegex() => replaceAllMapped(
-    _regexSpecialCharsRegex,
-    (Match m) => '\\${m.group(0) ?? ''}',
-  );
+  // escapeForRegex intentionally lives only on StringRegexExtensions
+  // (string_regex_extensions.dart): that copy has the canonical regex, full
+  // dartdoc, an empty-string guard, and tests. The duplicate here (with its own
+  // _regexSpecialCharsRegex) collided with it (ambiguous_extension_member_access
+  // for barrel consumers) and was pure duplication. Removed under BUG-003 — do
+  // not re-add a same-named String method here.
 
   /// Returns a new string with all occurrences of [pattern] removed.
   @useResult

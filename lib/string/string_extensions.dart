@@ -3,6 +3,9 @@ import 'package:characters/characters.dart';
 // Re-export split files for backward compatibility
 export 'string_analysis_extensions.dart';
 export 'string_manipulation_extensions.dart';
+// escapeForRegex moved out of string_manipulation_extensions (BUG-003); re-export
+// its canonical home so importers of this file keep reaching it unchanged.
+export 'string_regex_extensions.dart';
 export 'string_text_extensions.dart';
 import 'package:meta/meta.dart';
 
