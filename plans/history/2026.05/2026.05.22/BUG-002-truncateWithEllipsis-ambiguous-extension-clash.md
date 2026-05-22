@@ -3,7 +3,7 @@
 **File:** `lib/string/string_lower_extensions.dart` (offending re-declaration); counterpart `lib/string/string_extensions.dart` (original)
 **Severity:** 🔴 High
 **Category:** Logic Error (API collision — build-breaking for consumers; also a silent semantic divergence)
-**Status:** Closed (code fix complete & verified in working tree; release of 1.1.4 still pending)
+**Status:** Fixed (on main; release of 1.1.4 still pending)
 
 <!-- Status values: Open → Investigating → Fix Ready → Closed
      Closed = duplicate removed, grapheme version kept, verified (full suite +

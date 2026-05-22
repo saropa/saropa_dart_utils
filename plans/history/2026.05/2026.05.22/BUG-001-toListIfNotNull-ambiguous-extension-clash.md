@@ -3,7 +3,7 @@
 **File:** `lib/object/nullable_more_extensions.dart` (offending re-declaration); counterpart `lib/list/make_list_extensions.dart` (original)
 **Severity:** 🔴 High
 **Category:** Logic Error (API collision — build-breaking for consumers)
-**Status:** Closed (code fix complete & verified in working tree; release of 1.1.4 still pending)
+**Status:** Fixed (on main; release of 1.1.4 still pending)
 
 <!-- Status values: Open → Investigating → Fix Ready → Closed
      Closed = the toListIfNotNull rename is implemented and verified in the

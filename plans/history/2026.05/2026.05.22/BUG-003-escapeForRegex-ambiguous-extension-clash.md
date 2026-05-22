@@ -3,7 +3,7 @@
 **File:** `lib/string/string_manipulation_extensions.dart` (redundant copy to remove); counterpart `lib/string/string_regex_extensions.dart` (canonical, tested)
 **Severity:** 🔴 High
 **Category:** Logic Error (API collision — build-breaking for consumers; duplicate implementation)
-**Status:** Closed (code fix complete & verified in working tree; release of 1.1.4 still pending)
+**Status:** Fixed (on main; release of 1.1.4 still pending)
 
 <!-- Status values: Open → Investigating → Fix Ready → Closed
      Closed = duplicate + its private regex removed, canonical copy kept,
