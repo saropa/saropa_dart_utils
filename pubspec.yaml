@@ -37,6 +37,14 @@ dependencies:
   # https://pub.dev/packages/jiffy/changelog
   jiffy: ^6.4.4
 
+  # Annotations (@visibleForTesting, @immutable, ...) imported across lib/.
+  # Must be a DIRECT dependency, not transitive: pub.dev rejects publishing a
+  # package that imports a library it only depends on transitively. Leaving meta
+  # transitive silently failed `dart pub publish` (exit 65) on every release
+  # since 1.0.6. A bounded caret (not `any`) keeps pub.dev's score and avoids
+  # resolving an incompatible major. https://pub.dev/packages/meta/changelog
+  meta: ^1.16.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

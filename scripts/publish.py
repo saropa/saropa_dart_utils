@@ -49,8 +49,12 @@ This script automates the complete release workflow for a Dart/Flutter package.
     11. Creates and pushes git tag
     12. Triggers GitHub Actions publish to pub.dev
     13. Creates GitHub release with release notes
+    14. Verifies the version actually reached pub.dev (polls the pub.dev API,
+        using the workflow run's conclusion as a fast-fail signal). The script
+        only exits 0 once pub.dev serves the new version; a workflow that reports
+        success while pub.dev got nothing exits PUBLISH_FAILED.
 
-Version:   2.6
+Version:   2.7
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
@@ -388,22 +392,61 @@ def main() -> int:
         project_dir, version, release_notes
     )
 
+    # Block until pub.dev actually serves the new version. Pushing the tag only
+    # triggers publishing; a green workflow does NOT prove the package landed
+    # (the masked exit-65 bug reported success while pub.dev stayed at 1.0.6).
+    # This is the gate that makes the script's exit code reflect reality.
+    published = workflow.verify_published(project_dir, package_name, version)
+
+    repo_path = workflow.extract_repo_path(remote_url)
+
+    if not published:
+        ui.print_colored("=" * 70, ui.Color.RED)
+        ui.print_colored(f"  RELEASE v{version} DID NOT REACH PUB.DEV", ui.Color.RED)
+        ui.print_colored("=" * 70, ui.Color.RED)
+        print()
+        ui.print_warning(
+            "The git tag and GitHub release exist, but pub.dev does not serve "
+            f"{version}. This version is NOT consumed on pub.dev, so it can be "
+            "retried once the cause is fixed."
+        )
+        ui.print_colored("  Next steps:", ui.Color.WHITE)
+        ui.print_colored(
+            "    1. Open the publish workflow log and fix the reported error.",
+            ui.Color.CYAN,
+        )
+        ui.print_colored(
+            f"    2. Re-run it: gh run rerun --failed (or push tag v{version} again).",
+            ui.Color.CYAN,
+        )
+        ui.print_colored(
+            f"      Actions: https://github.com/{repo_path}/actions", ui.Color.YELLOW
+        )
+        ui.print_colored(
+            f"      Package: https://pub.dev/packages/{package_name}", ui.Color.YELLOW
+        )
+        print()
+        try:
+            webbrowser.open(f"https://github.com/{repo_path}/actions")
+        except Exception:
+            pass
+        return ExitCode.PUBLISH_FAILED.value
+
     ui.print_colored("=" * 70, ui.Color.GREEN)
-    ui.print_colored(f"  RELEASE v{version} TRIGGERED!", ui.Color.GREEN)
+    ui.print_colored(f"  RELEASE v{version} PUBLISHED!", ui.Color.GREEN)
     ui.print_colored("=" * 70, ui.Color.GREEN)
     print()
 
-    repo_path = workflow.extract_repo_path(remote_url)
-    ui.print_colored("  Publishing is running on GitHub Actions.", ui.Color.CYAN)
-    ui.print_colored("  No personal email will be shown on pub.dev.", ui.Color.GREEN)
+    ui.print_colored("  Confirmed live on pub.dev.", ui.Color.GREEN)
+    ui.print_colored("  No personal email is shown on pub.dev.", ui.Color.GREEN)
     print()
-    ui.print_colored("  Monitor progress:", ui.Color.WHITE)
+    ui.print_colored("  Links:", ui.Color.WHITE)
     ui.print_colored(
-        f"      GitHub Actions: https://github.com/{repo_path}/actions",
+        f"      Package:        https://pub.dev/packages/{package_name}/versions/{version}",
         ui.Color.CYAN,
     )
     ui.print_colored(
-        f"      Package:        https://pub.dev/packages/{package_name}",
+        f"      GitHub Actions: https://github.com/{repo_path}/actions",
         ui.Color.CYAN,
     )
     if gh_success:
@@ -421,11 +464,6 @@ def main() -> int:
             ui.Color.WHITE,
         )
     print()
-
-    try:
-        webbrowser.open(f"https://github.com/{repo_path}/actions")
-    except Exception:
-        pass
 
     return ExitCode.SUCCESS.value
 

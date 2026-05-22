@@ -1,9 +1,12 @@
 """Publish workflow steps: prerequisites, git, format, test, analyze, release."""
 
+import json
 import re
 import shutil
 import subprocess
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 from . import platform as platform_mod
@@ -567,6 +570,195 @@ def create_github_release(
         )
 
     return False, f"GitHub release failed (exit code {result.returncode})"
+
+
+# Default budget for STEP 14. GitHub Actions has to spin up a runner, install
+# Flutter (the slow part), test, then publish, after which pub.dev needs a moment
+# to index — so the wait is minutes, not seconds. 15 min is comfortably above a
+# normal run (~3 min) without hanging the operator forever on a stuck job.
+_VERIFY_TIMEOUT_SECONDS = 15 * 60
+# Poll cadence. pub.dev indexing after a successful publish is near-instant, so a
+# tight-ish loop confirms success quickly once the workflow finishes; it is also
+# the debounce that stops us declaring victory before pub.dev actually serves it.
+_VERIFY_POLL_SECONDS = 15
+
+
+def _pubdev_has_version(package_name: str, version: str) -> bool:
+    """True when pub.dev actually serves `version` of `package_name`.
+
+    Hits the per-version API endpoint, which returns 200 once the version is live
+    and 404 until then. This is the ONLY authoritative proof that publishing
+    succeeded: the GitHub Actions run's own conclusion can be masked green (the
+    `|| [ $? -eq 65 ]` bug) while pub.dev received nothing, so we trust pub.dev,
+    not the workflow's self-report. Any network/HTTP error is treated as "not yet"
+    so a transient blip just means another poll, never a false positive.
+    """
+    url = f"https://pub.dev/api/packages/{package_name}/versions/{version}"
+    request = urllib.request.Request(
+        url, headers={"User-Agent": "saropa-dart-utils-publish-script"}
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            return response.status == 200
+    except urllib.error.HTTPError:
+        # 404 = not published yet (expected while we wait); rate-limit / 5xx are
+        # transient. Either way it is "not confirmed live" — poll again.
+        return False
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return False
+
+
+def _find_publish_run_id(project_dir: Path, tag_name: str) -> str | None:
+    """Return the newest GitHub Actions run id triggered by pushing `tag_name`.
+
+    A tag push produces a run whose headBranch is the tag itself (e.g. 'v1.1.2').
+    Returns None when no matching run has registered yet (so the caller keeps
+    polling) or when gh/JSON is unavailable (verification then falls back to the
+    pub.dev poll alone, which is still authoritative).
+    """
+    result = run_mod.run_capture(
+        [
+            "gh",
+            "run",
+            "list",
+            "--json",
+            "databaseId,headBranch,event",
+            "-L",
+            "20",
+        ],
+        project_dir,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        return None
+    try:
+        runs = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return None
+    for run in runs:
+        if run.get("headBranch") == tag_name and run.get("event") == "push":
+            return str(run.get("databaseId"))
+    return None
+
+
+def _run_status(project_dir: Path, run_id: str) -> tuple[str, str]:
+    """Return (status, conclusion) for a workflow run.
+
+    status is queued / in_progress / completed; conclusion is empty until the run
+    completes, then success / failure / cancelled / timed_out. Returns ("", "")
+    on any error so the caller simply keeps polling pub.dev.
+    """
+    result = run_mod.run_capture(
+        ["gh", "run", "view", run_id, "--json", "status,conclusion"], project_dir
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        return "", ""
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return "", ""
+    return data.get("status") or "", data.get("conclusion") or ""
+
+
+def verify_published(
+    project_dir: Path,
+    package_name: str,
+    version: str,
+    timeout_seconds: int = _VERIFY_TIMEOUT_SECONDS,
+    poll_seconds: int = _VERIFY_POLL_SECONDS,
+) -> bool:
+    """STEP 14: confirm the release actually reached pub.dev before declaring success.
+
+    Pushing the tag only *triggers* publishing; it does not prove it worked. The
+    GitHub Actions run can report success while pub.dev got nothing (the masked
+    exit-65 bug), and the local dry run cannot run on Windows (the SDK 'nul' path
+    bug), so neither is trustworthy alone. This polls two independent signals:
+
+      1. pub.dev's per-version API — the authoritative proof the version is live.
+      2. The triggered workflow run's conclusion — a fast-fail accelerator: a
+         failed/cancelled run means publishing will never complete, so we stop
+         immediately instead of waiting out the whole timeout.
+
+    Returns True ONLY when pub.dev actually serves the new version. A workflow
+    that finishes "success" while pub.dev never shows the version (the exact
+    signature of the exit-65 mask) is reported here as a FAILURE, not a success.
+    """
+    ui.print_header("STEP 14: VERIFYING PUBLICATION ON PUB.DEV")
+
+    tag_name = f"v{version}"
+    repo_path = extract_repo_path(get_remote_url(project_dir))
+
+    ui.print_info(
+        f"Waiting for {package_name} {version} to appear on pub.dev "
+        f"(checking every {poll_seconds}s, up to {timeout_seconds // 60} min)..."
+    )
+
+    run_id: str | None = None
+    workflow_succeeded = False
+    last_reported_status = ""
+    deadline = time.monotonic() + timeout_seconds
+
+    while time.monotonic() < deadline:
+        if _pubdev_has_version(package_name, version):
+            ui.print_success(f"Confirmed live on pub.dev: {package_name} {version}")
+            ui.print_colored(
+                f"      https://pub.dev/packages/{package_name}/versions/{version}",
+                ui.Color.CYAN,
+            )
+            return True
+
+        # Locate the run once, then track its status so a hard failure ends the
+        # wait early and status transitions give the operator a heartbeat.
+        if run_id is None:
+            run_id = _find_publish_run_id(project_dir, tag_name)
+            if run_id is not None:
+                ui.print_info(f"Watching publish run {run_id}...")
+
+        if run_id is not None:
+            status, conclusion = _run_status(project_dir, run_id)
+            if status and status != last_reported_status:
+                ui.print_colored(f"      workflow status: {status}", ui.Color.WHITE)
+                last_reported_status = status
+            if status == "completed":
+                if conclusion == "success":
+                    # Green run but pub.dev not showing yet: usually just indexing
+                    # lag, so keep polling pub.dev (the loop re-checks at the top).
+                    workflow_succeeded = True
+                elif conclusion:
+                    ui.print_error(
+                        f"Publish workflow {conclusion}; {package_name} {version} "
+                        "was NOT published."
+                    )
+                    ui.print_colored(
+                        f"      Logs: https://github.com/{repo_path}/actions/runs/{run_id}",
+                        ui.Color.YELLOW,
+                    )
+                    return False
+
+        time.sleep(poll_seconds)
+
+    # Timed out. Name the two failure shapes so the message is actionable.
+    if workflow_succeeded:
+        # Green workflow + nothing on pub.dev is the masked-failure signature.
+        ui.print_error(
+            "Workflow reported success but pub.dev never served the version."
+        )
+        ui.print_warning(
+            "This is the signature of a masked publish failure (e.g. "
+            "`dart pub publish ... || [ $? -eq 65 ]`). Open the publish step log "
+            "and look for validation errors."
+        )
+    else:
+        ui.print_error(
+            f"Timed out after {timeout_seconds // 60} min; pub.dev did not show "
+            f"{package_name} {version}."
+        )
+    ui.print_colored(
+        f"      Actions: https://github.com/{repo_path}/actions", ui.Color.YELLOW
+    )
+    ui.print_colored(
+        f"      Package: https://pub.dev/packages/{package_name}", ui.Color.YELLOW
+    )
+    return False
 
 
 def get_current_branch(project_dir: Path) -> str:

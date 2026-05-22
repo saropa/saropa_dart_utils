@@ -31,8 +31,13 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      # Strict on purpose: `dart pub publish` exits 65 on validation failure
+      # (e.g. an undeclared dependency). The old `|| [ $? -eq 65 ]` swallowed
+      # that, so the dry run and the real publish both reported green while
+      # pub.dev received nothing — the package silently stayed at 1.0.6 across
+      # three "successful" releases. Let any non-zero exit fail the workflow.
       - name: Dry run
-        run: dart pub publish --dry-run || [ $? -eq 65 ]
+        run: dart pub publish --dry-run
 
       - name: Publish to pub.dev
-        run: dart pub publish --force || [ $? -eq 65 ]
+        run: dart pub publish --force
