@@ -37,6 +37,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.6]
+
+### Fixed
+
+- **Release fix: `dart pub publish` failed validation (exit 65), so 1.1.5 never reached pub.dev.** `test/async/debounce_utils_test.dart` and `test/async/heartbeat_utils_test.dart` import `package:fake_async/fake_async.dart`, but `fake_async` was only available transitively (via `flutter_test`) and was not declared in `pubspec.yaml`. pub.dev rejects publishing a package whose sources import an undeclared library. Added `fake_async: ^1.3.3` to `dev_dependencies` (matching the version `flutter_test` resolves). No `lib/` changes — this republishes the 1.1.5 content under 1.1.6.
+
+---
+
 ## [1.1.5]
 
 ### Fixed
