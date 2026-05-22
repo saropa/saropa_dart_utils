@@ -17,6 +17,9 @@ Object? canonicalizeJson(Object? value) {
     return out;
   }
   if (value is List) return value.map(canonicalizeJson).toList();
+  // Collapse every non-int num to a plain double so equal magnitudes compare
+  // equal regardless of their concrete runtime type (e.g. a Decimal vs double),
+  // keeping the canonical form stable for hashing and equality checks.
   if (value is num) return value is int ? value : value.toDouble();
   return value;
 }

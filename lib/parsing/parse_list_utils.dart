@@ -22,13 +22,18 @@ List<String> parseListFromString(String input, {String delimiter = ','}) {
 }
 
 Object? _jsonDecode(String s) {
+  // Hand-rolled scanner instead of dart:convert so quoted commas (e.g.
+  // ["a,b","c"]) are not mistaken for element separators by a naive split.
   if (s == '[]') return <dynamic>[];
   if (s.length < 2) return null;
   final List<dynamic> out = <dynamic>[];
+  // Strip the surrounding [ ] and scan the contents element by element.
   final String inner = s.substringSafe(1, s.length - 1);
   int i = 0;
   while (i < inner.length) {
     final int start = i;
+    // A leading quote means a string element whose closing quote (and any
+    // backslash escapes) must be honored; anything else is a bare token.
     if (inner[i] == '"') {
       final (String parsed, int next) = _parseQuotedElement(inner, start);
       out.add(parsed);

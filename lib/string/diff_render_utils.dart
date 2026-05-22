@@ -43,7 +43,6 @@ String renderUnifiedDiff(
   // ignore: avoid_unused_parameters - reserved for context hunk size
   int contextLines = 3,
 }) {
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final StringBuffer out = StringBuffer();
   for (final DiffOp op in ops) {
     final String raw = op.text;

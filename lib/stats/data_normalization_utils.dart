@@ -23,6 +23,8 @@ List<double> minMaxScale(List<num> values, {double low = 0.0, double high = 1.0}
   final doubles = values.map((num x) => x.toDouble()).toList();
   final double minV = doubles.fold(double.infinity, (a, b) => a < b ? a : b);
   final double maxV = doubles.fold(double.negativeInfinity, (a, b) => a > b ? a : b);
+  // All values equal: the (x-min)/(max-min) ratio would divide by zero, so map
+  // every element to the midpoint of the target range instead.
   if (maxV == minV) return List.filled(values.length, (low + high) / 2);
   return values.map((num x) => low + (x.toDouble() - minV) / (maxV - minV) * (high - low)).toList();
 }

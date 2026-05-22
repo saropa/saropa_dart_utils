@@ -26,6 +26,8 @@ extension StringCaseAcronymExtensions on String {
       final String word = words[i];
       if (word.length > 1) {
         final String rest = word.substringSafe(1);
+        // A fully-uppercase word is treated as a single acronym and lowercased
+        // whole (HTTP -> http), instead of title-casing it to "Http".
         final bool allUpper = word.toUpperCase() == word;
         if (allUpper) {
           sb.write(word.toLowerCase());
@@ -60,11 +62,20 @@ extension StringCaseAcronymExtensions on String {
       if (c == ' ' || c == '-') {
         sb.write('_');
       } else {
+        // Only cased uppercase letters start a word boundary. Checking that the
+        // upper-cased form equals the character is not enough on its own, because
+        // caseless characters such as digits and symbols also equal their own
+        // upper-cased form. Also requiring the lower-cased form to differ excludes
+        // those caseless characters.
         final bool upper = c.toUpperCase() == c && c.toLowerCase() != c;
         if (upper && i > 0) {
           final String prev = this[i - 1];
           final bool prevLower = prev.toUpperCase() != prev || prev.toLowerCase() == prev;
           final bool nextLower = i + 1 < length && this[i + 1].toLowerCase() == this[i + 1];
+          // Insert "_" in two cases. First, a lower-then-Upper transition, e.g.
+          // fooBar becomes foo_bar. Second, the last capital of an acronym that
+          // begins a new word, detected by Upper-then-lower: in HTTPResponse the
+          // boundary falls before the R, not inside the HTTP run.
           if (prevLower || (prev.toUpperCase() == prev && nextLower)) sb.write('_');
         }
         sb.write(c.toLowerCase());

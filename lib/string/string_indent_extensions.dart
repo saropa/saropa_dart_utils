@@ -32,6 +32,9 @@ extension StringIndentExtensions on String {
   String dedent() {
     if (isEmpty) return this;
     final List<String> lines = split('\n');
+    // Compute the smallest leading-whitespace width across non-blank lines.
+    // Blank lines are skipped because their lead is 0 and would otherwise force
+    // the common indent to 0, defeating the dedent.
     int? minLead;
     for (final String line in lines) {
       if (!line.trim().isEmpty) {
@@ -43,6 +46,8 @@ extension StringIndentExtensions on String {
       return this;
     }
     final lead = minLead;
+    // Strip exactly `lead` chars from each line; shorter lines (blanks/whitespace
+    // narrower than the common indent) are left as-is to avoid an index overrun.
     return lines
         .map((String line) => line.length >= lead ? line.replaceRange(0, lead, '') : line)
         .join('\n');

@@ -103,9 +103,14 @@ class _Edit {
 List<_Edit> _myers({required List<String> a, required List<String> b}) {
   final int n = a.length;
   final int m = b.length;
+  // Classic longest-common-subsequence DP table. dp[i][j] = length of the LCS of
+  // the first i lines of a and first j lines of b. Row/column 0 stay zero as the
+  // empty-prefix base case, which is why indexing uses a[i-1]/b[j-1].
   final List<List<int>> dp = List.generate(n + 1, (_) => List.filled(m + 1, 0));
   for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= m; j++) {
+      // Matching lines extend the diagonal LCS by one; otherwise inherit the
+      // better of dropping a line from a or from b.
       if (a[i - 1] == b[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1] + 1;
       } else {
@@ -113,15 +118,21 @@ List<_Edit> _myers({required List<String> a, required List<String> b}) {
       }
     }
   }
+  // Backtrack from the bottom-right corner to recover the edit script. Edits are
+  // collected in reverse (end-to-start) and reversed once at the return.
   int i = n;
   int j = m;
   final List<_Edit> edits = <_Edit>[];
   while (i > 0 || j > 0) {
     if (i > 0 && j > 0 && a[i - 1] == b[j - 1]) {
+      // On the LCS diagonal: this line is unchanged, step both cursors back.
       edits.add(_Edit(DiffOpKind.equal, i - 1, j - 1));
       i--;
       j--;
     } else if (j > 0 && (i == 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+      // Prefer insert when the left neighbor is at least as good. The >= tie-break
+      // makes insertions come out before deletions at equal-cost forks, giving a
+      // stable, deterministic script.
       edits.add(_Edit(DiffOpKind.insert, i, j - 1));
       j--;
     } else {
@@ -137,9 +148,7 @@ List<DiffOp> _mergeOps({
   required List<String> a,
   required List<String> b,
 }) {
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<DiffOp> result = List.filled(edits.length, DiffOp(DiffOpKind.equal, ''));
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- mutated across loop iterations; must be declared before it
   int resultIndex = 0;
   final StringBuffer buf = StringBuffer();
   int idx = 0;

@@ -35,9 +35,13 @@ class HumanNameParserUtils {
 HumanNameParserUtils parseHumanName(String full) {
   final String s = full.trim();
   if (s.isEmpty) return const HumanNameParserUtils();
+  // Strip a trailing generational suffix before splitting names, so it never
+  // gets mistaken for a middle/last token (e.g. "Smith, John Jr.").
   final RegExp suffixRe = RegExp(r',?\s+(Jr\.?|Sr\.?|III?|IV|II|I)$', caseSensitive: false);
   final String? suffix = suffixRe.firstMatch(s)?.group(1);
   final String rest = s.replaceAll(suffixRe, '').trim();
+  // A comma signals "Last, First [Middle]" order; without one it's natural
+  // "First [Middle] Last" order, handled by the token split below.
   if (rest.contains(',')) {
     final List<String> parts = rest.split(',').map((e) => e.trim()).toList();
     if (parts.length >= 2) {

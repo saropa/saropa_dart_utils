@@ -5,10 +5,12 @@ Duration? parseDuration(String input) {
   final String s = input.trim().toLowerCase();
   if (s.isEmpty) return null;
   final RegExp part = RegExp(r'([\d.]+)\s*([dhms]|ms)\b');
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulator mutated across loop iterations and read after the loop
   int totalMs = 0;
   int start = 0;
   for (final RegExpMatch m in part.allMatches(s)) {
+    // Reject any gap between matches: each token must begin exactly where the
+    // previous one ended, so stray characters (e.g. "1h x 2m") fail instead of
+    // being silently skipped by allMatches.
     if (m.start != start) return null;
     start = m.end;
     final g1 = m.group(1);
@@ -35,6 +37,8 @@ Duration? parseDuration(String input) {
         return null;
     }
   }
+  // Trailing-garbage guard: matches must cover the string through its end,
+  // otherwise input like "2h junk" would parse as 2h.
   if (start != s.length) return null;
   return Duration(milliseconds: totalMs);
 }

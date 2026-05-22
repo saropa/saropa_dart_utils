@@ -10,6 +10,8 @@ double? parseCompactNumber(String input) {
   final double? value = double.tryParse(g1);
   if (value == null) return null;
   final String suffix = m.group(2) ?? '';
+  // Decimal (1000-based) scale for human counts: 1K = 1000, not 1024. This is
+  // deliberately distinct from byte-size parsing, which uses 1024-based factors.
   const Map<String, double> multipliers = <String, double>{
     '': 1,
     'K': 1e3,

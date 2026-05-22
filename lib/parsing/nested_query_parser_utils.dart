@@ -13,8 +13,12 @@ Map<String, Object?> parseNestedQuery(String queryString) {
     if (eq < 0) continue;
     final String keyStr = Uri.decodeComponent(pair.substringSafe(0, eq));
     final String value = Uri.decodeComponent(pair.substringSafe(eq + 1));
+    // Bracket notation a[b][c] becomes ['a','b','c']: dropping every ']' then
+    // splitting on '[' yields one segment per nesting level without a regex.
     final List<String> keySegments = keyStr.replaceAll(']', '').split('[');
     Map<String, Object?> current = root;
+    // Walk all but the final segment, creating intermediate maps as we descend;
+    // the last segment is the leaf that actually holds the value (set below).
     for (int i = 0; i < keySegments.length - 1; i++) {
       final String k = keySegments[i];
       final child = current.putIfAbsent(k, () => <String, Object?>{});

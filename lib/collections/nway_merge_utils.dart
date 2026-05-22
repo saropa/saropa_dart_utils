@@ -9,7 +9,6 @@ List<T> nWayMerge<T extends Comparable<Object>>(List<Iterable<T>> iterables) {
   for (int i = 0; i < iters.length; i++) {
     if (iters[i].moveNext()) head[i] = iters[i].current;
   }
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across loop iterations; must outlive the loop
   final List<T> out = <T>[];
   while (true) {
     int best = -1;

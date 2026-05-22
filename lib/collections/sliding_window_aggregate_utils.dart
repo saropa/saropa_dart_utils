@@ -21,6 +21,8 @@ enum WindowAggregate {
 List<double> slidingWindow(List<num> values, int size, WindowAggregate agg) {
   if (size < 1 || values.length < size) return <double>[];
   final List<double> out = <double>[];
+  // Last valid start is values.length - size; the inclusive `<=` produces exactly
+  // (length - size + 1) windows. A non-inclusive bound would drop the final window.
   for (int i = 0; i <= values.length - size; i++) {
     final List<num> window = values.sublist(i, i + size);
     switch (agg) {

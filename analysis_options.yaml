@@ -5,6 +5,8 @@
 #
 # Configuration optimized for: DART UTILITY LIBRARY (not a Flutter app)
 
+# cspell:disable
+
 analyzer:
   exclude:
     - "**/*.bak"
@@ -115,6 +117,11 @@ plugins:
       avoid_static_state: false  # [WARNING] Static mutable state persists across hot-reloads and tests, causing stale data and inconsistent behavior. Tests fail unpredictably due to shared state leaking between runs, and production bugs become hard to reproduce across different app sessions and isolates. {v4}
       avoid_unmarked_public_class: false  # [INFO] Public class lacks an explicit class modifier. Dart 3.0 introduced class modifiers (base, final, interface, sealed). For API stability, public classes should declare their inheritance intent. {v3}
       function_always_returns_null: false  # [WARNING] Function returns null on every code path, making the return type effectively void. Callers that check or use the return value are performing dead logic, and the nullable return type misleads developers into thinking the function can return meaningful data. {v6}
+      # Disabled: this utility library declares loop accumulators and method-scope
+      # setup variables up front by design, so this stylistic rule fired ~37 times
+      # on correct code (it also counts comment lines toward declaration distance,
+      # penalizing explanatory comments). Not worth ~37 inline suppressions.
+      move_variable_closer_to_its_usage: false  # [INFO] Variable declared far from its first use, with many unrelated statements in between. This forces readers to hold the variable in memory while reading irrelevant code, reducing comprehension and increasing the risk of accidental reuse or shadowing. {v7}
       no_empty_string: false  # [INFO] Using empty string literals ("") in your code can be ambiguous and may indicate a missing value or a placeholder. Relying on empty strings for logic can lead to subtle bugs and makes intent unclear to readers. {v6}
       no_magic_number_in_tests: false  # [INFO] Unexplained numeric literal in test file obscures the purpose of expected values and assertions. When a test fails, readers cannot tell whether the number is an arbitrary fixture value, a meaningful boundary, or a calculated expected result, making failures harder to diagnose and fix. {v4}
       no_magic_string_in_tests: false  # [INFO] Unexplained string literal in test file obscures the purpose of expected values and assertions. When a test fails, readers cannot tell whether the string is an arbitrary fixture, a meaningful expected output, or a format-specific value, making failures harder to diagnose. {v5}
@@ -604,7 +611,6 @@ plugins:
       avoid_work_in_paused_state: true  # [WARNING] Timer.periodic without lifecycle handling. Will run when app is backgrounded. Timers and periodic callbacks should pause when the app is backgrounded to save battery and avoid unexpected behavior. {v2}
       dispose_widget_fields: true  # [WARNING] Field requires disposal but dispose method is missing or incomplete. Fields that need disposal are not disposed. This violates the widget lifecycle, risking setState-after-dispose errors or silent state corruption. {v2}
       match_class_name_pattern: true  # [INFO] Class name does not follow expected pattern. Class names should follow naming conventions for their purpose. {v4}
-      move_variable_closer_to_its_usage: true  # [INFO] Variable declared far from its first use, with many unrelated statements in between. This forces readers to hold the variable in memory while reading irrelevant code, reducing comprehension and increasing the risk of accidental reuse or shadowing. {v7}
       no_equal_arguments: true  # [WARNING] The same identifier is passed as multiple positional arguments to a function call, which typically indicates a copy-paste error where distinct values were intended (e.g., setPosition(x, x) instead of setPosition(x, y)). This silent bug produces incorrect behavior that passes compilation but yields wrong results at runtime. {v4}
       no_equal_conditions: true  # [WARNING] Same condition appears more than once in an if/else-if chain. The duplicate branch is unreachable because the first occurrence already handles all cases where the condition is true, making the repeated check dead code. {v5}
       no_equal_nested_conditions: true  # [WARNING] Inner condition is identical to an enclosing outer condition. The nested check is always true at that point because the outer condition already guarantees it, making the inner branch redundant dead logic that adds nesting depth without any behavioral effect. {v4}

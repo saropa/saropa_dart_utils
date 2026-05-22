@@ -9,12 +9,15 @@ List<String> chunkText(String text, {int maxChars = 500, int overlap = 0}) {
   if (text.isEmpty) return <String>[];
   if (maxChars < 1) return <String>[text];
   final int maxPossibleChunks = text.length + 1;
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<String> chunks = List<String>.filled(maxPossibleChunks, '');
   int chunkIndex = 0;
   int start = 0;
   while (start < text.length) {
     int end = (start + maxChars).clamp(0, text.length);
+    // Prefer a sentence boundary: pull `end` back to the last period within the
+    // window so chunks split between sentences rather than mid-sentence. Require
+    // lastPeriod > start so we never produce an empty/backward chunk when the
+    // only period sits at or before the chunk start.
     if (end < text.length) {
       final int lastPeriod = text.lastIndexOf('.', end);
       if (lastPeriod > start) end = lastPeriod + 1;
@@ -23,6 +26,8 @@ List<String> chunkText(String text, {int maxChars = 500, int overlap = 0}) {
     final int safeEnd = end.clamp(0, text.length);
     chunks[chunkIndex++] = text.substringSafe(safeStart, safeEnd).trim();
     start = end;
+    // Rewind the next start by `overlap` chars so adjacent chunks share trailing
+    // context (useful for search/embedding so matches spanning a boundary survive).
     if (overlap > 0 && start < text.length) start = (start - overlap).clamp(0, text.length);
   }
   return chunks.sublist(0, chunkIndex).where((String c) => c.isNotEmpty).toList();

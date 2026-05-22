@@ -30,7 +30,6 @@ class UrlExtractUtils {
 /// Extracts URLs from [text]; [snippetLength] chars of context before/after.
 List<UrlExtractUtils> extractUrlsWithContext(String text, {int snippetLength = 40}) {
   final RegExp urlPattern = RegExp(r'https?://[^\s<>"\x27]+', caseSensitive: false);
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<UrlExtractUtils> out = <UrlExtractUtils>[];
   for (final Match m in urlPattern.allMatches(text)) {
     final String urlStr = m.group(0) ?? '';

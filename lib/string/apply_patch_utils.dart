@@ -43,8 +43,10 @@ final class ApplyPatchConflict extends ApplyPatchUtils {
 ApplyPatchUtils applyPatch(String baseText, List<DiffOp> ops) {
   final List<String> lines = _splitLines(baseText);
   int lineIndex = 0;
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final StringBuffer out = StringBuffer();
+  // lineIndex is the cursor into baseText. equal/delete consume base lines and
+  // must match what the patch expected (the patch is rejected otherwise, so a
+  // stale patch can't corrupt mismatched text); insert emits without consuming.
   for (final DiffOp op in ops) {
     final List<String> opLines = _opToLines(op.text);
     switch (op.kind) {
@@ -88,6 +90,9 @@ ApplyPatchUtils applyPatch(String baseText, List<DiffOp> ops) {
         break;
     }
   }
+  // The patch must account for every base line; leftover base lines mean the
+  // patch was built against a shorter/different base, so reject rather than
+  // silently truncate them.
   if (lineIndex < lines.length) {
     return ApplyPatchConflict('Base has ${lines.length - lineIndex} extra lines after patch');
   }

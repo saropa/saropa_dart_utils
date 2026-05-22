@@ -7,6 +7,8 @@ int naturalCompare(String a, String b) {
   for (int i = 0; i < tokensA.length && i < tokensB.length; i++) {
     final Object tokenA = tokensA[i];
     final Object tokenB = tokensB[i];
+    // Compare numeric runs by value so "img2" sorts before "img10"; mixed or
+    // textual runs fall back to lexicographic comparison.
     if (tokenA is int && tokenB is int) {
       final int c = tokenA.compareTo(tokenB);
       if (c != 0) return c;
@@ -15,6 +17,8 @@ int naturalCompare(String a, String b) {
       if (c != 0) return c;
     }
   }
+  // All shared tokens were equal; the string with fewer tokens (a prefix of the
+  // other, e.g. "a" vs "a1") sorts first.
   return tokensA.length.compareTo(tokensB.length);
 }
 

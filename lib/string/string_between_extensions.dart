@@ -42,6 +42,8 @@ extension StringBetweenExtensions on String {
       return null;
     }
 
+    // Try each bracket family in priority order, returning the first non-empty
+    // result. Empty content is skipped so "()" doesn't shadow a later "[x]".
     final String parens = between('(', ')');
     if (parens.isNotEmpty) return parens;
 
@@ -72,7 +74,11 @@ extension StringBetweenExtensions on String {
       return '';
     }
 
+    // endOptional:false so we only act on a real, closed start..end pair.
     final String found = between(start, end, endOptional: false);
+    // Empty content with no literal "startend" adjacency: nothing to strip unless
+    // start and end exist separately in order. If they don't, return unchanged so
+    // a lone start (or out-of-order delimiters) is never partially mangled.
     if (found.isEmpty && !contains(start + end)) {
       if (contains(start) && contains(end) && indexOf(start) < indexOf(end)) {
         if (inclusive && this == start + end) {
@@ -82,6 +88,9 @@ extension StringBetweenExtensions on String {
         return this;
       }
     }
+    // Reconstruct the literal span to delete: with the delimiters when inclusive,
+    // just the inner content otherwise. An empty non-inclusive pattern would make
+    // replaceAll a no-op (or worse), so bail out and return the string untouched.
     final String pattern = inclusive ? (start + found + end) : found;
     if (pattern.isEmpty && !inclusive) {
       return this;
@@ -268,8 +277,12 @@ extension StringBetweenExtensions on String {
       return '';
     }
 
+    // An empty end can't be located: treat it as "to end of string" when optional,
+    // otherwise as not-found (-1) so the guards below fall through to the no-match path.
     final int endIndex = end.isEmpty ? (endOptional ? length : -1) : lastIndexOf(end);
     final bool noEnd = endIndex == -1;
+    // end must come strictly after start, and start's own delimiter must not
+    // run past end (overlap), or there's no valid inner span between them.
     final bool endBeforeStart = endIndex <= startIndex;
     final bool contentOverlaps = (startIndex + start.length) > endIndex;
     if (noEnd || endBeforeStart || contentOverlaps) {

@@ -56,9 +56,14 @@ double? percentile(Iterable<num> values, double p) {
   final List<double> list = values.map((num n) => n.toDouble()).toList()..sort();
   if (list.isEmpty) return null;
   if (list.length == 1) return list[0];
+  // Linear-interpolation method (R's "type 7"): the percentile maps to a
+  // fractional rank p*(n-1), so p=0 hits the first element and p=1 the last.
   final double index = p * (list.length - 1);
+  // Bracket that fractional rank with its floor (i) and next (j) integer ranks;
+  // both are clamped so the top of the range (i == n-1) does not read past end.
   final int i = index.floor().clamp(0, list.length - 1);
   final int j = (i + 1).clamp(0, list.length - 1);
+  // t is the fractional offset between ranks i and j; blend them proportionally.
   final double t = index - i;
   return list[i] + t * (list[j] - list[i]);
 }

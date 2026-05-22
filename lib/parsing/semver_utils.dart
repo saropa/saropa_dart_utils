@@ -72,6 +72,9 @@ class SemverUtils {
     if (_major != other._major) return _major.compareTo(other._major);
     if (_minor != other._minor) return _minor.compareTo(other._minor);
     if (_patch != other._patch) return _patch.compareTo(other._patch);
+    // Semver §11: a pre-release version has LOWER precedence than the otherwise
+    // equal normal version (1.0.0-rc < 1.0.0), so the side lacking a pre-release
+    // ranks higher. Only when both have one do we compare them lexically.
     if (_pre.isEmpty && other._pre.isNotEmpty) return 1;
     if (_pre.isNotEmpty && other._pre.isEmpty) return -1;
     return _pre.compareTo(other._pre);

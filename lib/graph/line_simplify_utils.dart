@@ -27,11 +27,14 @@ List<int> douglasPeuckerIndices(List<LineSimplifyUtils> points, double epsilon) 
 }
 
 List<int> _douglasPeucker(List<LineSimplifyUtils> points, int start, int end, double epsilon) {
+  // Base case: a segment with no interior points cannot be simplified further.
   if (end <= start + 1) return <int>[start, end];
   double maxDist = 0;
   int maxIdx = start;
   final LineSimplifyUtils a = points[start];
   final LineSimplifyUtils b = points[end];
+  // Find the interior point farthest from the chord start->end; it is the only
+  // candidate that could exceed tolerance, so it alone decides keep vs. discard.
   for (int i = start + 1; i < end; i++) {
     final double d = _perpendicularDistance(points[i], a, b);
     if (d > maxDist) {
@@ -39,9 +42,13 @@ List<int> _douglasPeucker(List<LineSimplifyUtils> points, int start, int end, do
       maxIdx = i;
     }
   }
+  // Whole span is within tolerance: drop every interior point, keep the endpoints.
   if (maxDist <= epsilon) return <int>[start, end];
+  // The farthest point must be kept; recurse on each half split at it.
   final List<int> left = _douglasPeucker(points, start, maxIdx, epsilon);
   final List<int> right = _douglasPeucker(points, maxIdx, end, epsilon);
+  // maxIdx is the last element of `left` and the first of `right`; drop the
+  // trailing copy from `left` so the shared pivot is not duplicated on merge.
   return <int>[...left.sublist(0, left.length - 1), ...right];
 }
 

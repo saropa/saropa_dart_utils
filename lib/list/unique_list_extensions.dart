@@ -31,7 +31,6 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
     }
 
     // 1. Iterate backwards to find the index of the LAST occurrence of each key.
-    // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across all loop iterations; must be declared before the loop
     final Map<E, int> lastIndices = <E, int>{};
     for (int i = length - 1; i >= 0; i--) {
       final T item = this[i];

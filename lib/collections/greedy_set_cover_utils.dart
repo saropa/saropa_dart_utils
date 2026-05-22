@@ -5,7 +5,6 @@ library;
 /// [sets] is list of sets; [universe] is the full set of elements to cover.
 List<int> greedySetCover(List<Set<Object>> sets, Set<Object> universe) {
   final Set<Object> remaining = Set<Object>.of(universe);
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across loop iterations; must outlive the loop
   final List<int> cover = [];
   while (remaining.isNotEmpty) {
     int best = -1;

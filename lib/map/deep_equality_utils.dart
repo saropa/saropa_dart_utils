@@ -11,6 +11,8 @@ bool deepEquals(Object? a, Object? b) {
   if (identical(a, b)) return true;
   if (a == null || b == null) return false;
   if (a is Map && b is Map) {
+    // Equal lengths plus every key of a present (and equal) in b implies the key
+    // sets match, so there is no need to also scan b's keys against a.
     if (a.length != b.length) return false;
     for (final Object? k in a.keys) {
       if (!b.containsKey(k)) return false;

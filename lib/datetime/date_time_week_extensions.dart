@@ -34,10 +34,17 @@ DateTime? parseIsoWeekString(String s) {
   final int? yearVal = int.tryParse(yearGroup);
   final int? weekVal = int.tryParse(weekGroup);
   if (yearVal == null || weekVal == null || weekVal < 1 || weekVal > 53) return null;
+  // ISO-8601: week 1 is always the week containing Jan 4 (equivalently, the week
+  // with the year's first Thursday). Anchoring on Jan 4 sidesteps the edge case
+  // where Jan 1 falls in the final week of the previous year.
   final DateTime jan4 = DateTime(yearVal, 1, 4);
   final int jan4Weekday = jan4.weekday;
+  // Step back to that week's Monday (weekday Mon=1), then add whole weeks.
+  // Day overflow past month/year end is handled by DateTime's normalization.
   final DateTime monday = DateTime(yearVal, 1, 4 - (jan4Weekday - 1));
   final DateTime targetMonday = DateTime(monday.year, monday.month, monday.day + (weekVal - 1) * 7);
+  // Reject week 53 in years that only have 52 weeks: such a "week 53" Monday
+  // spills into the next calendar year and is not a valid ISO week for yearVal.
   if (targetMonday.year != yearVal && weekVal > 1) return null;
   return targetMonday;
 }

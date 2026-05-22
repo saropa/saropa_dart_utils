@@ -24,6 +24,9 @@ extension StringSplitExtensions on String {
     }
     final List<Match> matches = pattern.allMatches(this).toList();
     final int matchCount = matches.length;
+    // N matches produce one more segment than there are matches, and keeping
+    // delimiters adds a further element for each match. Sizing the buffer
+    // exactly to that total avoids any reallocation while filling it.
     final int capacity = 1 + matchCount + (includeDelimiters ? matchCount : 0);
     final List<String> result = List<String>.filled(capacity, '');
     int start = 0;

@@ -100,7 +100,6 @@ bool isAsciiOnly(String s) => s.codeUnits.every((int c) => c < 128);
 /// ```
 String truncateToByteLength(String s, int maxBytes) {
   final List<int> units = s.codeUnits;
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- loop accumulator that must persist across iterations; moving it inside the loop would reset the running byte count
   int len = 0;
   for (int i = 0; i < units.length; i++) {
     final int u = units[i];

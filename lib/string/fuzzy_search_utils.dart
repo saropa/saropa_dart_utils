@@ -43,7 +43,6 @@ List<FuzzySearchUtils> fuzzySearch(
     return candidates.asMap().entries.map((e) => FuzzySearchUtils(e.key, e.value, 1.0)).toList();
   }
   final List<String> qTokens = q.split(RegExp(r'\s+'));
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<FuzzySearchUtils> out = <FuzzySearchUtils>[];
   for (int i = 0; i < candidates.length; i++) {
     final String c = candidates[i];

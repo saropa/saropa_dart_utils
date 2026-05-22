@@ -5,6 +5,8 @@ import 'graph_utils.dart';
 
 /// Returns sorted node indices, or null if cycle detected.
 List<int>? topologicalSort(Adjacency graph) {
+  // Kahn's algorithm: repeatedly emit a node with in-degree 0 and decrement its
+  // successors' in-degrees, queuing each one once it reaches 0.
   final List<int> inDeg = List.filled(graph.length, 0);
   for (final List<int> adj in graph) {
     for (final int v in adj) {
@@ -24,5 +26,7 @@ List<int>? topologicalSort(Adjacency graph) {
       if (inDeg[v] == 0) queue.add(v);
     }
   }
+  // Nodes inside a cycle never reach in-degree 0, so they are never emitted; a
+  // short output is the signal that the graph is not a DAG.
   return out.length == graph.length ? out : null;
 }

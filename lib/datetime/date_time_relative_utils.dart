@@ -36,6 +36,9 @@ String relativeTimeString(DateTime dateTime, {DateTime? clock}) {
   if (hour < 24) return '$prefix$hour ${_relativeUnit(hour, _kHour, _kHours)}$suffix';
   if (day == 1) return isPast ? _kYesterday : _kTomorrow;
   if (day < 7) return '$prefix$day $_kDays$suffix';
+  // Coarse buckets use fixed divisors (7/30/365) rather than true calendar
+  // arithmetic: output is intentionally approximate ("about 2 months"), so
+  // exact month lengths and leap years are not worth the added complexity.
   final int weeks = (day / 7).floor();
   if (day < 30) return '$prefix$weeks ${_relativeUnit(weeks, _kWeek, _kWeeks)}$suffix';
   final int months = (day / 30).floor();

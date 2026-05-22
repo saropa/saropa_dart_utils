@@ -6,19 +6,14 @@ import 'dart:math' show pow;
 /// Runs up to [maxIterations] of K-means; [points] are 2D, returns cluster index per point.
 List<int> kmeans2D(List<(double, double)> points, int k, {int maxIterations = 100}) {
   if (points.isEmpty || k < 1) return <int>[];
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- tuple-index const reused across multiple nested loops
   const int coordX = 0;
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- tuple-index const reused across multiple nested loops
   const int coordY = 1;
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- result accumulator written across all iterations and returned after the loop
   final List<int> assign = List.filled(points.length, 0);
   final double firstX = points[0].$1;
   final double firstY = points[0].$2;
   final List<List<double>> centroids = List.generate(k, (_) => [firstX, firstY]);
   for (int iter = 0; iter < maxIterations; iter++) {
-    // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulator read in two separate inner loops within this iteration
     final List<List<double>> sum = List.generate(k, (_) => [0.0, 0.0]);
-    // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulator read in two separate inner loops within this iteration
     final List<int> count = List.filled(k, 0);
     final List<double> centroid0 = centroids[coordX];
     for (int i = 0; i < points.length; i++) {

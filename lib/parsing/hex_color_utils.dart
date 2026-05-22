@@ -9,6 +9,8 @@ int? parseHexColor(String input) {
   const int hexRadix = 16;
   const int shortHexLength = 3;
   if (hex.length == shortHexLength) {
+    // #RGB shorthand expands each nibble by duplication: 'f' -> 'ff', so #f80
+    // becomes #ff8800. Matches the CSS three-digit hex expansion rule.
     final int? red = int.tryParse('${hex[0]}${hex[0]}', radix: hexRadix);
     final int? green = int.tryParse('${hex[1]}${hex[1]}', radix: hexRadix);
     final int? blue = int.tryParse('${hex[2]}${hex[2]}', radix: hexRadix);
@@ -20,6 +22,8 @@ int? parseHexColor(String input) {
   }
   const int rgbHexLength = 6;
   if (hex.length == rgbHexLength) {
+    // No alpha supplied: prepend opaque 'ff' to form a full AARRGGBB string,
+    // then parse the 8-digit value in one pass rather than masking afterward.
     const int defaultAlpha = 0xFF;
     return int.tryParse('${defaultAlpha.toRadixString(hexRadix)}$hex', radix: hexRadix);
   }

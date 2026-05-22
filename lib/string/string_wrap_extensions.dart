@@ -29,9 +29,7 @@ extension StringWrapExtensions on String {
     if (isEmpty) return <String>[];
     final Characters chars = characters;
     final int estimatedLines = (chars.length / columnWidth).ceil() + 1;
-    // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
     final List<String> lines = List<String>.filled(estimatedLines, '');
-    // ignore: saropa_lints/move_variable_closer_to_its_usage -- mutated across loop iterations; must be declared before it
     int lineIndex = 0;
     int i = 0;
     while (i < chars.length) {
@@ -39,8 +37,15 @@ extension StringWrapExtensions on String {
       if (lineEnd > chars.length) lineEnd = chars.length;
       final String segment = chars.getRange(i, lineEnd).string;
       int lineGraphemeCount = segment.characters.length;
+      // Only try a word-boundary break when this segment isn't the final tail;
+      // the last segment is taken whole so no trailing content is dropped.
       if (lineEnd < chars.length) {
         final int lastSpace = segment.lastIndexOf(_kSpace);
+        // Back the line up to the last space so words aren't split mid-word.
+        // Re-measure in graphemes because lastIndexOf returns a code-unit offset,
+        // which can't be used directly to slice the grapheme-indexed source.
+        // No space at all means one unbreakable run, so fall through to a hard
+        // cut at columnWidth.
         if (lastSpace >= 0) {
           lineGraphemeCount = segment.replaceRange(lastSpace, segment.length, '').characters.length;
         }
@@ -50,6 +55,7 @@ extension StringWrapExtensions on String {
           : chars.getRange(i, i + lineGraphemeCount).string;
       lines[lineIndex++] = lineContent;
       i += lineContent.characters.length;
+      // Consume the single break space so it doesn't lead the next line.
       if (i < chars.length && chars.elementAt(i) == _kSpace) i++;
     }
     return lines.sublist(0, lineIndex);

@@ -9,9 +9,7 @@ const String _kErrAllFailed = 'All failed';
 
 /// Returns result of first future that completes successfully; others are not cancelled (fire-and-forget).
 Future<T> raceFirst<T>(List<Future<T> Function()> producers) {
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- shared completer for all producers; returned to the caller, so it must outlive the loop
   final Completer<T> c = Completer<T>();
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- shared failure counter mutated by every producer; must be declared before the loop
   int pending = producers.length;
   for (final Future<T> Function() fn in producers) {
     // Launch every producer concurrently and race them: the first success

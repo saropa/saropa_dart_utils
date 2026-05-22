@@ -30,9 +30,13 @@ extension MapFlattenExtensions on Map<String, dynamic> {
     for (final MapEntry<String, dynamic> e in entries) {
       final List<String> parts = e.key.split('.');
       Map<String, dynamic> parentMap = out;
+      // Walk every part except the last, creating intermediate maps on demand.
       for (int i = 0; i < parts.length - 1; i++) {
         final String part = parts[i];
         final childMap = parentMap.putIfAbsent(part, () => <String, dynamic>{});
+        // On a key collision (a leaf already sits where a branch is needed,
+        // e.g. both "a" and "a.b" present) keep the existing value rather than
+        // clobbering it; descent stops since parentMap is not advanced.
         if (childMap is Map<String, dynamic>) parentMap = childMap;
       }
       final lastPart = parts.lastOrNull;

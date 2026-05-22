@@ -29,7 +29,11 @@ abstract final class GlobUtils {
     if (qi >= patternSegs.length) return false;
     final String pat = patternSegs[qi];
     if (pat == '**') {
+      // Trailing "**" matches all remaining path segments, so accept immediately.
       if (qi + 1 >= patternSegs.length) return true;
+      // "**" matches zero or more segments: try resuming the pattern after it at
+      // every remaining boundary (i == pi consumes zero; i == length consumes the
+      // rest). Backtracking is what lets a single "**" span a variable depth.
       for (int i = pi; i <= pathSegs.length; i++) {
         if (_matchSegments(pathSegs, i, patternSegs, qi + 1)) return true;
       }
@@ -77,6 +81,10 @@ abstract final class GlobUtils {
       }
       if (pat[patIdx] == '*') {
         patIdx++;
+        // "*" matches any run within a segment (never crossing '/'): try every
+        // split point from zero chars (segIdx) up to the whole remainder
+        // (segIdx == length), recursing to match the pattern tail at each. This
+        // backtracking resolves patterns with multiple "*" in one segment.
         while (segIdx <= seg.length) {
           if (_matchSegmentRest(seg, segIdx, pat, patIdx)) return true;
           segIdx++;
@@ -87,6 +95,7 @@ abstract final class GlobUtils {
       segIdx++;
       patIdx++;
     }
+    // Pattern exhausted: it matches only if the segment was fully consumed too.
     return segIdx >= seg.length;
   }
 }

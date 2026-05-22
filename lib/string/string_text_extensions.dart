@@ -239,6 +239,9 @@ extension StringTextExtensions on String {
 
     final String lower = word.toLowerCase();
 
+    // Phonetic exceptions are checked before the spelling-based vowel rule because
+    // the article depends on pronunciation, not the first letter: "an hour"
+    // (silent h), "a user" (consonant "y" sound), "a one-time" ("w" sound).
     if (_silentHPrefixes.any(lower.startsWith)) {
       return 'an';
     }
@@ -251,6 +254,7 @@ extension StringTextExtensions on String {
       return 'a';
     }
 
+    // Fallback: vowel-initial words take "an", everything else "a".
     return switch (lower[0]) {
       'a' || 'e' || 'i' || 'o' || 'u' => 'an',
       _ => 'a',
@@ -308,6 +312,9 @@ extension StringTextExtensions on String {
       case 'z':
         return '${this}es';
       case 'y':
+        // Vowel + y just adds s ("days"); consonant + y switches y to "ies"
+        // ("city" -> "cities"). length > 2 guards against 2-letter words like
+        // "by" where there's no consonant to inspect before the y.
         if (length > 2 && this[length - 2].isVowel()) {
           return '${this}s';
         }

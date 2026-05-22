@@ -27,7 +27,10 @@ int? parseSizeToBytes(String input) {
   if (g1 == null) return null;
   final double? value = double.tryParse(g1);
   if (value == null || value < 0) return null;
+  // The unit group may be 'K', 'KB', or 'B'; strip the trailing 'B' so that
+  // 'KB' and 'K' both key into the factor table as 'K' (and 'B'/'' as bytes).
   final String unit = (m.group(2) ?? '').toUpperCase().replaceAll(_kUnitB, '');
+  // 1024-based (binary) factors: callers expect '1 MB' = 1048576 bytes, not 1e6.
   const Map<String, int> factors = <String, int>{
     '': 1,
     'K': 1024,

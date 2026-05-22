@@ -3,11 +3,14 @@ bool isValidIsbn10(String isbn) {
   final String s = isbn.replaceAll(RegExp(r'[\s-]'), '').toUpperCase();
   if (s.length != 10) return false;
   int sum = 0;
+  // ISBN-10 weights each of the first 9 digits by its position (10, 9, ... 2).
   for (int i = 0; i < 9; i++) {
     final int? d = int.tryParse(s[i]);
     if (d == null) return false;
     sum += d * (10 - i);
   }
+  // The check digit (weight 1) may be 'X', which encodes the value 10 so that
+  // every possible remainder can be represented in a single character.
   if (s[9] == 'X') {
     sum += 10;
   } else {
@@ -15,6 +18,7 @@ bool isValidIsbn10(String isbn) {
     if (d == null) return false;
     sum += d;
   }
+  // Valid when the weighted sum is divisible by 11 (the ISBN-10 modulus).
   return sum % 11 == 0;
 }
 

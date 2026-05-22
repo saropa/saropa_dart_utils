@@ -29,17 +29,20 @@ const int _hexSegment5End = 20;
 
 /// Generate random UUID v4. Roadmap #228.
 String generateUuidV4() {
+  // Use the cryptographically secure RNG so generated IDs are not predictable.
   final Random random = Random.secure();
   final Uint8List bytes = Uint8List(_uuidByteCount);
   for (int i = 0; i < _uuidByteCount; i++) {
     bytes[i] = random.nextInt(_byteMaxExclusive);
   }
+  // RFC 4122: overwrite the high nibble of byte 6 with the version (0x4 = v4),
+  // and the top two bits of byte 8 with the variant (10xx). The masks clear the
+  // target bits first so the remaining random bits are preserved.
   bytes[6] = (bytes[6] & _versionNibbleMask) | _versionNibbleValue;
   bytes[8] = (bytes[8] & _variantMask) | _variantValue;
   final String hex = bytes
       .map((int b) => b.toRadixString(16).padLeft(_hexDigitsPerByte, _hexPadChar))
       .join();
-  // ignore: saropa_lints/move_variable_closer_to_its_usage -- one of a cohesive segment1..segment5 group all consumed in the final return
   final segment1 = hex.replaceRange(_hexSegment1End, _hexTotalLength, '');
   final segment2 = hex
       .replaceRange(_hexSegment2Start, _hexSegment2End, '')

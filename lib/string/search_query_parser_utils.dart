@@ -13,15 +13,22 @@ abstract final class SearchQueryParserUtils {
     final RegExp quoted = RegExp(r'"([^"]*)"');
     final RegExp ws = RegExp(r'\s+');
     int pos = 0;
+    // Upper bound on term count: every character could in theory start a new
+    // single-char term, so length+1 slots can never overflow. Pre-filling avoids
+    // per-add growth and the trailing slots are dropped by the final sublist.
     final int maxTerms = query.length + 1;
     final List<QueryTerm> out = List.filled(maxTerms, QueryTerm(''));
     int outIndex = 0;
+    // Walk the quoted phrases in order; the gap before each match (pos..m.start)
+    // is bare text that gets word-split, and the captured group is one phrase term.
     for (final Match m in quoted.allMatches(q)) {
       if (m.start > pos) {
         final int end = m.start.clamp(0, q.length);
         final int start = pos.clamp(0, end);
         final String span = start < end ? q.substringSafe(start, end) : '';
         for (final String word in span.split(ws).where((String x) => x.isNotEmpty)) {
+          // "OR" is dropped, not emitted as a term: this parser treats every gap
+          // between terms as AND, so the explicit OR keyword is a no-op separator.
           if (word.toUpperCase() != 'OR') {
             out[outIndex++] = QueryTerm(word, isNegated: word.startsWith('-'));
           }

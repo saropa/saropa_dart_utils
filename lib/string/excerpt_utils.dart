@@ -14,6 +14,8 @@ String excerptAround(String text, String query, {int contextChars = 60, String e
     final int fromEnd = (text.length - contextChars).clamp(0, text.length);
     return '${text.substringSafe(0, takeFirst)}$ellipsis${text.substringSafe(fromEnd)}';
   }
+  // Match case-insensitively but slice the original-case text: lowercase only
+  // for locating the index so the returned excerpt preserves the source casing.
   final int idx = text.toLowerCase().indexOf(q.toLowerCase());
   if (idx < 0) {
     if (text.length <= contextChars * 2 + 2) return text;
@@ -25,6 +27,8 @@ String excerptAround(String text, String query, {int contextChars = 60, String e
   final int end = (idx + q.length + contextChars).clamp(0, text.length);
   final int safeStart = start.clamp(0, text.length);
   final int safeEnd = end.clamp(0, text.length);
+  // Add a leading/trailing ellipsis only when the window is actually clipped at
+  // that edge; an excerpt that reaches the real start or end gets no ellipsis.
   final String head = start > 0 ? '$ellipsis ' : '';
   final String tail = end < text.length ? ' $ellipsis' : '';
   return '$head${text.substringSafe(safeStart, safeEnd)}$tail';

@@ -18,12 +18,16 @@ List<double> criticalPathDistances(WeightedAdjacency graph, int start) {
 }
 
 List<int> _topoOrder(WeightedAdjacency graph) {
+  // Kahn's algorithm: order nodes so every edge points forward. Relaxing edges in
+  // this order guarantees each node's distance is finalized before its successors
+  // are reached, which is what makes the single-pass longest-path relaxation correct.
   final List<int> inDeg = List.filled(graph.length, 0);
   for (final List<(int, double)> adj in graph) {
     for (final (int v, _) in adj) {
       inDeg[v]++;
     }
   }
+  // Sources (no incoming edges) are the only nodes that can come first.
   final List<int> queue = [
     for (int i = 0; i < graph.length; i++)
       if (inDeg[i] == 0) i,
@@ -32,6 +36,8 @@ List<int> _topoOrder(WeightedAdjacency graph) {
   while (queue.isNotEmpty) {
     final int u = queue.removeAt(0);
     out.add(u);
+    // Emitting u "removes" its outgoing edges; a successor becomes a new source
+    // once its last remaining predecessor has been emitted.
     for (final (int v, _) in graph[u]) {
       inDeg[v]--;
       if (inDeg[v] == 0) queue.add(v);
