@@ -2,7 +2,9 @@
 R Function(T) pipe<T, R>(List<R Function(dynamic)> fns) {
   return (T x) {
     dynamic v = x;
-    for (final R Function(dynamic) f in fns) v = f(v);
+    for (final R Function(dynamic) f in fns) {
+      v = f(v);
+    }
     if (v is R) return v;
     throw StateError('pipe: result is ${v.runtimeType}, expected $R');
   };

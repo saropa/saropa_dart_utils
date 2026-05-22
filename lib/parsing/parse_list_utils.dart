@@ -60,11 +60,15 @@ Object? _jsonDecode(String s) {
 
 (String, int) _parseUnquotedElement(String inner, int start) {
   int end = start;
-  while (end < inner.length && inner[end] != ',') end++;
+  while (end < inner.length && inner[end] != ',') {
+    end++;
+  }
   return (inner.substringSafe(start, end).trim(), end);
 }
 
 int _skipCommaAndSpace(String inner, int i) {
-  while (i < inner.length && (inner[i] == ',' || inner[i] == ' ')) i++;
+  while (i < inner.length && (inner[i] == ',' || inner[i] == ' ')) {
+    i++;
+  }
   return i;
 }

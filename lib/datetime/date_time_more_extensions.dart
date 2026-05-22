@@ -49,6 +49,8 @@ List<DateTime> monthsBetween(DateTime start, DateTime end) {
 /// List of years from [start].year through [end].year (inclusive).
 List<int> yearsBetween(DateTime start, DateTime end) {
   final List<int> out = <int>[];
-  for (int y = start.year; y <= end.year; y++) out.add(y);
+  for (int y = start.year; y <= end.year; y++) {
+    out.add(y);
+  }
   return out;
 }

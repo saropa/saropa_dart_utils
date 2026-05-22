@@ -8,10 +8,11 @@ jsonDiffShallow(Map<String, Object?> a, Map<String, Object?> b) {
   final Map<String, Object?> removed = <String, Object?>{};
   final Map<String, Object?> changed = <String, Object?>{};
   for (final String k in a.keys) {
-    if (!b.containsKey(k))
+    if (!b.containsKey(k)) {
       removed[k] = a[k];
-    else if (a[k] != b[k])
+    } else if (a[k] != b[k]) {
       changed[k] = b[k];
+    }
   }
   for (final String k in b.keys) {
     if (!a.containsKey(k)) added[k] = b[k];

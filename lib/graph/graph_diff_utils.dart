@@ -10,11 +10,15 @@ import 'graph_utils.dart';
 ) {
   final Set<(int, int)> b = <(int, int)>{};
   for (int i = 0; i < before.length; i++) {
-    for (final int j in before[i]) b.add((i, j));
+    for (final int j in before[i]) {
+      b.add((i, j));
+    }
   }
   final Set<(int, int)> a = <(int, int)>{};
   for (int i = 0; i < after.length; i++) {
-    for (final int j in after[i]) a.add((i, j));
+    for (final int j in after[i]) {
+      a.add((i, j));
+    }
   }
   return (a.difference(b).toList(), b.difference(a).toList());
 }

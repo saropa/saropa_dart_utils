@@ -32,7 +32,9 @@ List<RunDetectionUtils<T>> runsEqual<T extends Object>(List<T> list) {
   while (i < list.length) {
     final T v = list[i];
     int j = i + 1;
-    while (j < list.length && list[j] == v) j++;
+    while (j < list.length && list[j] == v) {
+      j++;
+    }
     out.add(RunDetectionUtils<T>(i, j - i, v));
     i = j;
   }

@@ -19,7 +19,9 @@ extension ListStringExtensions on List<String> {
       final String s = this[i];
       final int maxLen = prefix.length < s.length ? prefix.length : s.length;
       int j = 0;
-      while (j < maxLen && prefix[j] == s[j]) j++;
+      while (j < maxLen && prefix[j] == s[j]) {
+        j++;
+      }
       prefix = prefix.replaceRange(j, prefix.length, '');
       if (prefix.isEmpty) return '';
     }
@@ -42,7 +44,9 @@ extension ListStringExtensions on List<String> {
       final String s = this[i];
       final int maxLen = suffix.length < s.length ? suffix.length : s.length;
       int j = 0;
-      while (j < maxLen && suffix[suffix.length - 1 - j] == s[s.length - 1 - j]) j++;
+      while (j < maxLen && suffix[suffix.length - 1 - j] == s[s.length - 1 - j]) {
+        j++;
+      }
       suffix = suffix.replaceRange(0, suffix.length - j, '');
       if (suffix.isEmpty) return '';
     }

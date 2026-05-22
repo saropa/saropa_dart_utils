@@ -39,7 +39,9 @@ void dfs(
     seen[u] = true;
     visit(u, d);
     if (maxDepth >= 0 && d >= maxDepth) return;
-    for (final int v in graph[u]) go(v, d + 1);
+    for (final int v in graph[u]) {
+      go(v, d + 1);
+    }
   }
 
   go(start, 0);

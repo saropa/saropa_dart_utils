@@ -7,7 +7,9 @@ import 'dart:math' show Random;
 List<T> systematicSample<T>(List<T> list, int step, {int start = 0}) {
   if (step < 1) return [];
   final List<T> out = [];
-  for (int i = start; i < list.length; i += step) out.add(list[i]);
+  for (int i = start; i < list.length; i += step) {
+    out.add(list[i]);
+  }
   return out;
 }
 
@@ -21,7 +23,9 @@ List<int> stratifiedSampleIndices(List<Object?> strata, int perGroup, [Random? r
   final List<int> out = [];
   for (final List<int> indices in groups.values) {
     indices.shuffle(r);
-    for (int j = 0; j < perGroup && j < indices.length; j++) out.add(indices[j]);
+    for (int j = 0; j < perGroup && j < indices.length; j++) {
+      out.add(indices[j]);
+    }
   }
   return out;
 }

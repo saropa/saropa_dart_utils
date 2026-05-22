@@ -63,6 +63,11 @@ formatter:
 
 linter:
   rules:
+    # Enabled explicitly because pub.dev's pana scores this via the analysis
+    # server (which loads the saropa_lints plugin), but `dart analyze` CLI does
+    # not load plugins — so without this line the lint stays invisible locally
+    # and silently docks the "Pass static analysis" score on publish (40/50).
+    curly_braces_in_flow_control_structures: true
     avoid_classes_with_only_static_members: false
     avoid_positional_boolean_parameters: false
     flutter_style_todos: false

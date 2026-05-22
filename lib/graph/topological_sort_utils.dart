@@ -7,7 +7,9 @@ import 'graph_utils.dart';
 List<int>? topologicalSort(Adjacency graph) {
   final List<int> inDeg = List.filled(graph.length, 0);
   for (final List<int> adj in graph) {
-    for (final int v in adj) inDeg[v]++;
+    for (final int v in adj) {
+      inDeg[v]++;
+    }
   }
   final List<int> queue = [];
   for (int i = 0; i < graph.length; i++) {

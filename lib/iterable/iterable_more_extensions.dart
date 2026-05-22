@@ -156,7 +156,9 @@ extension IterableCountBy<T> on Iterable<T> {
   /// Map of element to occurrence count.
   Map<T, int> countBy() {
     final Map<T, int> out = <T, int>{};
-    for (final T e in this) out[e] = (out[e] ?? 0) + 1;
+    for (final T e in this) {
+      out[e] = (out[e] ?? 0) + 1;
+    }
     return out;
   }
 }

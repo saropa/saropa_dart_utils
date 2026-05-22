@@ -30,7 +30,9 @@ int maxWeightIntervals(List<WeightedIntervalUtils> intervals) {
   for (int i = 1; i <= sorted.length; i++) {
     final WeightedIntervalUtils cur = sorted[i - 1];
     int j = i - 1;
-    while (j > 0 && sorted[j - 1].end > cur.start) j--;
+    while (j > 0 && sorted[j - 1].end > cur.start) {
+      j--;
+    }
     final int w = (j > 0 ? dp[j] : 0) + cur.weight;
     dp[i] = dp[i - 1] > w ? dp[i - 1] : w;
   }

@@ -20,7 +20,9 @@ List<double> criticalPathDistances(WeightedAdjacency graph, int start) {
 List<int> _topoOrder(WeightedAdjacency graph) {
   final List<int> inDeg = List.filled(graph.length, 0);
   for (final List<(int, double)> adj in graph) {
-    for (final (int v, _) in adj) inDeg[v]++;
+    for (final (int v, _) in adj) {
+      inDeg[v]++;
+    }
   }
   final List<int> queue = [
     for (int i = 0; i < graph.length; i++)

@@ -31,13 +31,17 @@ void assertEqualsWithTolerance(double a, double b, double tolerance) {
 
 List<int> rangeInt(int start, int end, {int step = 1}) {
   final List<int> out = <int>[];
-  for (int i = start; step > 0 ? i < end : i > end; i += step) out.add(i);
+  for (int i = start; step > 0 ? i < end : i > end; i += step) {
+    out.add(i);
+  }
   return out;
 }
 
 List<double> rangeDouble(double start, double end, double step) {
   final List<double> out = <double>[];
-  for (double x = start; step > 0 ? x < end : x > end; x += step) out.add(x);
+  for (double x = start; step > 0 ? x < end : x > end; x += step) {
+    out.add(x);
+  }
   return out;
 }
 

@@ -30,6 +30,8 @@ double trimmedMean(List<num> values, double trim) {
   final int end = sorted.length - k;
   if (start >= end) return double.nan;
   double sum = 0;
-  for (int i = start; i < end; i++) sum += sorted[i].toDouble();
+  for (int i = start; i < end; i++) {
+    sum += sorted[i].toDouble();
+  }
   return sum / (end - start);
 }

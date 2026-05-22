@@ -20,13 +20,16 @@ int rollingHashSearch(String text, String pattern) {
   final int patternHash = rollingHash(pattern, 0, pattern.length);
   int textHash = rollingHash(text, 0, pattern.length);
   int pow = 1;
-  for (int i = 0; i < pattern.length - 1; i++) pow = (pow * _base) % _mod;
+  for (int i = 0; i < pattern.length - 1; i++) {
+    pow = (pow * _base) % _mod;
+  }
   for (int i = 0; i <= text.length - pattern.length; i++) {
     final int end = i + pattern.length;
     if (end <= text.length &&
         textHash == patternHash &&
-        String.fromCharCodes(text.codeUnits.sublist(i, end)) == pattern)
+        String.fromCharCodes(text.codeUnits.sublist(i, end)) == pattern) {
       return i;
+    }
     if (i + pattern.length < text.length) {
       textHash = (textHash - text.codeUnitAt(i) * pow % _mod + _mod) % _mod;
       textHash = (textHash * _base + text.codeUnitAt(i + pattern.length)) % _mod;

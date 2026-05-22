@@ -47,8 +47,9 @@ extension StringWildcardExtensions on String {
             stringIndex: si,
             pattern: pattern,
             patternIndex: pi,
-          ))
+          )) {
             return true;
+          }
           si++;
         }
         return false;

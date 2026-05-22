@@ -34,8 +34,9 @@ List<FuzzySearchUtils> fuzzySearch(
   double minScore = 0.0,
 }) {
   final String q = query.trim().toLowerCase();
-  if (q.isEmpty)
+  if (q.isEmpty) {
     return candidates.asMap().entries.map((e) => FuzzySearchUtils(e.key, e.value, 1.0)).toList();
+  }
   final List<String> qTokens = q.split(RegExp(r'\s+'));
   final List<FuzzySearchUtils> out = <FuzzySearchUtils>[];
   for (int i = 0; i < candidates.length; i++) {

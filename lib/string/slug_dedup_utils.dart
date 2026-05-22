@@ -8,7 +8,9 @@ String deduplicateSlug(String baseSlug, Set<String> takenSlugs) {
   final String trimmed = baseSlug.trim();
   if (trimmed.isEmpty) {
     int i = 1;
-    while (takenSlugs.contains('-$i')) i++;
+    while (takenSlugs.contains('-$i')) {
+      i++;
+    }
     return '-$i';
   }
   if (!takenSlugs.contains(trimmed)) return trimmed;

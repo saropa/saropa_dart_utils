@@ -36,7 +36,9 @@ extension RunLengthEncodeExtensions<T> on Iterable<T> {
 List<T> runLengthDecode<T>(Iterable<(T, int)> pairs) {
   final List<T> result = <T>[];
   for (final (T value, int count) in pairs) {
-    for (int i = 0; i < count; i++) result.add(value);
+    for (int i = 0; i < count; i++) {
+      result.add(value);
+    }
   }
   return result;
 }

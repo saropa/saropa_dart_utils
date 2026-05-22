@@ -14,8 +14,9 @@ String? lookupWithVariants(
     if (entry.key.toLowerCase() == queryLower) return entry.key;
     for (final String variant in entry.value) {
       if (variant.toLowerCase() == queryLower) return entry.key;
-      if (LevenshteinUtils.distance(variant.toLowerCase(), queryLower) <= maxDistance)
+      if (LevenshteinUtils.distance(variant.toLowerCase(), queryLower) <= maxDistance) {
         return entry.key;
+      }
     }
   }
   return null;

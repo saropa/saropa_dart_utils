@@ -29,7 +29,9 @@ String buildQueryString(Map<String, String> params) {
 Uri uriWithQueryParams(Uri uri, Map<String, String> add, {Set<String>? remove}) {
   final Map<String, String> params = Map<String, String>.from(uri.queryParameters);
   if (remove != null) {
-    for (final String k in remove) params.remove(k);
+    for (final String k in remove) {
+      params.remove(k);
+    }
   }
   params.addAll(add);
   return uri.replace(query: buildQueryString(params));

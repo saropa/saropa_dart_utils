@@ -37,7 +37,9 @@ String pathRelative(String base, String target) {
     target,
   ).split('/').where((String s) => s.isNotEmpty).toList();
   int i = 0;
-  while (i < b.length && i < t.length && b[i] == t[i]) i++;
+  while (i < b.length && i < t.length && b[i] == t[i]) {
+    i++;
+  }
   final List<String> ups = List<String>.filled(b.length - i, '..');
   final List<String> rest = t.sublist(i);
   return pathJoin(<String>[...ups, ...rest]);

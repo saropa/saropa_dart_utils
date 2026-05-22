@@ -13,10 +13,11 @@ Future<T> timebox<T>(Future<T> Function() fn, Duration timeout, {T? onTimeout}) 
   Timer? t;
   t = Timer(timeout, () {
     if (!c.isCompleted) {
-      if (onTimeout != null)
+      if (onTimeout != null) {
         c.complete(onTimeout);
-      else
+      } else {
         c.completeError(TimeboxException(_kTimeboxExceeded), StackTrace.current);
+      }
     }
   });
   try {

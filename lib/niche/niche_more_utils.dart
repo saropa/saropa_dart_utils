@@ -56,10 +56,11 @@ String truncateToByteLength(String s, int maxBytes) {
     final int u = units[i];
     int byteCount = 1;
     if (u > 127) {
-      if (u > 2047)
+      if (u > 2047) {
         byteCount = 3;
-      else
+      } else {
         byteCount = 2;
+      }
       if (u > 65535) byteCount = 4;
     }
     if (len + byteCount > maxBytes) return String.fromCharCodes(units.sublist(0, i));

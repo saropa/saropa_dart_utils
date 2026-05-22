@@ -5,7 +5,9 @@ extension MapFromIterableExtension<T, K, V> on Iterable<T> {
   /// Builds a map from [keyOf] and [valueOf] for each element; later elements overwrite.
   Map<K, V> toMapWith(K Function(T) keyOf, V Function(T) valueOf) {
     final Map<K, V> out = <K, V>{};
-    for (final T e in this) out[keyOf(e)] = valueOf(e);
+    for (final T e in this) {
+      out[keyOf(e)] = valueOf(e);
+    }
     return out;
   }
 }

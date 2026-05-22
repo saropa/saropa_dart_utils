@@ -23,7 +23,9 @@ List<int>? astar(
     final int u = open.removeAt(0);
     if (u == goal) {
       final List<int> path = <int>[];
-      for (int? p = goal; p != null; p = parent[p]) path.add(p);
+      for (int? p = goal; p != null; p = parent[p]) {
+        path.add(p);
+      }
       return path.reversed.toList();
     }
     for (final (int v, double w) in graph[u]) {

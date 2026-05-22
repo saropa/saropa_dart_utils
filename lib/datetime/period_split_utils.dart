@@ -9,8 +9,9 @@ List<(DateTime, DateTime)> splitByMonth(DateTime start, DateTime end) {
   while (cur.isBefore(endMonth) || cur.isAtSameMomentAs(endMonth)) {
     final DateTime next = DateTime(cur.year, cur.month + 1, 1);
     final DateTime segmentEnd = next.isAfter(end) ? end : next.subtract(const Duration(days: 1));
-    if (cur.isBefore(end) || cur.isAtSameMomentAs(end))
+    if (cur.isBefore(end) || cur.isAtSameMomentAs(end)) {
       out.add((cur, segmentEnd.isBefore(cur) ? cur : segmentEnd));
+    }
     cur = next;
   }
   return out;

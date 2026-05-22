@@ -68,7 +68,11 @@ List<T> mergeSorted<T>(List<T> a, List<T> b, [int Function(T a, T b)? compare]) 
       result.add(b[j++]);
     }
   }
-  while (i < a.length) result.add(a[i++]);
-  while (j < b.length) result.add(b[j++]);
+  while (i < a.length) {
+    result.add(a[i++]);
+  }
+  while (j < b.length) {
+    result.add(b[j++]);
+  }
   return result;
 }

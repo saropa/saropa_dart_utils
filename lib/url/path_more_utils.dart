@@ -33,7 +33,8 @@ const String _kBearerPrefix = 'bearer ';
 
 String? parseBearerToken(String authorizationHeader) {
   final String s = authorizationHeader.trim();
-  if (s.toLowerCase().startsWith(_kBearerPrefix))
+  if (s.toLowerCase().startsWith(_kBearerPrefix)) {
     return s.replaceRange(0, _kBearerPrefix.length, '').trim();
+  }
   return null;
 }

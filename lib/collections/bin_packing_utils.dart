@@ -7,7 +7,9 @@ List<int> firstFitBinPacking(List<num> itemWeights, num capacity) {
   final List<int> assign = [];
   for (final num w in itemWeights) {
     int b = 0;
-    while (b < bins.length && bins[b] + w > capacity) b++;
+    while (b < bins.length && bins[b] + w > capacity) {
+      b++;
+    }
     if (b >= bins.length) bins.add(0);
     bins[b] = bins[b] + w;
     assign.add(b);

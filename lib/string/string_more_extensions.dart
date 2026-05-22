@@ -9,9 +9,12 @@ extension StringMoreExtensions on String {
   String stripSubstring(String substring) {
     if (substring.isEmpty) return this;
     String current = this;
-    while (current.startsWith(substring)) current = current.substringSafe(substring.length);
-    while (current.endsWith(substring))
+    while (current.startsWith(substring)) {
+      current = current.substringSafe(substring.length);
+    }
+    while (current.endsWith(substring)) {
       current = current.substringSafe(0, current.length - substring.length);
+    }
     return current;
   }
 

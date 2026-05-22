@@ -6,7 +6,9 @@ List<double> simpleMovingAverage(List<num> values, int size) {
   if (size < 1 || values.length < size) return <double>[];
   final List<double> out = <double>[];
   double sum = 0;
-  for (int i = 0; i < size; i++) sum += values[i].toDouble();
+  for (int i = 0; i < size; i++) {
+    sum += values[i].toDouble();
+  }
   out.add(sum / size);
   for (int i = size; i < values.length; i++) {
     sum = sum - values[i - size].toDouble() + values[i].toDouble();

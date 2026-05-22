@@ -6,10 +6,11 @@ double percentileRank(List<num> sorted, num value) {
   if (sorted.isEmpty) return double.nan;
   int count = 0;
   for (final num x in sorted) {
-    if (x < value)
+    if (x < value) {
       count++;
-    else
+    } else {
       break;
+    }
   }
   return count / sorted.length;
 }

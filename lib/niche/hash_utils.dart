@@ -3,7 +3,9 @@ int simpleHash(Object? value) {
   if (value == null) return 0;
   if (value is List) {
     int h = 1;
-    for (final Object? e in value) h = 31 * h + simpleHash(e);
+    for (final Object? e in value) {
+      h = 31 * h + simpleHash(e);
+    }
     return h;
   }
   if (value is Map) {

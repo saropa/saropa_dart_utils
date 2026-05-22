@@ -29,8 +29,9 @@ String? _secondsPart(
   bool isShort,
 ) {
   if (!isIncludeSeconds) return null;
-  if (seconds > 0)
+  if (seconds > 0) {
     return isShort ? '${seconds}s' : '$seconds ${seconds == 1 ? _kSecond : _kSeconds}';
+  }
   if (parts.isEmpty && d.inSeconds == 0) return isShort ? _kZeroS : _kZeroSeconds;
   return null;
 }

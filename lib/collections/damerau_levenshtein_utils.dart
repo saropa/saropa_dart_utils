@@ -9,7 +9,9 @@ int damerauLevenshteinDistance(String a, String b) {
   if (bLen == 0) return aLen;
   final List<int> prevRow = List.filled(bLen + 1, 0);
   final List<int> currRow = List.filled(bLen + 1, 0);
-  for (int j = 0; j <= bLen; j++) prevRow[j] = j;
+  for (int j = 0; j <= bLen; j++) {
+    prevRow[j] = j;
+  }
   const int col0 = 0;
   for (int i = 1; i <= aLen; i++) {
     currRow[col0] = i;
@@ -24,7 +26,9 @@ int damerauLevenshteinDistance(String a, String b) {
       }
       currRow[j] = best;
     }
-    for (int k = 0; k <= bLen; k++) prevRow[k] = currRow[k];
+    for (int k = 0; k <= bLen; k++) {
+      prevRow[k] = currRow[k];
+    }
   }
   return prevRow[bLen];
 }
