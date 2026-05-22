@@ -5,6 +5,8 @@ library;
 class RingBufferUtils<T extends Object> {
   static const String _kErrCapacityAtLeastOne = 'capacity >= 1';
 
+  /// Creates a ring buffer holding at most [capacity] elements. Throws an
+  /// [ArgumentError] if [capacity] is less than 1.
   factory RingBufferUtils(int capacity) {
     if (capacity < 1) throw ArgumentError(_kErrCapacityAtLeastOne);
     return RingBufferUtils._(capacity);
@@ -29,6 +31,7 @@ class RingBufferUtils<T extends Object> {
     }
   }
 
+  /// Removes and returns the oldest element, or null when the buffer is empty.
   T? removeFirst() {
     if (_len == 0) return null;
     final T? v = _data[_head];

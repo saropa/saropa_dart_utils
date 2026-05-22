@@ -11,6 +11,9 @@ Map<T, int> multisetUnion<T>(Map<T, int> a, Map<T, int> b) {
   return out;
 }
 
+/// Returns the multiset intersection of [a] and [b], keeping each shared
+/// element with the minimum of its two counts. Elements absent from either
+/// input are omitted.
 Map<T, int> multisetIntersection<T>(Map<T, int> a, Map<T, int> b) {
   final Map<T, int> out = <T, int>{};
   for (final MapEntry<T, int> e in a.entries) {
@@ -20,6 +23,8 @@ Map<T, int> multisetIntersection<T>(Map<T, int> a, Map<T, int> b) {
   return out;
 }
 
+/// Returns the multiset difference [a] minus [b], subtracting counts and
+/// dropping any element whose remaining count falls to zero or below.
 Map<T, int> multisetDifference<T>(Map<T, int> a, Map<T, int> b) {
   final Map<T, int> out = Map<T, int>.from(a);
   for (final MapEntry<T, int> e in b.entries) {

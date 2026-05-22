@@ -117,6 +117,7 @@ extension FirstOfTypeExtension on List<Object?> {
   }
 }
 
+/// Wraps a nullable value into a list, treating null as empty.
 extension ToListOrEmpty<T> on T? {
   /// Wraps a non-null value in a single-element list, or returns an empty list
   /// when null.

@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+/// Extension methods for `num` covering sign checks and string length.
 extension NumberExtensions on num {
   /// Returns `true` if the number is not zero and not negative.
   ///

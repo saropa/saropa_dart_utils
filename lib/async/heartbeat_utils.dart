@@ -5,6 +5,8 @@ import 'dart:async' show Timer; // ignore: require_ios_deployment_target_consist
 
 /// Calls [onBeat] every [interval] until [stop] or [dispose] is called.
 class HeartbeatUtils {
+  /// Creates a heartbeat that invokes [onBeat] every [interval] once [start]
+  /// is called.
   HeartbeatUtils(Duration interval, void Function() onBeat)
     : _interval = interval,
       _onBeat = onBeat;

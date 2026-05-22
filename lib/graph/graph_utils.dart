@@ -3,6 +3,8 @@ library;
 
 /// Weighted directed edge.
 class GraphUtils {
+  /// Creates a directed edge from node [from] to node [to] with optional
+  /// [weight] (defaults to 1.0).
   const GraphUtils(int from, int to, [double weight = 1.0])
     : _from = from,
       _to = to,
@@ -41,6 +43,13 @@ WeightedAdjacency buildWeightedGraph(List<GraphUtils> edges, int nodeCount) {
 /// Unweighted: list of neighbors per node.
 typedef Adjacency = List<List<int>>;
 
+/// Builds an unweighted [Adjacency] list from [edges], where [nodeCount] is the
+/// max node index + 1. Edges referencing out-of-range nodes are skipped.
+///
+/// Example:
+/// ```dart
+/// buildGraph([(0, 1), (1, 2)], 3); // [[1], [2], []]
+/// ```
 Adjacency buildGraph(List<(int, int)> edges, int nodeCount) {
   final Adjacency adj = List.generate(nodeCount, (_) => <int>[]);
   for (final (int u, int v) in edges) {

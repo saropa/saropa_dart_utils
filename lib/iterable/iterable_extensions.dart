@@ -13,6 +13,7 @@ const String _kParamN = 'n';
 /// A function that tests whether an element of type [T] satisfies a condition.
 typedef ElementPredicate<T> = bool Function(T element);
 
+/// General-purpose aggregation, windowing, and frequency helpers for iterables.
 extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// Finds the most common value in the list.
   ///

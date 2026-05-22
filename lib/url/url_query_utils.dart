@@ -15,6 +15,15 @@ Map<String, String> parseQueryString(String query) {
   return out;
 }
 
+/// Builds a percent-encoded `key=value&...` query string from [params].
+///
+/// Both keys and values are component-encoded. Returns an empty string when
+/// [params] is empty.
+///
+/// Example:
+/// ```dart
+/// buildQueryString({'q': 'a b', 'p': '2'}); // 'q=a%20b&p=2'
+/// ```
 String buildQueryString(Map<String, String> params) {
   if (params.isEmpty) return '';
   return params.entries

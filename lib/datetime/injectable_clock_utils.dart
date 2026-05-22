@@ -20,6 +20,7 @@ class SystemClock implements InjectableClockUtils {
 
 /// Fixed clock for tests.
 class FixedClock implements InjectableClockUtils {
+  /// Creates a clock whose [now] always returns the fixed [DateTime].
   FixedClock(this._now);
   final DateTime _now;
 

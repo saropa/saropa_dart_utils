@@ -30,7 +30,17 @@ List<Object> _tokenize(String s) {
   return out;
 }
 
+/// Adds natural (human-friendly) sorting to a `List<String>`.
 extension NaturalSortExtension on List<String> {
+  /// Returns a new list sorted naturally so `a2` comes before `a10`.
+  ///
+  /// Uses [naturalCompare] to order embedded numbers by value rather than by
+  /// character. The original list is not modified.
+  ///
+  /// Example:
+  /// ```dart
+  /// ['a10', 'a2', 'a1'].sortedNatural(); // ['a1', 'a2', 'a10']
+  /// ```
   @useResult
   List<String> sortedNatural() => List<String>.of(this)..sort(naturalCompare);
 }

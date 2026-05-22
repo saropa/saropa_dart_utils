@@ -3,8 +3,13 @@ library;
 
 /// A scrubber rule: [pattern] is replaced by [replacement] when matched.
 class SensitiveScrubUtils {
+  /// Creates a rule that replaces every match of [pattern] with [replacement].
   const SensitiveScrubUtils(this.pattern, this.replacement);
+
+  /// Regular expression identifying the sensitive substrings to mask.
   final RegExp pattern;
+
+  /// Text substituted in place of each [pattern] match (e.g. "[EMAIL]").
   final String replacement;
 
   @override

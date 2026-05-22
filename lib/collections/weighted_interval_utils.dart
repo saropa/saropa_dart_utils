@@ -3,18 +3,22 @@ library;
 
 /// Interval with weight.
 class WeightedIntervalUtils {
+  /// Creates an interval spanning [start] to [end] with the given [weight].
   const WeightedIntervalUtils(int start, int end, int weight)
     : _start = start,
       _end = end,
       _weight = weight;
   final int _start;
 
+  /// Start of the interval.
   int get start => _start;
   final int _end;
 
+  /// End of the interval.
   int get end => _end;
   final int _weight;
 
+  /// Weight (value) contributed when this interval is selected.
   int get weight => _weight;
 
   @override

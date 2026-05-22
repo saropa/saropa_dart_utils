@@ -3,6 +3,8 @@ library;
 
 /// Parser error with position and snippet.
 class ParserErrorUtils {
+  /// Creates a parser error with a human-readable [message] and optional
+  /// position ([line], [column]) and source [snippet].
   const ParserErrorUtils(String message, {int? line, int? column, String? snippet})
     : _message = message,
       _line = line,
@@ -10,15 +12,19 @@ class ParserErrorUtils {
       _snippet = snippet;
   final String _message;
 
+  /// The human-readable description of what went wrong.
   String get message => _message;
   final int? _line;
 
+  /// The 1-based line where the error occurred, or `null` if unknown.
   int? get line => _line;
   final int? _column;
 
+  /// The 1-based column where the error occurred, or `null` if unknown.
   int? get column => _column;
   final String? _snippet;
 
+  /// The offending source excerpt, or `null` if none was captured.
   String? get snippet => _snippet;
 
   @override

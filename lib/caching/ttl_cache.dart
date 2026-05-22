@@ -1,5 +1,6 @@
 /// TTL cache (expire after duration). Roadmap #195.
 class TtlCache<K extends Object, V extends Object> {
+  /// Creates a cache whose entries each expire [ttl] after being stored.
   TtlCache(Duration ttl) : _ttl = ttl;
 
   final Duration _ttl;
@@ -19,6 +20,7 @@ class TtlCache<K extends Object, V extends Object> {
     return entry.$1;
   }
 
+  /// Stores [value] under [key] with a fresh expiry [ttl] from now.
   void set(K key, V value) {
     _map[key] = (value, DateTime.now().add(_ttl));
   }

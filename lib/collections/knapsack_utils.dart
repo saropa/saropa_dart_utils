@@ -3,6 +3,8 @@ library;
 
 /// Item with weight and value.
 class KnapsackUtils {
+  /// Creates a knapsack item with the given [weight] (cost) and [value]
+  /// (profit).
   const KnapsackUtils(int weight, int value) : _weight = weight, _value = value;
   final int _weight;
 

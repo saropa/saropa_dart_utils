@@ -5,18 +5,23 @@ import 'levenshtein_utils.dart';
 
 /// One candidate from fuzzy search with score and matched text.
 class FuzzySearchUtils {
+  /// Creates a match at [index] in the original candidate list, holding the
+  /// matched [text] and its computed relevance [score].
   const FuzzySearchUtils(int index, String text, double score)
     : _index = index,
       _text = text,
       _score = score;
   final int _index;
 
+  /// Position of this match within the original `candidates` list.
   int get index => _index;
   final String _text;
 
+  /// The candidate string that matched the query.
   String get text => _text;
   final double _score;
 
+  /// Relevance score in `[0, 1]`; higher means a closer match to the query.
   double get score => _score;
 
   @override

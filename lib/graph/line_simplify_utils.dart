@@ -5,6 +5,7 @@ import 'dart:math' show pow;
 
 /// Point for polyline.
 class LineSimplifyUtils {
+  /// Creates a 2D point at coordinates ([x], [y]).
   const LineSimplifyUtils(double x, double y) : _x = x, _y = y;
   final double _x;
 

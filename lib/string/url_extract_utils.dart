@@ -3,18 +3,23 @@ library;
 
 /// One extracted link with optional label and surrounding snippet.
 class UrlExtractUtils {
+  /// Creates an extracted link for [url], with an optional anchor [label] and
+  /// surrounding [snippet] of context.
   const UrlExtractUtils(String url, {String? label, String? snippet})
     : _url = url,
       _label = label,
       _snippet = snippet;
   final String _url;
 
+  /// The extracted URL.
   String get url => _url;
   final String? _label;
 
+  /// Visible link text/anchor when the URL was part of markup, else null.
   String? get label => _label;
   final String? _snippet;
 
+  /// Surrounding text giving context around the link, or null if unavailable.
   String? get snippet => _snippet;
 
   @override

@@ -12,16 +12,30 @@ import 'package:meta/meta.dart';
 /// Extensions for presentation, like adding quotes, truncating text,
 /// and formatting.
 extension StringExtensions on String {
+  /// Left single curly quotation mark ("smart" opening quote, U+2018).
   static const String accentedQuoteOpening = '\u2018';
+
+  /// Right single curly quotation mark ("smart" closing quote, U+2019).
   static const String accentedQuoteClosing = '\u2019';
+
+  /// Left double curly quotation mark ("smart" opening double quote, U+201C).
   static const String accentedDoubleQuoteOpening = '\u201C';
+
+  /// Right double curly quotation mark ("smart" closing double quote, U+201D).
   static const String accentedDoubleQuoteClosing = '\u201D';
+
+  /// Horizontal ellipsis character (U+2026), the single-glyph "\u2026".
   static const String ellipsis = '\u2026';
+
+  /// Right-pointing double angle quotation mark "\u00BB" (U+00BB).
   static const String doubleChevron = '\u00BB';
+
+  /// Typographic apostrophe (U+2019), preferred over the straight ASCII quote.
   static const String apostrophe = '\u2019';
 
   // https://www.compart.com/en/unicode/category/Pd
   // https://wikipedia.org/wiki/Hyphen
+  /// Unicode hyphen (U+2010), the typographically correct hyphen glyph.
   static const String hyphen = '\u2010';
 
   /// Soft Hyphen character (U+00AD).
@@ -29,10 +43,15 @@ extension StringExtensions on String {
   /// hyphenation by Flutter's text rendering engine.
   static const String softHyphen = '\u00ad';
 
+  /// Line feed character (`\n`) used to separate lines of text.
   static const String newLine = '\n';
+
+  /// Alias for [newLine]; reads more naturally when joining display text.
   static const String lineBreak = newLine;
 
   // https://blanktext.net/
+  /// Hangul filler (U+3164), a whitespace-like glyph that survives UI trimming
+  /// where a normal space would be collapsed.
   static const String blank = '\u3164';
 
   // cspell:disable
@@ -41,6 +60,7 @@ extension StringExtensions on String {
   static const String zeroWidth = '\u200B';
 
   // ref https://stackoverflow.com/questions/64245554
+  /// Non-breaking space (U+00A0); keeps adjacent words on the same line.
   static const String nonBreakingSpace = '\u00A0';
 
   /// For not breaking words into newline at hyphen in Text.

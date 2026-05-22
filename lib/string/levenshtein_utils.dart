@@ -101,6 +101,17 @@ abstract final class LevenshteinUtils {
   static const String _kErrMaxDistanceNonNegative = 'maxDistance must be non-negative';
   static const String _kParamMaxDistance = 'maxDistance';
 
+  /// Returns true if [source] contains a substring within [maxDistance] edits
+  /// of [target], using a sliding window the width of [target].
+  ///
+  /// An empty [target] always matches; returns false if [source] is shorter
+  /// than [target]. Throws [ArgumentError] if [maxDistance] is negative.
+  ///
+  /// Example:
+  /// ```dart
+  /// LevenshteinUtils.fuzzyContains('hello world', 'worls', 1); // true (1 edit)
+  /// LevenshteinUtils.fuzzyContains('hello', 'xyz', 2);         // false
+  /// ```
   static bool fuzzyContains(String source, String target, int maxDistance) {
     if (maxDistance < 0) {
       throw ArgumentError(_kErrMaxDistanceNonNegative, _kParamMaxDistance);

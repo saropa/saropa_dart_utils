@@ -1,6 +1,7 @@
 /// Data redaction policies (masking per field path) — roadmap #692.
 library;
 
+/// Maps a field [value] to its masked replacement (e.g. `(value) => '***'`).
 typedef RedactMaskFn = String Function(Object? value);
 
 /// Redacts [data] by applying [mask] to values at keys in [fieldPaths]. [mask] e.g. (value) => '***'.

@@ -47,8 +47,13 @@ abstract final class SearchQueryParserUtils {
 
 /// Parsed query term: phrase or word, optional negated.
 class QueryTerm {
+  /// Creates a query term for [text]; set [isNegated] for excluded ("-word") terms.
   const QueryTerm(this.text, {this.isNegated = false});
+
+  /// The word or quoted phrase to match (without the leading "-" if negated).
   final String text;
+
+  /// True when this term must be excluded from results (entered as "-term").
   final bool isNegated;
 
   @override

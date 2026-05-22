@@ -11,6 +11,9 @@ Object? getNested(Map<String, dynamic> map, List<String> path, [Object? defaultV
   return current;
 }
 
+/// Sets [value] at the nested location addressed by [path] in [map], creating
+/// intermediate maps as needed. Does nothing if [path] is empty, or stops early
+/// if an existing intermediate value along [path] is not a map.
 void setNested(Map<String, dynamic> map, List<String> path, Object? value) {
   if (path.isEmpty) return;
   Map<String, dynamic> current = map;

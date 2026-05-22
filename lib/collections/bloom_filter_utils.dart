@@ -3,6 +3,9 @@ library;
 
 /// Simple Bloom filter: add elements, test membership (may have false positives).
 class BloomFilterUtils {
+  /// Creates a filter sized for [expectedCount] elements at the target
+  /// [falsePositiveRate] (default 1%). The bit array length and hash count are
+  /// derived from these to minimize false positives at the expected load.
   BloomFilterUtils({required int expectedCount, double falsePositiveRate = 0.01})
     : _expectedCount = expectedCount,
       _falsePositiveRate = falsePositiveRate,

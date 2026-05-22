@@ -2,7 +2,19 @@
 library;
 
 /// Aggregation kind for a sliding window.
-enum WindowAggregate { min, max, sum, avg }
+enum WindowAggregate {
+  /// Smallest value in each window.
+  min,
+
+  /// Largest value in each window.
+  max,
+
+  /// Sum of all values in each window.
+  sum,
+
+  /// Arithmetic mean of the values in each window.
+  avg,
+}
 
 /// Returns a list where each element is the [agg] of [values] over a window of length [size].
 /// If [size] > length, returns empty list.

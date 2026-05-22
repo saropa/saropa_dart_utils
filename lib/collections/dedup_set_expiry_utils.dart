@@ -3,6 +3,8 @@ library;
 
 /// Tracks "seen" keys; after [expiry] they are forgotten. Not thread-safe.
 class DedupSetExpiryUtils {
+  /// Creates a deduplicating set that forgets each key once [expiry] has
+  /// elapsed since it was added.
   DedupSetExpiryUtils(Duration expiry) : _expiry = expiry;
   final Duration _expiry;
 

@@ -12,6 +12,17 @@ String abbreviateName(String name) {
   return '${first.substringSafe(0, 1)}. $last';
 }
 
+/// Returns the uppercase initials for [name].
+///
+/// Uses the first letter of the first and last whitespace-separated parts; a
+/// single-word name yields one initial. Returns an empty string when [name]
+/// has no usable parts.
+///
+/// Example:
+/// ```dart
+/// initialsFromName('Ada Lovelace'); // 'AL'
+/// initialsFromName('Plato'); // 'P'
+/// ```
 String initialsFromName(String name) {
   final List<String> parts = name
       .trim()

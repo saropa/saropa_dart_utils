@@ -21,6 +21,16 @@ double standardDeviation(Iterable<num> values, {bool isPopulation = false}) {
   return math.sqrt(v);
 }
 
+/// Returns the median of [values], or `null` if the collection is empty.
+///
+/// For an even count, returns the average of the two middle values. Does not
+/// mutate the caller's input.
+///
+/// Example:
+/// ```dart
+/// median([3, 1, 2]); // 2.0
+/// median([4, 1, 2, 3]); // 2.5
+/// ```
 double? median(Iterable<num> values) {
   // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort without mutating the caller's input
   final List<double> list = values.map((num n) => n.toDouble()).toList()..sort();
@@ -30,6 +40,16 @@ double? median(Iterable<num> values) {
   return (list[mid - 1] + list[mid]) / 2;
 }
 
+/// Returns the [p]th percentile of [values] using linear interpolation.
+///
+/// [p] is a fraction in `0.0`–`1.0` (e.g. `0.5` for the median). Returns
+/// `null` if [p] is out of range or [values] is empty. Does not mutate the
+/// caller's input.
+///
+/// Example:
+/// ```dart
+/// percentile([1, 2, 3, 4], 0.5); // 2.5
+/// ```
 double? percentile(Iterable<num> values, double p) {
   if (p < 0 || p > 1) return null;
   // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort without mutating the caller's input

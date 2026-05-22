@@ -3,6 +3,7 @@ library;
 
 /// Difference array: apply [add] to range [l..r] in O(1), then recover array with [toArray].
 class DifferenceArrayUtils {
+  /// Creates a difference array backing a logical array of [length] zeros.
   DifferenceArrayUtils(int length) : _d = List<int>.filled(length + 1, 0);
   final List<int> _d;
 

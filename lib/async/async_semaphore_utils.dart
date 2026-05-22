@@ -8,6 +8,7 @@ typedef AsyncAction<T> = Future<T> Function();
 
 /// Semaphore: at most [permits] concurrent acquisitions.
 class AsyncSemaphoreUtils {
+  /// Creates a semaphore allowing at most [permits] concurrent acquisitions.
   AsyncSemaphoreUtils(this.permits) : _available = permits;
 
   /// Maximum number of concurrent acquisitions allowed.

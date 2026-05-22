@@ -5,11 +5,22 @@ import 'package:collection/collection.dart';
 
 /// Pre-computed quantile summary for a list of numbers.
 class QuantileSummaryUtils {
+  /// Builds a summary from [values], sorting a copy once for repeated queries.
   QuantileSummaryUtils(List<num> values)
     : _sorted = List<double>.of(values.map((num x) => x.toDouble()))..sort();
 
   final List<double> _sorted;
 
+  /// Returns the value at quantile [p] (0.0–1.0).
+  ///
+  /// Uses nearest-rank selection on the sorted data. Values of [p] outside the
+  /// range are clamped to the min ([p] <= 0) or max ([p] >= 1). Returns
+  /// [double.nan] when there are no values.
+  ///
+  /// Example:
+  /// ```dart
+  /// QuantileSummaryUtils([1, 2, 3, 4]).quantile(0.5); // 2.0
+  /// ```
   double quantile(double p) {
     if (_sorted.isEmpty) return double.nan;
     if (p <= 0) return _sorted.firstOrNull ?? double.nan;
@@ -19,14 +30,19 @@ class QuantileSummaryUtils {
     return _sorted[i];
   }
 
+  /// Smallest value, or [double.nan] when there are no values.
   double get min => _sorted.isEmpty ? double.nan : _sorted.first;
 
+  /// Largest value, or [double.nan] when there are no values.
   double get max => _sorted.isEmpty ? double.nan : _sorted.last;
 
+  /// The median (50th percentile).
   double get median => quantile(0.5);
 
+  /// The first quartile (25th percentile).
   double get q1 => quantile(0.25);
 
+  /// The third quartile (75th percentile).
   double get q3 => quantile(0.75);
 
   @override

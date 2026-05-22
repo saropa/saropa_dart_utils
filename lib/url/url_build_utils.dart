@@ -20,4 +20,10 @@ Uri buildUri(String base, {String path = '', Map<String, String>? query}) {
   return noFrag.replace(query: buildQueryString(query));
 }
 
+/// Returns [uri] with its fragment (`#...`) removed.
+///
+/// Example:
+/// ```dart
+/// stripFragment(Uri.parse('https://x.com/a#top')); // https://x.com/a
+/// ```
 Uri stripFragment(Uri uri) => uri.replace(fragment: '');

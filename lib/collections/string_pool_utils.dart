@@ -6,6 +6,8 @@ library;
 /// Optional [maxSize] limits the pool; when exceeded, one arbitrary entry
 /// is evicted (FIFO by first intern after full). Omit for unbounded pooling.
 class StringPoolUtils {
+  /// Creates a string pool. Pass [maxSize] to bound the pool with FIFO
+  /// eviction; omit it for unbounded pooling.
   StringPoolUtils({int? maxSize})
     : _maxSize = maxSize,
       _order = maxSize != null ? <String>[] : null;

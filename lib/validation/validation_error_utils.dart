@@ -3,9 +3,13 @@ library;
 
 /// Single validation error with optional path and code.
 final class ValidationErrorUtils {
+  /// Creates an error with a human-readable [message], optional machine-readable
+  /// [code], and optional [path] identifying the offending field.
   const ValidationErrorUtils(this.message, {String? code, String? path})
     : _code = code,
       _path = path;
+
+  /// Human-readable description of what failed.
   final String message;
   final String? _code;
 
@@ -22,6 +26,7 @@ final class ValidationErrorUtils {
 
 /// Aggregates multiple validation errors (roadmap #684).
 final class ValidationErrors {
+  /// Creates a collector, optionally seeded with an existing [list] of errors.
   ValidationErrors([List<ValidationErrorUtils>? list]) : _list = list ?? [];
   final List<ValidationErrorUtils> _list;
 

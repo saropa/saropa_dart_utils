@@ -29,6 +29,17 @@ enum DiffOpKind {
 /// // [Equal('a\n'), Delete('b\n'), Insert('x\n'), Equal('c')] (conceptually)
 /// ```
 abstract final class MyersDiffUtils {
+  /// Computes a minimal line-based edit script transforming [oldText] into
+  /// [newText], returned as merged [DiffOp]s (equal, insert, delete).
+  ///
+  /// Both inputs are split on `\n` before diffing, and adjacent ops of the same
+  /// kind are merged so each [DiffOp] may span multiple lines.
+  ///
+  /// Example:
+  /// ```dart
+  /// final script = MyersDiffUtils.diffLines('a\nb\nc', 'a\nx\nc');
+  /// // equal('a\n'), delete('b\n'), insert('x\n'), equal('c')
+  /// ```
   static List<DiffOp> diffLines(String oldText, String newText) {
     final List<String> a = _splitLines(oldText);
     final List<String> b = _splitLines(newText);
@@ -60,6 +71,7 @@ abstract final class MyersDiffUtils {
 /// Adjacent equal/insert/delete ops with the same kind are merged
 /// so that [text] can represent a multi-line segment.
 class DiffOp {
+  /// Creates an edit operation of the given [kind] carrying its segment [text].
   const DiffOp(DiffOpKind kind, String text) : _kind = kind, _text = text;
 
   final DiffOpKind _kind;

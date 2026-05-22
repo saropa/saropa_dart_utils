@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 
 /// Interval with [start] and [end] (inclusive or exclusive per usage).
 class IntervalSchedulingUtils {
+  /// Creates an interval spanning [start] to [end].
   const IntervalSchedulingUtils(num start, num end) : _start = start, _end = end;
   final num _start;
 

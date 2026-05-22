@@ -6,6 +6,20 @@ final RegExp _sizeRegex = RegExp(
 
 const String _kUnitB = 'B';
 
+/// Parses a human-readable size string in [input] into a byte count.
+///
+/// Accepts an optional decimal number followed by an optional binary unit
+/// (`K`, `M`, `G`, `T`, `P`, `E`) and an optional trailing `B`, case-insensitive
+/// with surrounding whitespace allowed. Units use 1024-based factors. The result
+/// is rounded to the nearest whole byte. Returns `null` for malformed input or a
+/// negative value.
+///
+/// Example:
+/// ```dart
+/// parseSizeToBytes('1.5 MB'); // 1572864
+/// parseSizeToBytes('512K'); // 524288
+/// parseSizeToBytes('big'); // null
+/// ```
 int? parseSizeToBytes(String input) {
   final RegExpMatch? m = _sizeRegex.firstMatch(input.trim());
   if (m == null) return null;
@@ -32,6 +46,18 @@ const List<String> _sizeSuffixes = <String>['B', 'KB', 'MB', 'GB', 'TB', 'PB', '
 
 const String _kSizeZeroB = '0 B';
 
+/// Formats a byte count in [bytes] into a human-readable size string.
+///
+/// Scales by 1024 through the suffixes `B`, `KB`, ..., `EB`, using up to
+/// [decimals] fractional digits with trailing zeros trimmed. Whole values and
+/// values 10 or larger are shown without decimals. Zero yields `0 B`; negative
+/// counts are prefixed with `-`.
+///
+/// Example:
+/// ```dart
+/// formatBytesToHuman(1572864); // '1.5 MB'
+/// formatBytesToHuman(0); // '0 B'
+/// ```
 String formatBytesToHuman(int bytes, {int decimals = 1}) {
   if (bytes < 0) return '-${formatBytesToHuman(-bytes, decimals: decimals)}';
   if (bytes == 0) return _kSizeZeroB;

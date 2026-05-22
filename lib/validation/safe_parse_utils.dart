@@ -5,6 +5,7 @@ import 'dart:developer' show log;
 
 import 'package:flutter/foundation.dart' show kDebugMode;
 
+/// Parses [source] into a `T`, throwing on failure (caught by [safeParse]).
 typedef ParseFn<T extends Object> = T Function(String source);
 const String _kLogSafeParseFailed = 'safeParse failed';
 
@@ -16,6 +17,7 @@ sealed class SafeParseUtils<T extends Object> {
 
 /// Successful parse result holding the parsed [value].
 final class ParseOk<T extends Object> extends SafeParseUtils<T> {
+  /// Wraps a successfully parsed [value].
   ParseOk(T value) : _value = value;
   final T _value;
 
@@ -31,6 +33,7 @@ final class ParseOk<T extends Object> extends SafeParseUtils<T> {
 
 /// Failed parse result with [message] and optional [details].
 final class ParseErr<T extends Object> extends SafeParseUtils<T> {
+  /// Creates a failure with an error [message] and optional [details] trace.
   ParseErr(String message, [StackTrace? details]) : _message = message, _details = details;
   final String _message;
 

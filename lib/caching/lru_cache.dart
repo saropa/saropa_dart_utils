@@ -3,6 +3,8 @@
 /// Optional [ttl] expires entries after the given duration; expired entries
 /// are treated as missing on [get].
 class LruCache<K extends Object, V extends Object> {
+  /// Creates a cache holding at most [maxSize] entries (must be positive).
+  /// When [ttl] is set, entries expire that long after they were stored.
   LruCache(int maxSize, {Duration? ttl}) : _maxSize = maxSize, _ttl = ttl, assert(maxSize > 0);
 
   final int _maxSize;
@@ -48,6 +50,7 @@ class LruCache<K extends Object, V extends Object> {
     _order.add(key);
   }
 
+  /// Removes all entries and resets the cache to empty.
   void clear() {
     _map.clear();
     _order.clear();

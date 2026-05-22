@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+/// Null-safe comparison helpers for nullable [int] values.
 extension IntNullableExtensions on int? {
   /// Returns a negative value if this is less than [second], zero if they are
   /// equal, and a positive value if this is greater than [second].

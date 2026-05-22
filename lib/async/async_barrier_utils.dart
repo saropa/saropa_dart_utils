@@ -7,6 +7,8 @@ import 'dart:async' show Completer;
 final class AsyncBarrierUtils {
   static const String _kErrCountAtLeastOne = 'count >= 1';
 
+  /// Creates a barrier that completes after [count] calls to [signal].
+  /// Throws an [ArgumentError] when [count] is less than 1.
   factory AsyncBarrierUtils(int count) {
     if (count < 1) throw ArgumentError(_kErrCountAtLeastOne);
     return AsyncBarrierUtils._(count);

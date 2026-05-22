@@ -7,10 +7,13 @@ import 'package:collection/collection.dart';
 class PriorityMapUtils<K extends Object, V extends Object> {
   final Map<K, List<V>> _queues = <K, List<V>>{};
 
+  /// Enqueues [value] under [priority], creating the queue if needed.
   void add(K priority, V value) {
     _queues.putIfAbsent(priority, () => []).add(value);
   }
 
+  /// Removes and returns the next item in priority order (front of the first
+  /// queue), or null when the map is empty. Empty queues are pruned.
   V? removeFirst() {
     if (_queues.isEmpty) return null;
     final entry = _queues.entries.firstOrNull;

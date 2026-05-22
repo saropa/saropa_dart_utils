@@ -14,6 +14,9 @@ Map<String, dynamic> deepCopyMap(Map<String, dynamic> source) {
   return out;
 }
 
+/// Recursively deep-copies [source], cloning any nested maps and lists so the
+/// result shares no mutable structure with the original. Scalar values are
+/// copied by reference.
 List<dynamic> deepCopyList(List<dynamic> source) => source.map<dynamic>((dynamic e) {
   if (e is Map<String, dynamic>) return deepCopyMap(e);
   if (e is List<dynamic>) return deepCopyList(e);

@@ -1,5 +1,7 @@
 /// Semver parse and compare. Roadmap #150.
 class SemverUtils {
+  /// Creates a semantic version from its [major], [minor], and [patch] numbers,
+  /// with optional [pre]-release and [build] metadata strings.
   SemverUtils(int major, int minor, int patch, [String pre = '', String build = ''])
     : _major = major,
       _minor = minor,
@@ -8,20 +10,36 @@ class SemverUtils {
       _build = build;
   final int _major;
 
+  /// The major version number (breaking changes).
   int get major => _major;
   final int _minor;
 
+  /// The minor version number (backward-compatible features).
   int get minor => _minor;
   final int _patch;
 
+  /// The patch version number (backward-compatible fixes).
   int get patch => _patch;
   final String _pre;
 
+  /// The pre-release identifier (e.g. `rc.1`), or an empty string if none.
   String get pre => _pre;
   final String _build;
 
+  /// The build metadata (e.g. `001`), or an empty string if none.
   String get build => _build;
 
+  /// Parses [s] into a [SemverUtils], or returns `null` if it is not valid.
+  ///
+  /// Accepts an optional leading `v`, three dot-separated numeric components,
+  /// and optional `-prerelease` and `+build` suffixes. Surrounding whitespace is
+  /// trimmed. Returns `null` for any input that does not match this shape.
+  ///
+  /// Example:
+  /// ```dart
+  /// SemverUtils.parse('v1.2.3-rc.1+build')?.major; // 1
+  /// SemverUtils.parse('1.2'); // null
+  /// ```
   static SemverUtils? parse(String s) {
     final RegExp re = RegExp(
       r'^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+([0-9A-Za-z.-]+))?$',
@@ -39,6 +57,17 @@ class SemverUtils {
     return SemverUtils(majorVal, minorVal, patchVal, m.group(4) ?? '', m.group(5) ?? '');
   }
 
+  /// Compares this version against [other] following semver precedence rules.
+  ///
+  /// Returns a negative value if this version is lower, zero if equal in
+  /// precedence, or a positive value if higher. Major, minor, then patch are
+  /// compared numerically; a version with a pre-release ranks below one without.
+  /// Build metadata is ignored, matching the semver spec.
+  ///
+  /// Example:
+  /// ```dart
+  /// SemverUtils(1, 0, 0).compareTo(SemverUtils(1, 0, 0, 'rc.1')); // > 0
+  /// ```
   int compareTo(SemverUtils other) {
     if (_major != other._major) return _major.compareTo(other._major);
     if (_minor != other._minor) return _minor.compareTo(other._minor);

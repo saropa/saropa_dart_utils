@@ -33,8 +33,22 @@ extension DateTimeMoreExtensions on DateTime {
   }
 }
 
+/// Returns the absolute [Duration] between [a] and [b], regardless of order.
+///
+/// Example:
+/// ```dart
+/// durationBetween(DateTime(2020), DateTime(2020, 1, 2)); // 1 day
+/// ```
 Duration durationBetween(DateTime a, DateTime b) => b.difference(a).abs();
 
+/// Returns the first day of each month from [start] through [end] inclusive.
+/// The day and time components of the inputs are ignored.
+///
+/// Example:
+/// ```dart
+/// monthsBetween(DateTime(2020, 1, 15), DateTime(2020, 3, 1));
+/// // [2020-01-01, 2020-02-01, 2020-03-01]
+/// ```
 List<DateTime> monthsBetween(DateTime start, DateTime end) {
   final List<DateTime> out = <DateTime>[];
   DateTime d = DateTime(start.year, start.month);

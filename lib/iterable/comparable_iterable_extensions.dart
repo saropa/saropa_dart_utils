@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+/// Min/max lookups for iterables whose elements implement [Comparable].
 extension ComparableIterableExtensions<T extends Comparable<T>> on Iterable<T> {
   /// Finds the smallest occurrence in the list.
   ///

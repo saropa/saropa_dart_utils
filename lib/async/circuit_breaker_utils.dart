@@ -6,6 +6,8 @@ const Duration circuitBreakerDefaultResetTimeout = Duration(seconds: 30);
 
 /// Simple circuit breaker: after [failureThreshold] failures, open for [resetTimeout].
 class CircuitBreakerUtils {
+  /// Creates a breaker that opens after [failureThreshold] consecutive
+  /// failures and stays open for [resetTimeout] before allowing a retry.
   CircuitBreakerUtils({
     int failureThreshold = 5,
     Duration resetTimeout = circuitBreakerDefaultResetTimeout,

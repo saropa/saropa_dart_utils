@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 /// Extracts a key of type [E] from an element of type [T].
 typedef KeyExtractor<T, E> = E Function(T element);
 
+/// Deduplication helpers for any iterable, preserving encounter order.
 extension UniqueIterableExtensions<T> on Iterable<T> {
   /// Returns a new list with duplicate elements removed, preserving order.
   ///
@@ -14,6 +15,7 @@ extension UniqueIterableExtensions<T> on Iterable<T> {
       LinkedHashSet<T>.of(where((T? e) => !ignoreNulls || e != null)).toList();
 }
 
+/// Deduplication helpers that compare elements by an extracted key.
 extension UniqueListExtensionsUniqueBy<T> on List<T> {
   /// Returns a new list with unique elements based on the provided
   /// [keyExtractor] function.

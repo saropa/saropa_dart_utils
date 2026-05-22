@@ -1,6 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/list/unique_list_extensions.dart';
 
+/// Utilities for nested lists (matrices): totals, flattening, copying, and
+/// matrix-string rendering.
 extension ListOfListExtension<T> on List<List<T>> {
   /// sum the total number of items
   ///

@@ -3,6 +3,8 @@ library;
 
 /// Node with id and optional parentId for tree building.
 class HierarchyUtils {
+  /// Creates a node with the given [id] and optional [parentId] (null for a
+  /// root node).
   const HierarchyUtils(String id, [String? parentId]) : _id = id, _parentId = parentId;
   final String _id;
 

@@ -3,12 +3,15 @@ library;
 
 /// Step name and count of users who reached it.
 class FunnelUtils {
+  /// Creates a funnel step named [name] reached by [count] users.
   const FunnelUtils(String name, int count) : _name = name, _count = count;
   final String _name;
 
+  /// The step's display name.
   String get name => _name;
   final int _count;
 
+  /// Number of users who reached this step.
   int get count => _count;
 
   @override

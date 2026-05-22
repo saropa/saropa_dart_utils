@@ -3,6 +3,7 @@ library;
 
 /// Union-find over integer elements 0 .. n-1.
 class DisjointSetUtils {
+  /// Creates a union-find structure with [n] singleton sets numbered 0 .. n-1.
   DisjointSetUtils(int n)
     : _parent = List<int>.generate(n, (int i) => i),
       _rank = List<int>.filled(n, 0);
@@ -16,6 +17,8 @@ class DisjointSetUtils {
     return _parent[x];
   }
 
+  /// Merges the sets containing [x] and [y], using union-by-rank to keep the
+  /// trees shallow. Does nothing if they are already in the same set.
   void union(int x, int y) {
     final int rootX = find(x);
     final int rootY = find(y);

@@ -3,6 +3,8 @@
 /// Optional [ttl] expires entries after the given duration; expired entries
 /// are treated as missing on [get].
 class SizeLimitCache<K extends Object, V extends Object> {
+  /// Creates a cache holding at most [maxSize] entries (must be positive).
+  /// When [ttl] is set, entries expire that long after they were stored.
   SizeLimitCache(int maxSize, {Duration? ttl})
     : _maxSize = maxSize,
       _ttl = ttl,

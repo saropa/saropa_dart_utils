@@ -3,6 +3,7 @@ library;
 
 /// Simple trie for string keys: insert, delete, prefix search.
 class TrieUtils {
+  /// Creates an empty trie.
   TrieUtils() : _root = _Node();
 
   final _Node _root;
@@ -17,6 +18,7 @@ class TrieUtils {
     node.isEnd = true;
   }
 
+  /// True if [key] was inserted as a complete word (not merely a prefix).
   bool search(String key) {
     final _Node? node = _find(key);
     return node != null && node.isEnd;

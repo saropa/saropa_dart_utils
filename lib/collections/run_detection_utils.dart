@@ -3,6 +3,8 @@ library;
 
 /// One run: start index, length, constant value or null for increasing.
 class RunDetectionUtils<T extends Object> {
+  /// Creates a run beginning at [start], spanning [length] elements, with the
+  /// shared [value] (or null for a non-constant run).
   const RunDetectionUtils(int start, int length, T? value)
     : _start = start,
       _length = length,

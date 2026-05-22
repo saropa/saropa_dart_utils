@@ -44,6 +44,7 @@ extension StringLowerExtensions on String {
       endsWith(suffix) ? substringSafe(0, length - suffix.length) : this;
 }
 
+/// Null-safe fallbacks for nullable strings (treat null as empty).
 extension StringDefaultEmptyExtension on String? {
   /// Returns this string if non-null, otherwise the empty string.
   String orEmpty() => this ?? '';

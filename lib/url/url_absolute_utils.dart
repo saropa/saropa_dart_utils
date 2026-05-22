@@ -16,6 +16,16 @@ bool isAbsoluteUrl(String url) {
       scheme == _kSchemeFtp;
 }
 
+/// Whether [path] is a relative path (no leading `/` and no drive letter).
+///
+/// Empty or whitespace-only input is treated as relative.
+///
+/// Example:
+/// ```dart
+/// isRelativePath('docs/readme.md'); // true
+/// isRelativePath('/etc/hosts'); // false
+/// isRelativePath(r'C:\Windows'); // false
+/// ```
 bool isRelativePath(String path) {
   final String trimmed = path.trim();
   if (trimmed.isEmpty) return true;

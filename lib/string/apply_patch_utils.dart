@@ -11,9 +11,11 @@ sealed class ApplyPatchUtils {
 
 /// Patch applied successfully; [text] is the result.
 final class ApplyPatchSuccess extends ApplyPatchUtils {
+  /// Creates a success result wrapping the patched [text].
   const ApplyPatchSuccess(String text) : _text = text;
   final String _text;
 
+  /// The fully patched output text.
   String get text => _text;
 
   @override
@@ -22,9 +24,11 @@ final class ApplyPatchSuccess extends ApplyPatchUtils {
 
 /// Patch could not be applied; [message] describes the conflict or error.
 final class ApplyPatchConflict extends ApplyPatchUtils {
+  /// Creates a conflict result whose [message] describes why the patch failed.
   const ApplyPatchConflict(String message) : _message = message;
   final String _message;
 
+  /// Human-readable description of the conflict or error that blocked the patch.
   String get message => _message;
 
   @override

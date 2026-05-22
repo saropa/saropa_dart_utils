@@ -59,6 +59,14 @@ extension StringMoreExtensions on String {
     '',
   ).map((String ch) => ch.toUpperCase() == ch ? ch.toLowerCase() : ch.toUpperCase()).join();
 
+  /// Collapses runs of the same character into one, keeping order.
+  ///
+  /// Operates on UTF-16 code units, so it does not merge multi-unit emoji.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'aaabbbccaa'.removeRepeatedChars(); // 'abca'
+  /// ```
   @useResult
   String removeRepeatedChars() {
     if (length <= 1) return this;
@@ -69,6 +77,15 @@ extension StringMoreExtensions on String {
     return sb.toString();
   }
 
+  /// Counts non-overlapping occurrences of [substring] in this string.
+  ///
+  /// Returns 0 when [substring] is empty. Matches are consumed left to right,
+  /// so overlaps are not double-counted.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'aaaa'.countOccurrences('aa'); // 2
+  /// ```
   int countOccurrences(String substring) {
     if (substring.isEmpty) return 0;
     int count = 0;
@@ -122,6 +139,15 @@ extension StringMoreExtensions on String {
     return words.take(n).join(' ');
   }
 
+  /// Returns the last [n] words (split on whitespace), preserving their order.
+  ///
+  /// Returns the empty string when [n] is `<= 0`, and the whole trimmed string
+  /// when it has [n] or fewer words.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'the quick brown fox'.lastNWords(2); // 'brown fox'
+  /// ```
   @useResult
   String lastNWords(int n) {
     if (n <= 0) return '';

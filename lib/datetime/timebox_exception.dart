@@ -35,6 +35,7 @@ Future<T> timebox<T>(Future<T> Function() fn, Duration timeout, {T? onTimeout}) 
 
 /// Thrown when [timebox] exceeds the allowed duration and no [onTimeout] was provided.
 class TimeboxException implements Exception {
+  /// Creates the exception with a [message] describing the timeout.
   TimeboxException(String message) : _message = message;
   final String _message;
 

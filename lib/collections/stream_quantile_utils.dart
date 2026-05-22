@@ -3,13 +3,17 @@ library;
 
 /// Approximate percentile from a stream of values (single pass, fixed memory).
 class StreamQuantileUtils {
+  /// Creates an estimator for the quantile at [p], where [p] ranges from 0 to 1
+  /// (e.g. 0.5 for the median).
   StreamQuantileUtils(double p) : _p = p;
   final double _p;
 
+  /// The target quantile in the range 0 to 1.
   double get p => _p;
   final List<double> _buffer = [];
   static const int _maxSize = 100;
 
+  /// Feeds [value] into the estimator for inclusion in the quantile estimate.
   void add(num value) {
     _buffer.add(value.toDouble());
     if (_buffer.length > _maxSize) _buffer.sort();
