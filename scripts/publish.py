@@ -30,6 +30,9 @@ This script automates the complete release workflow for a Dart/Flutter package.
     - If CHANGELOG.md has an [Unreleased] section, resolves it:
       - If current version already has notes: offers patch/minor/major bump
       - If no versioned section yet: converts [Unreleased] to version header
+    - Strips a "- Unreleased" placeholder off the current version's header
+      (e.g. "## [1.1.1] - Unreleased" -> "## [1.1.1]") so the placeholder
+      never reaches pub.dev
     - Fails if version tag already exists on remote
 
   Numbered steps:
@@ -47,7 +50,7 @@ This script automates the complete release workflow for a Dart/Flutter package.
     12. Triggers GitHub Actions publish to pub.dev
     13. Creates GitHub release with release notes
 
-Version:   2.5
+Version:   2.6
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
@@ -281,6 +284,14 @@ def main() -> int:
             # No versioned section yet — [Unreleased] IS the release notes
             vc.update_changelog_unreleased(changelog_path, version)
             ui.print_success(f"CHANGELOG.md: [Unreleased] → [{version}]")
+
+    # Resolve the other unreleased shape: a versioned header that still carries
+    # a "- Unreleased" placeholder (e.g. `## [1.1.1] - Unreleased`). This slips
+    # past has_unreleased_section (which only matches a bare `[Unreleased]`), so
+    # without this strip the placeholder would publish to pub.dev labelling the
+    # release as unreleased. Strip it to leave `## [1.1.1]`.
+    if vc.strip_unreleased_suffix(changelog_path, version):
+        ui.print_success(f"CHANGELOG.md: stripped '- Unreleased' from [{version}]")
 
     tag_name = f"v{version}"
     res = subprocess.run(

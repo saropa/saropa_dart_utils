@@ -73,6 +73,34 @@ def update_changelog_unreleased(changelog_path: Path, new_version: str) -> None:
     changelog_path.write_text(updated, encoding="utf-8")
 
 
+def strip_unreleased_suffix(changelog_path: Path, version: str) -> bool:
+    """Remove a trailing "- Unreleased" placeholder from a version's header.
+
+    This handles a header shape distinct from `## [Unreleased]` (covered by
+    `has_unreleased_section`/`update_changelog_unreleased`): the in-flight
+    section is written as `## [1.1.1] - Unreleased`, where "Unreleased" is a
+    placeholder sitting in the date slot. `get_latest_changelog_version` reads
+    `1.1.1` straight through that suffix, so without this step the placeholder
+    reaches pub.dev and labels a shipped release as unreleased.
+
+    Targets only the header for `version`, leaving older dated entries intact,
+    and drops the entire " - Unreleased" run (separator included) so the header
+    reads `## [1.1.1]`. Returns True when a placeholder was removed.
+    """
+    content = changelog_path.read_text(encoding="utf-8")
+    # Capture the bracketed-version portion so it survives verbatim; consume the
+    # separator, the literal "Unreleased", and any trailing spaces/tabs, but
+    # stop at the newline ([ \t]* never crosses it) so the line break is kept.
+    pattern = rf"(##\s*\[?{re.escape(version)}\]?)\s*-\s*Unreleased[ \t]*"
+    updated, count = re.subn(
+        pattern, r"\g<1>", content, count=1, flags=re.IGNORECASE
+    )
+    if count == 0:
+        return False
+    changelog_path.write_text(updated, encoding="utf-8")
+    return True
+
+
 def get_package_name(pubspec_path: Path) -> str:
     """Read package name from pubspec.yaml."""
     content = pubspec_path.read_text(encoding="utf-8")
