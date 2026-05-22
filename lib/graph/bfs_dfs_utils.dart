@@ -27,6 +27,9 @@ void bfs(
 }
 
 /// DFS from [start]; calls [visit](node, depth). [maxDepth] caps depth (-1 = no limit).
+///
+/// Recurses to the traversal depth; pass [maxDepth] to bound it for deep or
+/// untrusted graphs, since deep recursion can exhaust the call stack.
 void dfs(
   Adjacency graph,
   int start,

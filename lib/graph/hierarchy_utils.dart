@@ -20,6 +20,9 @@ class HierarchyUtils {
 }
 
 /// Flattens tree: [nodes] has (id, parentId). Returns list of (id, level). Root level = 0.
+///
+/// Assumes an acyclic parent graph: a cycle among [nodes] causes unbounded
+/// recursion. Recursion depth equals the tree height.
 List<(String, int)> flattenHierarchy(List<HierarchyUtils> nodes) {
   final Map<String, String?> parent = {for (final n in nodes) n.id: n.parentId};
   final List<(String, int)> out = <(String, int)>[];

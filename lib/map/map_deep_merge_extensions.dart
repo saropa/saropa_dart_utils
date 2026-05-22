@@ -4,6 +4,9 @@ import 'package:meta/meta.dart';
 extension MapDeepMergeExtensions on Map<String, dynamic> {
   /// Merges [other] into this map recursively. Values in [other] overwrite.
   /// Nested maps are merged; lists and other values are replaced.
+  ///
+  /// Recurses to the maps' nesting depth; not intended for untrusted,
+  /// arbitrarily-deep input (deep nesting can exhaust the stack).
   @useResult
   Map<String, dynamic> deepMerge(Map<String, dynamic> other) {
     final Map<String, dynamic> result = Map<String, dynamic>.from(this);

@@ -2,6 +2,9 @@
 library;
 
 /// Recursively sorts map keys and normalizes numbers. Returns new structure.
+///
+/// Recurses to the value's nesting depth; not intended for untrusted,
+/// arbitrarily-deep input (deep nesting can exhaust the stack).
 Object? canonicalizeJson(Object? value) {
   if (value == null) return null;
   if (value is Map) {

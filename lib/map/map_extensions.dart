@@ -169,7 +169,8 @@ extension StringMapExtensions on Map<String, dynamic> {
   /// Returns `true` after removing all keys in [removeKeysList] from this map.
   ///
   /// When [recurseChildValues] is `true` (default), keys are also removed from
-  /// nested `Map<String, dynamic>` values.
+  /// nested `Map<String, dynamic>` values. Recursion follows the map's nesting
+  /// depth, so disable [recurseChildValues] for untrusted, arbitrarily-deep input.
   @useResult
   bool removeKeys(List<String>? removeKeysList, {bool recurseChildValues = true}) {
     if (removeKeysList == null || removeKeysList.isEmpty) {

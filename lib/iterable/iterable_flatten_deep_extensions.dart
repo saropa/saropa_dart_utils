@@ -6,6 +6,9 @@ extension IterableFlattenDeepExtensions<E> on Iterable<dynamic> {
   ///
   /// Returns a lazy [Iterable] of elements with nested iterables flattened
   /// up to [depth] levels, or fully when [depth] is null.
+  ///
+  /// With a null [depth] the recursion follows the input's nesting depth; pass
+  /// an explicit [depth] for untrusted, arbitrarily-deep iterables.
   @useResult
   Iterable<dynamic> flattenDeep([int? depth]) {
     final int? limit = depth;

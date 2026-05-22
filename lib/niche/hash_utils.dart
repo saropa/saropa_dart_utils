@@ -1,4 +1,8 @@
 /// Simple hash for cache key from objects. Roadmap #214.
+///
+/// Recurses into nested lists and maps to their nesting depth, so it is not
+/// intended for untrusted, arbitrarily-deep input (deep nesting can exhaust
+/// the stack).
 int simpleHash(Object? value) {
   if (value == null) return 0;
   if (value is List) {

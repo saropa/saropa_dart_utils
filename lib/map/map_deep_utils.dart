@@ -1,4 +1,7 @@
 /// Deep copy for maps and lists.
+///
+/// [deepCopyMap] and [deepCopyList] recurse to the input's nesting depth, so
+/// they are not intended for untrusted, arbitrarily-deep structures.
 Map<String, dynamic> deepCopyMap(Map<String, dynamic> source) {
   final Map<String, dynamic> out = <String, dynamic>{};
   for (final MapEntry<String, dynamic> e in source.entries) {

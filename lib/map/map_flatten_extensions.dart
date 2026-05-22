@@ -4,6 +4,9 @@ import 'package:meta/meta.dart';
 /// Flatten/unflatten keys (e.g. a.b.c -> value).
 extension MapFlattenExtensions on Map<String, dynamic> {
   /// Flattens nested keys to dot-separated keys. [prefix] is prepended (for recursion).
+  ///
+  /// Recurses to the map's nesting depth; not intended for untrusted,
+  /// arbitrarily-deep input (deep nesting can exhaust the stack).
   @useResult
   Map<String, dynamic> flattenKeys({String prefix = ''}) {
     final Map<String, dynamic> out = <String, dynamic>{};
