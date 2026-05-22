@@ -1,9 +1,7 @@
 /// Idempotent async wrapper (deduplicate concurrent calls by key) — roadmap #668.
 library;
 
-import 'dart:async'
-    show
-        unawaited; // ignore: require_ios_deployment_target_consistency // ignore: require_ios_deployment_target_consistency
+import 'dart:async' show unawaited;
 
 /// Deduplicates in-flight calls: same [key] reuses the same future until it completes.
 class IdempotentAsyncUtils {

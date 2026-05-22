@@ -9,6 +9,7 @@
 // https://pub.dev/packages/html_unescape
 //
 // Modernized: converted from parallel List<String> arrays to a single
+// ignore: saropa_lints/prefer_no_commented_out_code -- prose describing the design (a single const Map for O(1) lookup), not disabled code
 // const Map<String, String> for O(1) lookup. Added commonly-used entities
 // beyond Latin-1 (trade, euro, typographic quotes, dashes, etc.) that the
 // original basic set omitted.

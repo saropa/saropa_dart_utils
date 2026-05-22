@@ -29,7 +29,9 @@ extension StringWrapExtensions on String {
     if (isEmpty) return <String>[];
     final Characters chars = characters;
     final int estimatedLines = (chars.length / columnWidth).ceil() + 1;
+    // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
     final List<String> lines = List<String>.filled(estimatedLines, '');
+    // ignore: saropa_lints/move_variable_closer_to_its_usage -- mutated across loop iterations; must be declared before it
     int lineIndex = 0;
     int i = 0;
     while (i < chars.length) {

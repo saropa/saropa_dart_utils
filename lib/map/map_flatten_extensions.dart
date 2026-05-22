@@ -11,6 +11,7 @@ extension MapFlattenExtensions on Map<String, dynamic> {
       final String key = prefix.isEmpty ? e.key : '$prefix.${e.key}';
       final val = e.value;
       if (val is Map<String, dynamic>) {
+        // ignore: saropa_lints/prefer_spread_over_addall -- accumulates across loop iterations; spread would be O(n^2)
         out.addAll(val.flattenKeys(prefix: key));
       } else {
         out[key] = val;

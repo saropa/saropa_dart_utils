@@ -43,6 +43,7 @@ String renderUnifiedDiff(
   // ignore: avoid_unused_parameters - reserved for context hunk size
   int contextLines = 3,
 }) {
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final StringBuffer out = StringBuffer();
   for (final DiffOp op in ops) {
     final String raw = op.text;
@@ -52,7 +53,9 @@ String renderUnifiedDiff(
               .replaceRange(raw.length - 1, raw.length, '')
               .split('\n')
               .map((String l) => '$l\n')
+              // ignore: saropa_lints/avoid_large_list_copy -- needs an independent mutable copy to rewrite the last line below
               .toList()
+        // ignore: saropa_lints/avoid_large_list_copy -- needs an independent mutable copy to rewrite the last line below
         : raw.split('\n').map((String l) => '$l\n').toList();
     if (!raw.endsWith('\n') && lines.isNotEmpty) {
       lines[lines.length - 1] = lines.last.replaceFirst(RegExp(r'\n$'), '');
@@ -104,10 +107,8 @@ String _prefix(DiffOutputFormat format, String prefix, String line, String? colo
   }
 }
 
-String _escapeHtml(String s) {
-  return s
-      .replaceAll(_kAmp, _kAmpEsc)
-      .replaceAll(_kLt, _kLtEsc)
-      .replaceAll(_kGt, _kGtEsc)
-      .replaceAll(_kQuot, _kQuotEsc);
-}
+String _escapeHtml(String s) => s
+    .replaceAll(_kAmp, _kAmpEsc)
+    .replaceAll(_kLt, _kLtEsc)
+    .replaceAll(_kGt, _kGtEsc)
+    .replaceAll(_kQuot, _kQuotEsc);

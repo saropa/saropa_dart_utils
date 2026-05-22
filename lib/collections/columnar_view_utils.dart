@@ -4,9 +4,8 @@ library;
 import 'package:collection/collection.dart';
 
 /// Returns a single column [key] from [rows] as List<Object?>.
-List<Object?> columnValues(List<Map<String, Object?>> rows, String key) {
-  return rows.map((Map<String, Object?> r) => r[key]).toList();
-}
+List<Object?> columnValues(List<Map<String, Object?>> rows, String key) =>
+    rows.map((Map<String, Object?> r) => r[key]).toList();
 
 /// Returns map of key -> list of values for all keys in [rows].
 Map<String, List<Object?>> toColumnar(List<Map<String, Object?>> rows) {

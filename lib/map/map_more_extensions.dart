@@ -48,7 +48,7 @@ extension MapRenameKey<K, V> on Map<K, V> {
   /// New map with keys renamed according to [oldToNew].
   @useResult
   Map<K, V> renameKeys(Map<K, K> oldToNew) {
-    Map<K, V> out = Map<K, V>.from(this);
+    final Map<K, V> out = Map<K, V>.from(this);
     for (final MapEntry<K, K> e in oldToNew.entries) {
       if (out.containsKey(e.key)) {
         final v = out.remove(e.key);

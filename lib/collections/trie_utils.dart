@@ -18,7 +18,7 @@ class TrieUtils {
   }
 
   bool search(String key) {
-    _Node? node = _find(key);
+    final _Node? node = _find(key);
     return node != null && node.isEnd;
   }
 
@@ -28,6 +28,7 @@ class TrieUtils {
   /// Removes [key] from the trie if present.
   void delete(String key) {
     if (key.isEmpty) return;
+    // ignore: saropa_lints/avoid_ignoring_return_values -- bool signals child-prune to caller; root is never pruned here
     _delete(_root, key, 0);
   }
 
@@ -68,6 +69,7 @@ class TrieUtils {
     final List<String> out = <String>[];
     if (node.isEnd) out.add(path);
     for (final MapEntry<String, _Node> e in node.childEntries) {
+      // ignore: saropa_lints/prefer_spread_over_addall -- accumulates across loop iterations; spread would be O(n^2)
       out.addAll(_collect(e.value, path + e.key));
     }
     return out;
@@ -85,6 +87,7 @@ class _Node {
 
   bool get isEnd => _isEnd;
   // ignore: prefer_named_boolean_parameters - setters have a single positional parameter
+  // ignore: saropa_lints/prefer_correct_setter_parameter_name -- positional setter param; 'value' not required
   set isEnd(bool isEndValue) => _isEnd = isEndValue;
 
   _Node? getChild(String c) => _children[c];

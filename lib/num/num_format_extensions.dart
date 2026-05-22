@@ -21,8 +21,7 @@ extension NumFormatExtensions on num {
         ? math.log(magnitude) ~/ math.ln10
         : -(math.log(magnitude) / math.ln10).ceil();
     final double scale = math.pow(10.0, significantDigits - 1 - e).toDouble();
-    final double scaled = (x * scale).round() / scale;
-    return scaled;
+    return (x * scale).round() / scale;
   }
 
   /// Formats as compact string (e.g. 1200 → "1.2K", 1500000 → "1.5M").

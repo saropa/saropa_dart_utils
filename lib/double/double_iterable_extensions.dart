@@ -51,7 +51,7 @@ extension DoubleIterableExtensions on Iterable<double> {
     for (final double item in this) {
       // Update the frequency of the current double in the map, or set it to
       // 1 if it's not in the map yet.
-      // ignore: require_future_error_handling
+      // ignore: saropa_lints/require_future_error_handling -- Map.update is synchronous; there is no future to handle
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
@@ -86,7 +86,7 @@ extension DoubleIterableExtensions on Iterable<double> {
     for (final double item in this) {
       // Update the frequency of the current double in the map,
       // or set it to 1 if it's not in the map yet.
-      // ignore: require_future_error_handling
+      // ignore: saropa_lints/require_future_error_handling -- Map.update is synchronous; there is no future to handle
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 

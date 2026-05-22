@@ -19,7 +19,7 @@ String initialsFromName(String name) {
       .where((String s) => s.isNotEmpty)
       .toList();
   if (parts.isEmpty) return '';
-  if (parts.length == 1) return parts[0].substringSafe(0, 1).toUpperCase();
+  if (parts.length == 1) return parts.first.substringSafe(0, 1).toUpperCase();
   final first = parts.firstOrNull;
   final last = parts.lastOrNull;
   if (first == null || last == null) return '';

@@ -39,6 +39,7 @@ String generateUuidV4() {
   final String hex = bytes
       .map((int b) => b.toRadixString(16).padLeft(_hexDigitsPerByte, _hexPadChar))
       .join();
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- one of a cohesive segment1..segment5 group all consumed in the final return
   final segment1 = hex.replaceRange(_hexSegment1End, _hexTotalLength, '');
   final segment2 = hex
       .replaceRange(_hexSegment2Start, _hexSegment2End, '')

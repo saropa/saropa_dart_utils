@@ -67,8 +67,9 @@ Object? _jsonDecode(String s) {
 }
 
 int _skipCommaAndSpace(String inner, int i) {
-  while (i < inner.length && (inner[i] == ',' || inner[i] == ' ')) {
-    i++;
+  int pos = i;
+  while (pos < inner.length && (inner[pos] == ',' || inner[pos] == ' ')) {
+    pos++;
   }
-  return i;
+  return pos;
 }

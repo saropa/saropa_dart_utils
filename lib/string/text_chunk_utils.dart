@@ -9,6 +9,7 @@ List<String> chunkText(String text, {int maxChars = 500, int overlap = 0}) {
   if (text.isEmpty) return <String>[];
   if (maxChars < 1) return <String>[text];
   final int maxPossibleChunks = text.length + 1;
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<String> chunks = List<String>.filled(maxPossibleChunks, '');
   int chunkIndex = 0;
   int start = 0;

@@ -32,8 +32,9 @@ extension StringCaseAcronymExtensions on String {
         } else {
           const int firstCharIndex = 0;
           final String firstChar = word[firstCharIndex];
-          sb.write(firstChar.toUpperCase());
-          sb.write(rest.toLowerCase());
+          sb
+            ..write(firstChar.toUpperCase())
+            ..write(rest.toLowerCase());
         }
       } else {
         sb.write(word.toUpperCase());

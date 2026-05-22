@@ -1,7 +1,6 @@
 /// Async barrier: wait for N events — roadmap #676.
 library;
 
-// ignore: require_ios_deployment_target_consistency
 import 'dart:async' show Completer;
 
 /// Barrier that completes when [count] signals received.

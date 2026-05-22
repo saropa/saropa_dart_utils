@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 /// DateTime epoch = DateConstants.unixEpochDate;
 /// bool valid = month >= DateConstants.minMonth;
 /// ```
-// ignore: avoid_god_class
+// ignore: saropa_lints/avoid_god_class -- cohesive container of related constants
 abstract final class DateConstants {
   // Date/Time Range Constants
 

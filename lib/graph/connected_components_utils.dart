@@ -6,6 +6,7 @@ import 'graph_utils.dart';
 /// Returns list of components (each component = list of node indices).
 List<List<int>> connectedComponents(Adjacency graph) {
   final List<bool> seen = List.filled(graph.length, false);
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulator must live above the for-loop; first use is inside the loop but it persists across all iterations
   final List<List<int>> out = <List<int>>[];
   for (int s = 0; s < graph.length; s++) {
     if (seen[s]) continue;

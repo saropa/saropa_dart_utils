@@ -164,7 +164,7 @@ abstract final class DateTimeUtils {
   /// Returns the English singular or plural label for [count].
   ///
   /// English-only by design (no Intl dependency).
-  // ignore: require_plural_handling
+  // ignore: saropa_lints/require_plural_handling -- caller passes a pre-pluralized label
   static String _pluralLabel({
     required int count,
     required String singular,
@@ -375,7 +375,7 @@ abstract final class DateTimeUtils {
   /// Components that are `null` are not validated.
   @useResult
   // All 8 named params are needed to validate each DateTime component
-  // ignore: avoid_long_parameter_list
+  // ignore: saropa_lints/avoid_long_parameter_list -- all params are required date components
   static bool isValidDateParts({
     int? year,
     int? month,

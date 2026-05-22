@@ -14,10 +14,8 @@ Map<String, dynamic> deepCopyMap(Map<String, dynamic> source) {
   return out;
 }
 
-List<dynamic> deepCopyList(List<dynamic> source) {
-  return source.map<dynamic>((dynamic e) {
-    if (e is Map<String, dynamic>) return deepCopyMap(e);
-    if (e is List<dynamic>) return deepCopyList(e);
-    return e;
-  }).toList();
-}
+List<dynamic> deepCopyList(List<dynamic> source) => source.map<dynamic>((dynamic e) {
+  if (e is Map<String, dynamic>) return deepCopyMap(e);
+  if (e is List<dynamic>) return deepCopyList(e);
+  return e;
+}).toList();

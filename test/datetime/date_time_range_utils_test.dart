@@ -1,3 +1,4 @@
+// ignore_for_file: saropa_lints/prefer_setup_teardown -- each test builds its own DateTimeRange with distinct bounds; explicit per-test arrange reads clearer than a shared setUp
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/datetime/date_time_range_utils.dart';

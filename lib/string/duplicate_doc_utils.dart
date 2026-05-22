@@ -9,6 +9,7 @@ bool isNearDuplicate(String a, String b, {double threshold = 0.85}) =>
 
 /// Groups [documents] into near-duplicate clusters (greedy).
 List<List<int>> clusterNearDuplicates(List<String> documents, {double threshold = 0.85}) {
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<List<int>> clusters = [];
   final List<bool> used = List.filled(documents.length, false);
   for (int i = 0; i < documents.length; i++) {

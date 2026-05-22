@@ -6,9 +6,7 @@ int? parseIntBase(String s, int radix) {
   return int.tryParse(s, radix: radix);
 }
 
-bool isValidUrlLoose(String s) {
-  return s.startsWith(RegExp(r'https?://', caseSensitive: false));
-}
+bool isValidUrlLoose(String s) => s.startsWith(RegExp(r'https?://', caseSensitive: false));
 
 bool isValidIpv4(String s) {
   final List<String> parts = s.split('.');
@@ -44,6 +42,5 @@ bool isValidHexString(String s, {int? length}) {
   return true;
 }
 
-List<int> parseDottedDecimal(String s) {
-  return s.split('.').map((String x) => int.tryParse(x)).whereType<int>().toList();
-}
+List<int> parseDottedDecimal(String s) =>
+    s.split('.').map((String x) => int.tryParse(x)).whereType<int>().toList();

@@ -24,6 +24,7 @@ class CircuitBreakerUtils {
   bool _isClosed = true;
 
   /// True when the circuit is closed (requests are allowed).
+  // ignore: saropa_lints/prefer_correct_handler_name -- 'isClosed' is a boolean state getter, not an event handler; the public API name must stay stable
   bool get isClosed => _isClosed && _openedAt == null;
 
   /// True when the circuit is open (requests are blocked).

@@ -4,6 +4,7 @@ bool isPrime(int n) {
   if (n == 2) return true;
   if (n % 2 == 0) return false;
   final int limit = _isqrt(n);
+  // ignore: saropa_lints/prefer_correct_for_loop_increment -- steps by 2 to skip even candidates
   for (int d = 3; d <= limit; d += 2) {
     if (n % d == 0) return false;
   }

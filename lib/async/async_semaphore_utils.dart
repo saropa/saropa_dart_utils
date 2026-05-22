@@ -1,7 +1,6 @@
 /// Async semaphore with permits (roadmap #651).
 library;
 
-// ignore: require_ios_deployment_target_consistency
 import 'dart:async' show Completer;
 
 /// Callback that produces a future result.

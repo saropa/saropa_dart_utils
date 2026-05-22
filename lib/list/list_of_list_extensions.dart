@@ -79,7 +79,9 @@ extension ListOfListExtension<T> on List<List<T>> {
     }
 
     // If dimensions match, perform the copy
+    // ignore: saropa_lints/prefer_asmap_over_indexed_iteration -- parallel index copy writes into destination by the same i/j; asMap would obscure the row/column mapping
     for (int i = 0; i < length; i++) {
+      // ignore: saropa_lints/prefer_asmap_over_indexed_iteration -- inner parallel index copy; asMap would obscure the row/column mapping
       for (int j = 0; j < this[i].length; j++) {
         destination[i][j] = this[i][j];
       }

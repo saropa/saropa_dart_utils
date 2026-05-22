@@ -25,7 +25,7 @@ import 'package:meta/meta.dart';
 ///
 /// You can also provide a fixed [seed] to get a predictable sequence of numbers,
 /// which is useful for testing.
-// ignore: non_constant_identifier_names
+// ignore: non_constant_identifier_names -- PascalCase intentionally mimics a constructor call so usage reads like instantiating the dart:math Random it wraps
 @useResult
 Random CommonRandom([int? seed]) =>
     // Algorithm:

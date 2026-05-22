@@ -29,6 +29,7 @@ final class ValidationErrors {
   void add(ValidationErrorUtils e) => _list.add(e);
 
   /// Appends all errors from [e].
+  // ignore: saropa_lints/prefer_spread_over_addall -- appends into a persistent mutable field, not a one-shot list construction
   void addAll(Iterable<ValidationErrorUtils> e) => _list.addAll(e);
 
   /// True when there are no errors.

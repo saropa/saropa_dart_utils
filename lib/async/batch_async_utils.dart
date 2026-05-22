@@ -11,7 +11,8 @@ Future<List<T>> mapBatched<A, T>(
   final List<T> out = <T>[];
   for (int i = 0; i < list.length; i += batchSize) {
     final batch = list.skip(i).take(batchSize).map(fn);
-    final results = await Future.wait(batch, eagerError: false);
+    final List<T> results = await Future.wait(batch, eagerError: false);
+    // ignore: prefer_spread_over_addall -- accumulates across loop iterations; rebuilding via spread each pass would be O(n^2)
     out.addAll(results);
   }
   return out;

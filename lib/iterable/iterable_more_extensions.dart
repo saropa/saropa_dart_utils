@@ -57,7 +57,7 @@ extension IterablePad<T> on List<T> {
   @useResult
   List<T> padTo(int length, T fill) {
     if (this.length >= length) return List<T>.of(this);
-    return List<T>.of(this)..addAll(List<T>.filled(length - this.length, fill));
+    return <T>[...this, ...List<T>.filled(length - this.length, fill)];
   }
 }
 

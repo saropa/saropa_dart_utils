@@ -39,6 +39,7 @@ final class ApplyPatchConflict extends ApplyPatchUtils {
 ApplyPatchUtils applyPatch(String baseText, List<DiffOp> ops) {
   final List<String> lines = _splitLines(baseText);
   int lineIndex = 0;
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final StringBuffer out = StringBuffer();
   for (final DiffOp op in ops) {
     final List<String> opLines = _opToLines(op.text);

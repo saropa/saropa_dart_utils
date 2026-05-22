@@ -48,7 +48,7 @@ extension StringMoreExtensions on String {
       (Match m) {
         final prefixGroup = m[1];
         final letterGroup = m[2];
-        return '${prefixGroup ?? ''}${(letterGroup != null ? letterGroup : '').toUpperCase()}';
+        return '${prefixGroup ?? ''}${(letterGroup ?? '').toUpperCase()}';
       },
     );
   }

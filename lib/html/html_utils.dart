@@ -73,14 +73,12 @@ abstract final class HtmlUtils {
     while (offset < length) {
       final int ampIndex = text.indexOf('&', offset);
       if (ampIndex == -1) {
-        // Bounds safe: offset is always ≤ length (loop guard above)
-        // ignore: avoid_string_substring
+        // ignore: avoid_string_substring -- offset is always ≤ length (while-loop guard above), so substring is in bounds
         buffer.write(text.substring(offset));
         break;
       }
       if (ampIndex > offset) {
-        // Bounds safe: offset < ampIndex (guarded by ampIndex > offset)
-        // ignore: avoid_string_substring
+        // ignore: avoid_string_substring -- offset < ampIndex (guarded by the ampIndex > offset check), so both indices are in bounds
         buffer.write(text.substring(offset, ampIndex));
       }
       // Decode the entity at ampIndex, advance past it
@@ -123,6 +121,7 @@ abstract final class HtmlUtils {
     String text,
     int offset,
   ) {
+    // ignore: saropa_lints/prefer_no_commented_out_code -- prose noting the shortest numeric entity is 4 chars (e.g. &#0;), not disabled code
     // Minimum numeric entity is 4 chars: &#0;
     if (offset + 3 >= text.length) return null;
     if (text.codeUnitAt(offset + 1) != _poundCode) return null;
@@ -139,8 +138,7 @@ abstract final class HtmlUtils {
     if (digitStart >= semiIndex) return null;
 
     // Parse digits and validate as a Unicode scalar value
-    // Bounds safe: digitStart < semiIndex (guarded above), semiIndex < length
-    // ignore: avoid_string_substring
+    // ignore: avoid_string_substring -- digitStart < semiIndex (guarded above) and semiIndex < length (indexOf result bounded), so both indices are in bounds
     final String digits = text.substring(digitStart, semiIndex);
     final int? codePoint = int.tryParse(digits, radix: isHex ? 16 : 10);
     if (codePoint == null || !_isValidScalarValue(codePoint)) return null;
@@ -172,8 +170,7 @@ abstract final class HtmlUtils {
     final int searchBound = min(text.length, offset + htmlEntityMaxKeyLength);
     final int semiIndex = text.indexOf(';', offset + 2);
     if (semiIndex > 0 && semiIndex < searchBound) {
-      // Bounds safe: offset < semiIndex+1 ≤ length (indexOf found ';')
-      // ignore: avoid_string_substring
+      // ignore: avoid_string_substring -- indexOf found ';' so offset < semiIndex+1 ≤ length, making both indices in bounds
       final String candidate = text.substring(offset, semiIndex + 1);
       final String? value = htmlNamedEntities[candidate];
       if (value != null) {
@@ -192,8 +189,7 @@ abstract final class HtmlUtils {
   ) {
     final int legacyBound = min(text.length, offset + htmlEntityMaxLegacyLength);
     for (int end = legacyBound; end >= offset + 3; end--) {
-      // Bounds safe: offset+3 ≤ end ≤ legacyBound ≤ length
-      // ignore: avoid_string_substring
+      // ignore: avoid_string_substring -- loop invariant offset+3 ≤ end ≤ legacyBound ≤ length keeps both indices in bounds
       final String candidate = text.substring(offset, end);
       final String? value = htmlNamedEntities[candidate];
       if (value != null) {

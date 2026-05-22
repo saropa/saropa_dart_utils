@@ -8,8 +8,9 @@ List<String> stringDiffLines(String a, String b) {
     final String lineA = i < linesA.length ? linesA[i] : '';
     final String lineB = i < linesB.length ? linesB[i] : '';
     if (lineA != lineB) {
-      out.add('${i + 1}: - $lineA');
-      out.add('${i + 1}: + $lineB');
+      out
+        ..add('${i + 1}: - $lineA')
+        ..add('${i + 1}: + $lineB');
     }
   }
   return out;

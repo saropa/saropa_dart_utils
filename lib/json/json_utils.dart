@@ -30,8 +30,7 @@ abstract final class JsonUtils {
     try {
       return dc.jsonDecode(trimmed);
     } on FormatException catch (e, stackTrace) {
-      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
-      // ignore: saropa_lints/avoid_print_error
+      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.jsonDecodeSafe failed: $e\n$stackTrace');
 
       return null;
@@ -86,8 +85,7 @@ abstract final class JsonUtils {
     try {
       return dc.jsonDecode(value) != null;
     } on FormatException catch (e, stackTrace) {
-      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
-      // ignore: saropa_lints/avoid_print_error
+      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.isJson testDecode failed: $e\n$stackTrace');
 
       return false;
@@ -146,8 +144,7 @@ abstract final class JsonUtils {
 
     try {
       final Object? data = dc.json.decode(value);
-      // Guarded by isEmpty check above
-      // ignore: prefer_list_first
+      // ignore: saropa_lints/prefer_list_first -- index access is clearer alongside the adjacent data.isEmpty short-circuit guard
       if (data is! List || data.isEmpty || data[0] is! Map<String, dynamic>) {
         return null;
       }
@@ -158,8 +155,7 @@ abstract final class JsonUtils {
 
       return data.cast<Map<String, dynamic>>().toList();
     } on FormatException catch (e, stackTrace) {
-      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
-      // ignore: saropa_lints/avoid_print_error
+      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.tryJsonDecodeListMap failed: $e\n$stackTrace');
 
       return null;
@@ -179,8 +175,7 @@ abstract final class JsonUtils {
 
       return data.cast<String>().toList();
     } on FormatException catch (e, stackTrace) {
-      // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
-      // ignore: saropa_lints/avoid_print_error
+      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.tryJsonDecodeList failed: $e\n$stackTrace');
 
       return null;

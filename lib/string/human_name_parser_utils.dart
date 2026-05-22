@@ -23,7 +23,7 @@ class HumanNameParserUtils {
 
   @override
   String toString() =>
-      'HumanNameParserUtils(first: ${_first ?? ""}, middle: ${_middle ?? ""}, last: ${_last ?? ""}, suffix: ${_suffix ?? ""})';
+      'HumanNameParserUtils(first: ${_first ?? ''}, middle: ${_middle ?? ''}, last: ${_last ?? ''}, suffix: ${_suffix ?? ''})';
 }
 
 /// Simple split: "Last, First Middle" or "First Middle Last". Suffix: Jr., Sr., III, etc.
@@ -32,7 +32,7 @@ HumanNameParserUtils parseHumanName(String full) {
   if (s.isEmpty) return const HumanNameParserUtils();
   final RegExp suffixRe = RegExp(r',?\s+(Jr\.?|Sr\.?|III?|IV|II|I)$', caseSensitive: false);
   final String? suffix = suffixRe.firstMatch(s)?.group(1);
-  String rest = s.replaceAll(suffixRe, '').trim();
+  final String rest = s.replaceAll(suffixRe, '').trim();
   if (rest.contains(',')) {
     final List<String> parts = rest.split(',').map((e) => e.trim()).toList();
     if (parts.length >= 2) {
@@ -46,10 +46,10 @@ HumanNameParserUtils parseHumanName(String full) {
   }
   final List<String> tokens = rest.split(RegExp(r'\s+'));
   if (tokens.isEmpty) return HumanNameParserUtils(suffix: suffix);
-  if (tokens.length == 1) return HumanNameParserUtils(first: tokens[0], suffix: suffix);
+  if (tokens.length == 1) return HumanNameParserUtils(first: tokens.first, suffix: suffix);
   return HumanNameParserUtils(
-    first: tokens[0],
-    last: tokens[tokens.length - 1],
+    first: tokens.first,
+    last: tokens.last,
     middle: tokens.length > 2 ? tokens.sublist(1, tokens.length - 1).join(' ') : null,
     suffix: suffix,
   );

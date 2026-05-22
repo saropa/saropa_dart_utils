@@ -20,7 +20,7 @@ int businessDaysBetween(DateTime start, DateTime end) {
 DateTime addBusinessDays(DateTime date, int n) {
   if (n == 0) return date;
   final DateTime d = DateTime(date.year, date.month, date.day);
-  int step = n > 0 ? 1 : -1;
+  final int step = n > 0 ? 1 : -1;
   int remaining = n.abs();
   DateTime current = d;
   while (remaining > 0) {

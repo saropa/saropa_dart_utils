@@ -14,7 +14,7 @@ class HierarchyUtils {
   String? get parentId => _parentId;
 
   @override
-  String toString() => 'HierarchyUtils(id: $_id, parentId: ${_parentId ?? ""})';
+  String toString() => 'HierarchyUtils(id: $_id, parentId: ${_parentId ?? ''})';
 }
 
 /// Flattens tree: [nodes] has (id, parentId). Returns list of (id, level). Root level = 0.
@@ -28,13 +28,13 @@ List<(String, int)> flattenHierarchy(List<HierarchyUtils> nodes) {
     }
   }
 
-  for (final n in nodes) {
-    if ((n.parentId ?? '').isEmpty) visit(n.id, 0);
+  for (final root in nodes) {
+    if ((root.parentId ?? '').isEmpty) visit(root.id, 0);
   }
   return out;
 }
 
 /// Builds parent map from flat list: id -> parentId (roots have null).
-Map<String, String?> hierarchyFromParentIds(List<HierarchyUtils> nodes) {
-  return {for (final n in nodes) n.id: n.parentId};
-}
+Map<String, String?> hierarchyFromParentIds(List<HierarchyUtils> nodes) => {
+  for (final n in nodes) n.id: n.parentId,
+};

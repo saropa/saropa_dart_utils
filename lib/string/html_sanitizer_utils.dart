@@ -12,6 +12,5 @@ String sanitizeHtml(String html) {
 }
 
 /// Strips all HTML tags and returns plain text (no attributes or script content).
-String stripHtmlTags(String html) {
-  return html.replaceAll(RegExp(r'<[^>]+>'), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-}
+String stripHtmlTags(String html) =>
+    html.replaceAll(RegExp(r'<[^>]+>'), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();

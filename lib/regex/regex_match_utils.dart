@@ -5,9 +5,7 @@ String replaceAllWithCallback(
   String input,
   RegExp pattern,
   String Function(Match match) replace,
-) {
-  return input.replaceAllMapped(pattern, replace);
-}
+) => input.replaceAllMapped(pattern, replace);
 
 Map<String, String> namedGroupMap(RegExpMatch match) {
   final Map<String, String> out = <String, String>{};

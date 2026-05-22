@@ -33,6 +33,7 @@ Uri uriWithQueryParams(Uri uri, Map<String, String> add, {Set<String>? remove}) 
       params.remove(k);
     }
   }
+  // ignore: saropa_lints/prefer_spread_over_addall -- params is mutated by the removal loop above; not a one-shot literal construction
   params.addAll(add);
   return uri.replace(query: buildQueryString(params));
 }

@@ -28,6 +28,7 @@ List<int> parseHexToBytes(String hex) {
   final String h = hex.replaceAll(RegExp(r'\s'), '');
   if (h.length % 2 != 0) return <int>[];
   final List<int> out = <int>[];
+  // ignore: saropa_lints/prefer_correct_for_loop_increment -- steps by 2 to consume each hex byte (two chars) per iteration
   for (int i = 0; i < h.length; i += 2) {
     final int? b = int.tryParse(h.substringSafe(i, i + 2), radix: 16);
     if (b == null) return <int>[];
@@ -51,6 +52,7 @@ bool isAsciiOnly(String s) => s.codeUnits.every((int c) => c < 128);
 
 String truncateToByteLength(String s, int maxBytes) {
   final List<int> units = s.codeUnits;
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- loop accumulator that must persist across iterations; moving it inside the loop would reset the running byte count
   int len = 0;
   for (int i = 0; i < units.length; i++) {
     final int u = units[i];

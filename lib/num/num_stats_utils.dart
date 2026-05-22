@@ -22,6 +22,7 @@ double standardDeviation(Iterable<num> values, {bool isPopulation = false}) {
 }
 
 double? median(Iterable<num> values) {
+  // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort without mutating the caller's input
   final List<double> list = values.map((num n) => n.toDouble()).toList()..sort();
   if (list.isEmpty) return null;
   final int mid = list.length ~/ 2;
@@ -31,6 +32,7 @@ double? median(Iterable<num> values) {
 
 double? percentile(Iterable<num> values, double p) {
   if (p < 0 || p > 1) return null;
+  // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort without mutating the caller's input
   final List<double> list = values.map((num n) => n.toDouble()).toList()..sort();
   if (list.isEmpty) return null;
   if (list.length == 1) return list[0];

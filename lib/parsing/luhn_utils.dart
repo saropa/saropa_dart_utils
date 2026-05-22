@@ -3,8 +3,9 @@ bool luhnCheck(String digits) {
   const int minLength = 2;
   final String digitsOnly = digits.replaceAll(RegExp(r'\D'), '');
   if (digitsOnly.length < minLength) return false;
-  int sum = 0;
   bool isAlternate = false;
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulator summed across the loop and read after it
+  int sum = 0;
   for (int i = digitsOnly.length - 1; i >= 0; i--) {
     final int? digit = int.tryParse(digitsOnly[i]);
     if (digit == null) return false;

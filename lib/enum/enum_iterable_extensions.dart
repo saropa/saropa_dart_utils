@@ -7,9 +7,9 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   /// Returns a [MapEntry] with the most common value and its frequency,
   /// or `null` if the iterable is empty.
   ///
-  /// Dart's type system doesn’t allow us to return a strongly typed enum
+  /// Dart's type system doesn't allow us to return a strongly typed enum
   /// from a method that works with the base Enum type. This is because
-  /// Dart's generics are invariant, which means you can’t use a subtype
+  /// Dart's generics are invariant, which means you can't use a subtype
   /// (like ZodiacSigns) where a base type (like Enum) is expected.
   @useResult
   MapEntry<Enum, int>? mostOccurrences() {
@@ -21,7 +21,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
 
     for (final Enum item in this) {
       // Map.update is called for in-place mutation; no Future is involved
-      // ignore: require_future_error_handling
+      // ignore: saropa_lints/require_future_error_handling -- Map.update is synchronous; there is no future to handle
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 

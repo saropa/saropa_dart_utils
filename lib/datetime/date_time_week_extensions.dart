@@ -9,7 +9,8 @@ extension DateTimeWeekInMonthExtensions on DateTime {
     final int dayOfMonth = day;
     final DateTime first = DateTime(year, month);
     final int firstWeekday = first.weekday;
-    final int daysInFirstWeek = 8 - firstWeekday; // Sunday = 7
+    // weekday is Mon=1..Sun=7, so 8 - weekday gives remaining days in week 1
+    final int daysInFirstWeek = 8 - firstWeekday;
     if (dayOfMonth <= daysInFirstWeek) return 1;
     return ((dayOfMonth - daysInFirstWeek - 1) / 7).floor() + 2;
   }

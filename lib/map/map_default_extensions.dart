@@ -35,6 +35,7 @@ class MapDefaultExtensions<K extends Object, V extends Object> implements Map<K,
   Iterable<V> get values => _source.values;
 
   @override
+  // ignore: saropa_lints/prefer_spread_over_addall -- forwards the Map.addAll override to the wrapped source; no literal to spread
   void addAll(Map<K, V> other) => _source.addAll(other);
 
   @override

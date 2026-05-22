@@ -3,7 +3,7 @@ library;
 
 /// Strips Markdown markup and returns plain text (headers, lists as lines).
 String markdownToPlainText(String markdown) {
-  String s = markdown
+  final String s = markdown
       .replaceAllMapped(RegExp(r'^#{1,6}\s*', multiLine: true), (_) => '')
       .replaceAll(RegExp(r'\*\*?|__?|~~|`'), '')
       .replaceAllMapped(RegExp(r'\[([^\]]+)\]\([^)]+\)'), (m) => m.group(1) ?? '')

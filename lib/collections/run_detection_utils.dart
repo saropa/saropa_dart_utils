@@ -22,7 +22,7 @@ class RunDetectionUtils<T extends Object> {
 
   @override
   String toString() =>
-      'RunDetectionUtils(start: $_start, length: $_length, value: ${_value ?? "-"})';
+      'RunDetectionUtils(start: $_start, length: $_length, value: ${_value ?? '-'})';
 }
 
 /// Detects runs of equal consecutive values in [list].

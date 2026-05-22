@@ -27,8 +27,8 @@ import 'graph_utils.dart';
       if (color[i] == 0) i,
   ];
   final List<int> rightPart = [
-    for (int i = 0; i < graph.length; i++)
-      if (color[i] == 1) i,
+    for (int j = 0; j < graph.length; j++)
+      if (color[j] == 1) j,
   ];
   return (true, leftPart, rightPart);
 }

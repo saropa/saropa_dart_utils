@@ -11,7 +11,7 @@ List<(String, int, int)> detectPii(String text) {
   final List<RegExpMatch> emailMatches = email.allMatches(text).toList();
   final List<RegExpMatch> phoneMatches = phone.allMatches(text).toList();
   final int total = emailMatches.length + phoneMatches.length;
-  final List<(String, int, int)> out = List.generate(
+  return List.generate(
     total,
     (int index) {
       if (index < emailMatches.length) {
@@ -22,5 +22,4 @@ List<(String, int, int)> detectPii(String text) {
       return (_kPiiPatternPhone, m.start, m.end);
     },
   );
-  return out;
 }

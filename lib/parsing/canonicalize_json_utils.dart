@@ -6,6 +6,7 @@ Object? canonicalizeJson(Object? value) {
   if (value == null) return null;
   if (value is Map) {
     final Map<String, Object?> out = <String, Object?>{};
+    // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort the keys in place before iterating
     final List<String> keys = value.keys.map((k) => k.toString()).toList()..sort();
     for (final k in keys) {
       out[k] = canonicalizeJson(value[k]);

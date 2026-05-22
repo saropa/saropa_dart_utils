@@ -23,7 +23,7 @@ class StringPoolUtils {
       _pool.remove(evict);
     }
     _pool[s] = s;
-    if (_order != null) _order.add(s);
+    _order?.add(s);
     return s;
   }
 

@@ -5,6 +5,7 @@ Duration? parseDuration(String input) {
   final String s = input.trim().toLowerCase();
   if (s.isEmpty) return null;
   final RegExp part = RegExp(r'([\d.]+)\s*([dhms]|ms)\b');
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulator mutated across loop iterations and read after the loop
   int totalMs = 0;
   int start = 0;
   for (final RegExpMatch m in part.allMatches(s)) {

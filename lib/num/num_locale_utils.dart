@@ -36,8 +36,9 @@ String formatNumberLocale(
     sb.write(digits[i]);
   }
   if (parts.length > 1) {
-    sb.write('.');
-    sb.write(parts[1]);
+    sb
+      ..write('.')
+      ..write(parts[1]);
   }
   return sb.toString();
 }

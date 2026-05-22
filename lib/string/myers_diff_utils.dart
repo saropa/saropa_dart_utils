@@ -125,7 +125,9 @@ List<DiffOp> _mergeOps({
   required List<String> a,
   required List<String> b,
 }) {
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<DiffOp> result = List.filled(edits.length, DiffOp(DiffOpKind.equal, ''));
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- mutated across loop iterations; must be declared before it
   int resultIndex = 0;
   final StringBuffer buf = StringBuffer();
   int idx = 0;

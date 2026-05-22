@@ -1,7 +1,6 @@
 /// Async mutex with tryLock — roadmap #652.
 library;
 
-// ignore: require_ios_deployment_target_consistency
 import 'dart:async' show Completer;
 
 import 'package:saropa_dart_utils/async/async_semaphore_utils.dart' show AsyncAction;

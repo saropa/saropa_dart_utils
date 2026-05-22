@@ -8,11 +8,10 @@ import 'string_extensions.dart';
 List<String> characterNgrams(String s, int n) {
   if (n < 1 || s.length < n) return <String>[];
   final int count = s.length - n + 1;
-  final List<String> out = List.generate(count, (int i) {
+  return List.generate(count, (int i) {
     final int end = (i + n).clamp(0, s.length);
     return s.substringSafe(i, end);
   });
-  return out;
 }
 
 /// Returns word n-grams of [s] with [n] words per gram.
@@ -22,6 +21,5 @@ List<List<String>> wordNgrams(String s, int n) {
   final List<String> words = s.trim().split(RegExp(r'\s+'));
   if (words.isEmpty || words.length < n) return <List<String>>[];
   final int count = words.length - n + 1;
-  final List<List<String>> out = List.generate(count, (int i) => words.sublist(i, i + n));
-  return out;
+  return List.generate(count, (int i) => words.sublist(i, i + n));
 }

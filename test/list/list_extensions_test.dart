@@ -1,3 +1,4 @@
+// ignore_for_file: saropa_lints/prefer_setup_teardown -- per-test arrange kept explicit for readability; a shared setUp would hide each test's inputs
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/list/list_extensions.dart';
 

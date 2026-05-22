@@ -31,7 +31,9 @@ int rollingHashSearch(String text, String pattern) {
       return i;
     }
     if (i + pattern.length < text.length) {
+      // ignore: saropa_lints/avoid_string_concatenation_loop -- integer rolling-hash arithmetic, not string concatenation
       textHash = (textHash - text.codeUnitAt(i) * pow % _mod + _mod) % _mod;
+      // ignore: saropa_lints/avoid_string_concatenation_loop -- integer rolling-hash arithmetic, not string concatenation
       textHash = (textHash * _base + text.codeUnitAt(i + pattern.length)) % _mod;
     }
   }

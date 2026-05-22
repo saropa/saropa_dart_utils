@@ -4,6 +4,4 @@ import 'package:saropa_dart_utils/map/map_deep_merge_extensions.dart';
 Map<String, dynamic> copyWithDefaults(
   Map<String, dynamic> source,
   Map<String, dynamic> defaults,
-) {
-  return defaults.deepMerge(source);
-}
+) => defaults.deepMerge(source);

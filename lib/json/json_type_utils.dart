@@ -157,8 +157,7 @@ abstract final class JsonTypeUtils {
         (String w) {
           if (w.isEmpty) return w;
 
-          // Uses subscript because .first is not available on String
-          // ignore: prefer_list_first
+          // ignore: saropa_lints/prefer_list_first -- String has no .first; subscript [0] is the only way to read the first character
           return '${w[0].toUpperCase()}${w.substringSafe(1).toLowerCase()}';
         },
       )

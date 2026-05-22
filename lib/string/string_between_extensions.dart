@@ -121,16 +121,14 @@ extension StringBetweenExtensions on String {
       return null;
     }
 
-    final List<String> result = <String>[found.content];
     final List<String>? next = found.remaining?.betweenSplit(
       start,
       end,
       endOptional: endOptional,
       trim: trim,
     );
-    if (next != null) result.addAll(next);
 
-    return result;
+    return <String>[found.content, ...?next];
   }
 
   /// Returns a [BetweenResult] of content between [start] and [end]

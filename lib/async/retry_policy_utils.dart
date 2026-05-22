@@ -1,7 +1,7 @@
 /// Retry policy (fixed, backoff, jitter) — roadmap #656.
 library;
 
-import 'dart:async' show Future; // ignore: require_ios_deployment_target_consistency
+import 'dart:async' show Future;
 import 'dart:developer' show log;
 import 'dart:math' show Random;
 
@@ -28,6 +28,7 @@ Future<T> retryWithPolicy<T>(
     } on Object catch (e, st) {
       log('retryWithPolicy attempt $attempt', error: e);
       attempt++;
+      // ignore: saropa_lints/avoid_ignoring_return_values -- throwWithStackTrace returns Never; there is no value to capture
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       onRetry?.call(e, attempt);
       await Future<void>.delayed(delay);
@@ -51,6 +52,7 @@ Future<T> retryWithJitter<T>(
     } on Object catch (e, st) {
       log('retryWithJitter attempt $attempt', error: e);
       attempt++;
+      // ignore: saropa_lints/avoid_ignoring_return_values -- throwWithStackTrace returns Never; there is no value to capture
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       final int ms = base.inMilliseconds * (1 << attempt) + r.nextInt(jitter.inMilliseconds);
       await Future<void>.delayed(Duration(milliseconds: ms));

@@ -6,6 +6,7 @@ const String _kOriginalMessage = 'Original Message';
 /// Strips common reply patterns: lines starting with >, On ... wrote:, ----- Original Message -----.
 String stripEmailReplyQuotes(String body) {
   final List<String> lines = body.split('\n');
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- accumulates across the loop below; must be declared before it
   final List<String> out = [];
   bool isInQuote = false;
   for (final String line in lines) {

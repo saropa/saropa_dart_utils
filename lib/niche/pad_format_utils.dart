@@ -3,9 +3,7 @@ const String _kPadCharZero = '0';
 const String _kSizeZeroB = '0 B';
 const List<String> _kFileSizeUnits = <String>['B', 'KB', 'MB', 'GB', 'TB'];
 
-String padWithZeros(int value, int length) {
-  return value.toString().padLeft(length, _kPadCharZero);
-}
+String padWithZeros(int value, int length) => value.toString().padLeft(length, _kPadCharZero);
 
 String formatFileSize(int bytes, {int decimals = 1}) {
   if (bytes < 0) return '-${formatFileSize(-bytes, decimals: decimals)}';

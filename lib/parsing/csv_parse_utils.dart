@@ -1,8 +1,9 @@
 /// Parse one CSV line (handle quoted fields, commas inside quotes). Roadmap #141.
 List<String> parseCsvLine(String line, {String delimiter = ','}) {
-  final List<String> fields = <String>[];
   final StringBuffer current = StringBuffer();
   bool isInQuotes = false;
+  // ignore: saropa_lints/move_variable_closer_to_its_usage -- result accumulator appended across the loop and returned after it
+  final List<String> fields = <String>[];
   for (int i = 0; i < line.length; i++) {
     final String c = line[i];
     if (c == '"') {

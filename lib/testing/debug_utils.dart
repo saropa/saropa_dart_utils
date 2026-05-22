@@ -22,6 +22,7 @@ String prettyPrint(Object? obj, {int indent = 0}) {
 String dumpIterable(Iterable<dynamic> it, {int maxItems = 10}) {
   final List<dynamic> list = it.toList();
   if (list.length <= maxItems) return list.toString();
+  // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to render the truncated head as a list literal in toString
   return '${list.take(maxItems).toList()}... (${list.length} total)';
 }
 
