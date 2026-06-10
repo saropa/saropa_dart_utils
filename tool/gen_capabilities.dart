@@ -1,0 +1,355 @@
+// Generates CAPABILITIES.md — a per-symbol catalog of EVERY public declaration
+// under lib/, scraped from the Dart AST (not regex). Run after adding utilities:
+//
+//     dart run tool/gen_capabilities.dart
+//
+// Why the AST and not a regex scan: the previous Python generator only listed
+// declarations that happened to have a `///` doc block directly above them, so
+// any undocumented public symbol (e.g. the `DateConstants` container class) was
+// silently dropped, and constructor-call initializers were mislabeled (a field
+// `final Duration x = Duration(...)` showed up as a `Duration` constructor). The
+// analyzer's parsed AST knows each declaration's real name and kind exactly, so
+// the catalog is both complete (every public member) and correctly labeled.
+//
+// Output is grouped by category (top-level dir under lib/) then by file, each
+// file carrying its import path. The header is stamped with the package version
+// (read from pubspec.yaml) and the regen date so a snapshot is identifiable.
+
+import 'dart:io';
+
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/source/line_info.dart';
+
+const String barrel = 'saropa_dart_utils.dart';
+
+// Human label per top-level dir under lib/.
+const Map<String, String> categoryLabels = <String, String>{
+  'string': 'String', 'datetime': 'DateTime', 'iterable': 'Iterable',
+  'list': 'List', 'collections': 'Collections', 'graph': 'Graph',
+  'stats': 'Stats', 'validation': 'Validation', 'async': 'Async',
+  'num': 'Number', 'int': 'Integer', 'double': 'Double', 'bool': 'Bool',
+  'map': 'Map', 'parsing': 'Parsing', 'caching': 'Caching', 'url': 'URL & Path',
+  'niche': 'Niche', 'object': 'Object & Null', 'enum': 'Enum', 'json': 'JSON',
+  'base64': 'Base64', 'hex': 'Hex', 'html': 'HTML', 'uuid': 'UUID',
+  'random': 'Random', 'regex': 'Regex', 'gesture': 'Gesture', 'testing': 'Testing',
+};
+
+/// One catalog row: a public declaration with its kind and one-line summary.
+class Sym {
+  Sym(this.kind, this.name, this.target, this.description);
+
+  /// class / mixin / enum / extension / extension type / typedef / function /
+  /// method / getter / setter / operator / constructor / field / enum value.
+  final String kind;
+
+  /// The public identifier as declared (operators carry the `operator ` prefix,
+  /// named constructors are `Class.named`).
+  final String name;
+
+  /// For extensions: the type the extension is `on`; null otherwise.
+  final String? target;
+
+  /// First sentence of the doc comment, or '' when the symbol is undocumented.
+  final String description;
+}
+
+/// One file's contribution: its relative path, file-level purpose, and symbols.
+class FileSyms {
+  FileSyms(this.rel, this.purpose, this.symbols);
+  final String rel;
+  final String purpose;
+  final List<Sym> symbols;
+}
+
+/// Condenses a doc/comment blob to a single ≤160-char sentence for the table.
+String firstSentence(String? doc) {
+  if (doc == null) return '';
+  var text = doc.replaceAll(RegExp(r'\s+'), ' ').trim();
+  // Drop fenced code examples — the summary is prose only.
+  text = text.split('```').first.trim();
+  final Match? m = RegExp(r'\.(\s|$)').firstMatch(text);
+  if (m != null) text = text.substring(0, m.start + 1);
+  if (text.length > 160) text = '${text.substring(0, 157).trimRight()}...';
+  return text;
+}
+
+/// Joins a declaration's `///` doc tokens into one string (markers stripped).
+String? docText(AnnotatedNode node) {
+  final Comment? c = node.documentationComment;
+  if (c == null) return null;
+  final StringBuffer buf = StringBuffer();
+  for (final token in c.tokens) {
+    var line = token.lexeme;
+    if (line.startsWith('///')) {
+      line = line.substring(3);
+    } else if (line.startsWith('/**')) {
+      line = line.substring(3);
+    }
+    buf.write(' ');
+    buf.write(line.replaceFirst(RegExp(r'^\s*\*\s?'), '').trim());
+  }
+  return buf.toString();
+}
+
+/// File purpose = the first contiguous `///` block of leading comments, i.e. the
+/// top-of-file note that precedes the first token (stops at the first blank-line
+/// gap so a floating header is not merged with the first declaration's doc).
+String filePurpose(CompilationUnit unit) {
+  final LineInfo lineInfo = unit.lineInfo;
+  final List<String> lines = <String>[];
+  var prevLine = -1;
+  Token? token = unit.beginToken.precedingComments;
+  while (token != null) {
+    final int line = lineInfo.getLocation(token.offset).lineNumber;
+    final String lexeme = token.lexeme;
+    if (lexeme.startsWith('///')) {
+      // A gap (non-consecutive line) ends the leading block.
+      if (prevLine != -1 && line > prevLine + 1) break;
+      lines.add(lexeme.substring(3).trim());
+      prevLine = line;
+    } else if (lines.isNotEmpty) {
+      break;
+    }
+    token = token.next;
+  }
+  return firstSentence(lines.join(' '));
+}
+
+/// Members of a type body. Analyzer 11 moved members onto the body node
+/// (`BlockClassBody` / `EnumBody`); a primary-constructor `;` body has none.
+List<ClassMember> bodyMembers(AstNode? body) {
+  if (body is BlockClassBody) return body.members;
+  if (body is EnumBody) return body.members;
+  return const <ClassMember>[];
+}
+
+/// Appends rows for a class/mixin/enum/extension member (skips private names).
+/// [enclosing] is the owning type's name, used to label constructors — the
+/// member's AST parent is now the body node, not the declaration.
+void addMember(List<Sym> out, ClassMember m, String enclosing) {
+  if (m is MethodDeclaration) {
+    final String name = m.name.lexeme;
+    if (name.startsWith('_')) return;
+    final String kind = m.isGetter
+        ? 'getter'
+        : m.isSetter
+            ? 'setter'
+            : m.isOperator
+                ? 'operator'
+                : 'method';
+    final String label = m.isOperator ? 'operator $name' : name;
+    out.add(Sym(kind, label, null, firstSentence(docText(m))));
+  } else if (m is FieldDeclaration) {
+    for (final v in m.fields.variables) {
+      final String name = v.name.lexeme;
+      if (name.startsWith('_')) continue;
+      out.add(Sym('field', name, null, firstSentence(docText(m))));
+    }
+  } else if (m is ConstructorDeclaration) {
+    final String? named = m.name?.lexeme;
+    if (named != null && named.startsWith('_')) return;
+    // Default constructor is shown by its class name; named adds `.name`.
+    final String label = named == null ? enclosing : '$enclosing.$named';
+    out.add(Sym('constructor', label, null, firstSentence(docText(m))));
+  }
+}
+
+/// Extracts every public symbol declared at top level or as a type member.
+List<Sym> parseUnit(CompilationUnit unit) {
+  final List<Sym> out = <Sym>[];
+  for (final d in unit.declarations) {
+    if (d is ClassDeclaration) {
+      final String name = d.namePart.typeName.lexeme;
+      if (!name.startsWith('_')) {
+        out.add(Sym('class', name, null, firstSentence(docText(d))));
+      }
+      for (final m in bodyMembers(d.body)) {
+        addMember(out, m, name);
+      }
+    } else if (d is MixinDeclaration) {
+      final String name = d.name.lexeme;
+      if (!name.startsWith('_')) {
+        out.add(Sym('mixin', name, null, firstSentence(docText(d))));
+      }
+      for (final m in bodyMembers(d.body)) {
+        addMember(out, m, name);
+      }
+    } else if (d is EnumDeclaration) {
+      final String name = d.namePart.typeName.lexeme;
+      if (!name.startsWith('_')) {
+        out.add(Sym('enum', name, null, firstSentence(docText(d))));
+      }
+      final EnumBody body = d.body;
+      for (final c in body.constants) {
+        if (c.name.lexeme.startsWith('_')) continue;
+        out.add(Sym('enum value', c.name.lexeme, null, firstSentence(docText(c))));
+      }
+      for (final m in body.members) {
+        addMember(out, m, name);
+      }
+    } else if (d is ExtensionDeclaration) {
+      final String name = d.name?.lexeme ?? '(unnamed)';
+      final String? target = d.onClause?.extendedType.toSource();
+      out.add(Sym('extension', name, target, firstSentence(docText(d))));
+      for (final m in bodyMembers(d.body)) {
+        addMember(out, m, name);
+      }
+    } else if (d is FunctionDeclaration) {
+      final String name = d.name.lexeme;
+      if (name.startsWith('_')) continue;
+      final String kind = d.isGetter ? 'getter' : d.isSetter ? 'setter' : 'function';
+      out.add(Sym(kind, name, null, firstSentence(docText(d))));
+    } else if (d is TopLevelVariableDeclaration) {
+      for (final v in d.variables.variables) {
+        final String name = v.name.lexeme;
+        if (name.startsWith('_')) continue;
+        out.add(Sym('field', name, null, firstSentence(docText(d))));
+      }
+    } else if (d is TypeAlias) {
+      if (!d.name.lexeme.startsWith('_')) {
+        out.add(Sym('typedef', d.name.lexeme, null, firstSentence(docText(d))));
+      }
+    }
+  }
+  return out;
+}
+
+String importPath(String rel) => "package:saropa_dart_utils/${rel.replaceAll('\\', '/')}";
+
+String anchorFor(String cat) =>
+    cat.toLowerCase().replaceAll(' & ', '--').replaceAll(' ', '-');
+
+String escapeCell(String s) => s.replaceAll('|', r'\|');
+
+/// Reads the package version from pubspec.yaml, or null if unreadable. The
+/// publish workflow resolves the release version into pubspec.yaml before it
+/// regenerates this index, so the stamp matches the shipped version.
+String? readPubspecVersion(String root) {
+  try {
+    for (final line in File('$root/pubspec.yaml').readAsLinesSync()) {
+      final Match? m = RegExp(r'^version:\s*(\S+)').firstMatch(line);
+      if (m != null) return m.group(1);
+    }
+  } on FileSystemException {
+    // Non-fatal: the header simply omits the version.
+  }
+  return null;
+}
+
+void main() {
+  final String root = Directory.current.path;
+  final Directory lib = Directory('$root/lib');
+
+  // category label -> list of files with symbols.
+  final Map<String, List<FileSyms>> cats = <String, List<FileSyms>>{};
+  var totalFiles = 0;
+  var totalSyms = 0;
+
+  final List<File> dartFiles = lib
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where((f) => f.path.endsWith('.dart') && !f.path.endsWith(barrel))
+      .toList()
+    ..sort((a, b) => a.path.compareTo(b.path));
+
+  for (final file in dartFiles) {
+    final String rel = file.path
+        .substring(lib.path.length + 1)
+        .replaceAll('\\', '/');
+    final parsed =
+        parseString(content: file.readAsStringSync(), throwIfDiagnostics: false);
+    final List<Sym> syms = parseUnit(parsed.unit);
+    if (syms.isEmpty) continue;
+
+    final String topDir = rel.split('/').first;
+    final String cat = categoryLabels[topDir] ??
+        '${topDir[0].toUpperCase()}${topDir.substring(1)}';
+    cats
+        .putIfAbsent(cat, () => <FileSyms>[])
+        .add(FileSyms(rel, filePurpose(parsed.unit), syms));
+    totalFiles++;
+    totalSyms += syms.length;
+  }
+
+  final String? version = readPubspecVersion(root);
+  final DateTime now = DateTime.now();
+  final String today =
+      '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  final String releaseLabel =
+      version != null ? 'Release $version' : 'Release (version unknown)';
+
+  final List<String> out = <String>['# Capabilities Index', ''];
+  out
+    ..add('**$releaseLabel** · Generated $today')
+    ..add('')
+    ..add(
+      'A complete, per-symbol catalog of every public utility in '
+      '`saropa_dart_utils` — for teams evaluating or adopting the library. '
+      'Covers **$totalSyms public symbols** across **$totalFiles files**.',
+    )
+    ..add('')
+    ..add(
+      "Each file is independently importable for minimal bundle size "
+      "(`import 'package:saropa_dart_utils/<path>';`), or import the barrel "
+      "`package:saropa_dart_utils/saropa_dart_utils.dart` for everything.",
+    )
+    ..add('')
+    ..add(
+      '> Generated by `tool/gen_capabilities.dart` from the Dart AST under '
+      '`lib/` — every public declaration, documented or not. Run it after '
+      'adding utilities to keep this complete.',
+    )
+    ..add('')
+    ..add('---')
+    ..add('')
+    ..add('## Categories')
+    ..add('');
+
+  final List<String> sortedCats = cats.keys.toList()..sort();
+  for (final cat in sortedCats) {
+    final int count =
+        cats[cat]!.fold(0, (sum, fs) => sum + fs.symbols.length);
+    out.add('- [$cat](#${anchorFor(cat)}) — $count symbols');
+  }
+  out
+    ..add('')
+    ..add('---')
+    ..add('');
+
+  for (final cat in sortedCats) {
+    out
+      ..add('## $cat')
+      ..add('');
+    final List<FileSyms> files = cats[cat]!
+      ..sort((a, b) => a.rel.compareTo(b.rel));
+    for (final fs in files) {
+      out.add('### `${fs.rel}`');
+      if (fs.purpose.isNotEmpty) {
+        out
+          ..add('')
+          ..add(fs.purpose);
+      }
+      out
+        ..add('')
+        ..add("`import '${importPath(fs.rel)}';`")
+        ..add('')
+        ..add('| Symbol | Kind | Description |')
+        ..add('|--------|------|-------------|');
+      for (final s in fs.symbols) {
+        final String label = s.kind == 'extension' && s.target != null
+            ? '`${s.name}` on `${s.target}`'
+            : '`${s.name}`';
+        out.add('| $label | ${s.kind} | ${escapeCell(s.description)} |');
+      }
+      out.add('');
+    }
+    out
+      ..add('---')
+      ..add('');
+  }
+
+  File('$root/CAPABILITIES.md').writeAsStringSync('${out.join('\n')}\n');
+  stdout.writeln('Wrote CAPABILITIES.md: $totalSyms symbols, $totalFiles files');
+}

@@ -244,14 +244,18 @@ def regenerate_capabilities(project_dir: Path) -> None:
     release commit (`git add -A`), so the index can never ship stale. Failure is
     non-fatal — a hiccup in a docs-index regen must not block a release; it is
     surfaced as a warning instead.
+
+    Uses the AST-based `tool/gen_capabilities.dart` (run via `dart run`): the
+    Dart analyzer enumerates EVERY public declaration, not just doc-commented
+    ones, so the catalog is complete and correctly labeled.
     """
-    script = project_dir / "tool" / "gen_capabilities.py"
+    script = project_dir / "tool" / "gen_capabilities.dart"
     if not script.exists():
-        ui.print_warning("tool/gen_capabilities.py not found; skipping index regen.")
+        ui.print_warning("tool/gen_capabilities.dart not found; skipping index regen.")
         return
     ui.print_info("Regenerating CAPABILITIES.md index...")
     res = subprocess.run(
-        [sys.executable, str(script)],
+        ["dart", "run", "tool/gen_capabilities.dart"],
         cwd=project_dir,
         capture_output=True,
         text=True,

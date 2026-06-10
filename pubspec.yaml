@@ -2,7 +2,7 @@ name: saropa_dart_utils
 
 description: "280+ extension methods and utilities for Flutter/Dart. Null-safe string, DateTime, List, Map, and number operations that eliminate boilerplate."
 
-version: 1.3.0
+version: 1.4.0
 
 homepage: https://app.saropa.com
 
@@ -48,6 +48,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # Parses lib/ via the Dart AST so tool/gen_capabilities.dart can enumerate
+  # EVERY public declaration (not just doc-commented ones) for CAPABILITIES.md.
+  # Already resolved transitively via saropa_lints/custom_lint at this version;
+  # pinned here as a DIRECT dev_dependency because a tool/ script may not import
+  # a transitive-only package (same publish rule that meta/fake_async document).
+  analyzer: ^11.0.0
 
   # Controls virtual time in tests (debounce_utils_test, heartbeat_utils_test).
   # Must be a DIRECT dev_dependency, not transitive (it arrives via flutter_test):
