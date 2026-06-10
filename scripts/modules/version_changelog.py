@@ -6,6 +6,13 @@ from pathlib import Path
 
 from . import ui
 
+# Base of the per-release "[log]" link required at the top of every CHANGELOG
+# section. The maintenance note in CHANGELOG.md mandates each release open with
+# one plain-language line and close with `[log](<base>/v<X.Y.Z>/CHANGELOG.md)`
+# ([Unreleased] uses `main` in place of the tag). Centralized here so the
+# validator and the auto-fixer agree on the exact URL shape.
+LOG_LINK_BASE = "https://github.com/saropa/saropa_dart_utils/blob"
+
 
 def parse_version(version: str) -> tuple[int, int, int]:
     """Parse a version string into (major, minor, patch) tuple."""
@@ -140,6 +147,96 @@ def validate_changelog_version(project_dir: Path, version: str) -> str | None:
     if match:
         return match.group(1).strip()
     return ""
+
+
+def _release_section_bounds(content: str, version: str) -> tuple[int, int] | None:
+    """Locate a version's section body within the raw CHANGELOG text.
+
+    Returns (start, end) offsets spanning from just after the `## [version]`
+    header line up to the next `## ` header (any version) or EOF, or None when
+    the header is absent. The body is what carries the intro line, the log
+    link, and the `### Added` / `### Fixed` subsections.
+    """
+    header = re.search(
+        rf"##\s*\[?{re.escape(version)}\]?[^\n]*\n", content
+    )
+    if not header:
+        return None
+    start = header.end()
+    # The next top-level `## ` header ends this section; nothing below it belongs
+    # to `version`. Match a leading newline so a `##` mid-line cannot false-trip.
+    nxt = re.search(r"\n##\s", content[start:])
+    end = start + nxt.start() if nxt else len(content)
+    return start, end
+
+
+def has_release_intro(changelog_path: Path, version: str) -> bool:
+    """Report whether a version's section opens with a plain-language intro.
+
+    The maintenance note requires one casual, human-facing line before the
+    `### Added` / `### Changed` subsections. We scan the section head (above the
+    first `###`) for a non-empty line that is neither the `[log]` link nor a
+    bullet — that line is the intro. Returns False when the section is missing
+    or contains only the log link / bullets.
+    """
+    if not changelog_path.exists():
+        return False
+
+    content = changelog_path.read_text(encoding="utf-8")
+    bounds = _release_section_bounds(content, version)
+    if bounds is None:
+        return False
+
+    body = content[bounds[0] : bounds[1]]
+    # Only the text above the first `### ` subsection can hold the intro.
+    sub = re.search(r"\n###\s", body)
+    head = body[: sub.start()] if sub else body
+
+    for line in head.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        # The log link and bullet entries are not the human intro line.
+        if stripped.startswith("[log]"):
+            continue
+        if stripped.startswith(("-", "*")):
+            continue
+        return True
+    return False
+
+
+def update_log_link(changelog_path: Path, version: str) -> bool:
+    """Pin a version's `[log]` link to its release tag, rewriting in place.
+
+    The [Unreleased] template ships the link pointing at `main`; once the
+    section is versioned the link must point at `v<version>` so the published
+    pub.dev changelog deep-links to the tagged file. Rewrites any existing
+    `[log](<base>/.../CHANGELOG.md)` inside the section to the correct tag and
+    returns True. Returns False when no log link exists in the section (a
+    wholly missing link is the caller's to flag, not silently inserted).
+    """
+    if not changelog_path.exists():
+        return False
+
+    content = changelog_path.read_text(encoding="utf-8")
+    bounds = _release_section_bounds(content, version)
+    if bounds is None:
+        return False
+
+    start, end = bounds
+    body = content[start:end]
+    correct = f"[log]({LOG_LINK_BASE}/v{version}/CHANGELOG.md)"
+    # Match the whole existing log link (any ref: `main` or a stale `vA.B.C`)
+    # and replace just the link, leaving surrounding prose untouched.
+    pattern = r"\[log\]\(" + re.escape(LOG_LINK_BASE) + r"/[^)]*\)"
+    new_body, count = re.subn(pattern, correct, body, count=1)
+    if count == 0:
+        return False
+
+    if new_body != body:
+        content = content[:start] + new_body + content[end:]
+        changelog_path.write_text(content, encoding="utf-8")
+    return True
 
 
 def display_changelog(project_dir: Path) -> str | None:

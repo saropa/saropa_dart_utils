@@ -13,9 +13,7 @@
     The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-    Each release (and [Unreleased]) opens with one plain-language line for humans—user-facing only, casual wording—then end it with:
-    [log](https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md)
-    substituting X.Y.Z. ([Unreleased] uses `main` in place of the tag.)
+    **Overview** — Each release (and [Unreleased]) opens with one plain-language line for humans—user-facing only, casual wording—then end it with: [log](https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md) substituting X.Y.Z. ([Unreleased] uses `main` in place of the tag.)
 
     **Tagged changelog** — Published versions use git tag **`vx.y.z`**; compare to [current `main`](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md).
 
@@ -59,11 +57,13 @@ A handful of everyday helpers: skip nulls while mapping, a readable `none()` che
 
 ### Changed
 
+- **`publish.py` now regenerates `CAPABILITIES.md` automatically during release** (step 4, after the remote-sync check and before formatting), so the per-symbol index can never ship stale — the release commit stages it via `git add -A`. Non-fatal if the generator errors.
 - **`ROADMAP_TO_400.md` reached 400/400 and was archived to `plans/history/2026.06/2026.06.10/`.** All originally-outstanding items are implemented; `ROADMAP_TO_700.md` remains the active forward roadmap.
 - **README now carries a quality-standard banner** stating the bar every utility meets — world-class lint-clean code, detailed dartdoc on every public member, and comprehensive unit-test coverage.
 - **Hardened today's new utilities to that bar.** Documented the `LanguageRange` and `ByteRange` constructors, resolved trailing-comma lints in `deep_freeze_utils.dart`, and reworded two comments that tripped the commented-out-code heuristic. All 15 new files pass `dart analyze` (including `saropa_lints` and `public_member_api_docs`) with zero issues.
 - **Trimmed the published pub.dev tarball via `.pubignore`.** Repo-internal directories that no consumer needs — `test/`, `plans/` (130 files), `tool/`, `bugs/`, `reports/`, `scripts/`, and the `coverage/` artifact — are now excluded from the package. `lib/`, `example/`, `assets/`, and the standard README/CHANGELOG/LICENSE/pubspec files remain. Takes effect on the next release; does not alter the already-published 1.1.6.
 - **Every release in `CHANGELOG.md` and `CHANGELOG_HISTORY.md` now carries a plain-language opening line followed immediately by a `[log]` link to that version's tagged changelog** (`https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md`; `[Unreleased]` points at `main`). The maintenance-note template URL was corrected from the `saropa-log-capture` repo to `saropa_dart_utils`.
+- **`publish.py` (v2.8) now enforces the release-intro/log-link convention before publishing.** A new pre-check requires the release section to open with a plain-language intro line and pins its `[log]` link to the proposed version's tag (rewriting the `[Unreleased]` template's `main` reference to `vX.Y.Z` automatically). A missing intro prompts retry / ignore / abort, defaulting to retry so the operator can add it in an editor and re-check without restarting the run. New `version_changelog` helpers `has_release_intro` and `update_log_link` carry the logic.
 
 ---
 

@@ -33,28 +33,33 @@ This script automates the complete release workflow for a Dart/Flutter package.
     - Strips a "- Unreleased" placeholder off the current version's header
       (e.g. "## [1.1.1] - Unreleased" -> "## [1.1.1]") so the placeholder
       never reaches pub.dev
+    - Requires the release section to open with a plain-language intro line and
+      pins its "[log]" link to the proposed version's tag; a missing intro
+      prompts retry/ignore/abort (default retry)
     - Fails if version tag already exists on remote
 
   Numbered steps:
     1. Checks prerequisites (flutter, git, gh auth, publish workflow)
     2. Checks working tree status
     3. Checks remote sync
-    4. Formats code
-    5. Runs tests
-    6. Runs static analysis
-    7. Validates changelog has release notes
-    8. Generates documentation with dart doc
-    9. Pre-publish validation (dry-run)
-    10. Commits and pushes changes
-    11. Creates and pushes git tag
-    12. Triggers GitHub Actions publish to pub.dev
-    13. Creates GitHub release with release notes
-    14. Verifies the version actually reached pub.dev (polls the pub.dev API,
+    4. Regenerates CAPABILITIES.md (the per-symbol index) so it ships current;
+       the release commit (step 11) stages it automatically. Non-fatal.
+    5. Formats code
+    6. Runs tests
+    7. Runs static analysis
+    8. Validates changelog has release notes
+    9. Generates documentation with dart doc
+    10. Pre-publish validation (dry-run)
+    11. Commits and pushes changes
+    12. Creates and pushes git tag
+    13. Triggers GitHub Actions publish to pub.dev
+    14. Creates GitHub release with release notes
+    15. Verifies the version actually reached pub.dev (polls the pub.dev API,
         using the workflow run's conclusion as a fast-fail signal). The script
         only exits 0 once pub.dev serves the new version; a workflow that reports
         success while pub.dev got nothing exits PUBLISH_FAILED.
 
-Version:   2.7
+Version:   2.8
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
@@ -167,6 +172,97 @@ def run_audit_phase(project_dir: Path) -> None:
         ui.exit_with_error(
             "User aborted publication after audit.", ExitCode.AUDIT_FAILED
         )
+
+
+def validate_release_intro_phase(changelog_path: Path, version: str) -> None:
+    """Ensure the release section has a human intro and a version-pinned log link.
+
+    The CHANGELOG maintenance note requires every release to open with one
+    plain-language line and close with `[log](.../v<version>/CHANGELOG.md)`.
+    Two distinct treatments:
+      - Log link: mechanical. `update_log_link` rewrites an existing link
+        (the [Unreleased] template ships it pointing at `main`) to v{version},
+        so only a wholly missing link is flagged here.
+      - Intro line: hand-written prose the script cannot synthesize. A missing
+        one loops on retry / ignore / abort, defaulting to retry so the operator
+        can add it in an editor and re-check without restarting the run.
+    Returns when both are present (or the operator ignores); abort exits via
+    `ui.exit_with_error`.
+    """
+    while True:
+        # Pin the log link first so a re-check sees the corrected URL; the call
+        # also tells us whether any log link exists to pin.
+        link_ok = vc.update_log_link(changelog_path, version)
+        intro_ok = vc.has_release_intro(changelog_path, version)
+        if intro_ok and link_ok:
+            ui.print_success(
+                f"Release intro and v{version} log link present in CHANGELOG.md."
+            )
+            return
+
+        print()
+        if not intro_ok:
+            ui.print_warning(
+                f"No plain-language intro line found for v{version} in CHANGELOG.md."
+            )
+        if not link_ok:
+            ui.print_warning(
+                f"No [log] link found for v{version} in CHANGELOG.md."
+            )
+        ui.print_info(
+            "Each release opens with one casual, user-facing line, then ends with:"
+        )
+        ui.print_info(f"  [log]({vc.LOG_LINK_BASE}/v{version}/CHANGELOG.md)")
+
+        ui.print_colored("  Choose an action:", ui.Color.WHITE)
+        ui.print_colored(
+            "    r = retry  (re-check after you add it in an editor)", ui.Color.CYAN
+        )
+        ui.print_colored("    i = ignore (publish anyway)", ui.Color.CYAN)
+        ui.print_colored("    a = abort  (cancel publication)", ui.Color.CYAN)
+        # Default to retry: the intro is hand-written, so the likely next move is
+        # to add it and re-check, not to ship without it.
+        action = input("  Enter r, i, or a [r]: ").strip().lower() or "r"
+
+        if action.startswith("i"):
+            ui.print_warning("Ignoring missing intro/log link; continuing with publish.")
+            return
+        if action.startswith("a"):
+            ui.exit_with_error(
+                "User aborted publication: CHANGELOG release intro/log link missing.",
+                ExitCode.CHANGELOG_FAILED,
+            )
+        # Anything else (including the default) re-runs the check.
+        ui.print_info("Re-checking CHANGELOG.md...")
+
+
+def regenerate_capabilities(project_dir: Path) -> None:
+    """Regenerate CAPABILITIES.md so the published index reflects the current
+    public API.
+
+    Run unconditionally (no staleness gate): any change is picked up by the
+    release commit (`git add -A`), so the index can never ship stale. Failure is
+    non-fatal — a hiccup in a docs-index regen must not block a release; it is
+    surfaced as a warning instead.
+    """
+    script = project_dir / "tool" / "gen_capabilities.py"
+    if not script.exists():
+        ui.print_warning("tool/gen_capabilities.py not found; skipping index regen.")
+        return
+    ui.print_info("Regenerating CAPABILITIES.md index...")
+    res = subprocess.run(
+        [sys.executable, str(script)],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        shell=platform_mod.get_shell_mode(),
+        encoding="utf-8",
+        errors="replace",
+    )
+    if res.returncode != 0:
+        ui.print_warning(f"Index regeneration failed (continuing): {res.stderr.strip()}")
+        return
+    ui.print_success(res.stdout.strip() or "CAPABILITIES.md regenerated.")
 
 
 def main() -> int:
@@ -297,6 +393,12 @@ def main() -> int:
     if vc.strip_unreleased_suffix(changelog_path, version):
         ui.print_success(f"CHANGELOG.md: stripped '- Unreleased' from [{version}]")
 
+    # With the header now pinned to a concrete version, require the release
+    # section's human intro line and pin its [log] link to v{version} (the
+    # [Unreleased] template ships the link pointing at `main`). A missing intro
+    # loops on retry/ignore/abort; the log link is rewritten automatically.
+    validate_release_intro_phase(changelog_path, version)
+
     tag_name = f"v{version}"
     res = subprocess.run(
         ["git", "ls-remote", "--tags", "origin", f"refs/tags/{tag_name}"],
@@ -348,6 +450,10 @@ def main() -> int:
 
     if not workflow.check_remote_sync(project_dir, branch):
         ui.exit_with_error("Remote sync check failed", ExitCode.WORKING_TREE_FAILED)
+
+    # Regenerate the per-symbol index now (tree is already clean past the
+    # working-tree check); the release commit below stages it via `git add -A`.
+    regenerate_capabilities(project_dir)
 
     if not workflow.format_code(project_dir):
         ui.exit_with_error("Code formatting failed", ExitCode.VALIDATION_FAILED)
