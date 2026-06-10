@@ -381,6 +381,7 @@ export 'parsing/config_precedence_utils.dart';
 export 'parsing/csv_dialect_utils.dart';
 export 'parsing/parser_error_utils.dart';
 export 'parsing/canonicalize_json_utils.dart';
+export 'parsing/json_pretty_print_utils.dart';
 export 'parsing/changelog_section_utils.dart';
 export 'parsing/json_diff_patch_utils.dart';
 export 'parsing/nested_query_parser_utils.dart';

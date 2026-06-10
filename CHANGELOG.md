@@ -26,7 +26,7 @@ cspell:disable
 
 ## [Unreleased]
 
-New algorithmic utilities from the Roadmap-to-700 set: a forgiving JSON-to-model reader that reports every bad field at once.
+Ten new utilities from the Roadmap-to-700 set: a forgiving JSON-to-model reader, a CSV writer, a path-template matcher, stream zip/combine operators, multi-key grouping, a swappable cache interface with a write-through loader, date-format presets, ICU plural/select message lite, timing wrappers, and a JSON pretty-printer.
 [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
 
 ### Added
@@ -40,6 +40,7 @@ New algorithmic utilities from the Roadmap-to-700 set: a forgiving JSON-to-model
 - **`formatDateShort` / `formatDateMedium` / `formatDateLong` + `DateFormatNames`** ([date_format_preset_utils.dart](lib/datetime/date_format_preset_utils.dart)) — dashboard date presets without the `intl` dependency: short is ISO `2026-06-10` (locale-independent, sorts lexically), medium is `Jun 10, 2026`, long is `Wednesday, June 10, 2026`. Month/weekday names are injected via `DateFormatNames` (English default) so the presets render in any language while the layout stays fixed. Roadmap #615.
 - **`icuPlural` / `icuSelect`** ([icu_message_utils.dart](lib/string/icu_message_utils.dart)) — ICU MessageFormat lite: `icuPlural(count, {zero, one, other})` picks a plural form (English cardinal rules) and substitutes `#` with the count; `icuSelect(value, cases, {other})` picks a gendered/category form. No parser, no `intl`. Unlike `String.pluralize` (appends an `s`), these choose among caller-supplied, locale-routable forms. Roadmap #414.
 - **`observeAsync` / `observeSync`** ([observability_utils.dart](lib/async/observability_utils.dart)) — wrap an operation to measure its wall-clock duration and report the outcome through optional `onSuccess(elapsed, result)` / `onError(elapsed, error, stackTrace)` hooks (logging, metrics, tracing), returning the result unchanged or rethrowing the original error. Transparent: timing only, never swallows a failure. Roadmap #680.
+- **`prettyPrintJson`** ([json_pretty_print_utils.dart](lib/parsing/json_pretty_print_utils.dart)) — render decoded JSON as an indented string with a configurable `indent` width (`0` for compact single-line) and optional recursive `sortKeys` (via `canonicalizeJson`) for stable, diff-friendly output. Roadmap #436.
 
 ### Changed
 
