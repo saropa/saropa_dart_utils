@@ -37,6 +37,7 @@ export 'datetime/relative_date_bucket_utils.dart';
 export 'datetime/period_split_utils.dart';
 export 'datetime/injectable_clock_utils.dart';
 export 'datetime/timebox_exception.dart';
+export 'datetime/date_format_preset_utils.dart';
 
 // Double extensions
 export 'double/double_close_to_extensions.dart';
