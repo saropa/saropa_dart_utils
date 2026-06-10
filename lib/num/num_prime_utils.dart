@@ -31,6 +31,10 @@ List<int> primeFactors(int n) {
   if (n <= 1) return <int>[];
   final List<int> out = <int>[];
   int x = n.abs();
+  // Trial division: divide out each factor fully (the inner while) before moving
+  // on, so factors are emitted with multiplicity and in ascending order. Once a
+  // factor exceeds the running square root, any remainder above 1 is itself a
+  // prime (it can have no smaller factor left) and is appended below.
   for (int d = 2; d <= _isqrt(x); d++) {
     while (x % d == 0) {
       out.add(d);

@@ -72,6 +72,10 @@ List<SeqDiffOp<T>> diffSequences<T>(List<T> a, List<T> b) {
 }
 
 List<SeqDiffOp<T>> _backtrack<T>(List<T> a, List<T> b, List<List<int>> dp) {
+  // Walk the filled LCS table from the top-left to emit the edit script. On a
+  // match, both cursors advance (equal). On a mismatch, follow the larger
+  // neighbor: prefer delete when the down cell is at least the right cell,
+  // otherwise insert — the tie-break that keeps this consistent with the table.
   final List<SeqDiffOp<T>> ops = <SeqDiffOp<T>>[];
   int i = 0;
   int j = 0;

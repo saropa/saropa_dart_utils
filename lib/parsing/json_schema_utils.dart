@@ -52,6 +52,9 @@ class FieldSchema {
 }
 
 bool _typeMatches(JsonType type, Object value) {
+  // Maps each schema type to the Dart runtime check a decoded JSON value must
+  // satisfy. `integer` is stricter than `number` (int vs any num), and `any`
+  // accepts everything. Exhaustive over JsonType, so no default is needed.
   switch (type) {
     case JsonType.string:
       return value is String;
