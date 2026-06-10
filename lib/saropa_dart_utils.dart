@@ -366,6 +366,7 @@ export 'async/heartbeat_utils.dart';
 export 'async/async_more_utils.dart';
 export 'async/stream_combine_utils.dart';
 export 'async/observability_utils.dart';
+export 'async/task_scheduler_utils.dart';
 
 // Parsing and validation
 export 'parsing/csv_parse_utils.dart';
