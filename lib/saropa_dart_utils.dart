@@ -47,6 +47,7 @@ export 'double/double_iterable_extensions.dart';
 export 'enum/enum_iterable_extensions.dart';
 
 // Gesture utilities
+export 'gesture/gesture_utils.dart';
 export 'gesture/swipe_properties.dart';
 
 // Hex utilities
@@ -64,13 +65,25 @@ export 'int/int_utils.dart';
 
 // Iterable extensions
 export 'iterable/comparable_iterable_extensions.dart';
+export 'iterable/iterable_cartesian_extensions.dart';
+export 'iterable/iterable_diff_extensions.dart';
 export 'iterable/iterable_extensions.dart';
+export 'iterable/iterable_first_last_extensions.dart';
+export 'iterable/iterable_flatten_deep_extensions.dart';
 export 'iterable/iterable_flatten_extensions.dart';
+export 'iterable/iterable_group_by_extensions.dart';
+export 'iterable/iterable_indexed_extensions.dart';
 export 'iterable/iterable_list_ops_extensions.dart';
 export 'iterable/iterable_map_not_null_extensions.dart';
+export 'iterable/iterable_min_max_extensions.dart';
+export 'iterable/iterable_more_extensions.dart';
 export 'iterable/iterable_none_extensions.dart';
+export 'iterable/iterable_pairs_extensions.dart';
+export 'iterable/iterable_sort_extensions.dart';
+export 'iterable/iterable_split_extensions.dart';
 export 'iterable/iterable_stable_sort_extensions.dart';
 export 'iterable/iterable_sum_by_extensions.dart';
+export 'iterable/iterable_symmetric_diff_extensions.dart';
 export 'iterable/occurrence.dart';
 export 'iterable/run_length_utils.dart';
 
@@ -169,6 +182,8 @@ export 'list/make_list_extensions.dart';
 export 'list/unique_list_extensions.dart';
 export 'list/list_lower_extensions.dart';
 export 'list/list_default_empty_extensions.dart';
+export 'list/list_shuffle_seeded_extensions.dart';
+export 'list/list_top_k_extensions.dart';
 
 // Map extensions and utilities
 export 'map/deep_equality_utils.dart';
@@ -337,6 +352,7 @@ export 'async/idempotent_async_utils.dart';
 export 'async/stream_window_utils.dart';
 export 'async/stream_debounce_utils.dart';
 export 'async/heartbeat_utils.dart';
+export 'async/async_more_utils.dart';
 
 // Parsing and validation
 export 'parsing/csv_parse_utils.dart';
