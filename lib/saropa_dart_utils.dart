@@ -41,6 +41,7 @@ export 'datetime/date_format_preset_utils.dart';
 export 'datetime/rrule_parse_utils.dart';
 export 'datetime/recurrence_iterator_utils.dart';
 export 'datetime/business_calendar_utils.dart';
+export 'datetime/iso_interval_parse_utils.dart';
 
 // Double extensions
 export 'double/double_close_to_extensions.dart';
