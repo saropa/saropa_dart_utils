@@ -28,10 +28,14 @@ String? _secondsPart(
   bool isIncludeSeconds,
   bool isShort,
 ) {
+  // Caller opted out of seconds entirely.
   if (!isIncludeSeconds) return null;
+  // Normal case: a non-zero seconds component, singular/plural or short form.
   if (seconds > 0) {
     return isShort ? '${seconds}s' : '$seconds ${seconds == 1 ? _kSecond : _kSeconds}';
   }
+  // Special "0 seconds" label only when nothing else was emitted and the whole
+  // duration is zero — so a duration like 5 minutes does not append "0 seconds".
   if (parts.isEmpty && d.inSeconds == 0) return isShort ? _kZeroS : _kZeroSeconds;
   return null;
 }

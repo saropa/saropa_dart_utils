@@ -10,12 +10,15 @@ void bfs(
   void Function(int node, int depth) visit, {
   int maxDepth = -1,
 }) {
+  // Breadth-first: a FIFO queue of (node, depth) pairs. Mark each node seen
+  // when it is ENQUEUED, not when visited, so it can never be queued twice.
   final List<bool> seen = List.filled(graph.length, false);
   final List<(int, int)> queue = <(int, int)>[(start, 0)];
   seen[start] = true;
   while (queue.isNotEmpty) {
     final (int u, int d) = queue.removeAt(0);
     visit(u, d);
+    // Stop descending past the optional depth bound, but still finish the queue.
     if (maxDepth >= 0 && d >= maxDepth) continue;
     for (final int v in graph[u]) {
       if (!seen[v]) {

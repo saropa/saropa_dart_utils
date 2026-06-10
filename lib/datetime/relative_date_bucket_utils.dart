@@ -9,6 +9,10 @@ const String _kOlder = 'older';
 
 /// Bucket label for [date] relative to [today]. Returns short label.
 String relativeDateBucket(DateTime date, DateTime today) {
+  // Compare date-only (drop the time component) so the bucket reflects calendar
+  // days, not elapsed 24-hour spans — otherwise "this morning vs last night"
+  // could misbucket. Buckets are checked nearest-first and are mutually
+  // exclusive by the ascending day thresholds.
   final DateTime d = DateTime(date.year, date.month, date.day);
   final DateTime t = DateTime(today.year, today.month, today.day);
   final int days = t.difference(d).inDays;

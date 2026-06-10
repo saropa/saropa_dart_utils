@@ -5,12 +5,16 @@ import 'graph_utils.dart';
 
 /// Returns shortest distances from [source] to all nodes; unreachable = infinity.
 List<double> dijkstraDistances(WeightedAdjacency graph, int source) {
+  // Dijkstra from a single source; assumes non-negative edge weights.
   final List<double> dist = List.filled(graph.length, double.infinity);
   dist[source] = 0;
+  // `heap` is the frontier; sorting it each pass to pop the nearest node is a
+  // simple stand-in for a real priority queue (fine for modest graphs).
   final List<int> heap = <int>[source];
   while (heap.isNotEmpty) {
     heap.sort((int a, int b) => dist[a].compareTo(dist[b]));
     final int u = heap.removeAt(0);
+    // Relax each outgoing edge; only enqueue v if this gives a shorter path.
     for (final (int v, double w) in graph[u]) {
       final double d = dist[u] + w;
       if (d < dist[v]) {
