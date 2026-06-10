@@ -411,6 +411,7 @@ export 'parsing/cron_utils.dart';
 export 'parsing/json_path_utils.dart';
 export 'parsing/range_header_utils.dart';
 export 'parsing/ini_parser_utils.dart';
+export 'parsing/expression_evaluator_utils.dart';
 
 // URL and path utilities
 export 'url/path_extension_utils.dart';
