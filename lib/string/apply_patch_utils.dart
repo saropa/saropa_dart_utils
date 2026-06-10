@@ -99,20 +99,27 @@ ApplyPatchUtils applyPatch(String baseText, List<DiffOp> ops) {
   return ApplyPatchSuccess(out.toString());
 }
 
+// Splits into lines that RETAIN their trailing newline (each piece includes its
+// own '\n'), so re-joining reproduces the original exactly. A final unterminated
+// segment is emitted without a newline. Patch logic relies on this round-trip.
 List<String> _splitLines(String s) {
   if (s.isEmpty) return <String>[];
   final List<String> out = <String>[];
   int start = 0;
   for (int i = 0; i < s.length; i++) {
+    // Cut just past each newline so the delimiter stays attached to its line.
     if (s[i] == '\n') {
       out.add(s.substringSafe(start, i + 1));
       start = i + 1;
     }
   }
+  // Trailing text with no final newline becomes the last (newline-less) line.
   if (start < s.length) out.add(s.substringSafe(start));
   return out;
 }
 
+// Same newline-retaining split as _splitLines, used when turning a patch op's
+// text back into lines (kept separate for call-site clarity in the patch code).
 List<String> _opToLines(String text) {
   if (text.isEmpty) return <String>[];
   final List<String> out = <String>[];

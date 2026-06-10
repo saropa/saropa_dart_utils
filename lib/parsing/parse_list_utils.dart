@@ -52,17 +52,23 @@ Object? _jsonDecode(String s) {
   return out;
 }
 
+// Reads a double-quoted element starting at the opening quote ([start]) and
+// returns (unquoted value, index just past the closing quote). A backslash
+// escapes the next character, so an embedded quote or comma is taken literally
+// rather than ending the element.
 (String, int) _parseQuotedElement(String inner, int start) {
   final StringBuffer sb = StringBuffer();
   int i = start + 1;
   while (i < inner.length && inner[i] != '"') {
     if (inner[i] == '\\') {
+      // Escape: skip the backslash and take the following char verbatim.
       i++;
       if (i < inner.length) sb.write(inner[i++]);
     } else {
       sb.write(inner[i++]);
     }
   }
+  // Step past the closing quote when present (clamped if the string was unterminated).
   final int next = i < inner.length ? i + 1 : i;
   return (sb.toString(), next);
 }
