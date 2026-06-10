@@ -424,6 +424,7 @@ export 'url/url_extensions.dart';
 export 'url/url_query_utils.dart';
 export 'url/url_canonicalize_utils.dart';
 export 'url/uri_pattern_utils.dart';
+export 'url/url_template_utils.dart';
 export 'url/path_more_utils.dart';
 
 // UUID utilities
