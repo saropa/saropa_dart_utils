@@ -2,10 +2,14 @@
 String pathJoin(Iterable<String> segments) {
   final List<String> parts = <String>[];
   for (final String s in segments) {
+    // Normalize each segment to forward slashes, collapse runs of '/', and trim.
     final String t = s.replaceAll(r'\', '/').replaceAll(RegExp(r'/+'), '/').trim();
+    // Drop no-op segments: empty and '.' (current dir) contribute nothing.
     if (t.isEmpty) continue;
     if (t == '.') continue;
     if (t == '..') {
+      // '..' pops the previous segment. NOTE: a leading '..' with nothing to pop
+      // is discarded — this join does not emit leading parent references.
       if (parts.isNotEmpty) parts.removeLast();
       continue;
     }

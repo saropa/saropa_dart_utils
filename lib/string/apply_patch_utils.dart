@@ -125,11 +125,13 @@ List<String> _opToLines(String text) {
   final List<String> out = <String>[];
   int start = 0;
   for (int i = 0; i < text.length; i++) {
+    // Cut just past each newline so the delimiter stays attached to its line.
     if (text[i] == '\n') {
       out.add(text.substringSafe(start, i + 1));
       start = i + 1;
     }
   }
+  // Trailing text without a final newline becomes the last line.
   if (start < text.length) out.add(text.substringSafe(start));
   return out;
 }

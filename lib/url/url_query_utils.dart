@@ -2,6 +2,8 @@
 Map<String, String> parseQueryString(String query) {
   final Map<String, String> out = <String, String>{};
   if (query.isEmpty) return out;
+  // Split on '&' into pairs, then on the FIRST '=' into key/value so a value
+  // containing '=' is preserved. Both sides are percent-decoded.
   for (final String pair in query.split('&')) {
     final int eq = pair.indexOf('=');
     if (eq != -1) {
@@ -9,6 +11,7 @@ Map<String, String> parseQueryString(String query) {
         pair.replaceRange(0, eq + 1, ''),
       );
     } else if (pair.isNotEmpty) {
+      // A bare token with no '=' is a flag key with an empty value.
       out[Uri.decodeComponent(pair)] = '';
     }
   }

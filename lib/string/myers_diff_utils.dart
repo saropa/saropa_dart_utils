@@ -47,11 +47,14 @@ abstract final class MyersDiffUtils {
     return _mergeOps(edits: raw, a: a, b: b);
   }
 
+  // Splits into lines that keep their trailing newline, so the diff can rejoin
+  // tokens into exactly the original text. A final newline-less segment is kept.
   static List<String> _splitLines(String s) {
     if (s.isEmpty) return <String>[];
     final List<String> out = <String>[];
     int start = 0;
     for (int i = 0; i < s.length; i++) {
+      // End each line one past its newline so the delimiter stays attached.
       if (s[i] == '\n') {
         final int end = (i + 1).clamp(0, s.length);
         out.add(s.substringSafe(start, end));
