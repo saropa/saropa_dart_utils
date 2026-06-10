@@ -247,6 +247,22 @@ _TYPE_DECL_RE = re.compile(
 _PRIVATE_CTOR_RE = re.compile(r"\.\_\w*\s*\(")
 
 
+def _enclosing_type_name(lines_arr: list[str], line_1based: int) -> str | None:
+    """Return the name of the type that lexically encloses the declaration at
+    `line_1based`, or None if it is top-level. Used to recognize constructors
+    (whose name equals the enclosing type)."""
+    i = line_1based - 2
+    while i >= 0:
+        line = lines_arr[i]
+        if line.startswith("}"):
+            return None
+        m = _TYPE_DECL_RE.match(line)
+        if m:
+            return m.group(1)
+        i -= 1
+    return None
+
+
 def _is_nonpublic_decl(lines_arr: list[str], line_1based: int, name: str) -> bool:
     """True if a declaration is not part of the public API.
 
@@ -274,6 +290,30 @@ def _is_nonpublic_decl(lines_arr: list[str], line_1based: int, name: str) -> boo
             return m.group(1).startswith("_")
         i -= 1
     return False
+
+
+def _dartdoc_header_lines(lines_arr: list[str], decl_line_1based: int) -> int:
+    """Count the `///` dartdoc lines immediately above a declaration (skipping
+    blank lines, `//` comments, annotations, and multi-line signature
+    continuations). Used to credit header documentation toward a function's
+    explanation budget in the inline-comment check."""
+    count = 0
+    i = decl_line_1based - 2
+    while i >= 0:
+        stripped = lines_arr[i].strip()
+        if stripped.startswith("///"):
+            count += 1
+            i -= 1
+        elif (
+            stripped == ""
+            or stripped.startswith("//")
+            or stripped.startswith("@")
+            or stripped.endswith((")", ">", ","))
+        ):
+            i -= 1
+        else:
+            break
+    return count
 
 
 def _section(lines: list[str], title: str) -> list[str]:
@@ -438,21 +478,36 @@ def _method_ranges(content: str) -> list[tuple[int, int, str]]:
         name = parsed[0] if parsed else ""
         if name:
             decl_line_1based = i + 1
-            depth = 0
+            # Find the body span. Track paren depth so that named-parameter
+            # braces (`{ ... }` inside the parameter list) and multi-line
+            # signatures do not prematurely close the range — only braces at
+            # paren depth 0 are body braces. Expression/abstract bodies have no
+            # body brace, so they end at the first top-level `;`.
+            paren = 0
+            brace = 0
+            seen_body = False
+            end_line = None
             for j in range(i, len(lines)):
-                for c in lines[j]:
-                    if c == "{":
-                        depth += 1
-                    elif c == "}":
-                        depth -= 1
-                if depth < 0:
+                for c in _strip_strings(_strip_line_comment(lines[j])):
+                    if c == "(":
+                        paren += 1
+                    elif c == ")":
+                        paren -= 1
+                    elif paren <= 0 and c == "{":
+                        brace += 1
+                        seen_body = True
+                    elif paren <= 0 and c == "}":
+                        brace -= 1
+                        if seen_body and brace <= 0:
+                            end_line = j + 1
+                            break
+                    elif paren <= 0 and c == ";" and not seen_body:
+                        # Expression-bodied (`=> ...;`) or abstract (`;`) member.
+                        end_line = j + 1
+                        break
+                if end_line is not None:
                     break
-                if depth == 0 and j > i:
-                    ranges.append((decl_line_1based, j + 1, name))
-                    break
-            else:
-                if depth != 0:
-                    ranges.append((decl_line_1based, len(lines), name))
+            ranges.append((decl_line_1based, end_line or len(lines), name))
         i += 1
 
     # Drop declarations nested inside another declaration's body — local
@@ -498,6 +553,11 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
             # named constructors, and members of private types — together ~half
             # the false positives in this check.
             if _is_nonpublic_decl(lines_arr, start_line, name):
+                continue
+            # A constructor (name == enclosing type) is documented by the type's
+            # own dartdoc; `public_member_api_docs` does not require a separate
+            # doc on it, so neither should this check.
+            if name == _enclosing_type_name(lines_arr, start_line):
                 continue
             doc_lines = []
             is_override = False
@@ -782,6 +842,13 @@ def audit_code_comments(
             # Trivial methods are exempt from the inline-comment requirement.
             if constructs < _MIN_CONSTRUCTS_FOR_COMMENT:
                 continue
+            # Credit the dartdoc header toward the WHY budget: the project policy
+            # is "comment WHY", and for cohesive algorithmic utilities the why
+            # often lives in a multi-line `///` header rather than inline. A
+            # function whose header explains its approach is documented; this
+            # check should flag only functions under-explained RELATIVE to their
+            # complexity, counting header + inline together.
+            comments += _dartdoc_header_lines(lines_arr, start_line)
             ratio = comments / constructs
             if ratio < _MIN_COMMENT_RATIO:
                 shortfall = constructs - comments
