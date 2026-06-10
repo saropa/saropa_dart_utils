@@ -2,7 +2,7 @@ name: saropa_dart_utils
 
 description: "280+ extension methods and utilities for Flutter/Dart. Null-safe string, DateTime, List, Map, and number operations that eliminate boilerplate."
 
-version: 1.1.6
+version: 1.2.0
 
 homepage: https://app.saropa.com
 
@@ -64,7 +64,7 @@ dev_dependencies:
   # 1,000+ lint rules for Flutter and Dart. Free. Open source.
   # https://pub.dev/packages/saropa_lints/changelog
   # e.g. dart run saropa_lints:init --tier essential
-  saropa_lints: ^13.10.3
+  saropa_lints: ^13.12.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

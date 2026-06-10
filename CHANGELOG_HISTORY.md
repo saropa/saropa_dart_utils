@@ -10,11 +10,151 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **pub.dev** - [saropa_dart_utils](https://pub.dev/packages/saropa_dart_utils)
 
+## [1.0.5] - 2026-01-08
+
+We rewrote the README with before/after examples and real-world use cases so it’s easier to see what the library does and whether it fits your project.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.5/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+**Documentation**
+
+- Rewrote README with compelling production-proven messaging
+- Added before/after code comparison table
+- Added real-world use cases section
+- Improved About section with library origin story
+
+</details>
+
+## [1.0.4] - 2026-01-08
+
+We fixed a flaky date/time test that sometimes failed in CI. Your test runs should be more reliable now.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.4/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+**Tests**
+
+- Fix flaky DateTime test race condition in CI
+
+</details>
+
+## [1.0.3] - 2026-01-07
+
+We updated the GitHub Actions publish workflow to use OIDC authentication. Publishing to pub.dev works with the current GitHub setup again.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.3/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+**Build/tooling**
+
+- Fix GitHub Actions publish workflow for OIDC authentication
+
+</details>
+
+## [1.0.2] - 2026-01-07
+
+We added a banner to the README so the project is easier to spot at a glance.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.2/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+**Documentation**
+
+- Added a banner to README.md
+
+</details>
+
+## [1.0.0] - 2026-01-07
+
+First stable 1.0: we switched to the MIT license for broader use, turned on the full saropa_lints tier for quality, and added README badges so you can see pub points, method count, and coverage at a glance.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.0/CHANGELOG.md)
+
+### Changed
+
+- Migrated from GPL v3 to MIT license for broader adoption
+
+<details><summary>Maintenance</summary>
+
+**Lint**
+
+- Upgraded saropa_lints from `recommended` to `insanity` tier (all 500+ rules enabled)
+
+**Documentation**
+
+- Pub points badge (dynamic from pub.dev)
+- Methods count badge (480+ methods)
+- Coverage badge (100%)
+- Organized badge assets into `assets/badges/` folder
+
+</details>
+
+## [0.5.12] - 2026-01-05
+
+We switched to the saropa_lints package and custom_lint, and trimmed the analysis config from 255 lines to 69. You get the same level of checking with less to maintain.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.12/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+**Build/tooling**
+
+- Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
+- Added `custom_lint: ^0.8.0` for custom lint rule support
+- Configured `recommended` tier (~150 rules)
+- Simplified `analysis_options.yaml` from 255 lines to 69 lines
+- Removed manually flattened flutter_lints/recommended/core rules
+
+</details>
+
+## [0.5.11]
+
+We added utilities for Base64 compression, UUID validation and formatting, HTML unescape and plain text, and double formatting (percentages, precision, clamping). All of it is covered by 103 new tests.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.11/CHANGELOG.md)
+
+### Added
+
+- `Base64Utils` - Text compression and decompression (`compressText`, `decompressText`)
+- `UuidUtils` - UUID validation and manipulation (`isUUID`, `addHyphens`, `removeHyphens`)
+- `HtmlUtils` - HTML text processing (`unescape`, `removeHtmlTags`, `toPlainText`)
+- `DoubleExtensions` - Double formatting (`hasDecimals`, `toPercentage`, `formatDouble`, `forceBetween`, `toPrecision`, `formatPrecision`)
+
+<details><summary>Maintenance</summary>
+
+**Tests**
+
+- 103 test cases covering all new utilities
+
+</details>
+
+## [0.5.10] - 2025-12-11
+
+We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync. Releases are safer and easier to script from CI.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.10/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+**Build/tooling**
+
+- `-Version` parameter for CI/CD automation in publish script
+- `-Branch` parameter to specify target branch
+- Pre-publish validation step (`flutter pub publish --dry-run`)
+- `flutter analyze` step before publishing
+- Working tree status check with user confirmation
+- Remote sync check to prevent publishing when behind remote
+- Early CHANGELOG version validation
+- Step numbering in publish script (was skipping from 4 to 6)
+- `ErrorActionPreference` issue with try/catch for GitHub release check
+- Dynamic package name and repo URL extraction from pubspec.yaml and git remote
+- Excluded example folder from parent analysis
+
+</details>
+
 ---
 
 ## [0.5.9] - 2025-11-25
 
 We added an `allowEmpty` option to JSON validation and made string methods (substring, truncate, lastChars) use grapheme clusters so emoji and Unicode behave correctly. **Note:** indices are now grapheme-based—a breaking change if you relied on code-unit positions.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.9/CHANGELOG.md)
 
 ### Added
 
@@ -52,6 +192,7 @@ We added an `allowEmpty` option to JSON validation and made string methods (subs
 ## [0.5.8] - 2025-11-25
 
 We made the publish script handle git tags and GitHub releases idempotently. You can re-run it after a partial run without it failing.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.8/CHANGELOG.md)
 
 <details><summary>Maintenance</summary>
 
@@ -66,6 +207,7 @@ We made the publish script handle git tags and GitHub releases idempotently. You
 ## [0.5.7] - 2025-11-25
 
 We fixed string extraction (curly braces, line breaks), made word removal Unicode-aware, and improved the grammar and article rules. Text handling should be more accurate now.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.7/CHANGELOG.md)
 
 ### Fixed
 
@@ -83,6 +225,7 @@ We fixed string extraction (curly braces, line breaks), made word removal Unicod
 ## [0.5.6]
 
 We added URL/URI extensions so you can check HTTPS, add or get query parameters, and replace the host. Handy when building or validating links.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.6/CHANGELOG.md)
 
 ### Added
 
@@ -95,6 +238,7 @@ We added URL/URI extensions so you can check HTTPS, add or get query parameters,
 ## [0.5.5] - 2025-11-25
 
 A big release: JSON and map utilities, URL extensions, string extraction and search, date constants, and many new DateTime and string helpers. We added tests too—over 2,850 in total.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.5/CHANGELOG.md)
 
 ### Added
 
@@ -122,6 +266,7 @@ A big release: JSON and map utilities, URL extensions, string extraction and sea
 ## [0.5.4]
 
 We fixed range and date logic (inclusive boundaries, year boundaries), list comparison, hex overflow, and string truncation. Added 110 tests so the fixes stay solid.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.4/CHANGELOG.md)
 
 ### Fixed
 
@@ -148,6 +293,7 @@ We fixed range and date logic (inclusive boundaries, year boundaries), list comp
 ## [0.5.3] - 2025-11-12
 
 We tuned regex usage in string utils and improved the docs for the random and list helpers. A small polish release.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.3/CHANGELOG.md)
 
 ### Changed
 
@@ -164,6 +310,7 @@ We tuned regex usage in string utils and improved the docs for the random and li
 ## [0.5.2] - 2025-08-19
 
 We renamed the string extension type to `StringExtensions` for consistency. Behavior is unchanged; only the type name is different.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.2/CHANGELOG.md)
 
 ### Changed
 
@@ -172,6 +319,7 @@ We renamed the string extension type to `StringExtensions` for consistency. Beha
 ## [0.5.1] - 2025-08-19
 
 We merged all string extension methods into one file and added a full test suite. Imports and structure are simpler.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.1/CHANGELOG.md)
 
 <details><summary>Maintenance</summary>
 
@@ -190,6 +338,7 @@ We merged all string extension methods into one file and added a full test suite
 ## [0.5.0] - 2025-08-19
 
 We added extensions for numbers (e.g. clamping), lists (order-agnostic comparison), and strings (safer number parsing), and refactored names and tests for consistency.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.5.0/CHANGELOG.md)
 
 ### Added
 
@@ -211,6 +360,7 @@ We added extensions for numbers (e.g. clamping), lists (order-agnostic compariso
 ## [0.4.4] - 2025-08-18
 
 We split the string code into smaller files and added unique-list and number-range utilities. The layout is clearer and you get a few new helpers.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.4.4/CHANGELOG.md)
 
 ### Added
 
@@ -235,6 +385,7 @@ We split the string code into smaller files and added unique-list and number-ran
 ## [0.4.3] - 2025-02-24
 
 We added framework-style extensions for primitives (num, string, etc.), set line length to 100, and removed the VGV spelling lists.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.4.3/CHANGELOG.md)
 
 ### Added
 
@@ -252,6 +403,7 @@ We added framework-style extensions for primitives (num, string, etc.), set line
 ## [0.4.2] - 2025-02-24
 
 A small maintenance release: minor improvements and fixes.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.4.2/CHANGELOG.md)
 
 ### Changed
 
@@ -260,6 +412,7 @@ A small maintenance release: minor improvements and fixes.
 ## [0.4.1] - 2025-02-13
 
 Another small maintenance release: minor improvements and fixes.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.4.1/CHANGELOG.md)
 
 ### Changed
 
@@ -268,6 +421,7 @@ Another small maintenance release: minor improvements and fixes.
 ## [0.4.0] - 2025-02-13
 
 We did a major refactor of the library structure and APIs to set things up for the extensions and utilities that followed.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.4.0/CHANGELOG.md)
 
 ### Changed
 
@@ -276,6 +430,7 @@ We did a major refactor of the library structure and APIs to set things up for t
 ## [0.3.18] - 2025-01-07
 
 We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date formatting. Date handling works well out of the box now.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.3.18/CHANGELOG.md)
 
 ### Added
 
@@ -294,6 +449,7 @@ We added DateTime and DateTimeRange utilities and brought in jiffy/intl for date
 ## [0.3.17] - 2025-01-07
 
 A small maintenance release: minor improvements.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.3.17/CHANGELOG.md)
 
 ### Changed
 
@@ -302,6 +458,7 @@ A small maintenance release: minor improvements.
 ## [0.3.16] - 2025-01-07
 
 Another small maintenance release: minor improvements.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.3.16/CHANGELOG.md)
 
 ### Changed
 
@@ -310,6 +467,7 @@ Another small maintenance release: minor improvements.
 ## [0.3.15] - 2025-01-03
 
 Another small maintenance release: minor improvements.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.3.15/CHANGELOG.md)
 
 ### Changed
 
@@ -318,6 +476,7 @@ Another small maintenance release: minor improvements.
 ## [0.3.13]
 
 We added a script to detect unused Flutter code and updated the Code of Conduct (logo, examples, survey). We also renamed the doc folder to docs and removed Codecov.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.3.13/CHANGELOG.md)
 
 <details><summary>Maintenance</summary>
 
@@ -339,6 +498,7 @@ We added a script to detect unused Flutter code and updated the Code of Conduct 
 ## [0.2.3]
 
 We added CommonRandom for reproducible randomness, a Code of Conduct for contributors, and development helper scripts. The project is easier to work on and expectations are clearer.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.2.3/CHANGELOG.md)
 
 ### Added
 
@@ -360,6 +520,7 @@ We added CommonRandom for reproducible randomness, a Code of Conduct for contrib
 ## [0.2.1]
 
 We moved the list extensions onto Iterable so they work with any iterable, not just lists. The API is more flexible.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.2.1/CHANGELOG.md)
 
 ### Changed
 
@@ -368,6 +529,7 @@ We moved the list extensions onto Iterable so they work with any iterable, not j
 ## [0.2.0]
 
 We added enum helpers (byNameTry, sortedEnumValues) and list extensions (smallest, biggest, most/least occurrences), and bumped the SDK and collections dependency.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.2.0/CHANGELOG.md)
 
 ### Added
 
@@ -382,6 +544,7 @@ We added enum helpers (byNameTry, sortedEnumValues) and list extensions (smalles
 ## [0.1.0]
 
 We renamed nullable string utils to extensions and deprecated a few functions we plan to remove. Cleanup to make the API clearer.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.1.0/CHANGELOG.md)
 
 ### Deprecated
 
@@ -398,6 +561,7 @@ We renamed nullable string utils to extensions and deprecated a few functions we
 ## [0.0.11]
 
 We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart when the search is empty, and removed the deprecated string-nullable functions.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.11/CHANGELOG.md)
 
 ### Added
 
@@ -421,6 +585,7 @@ We added date constants and ordinal/GCD/countDigits helpers, fixed removeStart w
 ## [0.0.10]
 
 We made removeStart accept a nullable search parameter so it’s easier to use in nullable contexts.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.10/CHANGELOG.md)
 
 ### Changed
 
@@ -429,6 +594,7 @@ We made removeStart accept a nullable search parameter so it’s easier to use i
 ## [0.0.9]
 
 We added an optional trimFirst parameter to removeStart so you can trim the result. A small string API improvement.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.9/CHANGELOG.md)
 
 ### Added
 
@@ -437,6 +603,7 @@ We added an optional trimFirst parameter to removeStart so you can trim the resu
 ## [0.0.8]
 
 We added an optional trimFirst parameter to nullIfEmpty so you have finer control over empty and whitespace handling.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.8/CHANGELOG.md)
 
 ### Added
 
@@ -445,6 +612,7 @@ We added an optional trimFirst parameter to nullIfEmpty so you have finer contro
 ## [0.0.7]
 
 We renamed the strings folder to singular and deprecated the nullable string extensions. Naming and API cleanup.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.7/CHANGELOG.md)
 
 ### Deprecated
 
@@ -461,6 +629,7 @@ We renamed the strings folder to singular and deprecated the nullable string ext
 ## [0.0.6]
 
 We added swipe gesture properties for use in gesture-aware UIs. The groundwork for swipe handling.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.6/CHANGELOG.md)
 
 ### Added
 
@@ -469,6 +638,7 @@ We added swipe gesture properties for use in gesture-aware UIs. The groundwork f
 ## [0.0.5]
 
 We documented all methods, added example app usage and README examples, and extended the string extensions. The library should be easier to discover and use.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.5/CHANGELOG.md)
 
 ### Added
 
@@ -487,6 +657,7 @@ We documented all methods, added example app usage and README examples, and exte
 ## [0.0.4]
 
 We added an example app, GitHub Actions, and contribution templates (PR, issue, contributing guide). The project is ready for others to contribute.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.4/CHANGELOG.md)
 
 ### Added
 
@@ -506,6 +677,7 @@ We added an example app, GitHub Actions, and contribution templates (PR, issue, 
 ## [0.0.3]
 
 We added a random enum selection helper for when you need a random value from an enum.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.3/CHANGELOG.md)
 
 ### Added
 
@@ -514,6 +686,7 @@ We added a random enum selection helper for when you need a random value from an
 ## [0.0.2]
 
 We added string-to-bool conversion methods so you can parse "true"/"false" and similar strings safely.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.2/CHANGELOG.md)
 
 ### Added
 
@@ -522,6 +695,7 @@ We added string-to-bool conversion methods so you can parse "true"/"false" and s
 ## [0.0.1] - 2024-06-27
 
 First release. We included bool list methods to get started.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v0.0.1/CHANGELOG.md)
 
 ### Added
 

@@ -77,12 +77,15 @@ def check_working_tree(project_dir: Path) -> tuple[bool, bool]:
         print()
         response = (
             input(
-                "  These changes will be included in the release commit. Continue? [y/N] "
+                "  These changes will be included in the release commit. Continue? [Y/n] "
             )
             .strip()
             .lower()
         )
-        if not response.startswith("y"):
+        # Default to Yes: an empty (bare-Enter) response proceeds; only an
+        # explicit "n"/"no" aborts. The release workflow always commits the
+        # working tree anyway, so proceeding is the expected path.
+        if response.startswith("n"):
             return False, True
         return True, True
 

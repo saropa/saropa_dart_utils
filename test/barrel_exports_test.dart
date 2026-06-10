@@ -13,10 +13,19 @@ void main() {
       // diff returns a positional record (added, removed, unchanged).
       expect(<int>[1, 2, 3].diff(<int>[2, 3, 4]).$1, <int>[4]);
       expect(<int>[1, 2, 3].firstWhereOrElse((int x) => x > 5, -1), -1);
-      expect(<List<int>>[<int>[1], <int>[2, 3]].flattenDeep(), <int>[1, 2, 3]);
+      expect(
+        <List<int>>[
+          <int>[1],
+          <int>[2, 3],
+        ].flattenDeep(),
+        <int>[1, 2, 3],
+      );
       expect(
         <String>['a', 'bb'].groupByTransform((String s) => s.length, (String s) => s.toUpperCase()),
-        <int, List<String>>{1: <String>['A'], 2: <String>['BB']},
+        <int, List<String>>{
+          1: <String>['A'],
+          2: <String>['BB'],
+        },
       );
       expect(<int>[5, 6].mapIndexed((int i, int v) => i + v), <int>[5, 7]);
       expect(<String>['aaa', 'b'].minBy((String s) => s.length), 'b');

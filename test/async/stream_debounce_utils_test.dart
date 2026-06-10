@@ -54,8 +54,10 @@ void main() {
     test('flushes the trailing pending value when the source closes early', () async {
       final StreamController<int> source = StreamController<int>();
       final List<int> results = <int>[];
-      final Future<void> drained =
-          debounceStream(source.stream, const Duration(milliseconds: 100)).forEach(results.add);
+      final Future<void> drained = debounceStream(
+        source.stream,
+        const Duration(milliseconds: 100),
+      ).forEach(results.add);
 
       source.add(7);
       await Future<void>.delayed(const Duration(milliseconds: 10));
@@ -71,9 +73,10 @@ void main() {
     test('forwards errors without debouncing them', () async {
       final StreamController<int> source = StreamController<int>();
       final List<Object> errors = <Object>[];
-      final StreamSubscription<int> sub =
-          debounceStream(source.stream, const Duration(milliseconds: 100))
-              .listen((_) {}, onError: errors.add);
+      final StreamSubscription<int> sub = debounceStream(
+        source.stream,
+        const Duration(milliseconds: 100),
+      ).listen((_) {}, onError: errors.add);
 
       source.addError(StateError('boom'));
       // Errors are forwarded immediately, not held for the debounce window.

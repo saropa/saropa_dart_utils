@@ -4,6 +4,8 @@
 
 All ideas must still respect **tree‑shaking**, **no global state**, and **small, composable files**, but we accept more logic per feature when it meaningfully replaces app‑level code.
 
+<!-- cspell:disable -->
+
 ---
 
 ## ⚠️ Tree-shaking and complexity

@@ -216,10 +216,16 @@ def _count_tests_per_member(
     blocks = re.split(r"\b(?:test|group)\s*\(\s*['\"]", text)
     count: dict[str, int] = defaultdict(int)
     for block in blocks[1:]:  # first part is before first test/group
+        # Credit EVERY member referenced in this block, not just the first.
+        # WHY: a previous `break` exited the member loop after the first match,
+        # so a block exercising several methods (the common case — one group
+        # tests a whole extension) credited only one of them and zeroed the
+        # rest. That produced a flood of false "0 tests" findings and a
+        # distorted coverage histogram. Each member is still counted at most
+        # once per block (no inner break, just a single membership test).
         for member in members:
             if member in block:
                 count[member] += 1
-                break  # count at most one per block per member
     return dict(count)
 
 
