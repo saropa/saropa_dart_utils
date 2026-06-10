@@ -37,12 +37,12 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | Section | Done | Total |
 |---------|------|-------|
 | String (1–30) | 30 | 30 |
-| Collections (31–70) | 23 | 40 |
+| Collections (31–70) | 40 | 40 |
 | Map/Object (71–90) | 20 | 20 |
 | DateTime (91–115) | 25 | 25 |
 | Number/Math (116–140) | 25 | 25 |
-| Parsing (141–160) | 17 | 20 |
-| URL/Path (161–175) | 13 | 15 |
+| Parsing (141–160) | 20 | 20 |
+| URL/Path (161–175) | 15 | 15 |
 | Async (176–185) | 10 | 10 |
 | Regex (186–193) | 8 | 8 |
 | Caching (194–198) | 5 | 5 |
@@ -61,7 +61,7 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | Testing/Debug (366–375) | 10 | 10 |
 | Niche More (376–390) | 15 | 15 |
 | Lower More (391–400) | 10 | 10 |
-| **Total** | **378** | **400** |
+| **Total** | **400** | **400** |
 
 ---
 
@@ -126,26 +126,26 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 48 | Combinations (choose K from N) | Medium | Medium | High | ✅ | ✅ |
 | 49 | Zip with index ([(0,a),(1,b),...]) | High | High | Low | ✅ | ✅ |
 | 50 | Interleave two lists (a1,b1,a2,b2,...) | Medium | Medium | Low | ✅ | ✅ |
-| 51 | Top K elements (partial sort or heap) | High | High | High | ✅ | TODO |
+| 51 | Top K elements (partial sort or heap) | High | High | High | ✅ | ✅ |
 | 52 | Nth element (e.g. 2nd smallest) without full sort | Medium | Medium | High | ✅ | ✅ |
-| 53 | Take every Nth element | High | Medium | Low | ✅ | TODO |
-| 54 | Skip every Nth element | Medium | Low | Low | ✅ | TODO |
-| 55 | Rotate list left/right by N | High | Medium | Low | ✅ | TODO |
-| 56 | Shuffle with seed (reproducible) | High | High | Medium | ✅ | TODO |
+| 53 | Take every Nth element | High | Medium | Low | ✅ | ✅ |
+| 54 | Skip every Nth element | Medium | Low | Low | ✅ | ✅ |
+| 55 | Rotate list left/right by N | High | Medium | Low | ✅ | ✅ |
+| 56 | Shuffle with seed (reproducible) | High | High | Medium | ✅ | ✅ |
 | 57 | Stable sort by key (preserve order for equal keys) | High | High | Medium | ✅ | ✅ |
-| 58 | Topological sort (DAG) from edges | Medium | High | High | ✅ | TODO |
-| 59 | Split at index / split at predicate (first where true) | High | High | Low | ✅ | TODO |
-| 60 | Indexed map (map with (index, value)) | High | High | Low | ✅ | TODO |
-| 61 | Fold with index (reduce with index) | Medium | Medium | Low | ✅ | TODO |
-| 62 | First where / last where (with default) | High | High | Low | ✅ | TODO |
-| 63 | Min/max by key (return element, not value) | High | High | Medium | ✅ | TODO |
-| 64 | All pairs (i,j) i < j from list | Medium | Medium | Low | ✅ | TODO |
-| 65 | Difference of two lists (elements in A not in B) | High | High | Medium | ✅ | TODO |
-| 66 | Symmetric difference (A Δ B) | Medium | Medium | Medium | ✅ | TODO |
-| 67 | Intersection of two lists (with optional count) | High | High | Medium | ✅ | TODO |
-| 68 | Union of two lists (distinct) | High | High | Low | ✅ | TODO |
+| 58 | Topological sort (DAG) from edges | Medium | High | High | ✅ | ✅ |
+| 59 | Split at index / split at predicate (first where true) | High | High | Low | ✅ | ✅ |
+| 60 | Indexed map (map with (index, value)) | High | High | Low | ✅ | ✅ |
+| 61 | Fold with index (reduce with index) | Medium | Medium | Low | ✅ | ✅ |
+| 62 | First where / last where (with default) | High | High | Low | ✅ | ✅ |
+| 63 | Min/max by key (return element, not value) | High | High | Medium | ✅ | ✅ |
+| 64 | All pairs (i,j) i < j from list | Medium | Medium | Low | ✅ | ✅ |
+| 65 | Difference of two lists (elements in A not in B) | High | High | Medium | ✅ | ✅ |
+| 66 | Symmetric difference (A Δ B) | Medium | Medium | Medium | ✅ | ✅ |
+| 67 | Intersection of two lists (with optional count) | High | High | Medium | ✅ | ✅ |
+| 68 | Union of two lists (distinct) | High | High | Low | ✅ | ✅ |
 | 69 | LCS (longest common subsequence) of two lists | Medium | Medium | High | ✅ | ✅ |
-| 70 | Diff two lists (added/removed/unchanged) | High | High | High | ✅ | TODO |
+| 70 | Diff two lists (added/removed/unchanged) | High | High | High | ✅ | ✅ |
 
 ---
 
@@ -257,9 +257,9 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 151 | Parse version string (major.minor.patch) | High | High | Low | ✅ | ✅ |
 | 152 | Parse hex color string (#RGB, #RRGGBB, #AARRGGBB) | High | High | Medium | ✅ | ✅ |
 | 153 | Parse simple boolean ("on"/"off", "1"/"0", "yes"/"no") — extend existing | High | High | Low | — | ✅ |
-| 154 | Parse list from string (e.g. "a,b,c" or JSON array string) | High | High | Medium | ✅ | TODO |
-| 155 | Validate non-empty after trim | High | High | Low | ✅ | TODO |
-| 156 | Coerce to int/double (parse or default) — extend existing | High | High | Low | — | TODO |
+| 154 | Parse list from string (e.g. "a,b,c" or JSON array string) | High | High | Medium | ✅ | ✅ |
+| 155 | Validate non-empty after trim | High | High | Low | ✅ | ✅ |
+| 156 | Coerce to int/double (parse or default) — extend existing | High | High | Low | — | ✅ |
 | 157 | Parse JSON path (e.g. "$.a.b[0]") for dynamic access | Medium | Medium | High | ✅ | ✅ |
 | 158 | Parse simple cron expression (next run time) | Low | Low | High | ✅ | ✅ |
 | 159 | Parse Accept-Language header (q-values) | Medium | Medium | Medium | ✅ | ✅ |
@@ -283,8 +283,8 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 170 | Build URL from base + path + query | High | High | Low | ✅ | ✅ |
 | 171 | Safe decode URI (return null on failure) | High | High | Low | ✅ | ✅ |
 | 172 | Parse data URL (e.g. data:image/png;base64,...) | Medium | Medium | Medium | ✅ | ✅ |
-| 173 | Strip fragment from URL | High | Medium | Low | ✅ | TODO |
-| 174 | Is absolute URL / is relative path | High | High | Low | ✅ | TODO |
+| 173 | Strip fragment from URL | High | Medium | Low | ✅ | ✅ |
+| 174 | Is absolute URL / is relative path | High | High | Low | ✅ | ✅ |
 | 175 | Canonicalize URL (sort query, remove defaults) | Medium | Medium | Medium | ✅ | ✅ |
 
 ---

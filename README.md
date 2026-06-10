@@ -48,6 +48,8 @@ These utilities aren't academic exercises—they're **dog-fooded daily** in [Sar
 
 ## What's Included
 
+> **📒 Full index:** [`CAPABILITIES.md`](CAPABILITIES.md) is a complete, per-symbol catalog — every public utility with a one-line description and its import path, grouped by category. The table below is the high-level map; that file is the searchable detail for teams evaluating the library.
+
 | Category          | Scope                      | Highlights                                                                                                                                                                                                                                           |
 | ----------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **String**        | 110+ extensions, 30+ utils | Case conversion, truncation, wrapping, searching, grammar, diacritics, Unicode-safe ops; Levenshtein, slug/mask/template, diff (Myers), fuzzy search, excerpt, markdown, HTML sanitizer, name parsing                                                |
