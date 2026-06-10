@@ -39,6 +39,7 @@ export 'datetime/injectable_clock_utils.dart';
 export 'datetime/timebox_exception.dart';
 
 // Double extensions
+export 'double/double_close_to_extensions.dart';
 export 'double/double_extensions.dart';
 export 'double/double_iterable_extensions.dart';
 
@@ -66,6 +67,9 @@ export 'iterable/comparable_iterable_extensions.dart';
 export 'iterable/iterable_extensions.dart';
 export 'iterable/iterable_flatten_extensions.dart';
 export 'iterable/iterable_list_ops_extensions.dart';
+export 'iterable/iterable_map_not_null_extensions.dart';
+export 'iterable/iterable_none_extensions.dart';
+export 'iterable/iterable_sum_by_extensions.dart';
 export 'iterable/occurrence.dart';
 export 'iterable/run_length_utils.dart';
 
@@ -272,6 +276,7 @@ export 'string/string_number_extensions.dart';
 export 'string/string_punctuation.dart';
 export 'string/string_search_extensions.dart';
 export 'string/string_text_extensions.dart';
+export 'string/string_truncate_middle_extensions.dart';
 export 'string/string_utils.dart';
 export 'string/string_more_extensions.dart';
 export 'string/string_lower_extensions.dart';

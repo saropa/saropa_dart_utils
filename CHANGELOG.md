@@ -26,8 +26,6 @@ Made by Saropa. All rights reserved.
 Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 **pub.dev** - [saropa_dart_utils](https://pub.dev/packages/saropa_dart_utils)
 
@@ -37,23 +35,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+<!-- MAINTENANCE NOTES -- IMPORTANT --
+
+    The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+    Each release (and [Unreleased]) opens with one plain-language line for humans—user-facing only, casual wording—then end it with:
+    [log](https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md)
+    substituting X.Y.Z. ([Unreleased] uses `main` in place of the tag.)
+
+    **Tagged changelog** — Published versions use git tag **`vx.y.z`**; compare to [current `main`](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md).
+
+    **Published version**: See field "version": "x.y.z" in [package.json](./package.json)
+
+    NOTE: try to keep this file to approx 500 lines
+    
+cspell:disable
+-->
+
 ## [Unreleased]
+
+A handful of everyday helpers: skip nulls while mapping, a readable `none()` check, sum or average by a selector, middle-eliding for long strings and paths, and float comparison that shrugs off rounding error. The published download is slimmer, too.
+
+### Added
+
+- **`Iterable.none(predicate)`** ([iterable_none_extensions.dart](lib/iterable/iterable_none_extensions.dart)) — the boolean complement of `any`; returns `true` when no element matches (and `true` for an empty iterable, matching `every`). Reads as intent and removes the easy-to-misplace `!any(...)`.
+- **`Iterable.mapNotNull(selector)` / `Iterable<T?>.whereNotNull()`** ([iterable_map_not_null_extensions.dart](lib/iterable/iterable_map_not_null_extensions.dart)) — map-and-drop-nulls in a single lazy pass, recovering the non-nullable result type without a separate `whereType`/`cast`.
+- **`Iterable.sumBy(selector)` / `Iterable.averageBy(selector)`** ([iterable_sum_by_extensions.dart](lib/iterable/iterable_sum_by_extensions.dart)) — numeric sum/mean over a selector, so reductions work on any element type. `sumBy` returns `0` for empty; `averageBy` returns `null` for empty (no silent `NaN`).
+- **`String.truncateMiddle(maxLength, {ellipsis})`** ([string_truncate_middle_extensions.dart](lib/string/string_truncate_middle_extensions.dart)) — elides the middle while keeping both ends visible (paths, hashes, IDs). Grapheme-cluster safe, so emoji are never split; degrades to a leading cut when the budget is too small.
+- **`double.isCloseTo(other, {relativeTolerance, absoluteTolerance})`** ([double_close_to_extensions.dart](lib/double/double_close_to_extensions.dart)) — tolerance-based float comparison (`(0.1 + 0.2).isCloseTo(0.3)` is `true`). Combines an absolute floor (meaningful near zero) with a relative tolerance (scales to large magnitudes); `NaN` is never close, same-sign infinities are.
 
 ### Changed
 
 - **Trimmed the published pub.dev tarball via `.pubignore`.** Repo-internal directories that no consumer needs — `test/`, `plans/` (130 files), `tool/`, `bugs/`, `reports/`, `scripts/`, and the `coverage/` artifact — are now excluded from the package. `lib/`, `example/`, `assets/`, and the standard README/CHANGELOG/LICENSE/pubspec files remain. Takes effect on the next release; does not alter the already-published 1.1.6.
 
+[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
 ---
 
 ## [1.1.6]
+
+A republish fix: 1.1.5's exact content reaches pub.dev now that a missing test dependency is declared. No library changes.
 
 ### Fixed
 
 - **Release fix: `dart pub publish` failed validation (exit 65), so 1.1.5 never reached pub.dev.** `test/async/debounce_utils_test.dart` and `test/async/heartbeat_utils_test.dart` import `package:fake_async/fake_async.dart`, but `fake_async` was only available transitively (via `flutter_test`) and was not declared in `pubspec.yaml`. pub.dev rejects publishing a package whose sources import an undeclared library. Added `fake_async: ^1.3.3` to `dev_dependencies` (matching the version `flutter_test` resolves). No `lib/` changes — this republishes the 1.1.5 content under 1.1.6.
 
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.6/CHANGELOG.md)
+
 ---
 
 ## [1.1.5]
+
+We added a large batch of unit tests across the library and fixed the five correctness bugs they turned up — edit distance, value caching, an async barrier, CSV dialect detection, and search-query parsing.
 
 ### Fixed
 
@@ -90,9 +124,13 @@ These five correctness bugs were surfaced by the new unit tests (see Maintenance
 
 </details>
 
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.5/CHANGELOG.md)
+
 ---
 
 ## [1.1.4]
+
+We cleared three ambiguous-extension clashes that could break importing the package, and documented and tested the nullable helpers that shipped undocumented.
 
 ### Fixed
 
@@ -106,7 +144,13 @@ These five correctness bugs were surfaced by the new unit tests (see Maintenance
 
 - **`nullable_more_extensions.dart` documentation and coverage** — added dartdoc with examples to every public member that previously had none (`whenNonNull`, `mapNonNull`, `orElse`, `tryCast`, `isType`, `asTypeOr`, `firstOfType`) and added a full test file (`test/object/nullable_more_extensions_test.dart`, 33 cases) covering each, including null receivers, falsy-but-non-null values, type mismatches, and the empty-list / no-match paths. The file shipped with no tests and no docs in the roadmap batch.
 
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.4/CHANGELOG.md)
+
+---
+
 ## [1.1.3] - 2026-05-22
+
+Publishing works again: we declared a dependency that was only transitive and fixed the static-analysis score that had been quietly blocking pub.dev.
 
 ### Fixed
 
@@ -126,15 +170,21 @@ These five correctness bugs were surfaced by the new unit tests (see Maintenance
 
 </details>
 
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.3/CHANGELOG.md)
+
 ---
 
 ## [1.1.2]
 
-- Version bump for publishing.
+A version bump to push a release through publishing.
+
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.2/CHANGELOG.md)
 
 ---
 
 ## [1.1.1]
+
+We fixed an invalid record return type and made map-key collisions explicit, so two source keys that collapse to one string no longer silently drop a value.
 
 ### Fixed
 
@@ -181,9 +231,13 @@ These five correctness bugs were surfaced by the new unit tests (see Maintenance
 
 </details>
 
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.1/CHANGELOG.md)
+
 ---
 
 ## [1.1.0]
+
+We dropped a `dart:io` dependency (you now pass the locale yourself), expanded HTML entity decoding to 278 named entities, and fixed a couple of async and name-collision bugs.
 
 ### Breaking
 
@@ -211,6 +265,8 @@ These five correctness bugs were surfaced by the new unit tests (see Maintenance
 - **Typedef duplication**: consolidated `AsyncProducer`, `FutureSupplier`, and `AsyncAction` (all `Future<T> Function()`) into single `AsyncAction` typedef in `async_semaphore_utils.dart`.
 
 </details>
+
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.0/CHANGELOG.md)
 
 ---
 
@@ -257,6 +313,10 @@ New and expanded APIs (all exported from `package:saropa_dart_utils`):
 - Swipe.toString(), MapNullableExtensions (isMapNullOrEmpty, isNotMapNullOrEmpty), GestureUtils (getSwipeSpeed, swipeMagnitudeThresholds), obscureText, hasInvalidUnicode/removeInvalidUnicode (invalid code point 56327). Additional tests for new collections, graph, stats, validation, string, and async modules.
 
 </details>
+
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.8+1/CHANGELOG.md)
+
+---
 
 ## [1.0.8] - 2026-02-24
 
