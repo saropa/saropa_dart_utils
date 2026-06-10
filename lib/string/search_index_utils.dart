@@ -5,8 +5,8 @@ import 'text_similarity_utils.dart';
 
 /// In-memory document index: add docs, search by query (TF scoring).
 class SearchIndexUtils {
-  final List<String> _docs = [];
-  final List<Map<String, int>> _tfs = [];
+  final List<String> _docs = <String>[];
+  final List<Map<String, int>> _tfs = <Map<String, int>>[];
 
   /// Adds [text] as a document to the index.
   void addDocument(String text) {

@@ -8,11 +8,10 @@
 // by Filip Hracek (BSD-3-Clause license).
 // https://pub.dev/packages/html_unescape
 //
-// Modernized: converted from parallel List<String> arrays to a single
-// ignore: saropa_lints/prefer_no_commented_out_code -- prose describing the design (a single const Map for O(1) lookup), not disabled code
-// const Map<String, String> for O(1) lookup. Added commonly-used entities
-// beyond Latin-1 (trade, euro, typographic quotes, dashes, etc.) that the
-// original basic set omitted.
+// Modernized: converted from parallel string arrays into a single constant
+// lookup map (entity name to replacement) for O(1) access. Added commonly-used
+// entities beyond Latin-1 (trade, euro, typographic quotes, dashes, etc.) that
+// the original basic set omitted.
 
 // cspell:ignore Diacritical brvbar percnt midast verbar yacute curren uacute
 // cspell:ignore otilde ugrave commat oslash plusmn lbrack middot rbrack lowbar

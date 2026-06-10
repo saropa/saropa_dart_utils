@@ -51,7 +51,7 @@ abstract final class Base64Utils {
       return base64.encode(gzipJson);
     } on FormatException catch (e, stackTrace) {
       // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
-      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging via debugPrint (stripped in release)
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print, saropa_lints/avoid_stack_trace_in_production -- intentional diagnostic logging via debugPrint (stripped in release)
       debugPrint('Base64Utils.compressText failed: $e\n$stackTrace');
 
       return null;
@@ -95,7 +95,7 @@ abstract final class Base64Utils {
       return utf8.decode(decodedGzip);
     } on FormatException catch (e, stackTrace) {
       // debugPrint is appropriate for utility packages (stripped in release builds, no external dependencies)
-      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging via debugPrint (stripped in release)
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print, saropa_lints/avoid_stack_trace_in_production -- intentional diagnostic logging via debugPrint (stripped in release)
       debugPrint('Base64Utils.decompressText failed: $e\n$stackTrace');
 
       return null;

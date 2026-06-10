@@ -18,7 +18,7 @@ library;
 
 /// Encodes [value] as varint bytes.
 List<int> encodeVarint(int value) {
-  final List<int> out = [];
+  final List<int> out = <int>[];
   int v = value;
   while (v > 0x7f) {
     out.add((v & 0x7f) | 0x80);

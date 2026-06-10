@@ -90,8 +90,10 @@ String renderUnifiedDiff(
 String _prefix(DiffOutputFormat format, String prefix, String line, String? color) {
   switch (format) {
     case DiffOutputFormat.plain:
+      // Plain text: no styling, so color is irrelevant.
       return '$prefix $line';
     case DiffOutputFormat.ansi:
+      // Terminal: red SGR code for removals, green for additions, else plain.
       if (color == _kColorRed) {
         return '\u001b[31m$prefix $line\u001b[0m';
       }
@@ -100,6 +102,7 @@ String _prefix(DiffOutputFormat format, String prefix, String line, String? colo
       }
       return '$prefix $line';
     case DiffOutputFormat.html:
+      // HTML: CSS-classed span per change kind; text escaped so it stays inert.
       if (color == _kColorRed) {
         return '<span class="$_kCssDiffRemove">$prefix ${_escapeHtml(line)}</span>';
       }

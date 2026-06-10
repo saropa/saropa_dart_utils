@@ -5,8 +5,8 @@ import 'dart:math' show Random;
 
 /// Systematic sampling: take every [step]-th element starting at [start].
 List<T> systematicSample<T>(List<T> list, int step, {int start = 0}) {
-  if (step < 1) return [];
-  final List<T> out = [];
+  if (step < 1) return <T>[];
+  final List<T> out = <T>[];
   for (int i = start; i < list.length; i += step) {
     out.add(list[i]);
   }
@@ -18,9 +18,9 @@ List<int> stratifiedSampleIndices(List<Object?> strata, int perGroup, [Random? r
   final Random r = random ?? Random();
   final Map<Object?, List<int>> groups = <Object?, List<int>>{};
   for (int i = 0; i < strata.length; i++) {
-    groups.putIfAbsent(strata[i], () => []).add(i);
+    groups.putIfAbsent(strata[i], () => <int>[]).add(i);
   }
-  final List<int> out = [];
+  final List<int> out = <int>[];
   for (final List<int> indices in groups.values) {
     indices.shuffle(r);
     for (int j = 0; j < perGroup && j < indices.length; j++) {

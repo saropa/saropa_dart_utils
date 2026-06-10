@@ -16,7 +16,7 @@ extension MapDeepMergeExtensions on Map<String, dynamic> {
       if (existing is Map<String, dynamic> && otherVal is Map<String, dynamic>) {
         result[e.key] = existing.deepMerge(otherVal);
       } else {
-        result[e.key] = e.value;
+        result[e.key] = otherVal;
       }
     }
     return result;

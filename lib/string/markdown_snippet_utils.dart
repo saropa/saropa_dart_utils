@@ -12,7 +12,7 @@ String? extractSectionByHeading(String markdown, RegExp headingPattern) {
     }
   }
   if (start < 0) return null;
-  final List<String> out = [];
+  final List<String> out = <String>[];
   for (int i = start; i < lines.length; i++) {
     if (lines[i].trimLeft().startsWith('#')) break;
     out.add(lines[i]);

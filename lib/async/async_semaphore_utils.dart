@@ -14,7 +14,7 @@ class AsyncSemaphoreUtils {
   /// Maximum number of concurrent acquisitions allowed.
   final int permits;
   int _available;
-  final List<void Function()> _waiters = [];
+  final List<void Function()> _waiters = <void Function()>[];
 
   /// Acquires a permit, runs [fn], then releases;
   /// ensures release on exception.

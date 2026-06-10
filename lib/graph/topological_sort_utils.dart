@@ -13,11 +13,11 @@ List<int>? topologicalSort(Adjacency graph) {
       inDeg[v]++;
     }
   }
-  final List<int> queue = [];
+  final List<int> queue = <int>[];
   for (int i = 0; i < graph.length; i++) {
     if (inDeg[i] == 0) queue.add(i);
   }
-  final List<int> out = [];
+  final List<int> out = <int>[];
   while (queue.isNotEmpty) {
     final int u = queue.removeAt(0);
     out.add(u);

@@ -3,8 +3,10 @@ library;
 
 /// Splits [list] into chunks of [chunkSize] with [overlap] between consecutive chunks.
 List<List<T>> chunksWithOverlap<T>(List<T> list, int chunkSize, int overlap) {
-  if (chunkSize < 1 || overlap < 0 || overlap >= chunkSize) return list.isEmpty ? [] : [list];
-  final List<List<T>> out = [];
+  if (chunkSize < 1 || overlap < 0 || overlap >= chunkSize) {
+    return list.isEmpty ? <List<T>>[] : [list];
+  }
+  final List<List<T>> out = <List<T>>[];
   int start = 0;
   while (start < list.length) {
     final int end = (start + chunkSize).clamp(0, list.length);

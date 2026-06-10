@@ -5,11 +5,11 @@ import 'package:collection/collection.dart';
 
 /// From columnar map (key -> list of values) to list of row maps.
 List<Map<String, Object?>> columnarToRows(Map<String, List<Object?>> columnar) {
-  if (columnar.isEmpty) return [];
+  if (columnar.isEmpty) return <Map<String, Object?>>[];
   final firstCol = columnar.values.firstOrNull;
-  if (firstCol == null) return [];
+  if (firstCol == null) return <Map<String, Object?>>[];
   final int n = firstCol.length;
-  final List<Map<String, Object?>> rows = [];
+  final List<Map<String, Object?>> rows = <Map<String, Object?>>[];
   for (int i = 0; i < n; i++) {
     final Map<String, Object?> rowMap = <String, Object?>{};
     for (final MapEntry<String, List<Object?>> e in columnar.entries) {

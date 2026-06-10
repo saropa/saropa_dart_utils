@@ -5,7 +5,7 @@ library;
 class BatchFlushUtils<T extends Object> {
   /// Creates a batcher that flushes via [onFlush] once [batchSize] items
   /// accumulate (or when [flush] is called explicitly).
-  BatchFlushUtils(this.batchSize, this.onFlush) : _buffer = [];
+  BatchFlushUtils(this.batchSize, this.onFlush) : _buffer = <T>[];
 
   /// Size at which the buffer is automatically flushed.
   final int batchSize;

@@ -27,7 +27,7 @@ final class ValidationErrorUtils {
 /// Aggregates multiple validation errors (roadmap #684).
 final class ValidationErrors {
   /// Creates a collector, optionally seeded with an existing [list] of errors.
-  ValidationErrors([List<ValidationErrorUtils>? list]) : _list = list ?? [];
+  ValidationErrors([List<ValidationErrorUtils>? list]) : _list = list ?? <ValidationErrorUtils>[];
   final List<ValidationErrorUtils> _list;
 
   /// Appends a single error.

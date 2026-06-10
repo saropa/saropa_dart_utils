@@ -5,6 +5,10 @@ library;
 int longestCommonSubstringLength(String a, String b) {
   if (a.isEmpty || b.isEmpty) return 0;
   int maxLen = 0;
+  // Each table cell holds the length of the common substring ending exactly at
+  // this pair of positions. A character match extends the diagonal run by one;
+  // a mismatch leaves the cell at 0, because a substring must be contiguous
+  // (unlike a subsequence). The answer is the largest cell ever produced.
   final List<List<int>> dp = List.generate(a.length + 1, (_) => List.filled(b.length + 1, 0));
   for (int i = 1; i <= a.length; i++) {
     for (int j = 1; j <= b.length; j++) {

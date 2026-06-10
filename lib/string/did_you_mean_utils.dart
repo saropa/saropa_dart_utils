@@ -5,7 +5,7 @@ import 'levenshtein_utils.dart';
 
 /// Returns up to [limit] words from [dictionary] closest to [word] by edit distance.
 List<String> didYouMean(String word, List<String> dictionary, {int limit = 5}) {
-  if (word.isEmpty || dictionary.isEmpty) return [];
+  if (word.isEmpty || dictionary.isEmpty) return <String>[];
   final List<(String, int)> scored = dictionary
       .map((String w) => (w, LevenshteinUtils.distance(word, w)))
       .toList();

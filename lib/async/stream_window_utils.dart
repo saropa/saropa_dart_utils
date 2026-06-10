@@ -7,7 +7,7 @@ import 'dart:async' show Stream, StreamController, StreamSubscription;
 Stream<List<T>> windowCount<T>(Stream<T> stream, int count) {
   late StreamController<List<T>> ctrl;
   StreamSubscription<T>? sub;
-  List<T> buf = [];
+  List<T> buf = <T>[];
   ctrl = StreamController<List<T>>(
     onListen: () {
       sub = stream.listen(
@@ -15,7 +15,7 @@ Stream<List<T>> windowCount<T>(Stream<T> stream, int count) {
           buf.add(data);
           if (buf.length >= count) {
             ctrl.add(List<T>.of(buf));
-            buf = [];
+            buf = <T>[];
           }
         },
         onDone: () {

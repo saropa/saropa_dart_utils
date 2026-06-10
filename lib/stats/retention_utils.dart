@@ -8,7 +8,7 @@ Map<int, int> retentionByDay(List<(Object, DateTime)> events) {
   if (events.isEmpty) return <int, int>{};
   final Map<Object, List<DateTime>> byUser = <Object, List<DateTime>>{};
   for (final (Object u, DateTime d) in events) {
-    byUser.putIfAbsent(u, () => []).add(d);
+    byUser.putIfAbsent(u, () => <DateTime>[]).add(d);
   }
   final Map<int, int> out = <int, int>{};
   for (final List<DateTime> dates in byUser.values) {

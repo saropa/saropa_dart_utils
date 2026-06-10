@@ -10,7 +10,7 @@ class StreamQuantileUtils {
 
   /// The target quantile in the range 0 to 1.
   double get p => _p;
-  final List<double> _buffer = [];
+  final List<double> _buffer = <double>[];
   static const int _maxSize = 100;
 
   /// Feeds [value] into the estimator for inclusion in the quantile estimate.

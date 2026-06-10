@@ -9,7 +9,7 @@ class PriorityMapUtils<K extends Object, V extends Object> {
 
   /// Enqueues [value] under [priority], creating the queue if needed.
   void add(K priority, V value) {
-    _queues.putIfAbsent(priority, () => []).add(value);
+    _queues.putIfAbsent(priority, () => <V>[]).add(value);
   }
 
   /// Removes and returns the next item in priority order (front of the first

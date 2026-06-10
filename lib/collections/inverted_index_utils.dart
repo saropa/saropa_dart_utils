@@ -12,7 +12,7 @@ Map<String, List<int>> buildInvertedIndex(List<String> documents) {
         .toSet()
         .toList();
     for (final String t in terms) {
-      index.putIfAbsent(t, () => []).add(i);
+      index.putIfAbsent(t, () => <int>[]).add(i);
     }
   }
   return index;

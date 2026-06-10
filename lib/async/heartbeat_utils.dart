@@ -26,6 +26,7 @@ class HeartbeatUtils {
   /// Starts the periodic heartbeat; cancels any existing timer.
   void start() {
     _timer?.cancel();
+    // ignore: saropa_lints/avoid_work_in_paused_state, saropa_lints/require_workmanager_for_background -- pure-Dart utility primitive; app-lifecycle pausing and Android WorkManager scheduling are the consuming app's responsibility, not this library's
     _timer = Timer.periodic(_interval, (_) => _onBeat());
   }
 

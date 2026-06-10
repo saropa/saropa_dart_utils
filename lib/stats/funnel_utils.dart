@@ -20,8 +20,8 @@ class FunnelUtils {
 
 /// Returns conversion rate from step i to i+1 (and overall to last step).
 List<double> funnelConversionRates(List<FunnelUtils> steps) {
-  if (steps.length < 2) return [];
-  final List<double> out = [];
+  if (steps.length < 2) return <double>[];
+  final List<double> out = <double>[];
   for (int i = 0; i < steps.length - 1; i++) {
     final int cur = steps[i].count;
     final int next = steps[i + 1].count;

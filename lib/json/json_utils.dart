@@ -30,7 +30,7 @@ abstract final class JsonUtils {
     try {
       return dc.jsonDecode(trimmed);
     } on FormatException catch (e, stackTrace) {
-      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print, saropa_lints/avoid_stack_trace_in_production -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.jsonDecodeSafe failed: $e\n$stackTrace');
 
       return null;
@@ -85,7 +85,7 @@ abstract final class JsonUtils {
     try {
       return dc.jsonDecode(value) != null;
     } on FormatException catch (e, stackTrace) {
-      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print, saropa_lints/avoid_stack_trace_in_production -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.isJson testDecode failed: $e\n$stackTrace');
 
       return false;
@@ -155,7 +155,7 @@ abstract final class JsonUtils {
 
       return data.cast<Map<String, dynamic>>().toList();
     } on FormatException catch (e, stackTrace) {
-      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print, saropa_lints/avoid_stack_trace_in_production -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.tryJsonDecodeListMap failed: $e\n$stackTrace');
 
       return null;
@@ -175,7 +175,7 @@ abstract final class JsonUtils {
 
       return data.cast<String>().toList();
     } on FormatException catch (e, stackTrace) {
-      // ignore: saropa_lints/avoid_print_error -- intentional diagnostic logging; debugPrint is stripped in release builds
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print, saropa_lints/avoid_stack_trace_in_production -- intentional diagnostic logging; debugPrint is stripped in release builds
       debugPrint('JsonUtils.tryJsonDecodeList failed: $e\n$stackTrace');
 
       return null;

@@ -12,7 +12,9 @@ int damerauLevenshteinDistance(String a, String b) {
   // insufficient for OSA and would score an adjacent swap as 2 instead of 1.
   // This still gives O(bLen) space rather than the full O(aLen*bLen) matrix.
   final List<int> prevPrevRow = List.filled(bLen + 1, 0); // row i-2
+  // ignore: saropa_lints/prefer_reusing_assigned_local -- must be a SEPARATE array from prevPrevRow; reusing one buffer would corrupt the OSA recurrence
   final List<int> prevRow = List.filled(bLen + 1, 0); // row i-1
+  // ignore: saropa_lints/prefer_reusing_assigned_local -- distinct rolling-row buffer (see above); three independent arrays are required
   final List<int> currRow = List.filled(bLen + 1, 0); // row i
   // Base case: transforming an empty prefix of `a` into b[0..j) costs j insertions.
   for (int j = 0; j <= bLen; j++) {

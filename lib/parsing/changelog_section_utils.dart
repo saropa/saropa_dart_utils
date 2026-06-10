@@ -5,7 +5,7 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Extracts sections like "## [1.0.0] - date" and content until next ##.
 List<(String version, String content)> parseChangelogSections(String changelog) {
-  final List<(String, String)> out = [];
+  final List<(String, String)> out = <(String, String)>[];
   final RegExp header = RegExp(r'^##\s+\[([^\]]+)\].*$', multiLine: true);
   final List<RegExpMatch> matches = header.allMatches(changelog).toList();
   for (int i = 0; i < matches.length; i++) {

@@ -9,7 +9,7 @@ import 'graph_utils.dart';
   final List<GraphUtils> sorted = List<GraphUtils>.of(edges)
     ..sort((a, b) => a.weight.compareTo(b.weight));
   final DisjointSetUtils ds = DisjointSetUtils(nodeCount);
-  final List<GraphUtils> mst = [];
+  final List<GraphUtils> mst = <GraphUtils>[];
   double cost = 0;
   for (final GraphUtils e in sorted) {
     if (ds.connected(e.from, e.to)) continue;

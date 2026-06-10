@@ -3,7 +3,7 @@ library;
 
 /// Splits [start]..[end] into consecutive months. Returns list of (monthStart, monthEnd).
 List<(DateTime, DateTime)> splitByMonth(DateTime start, DateTime end) {
-  final List<(DateTime, DateTime)> out = [];
+  final List<(DateTime, DateTime)> out = <(DateTime, DateTime)>[];
   DateTime cur = DateTime(start.year, start.month, 1);
   final DateTime endMonth = DateTime(end.year, end.month, 1);
   while (cur.isBefore(endMonth) || cur.isAtSameMomentAs(endMonth)) {

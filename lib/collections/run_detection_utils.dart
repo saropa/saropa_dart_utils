@@ -29,7 +29,7 @@ class RunDetectionUtils<T extends Object> {
 
 /// Detects runs of equal consecutive values in [list].
 List<RunDetectionUtils<T>> runsEqual<T extends Object>(List<T> list) {
-  final List<RunDetectionUtils<T>> out = [];
+  final List<RunDetectionUtils<T>> out = <RunDetectionUtils<T>>[];
   int i = 0;
   while (i < list.length) {
     final T v = list[i];

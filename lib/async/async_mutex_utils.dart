@@ -8,7 +8,7 @@ import 'package:saropa_dart_utils/async/async_semaphore_utils.dart' show AsyncAc
 /// Async mutex: only one holder at a time.
 class AsyncMutexUtils {
   bool _isLocked = false;
-  final List<Completer<void>> _waiters = [];
+  final List<Completer<void>> _waiters = <Completer<void>>[];
 
   /// Waits until the mutex is available, then acquires it.
   /// Completes when the mutex is acquired.

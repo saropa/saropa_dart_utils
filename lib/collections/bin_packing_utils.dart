@@ -3,8 +3,8 @@ library;
 
 /// Assigns each [itemWeights] to a bin; [capacity] per bin. Returns bin index per item (0-based).
 List<int> firstFitBinPacking(List<num> itemWeights, num capacity) {
-  final List<num> bins = [];
-  final List<int> assign = [];
+  final List<num> bins = <num>[];
+  final List<int> assign = <int>[];
   for (final num w in itemWeights) {
     int b = 0;
     while (b < bins.length && bins[b] + w > capacity) {

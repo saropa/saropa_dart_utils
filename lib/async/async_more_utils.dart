@@ -19,6 +19,7 @@ Future<List<Object?>> allSettled<T>(
 
       results[i] = value;
     } on Object catch (e, st) {
+      // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print -- intentional diagnostic logging; debugPrint is stripped in release builds. Error + stack are also returned to the caller in results.
       debugPrint('allSettled: $e\n$st');
       results[i] = <Object>[e, st];
     }
@@ -41,6 +42,7 @@ Future<T> retryTimes<T>(
     } on Object catch (e, st) {
       attempts++;
       if (attempts >= times) {
+        // ignore: saropa_lints/avoid_print_error, saropa_lints/avoid_debug_print -- intentional diagnostic logging; debugPrint is stripped in release builds. The error is rethrown to the caller below.
         debugPrint(
           'retryTimes failed after $times: $e\n$st',
         );

@@ -9,7 +9,7 @@ bool isNearDuplicate(String a, String b, {double threshold = 0.85}) =>
 
 /// Groups [documents] into near-duplicate clusters (greedy).
 List<List<int>> clusterNearDuplicates(List<String> documents, {double threshold = 0.85}) {
-  final List<List<int>> clusters = [];
+  final List<List<int>> clusters = <List<int>>[];
   final List<bool> used = List.filled(documents.length, false);
   for (int i = 0; i < documents.length; i++) {
     if (used[i]) continue;

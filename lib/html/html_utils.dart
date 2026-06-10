@@ -121,8 +121,8 @@ abstract final class HtmlUtils {
     String text,
     int offset,
   ) {
-    // ignore: saropa_lints/prefer_no_commented_out_code -- prose noting the shortest numeric entity is 4 chars (e.g. &#0;), not disabled code
-    // Minimum numeric entity is 4 chars: &#0;
+    // Minimum numeric entity length is 4 characters (the shortest is the null
+    // reference: ampersand, hash, a single digit, then semicolon).
     if (offset + 3 >= text.length) return null;
     if (text.codeUnitAt(offset + 1) != _poundCode) return null;
 

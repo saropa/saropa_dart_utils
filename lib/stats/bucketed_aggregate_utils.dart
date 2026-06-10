@@ -9,7 +9,7 @@ Map<K, List<num>> bucketBy<K>(List<num> values, K Function(int index, num value)
   final Map<K, List<num>> out = <K, List<num>>{};
   for (int i = 0; i < values.length; i++) {
     final K k = keyOf(i, values[i]);
-    out.putIfAbsent(k, () => []).add(values[i]);
+    out.putIfAbsent(k, () => <num>[]).add(values[i]);
   }
   return out;
 }
