@@ -69,6 +69,7 @@ export 'iterable/iterable_flatten_extensions.dart';
 export 'iterable/iterable_list_ops_extensions.dart';
 export 'iterable/iterable_map_not_null_extensions.dart';
 export 'iterable/iterable_none_extensions.dart';
+export 'iterable/iterable_stable_sort_extensions.dart';
 export 'iterable/iterable_sum_by_extensions.dart';
 export 'iterable/occurrence.dart';
 export 'iterable/run_length_utils.dart';
@@ -113,6 +114,8 @@ export 'collections/string_pool_utils.dart';
 export 'collections/row_column_table_utils.dart';
 export 'collections/priority_map_utils.dart';
 export 'collections/seeded_shuffle_utils.dart';
+export 'collections/quickselect_utils.dart';
+export 'collections/lcs_sequence_utils.dart';
 
 // Graph (roadmap 531+)
 export 'graph/graph_utils.dart';
@@ -169,6 +172,7 @@ export 'list/list_default_empty_extensions.dart';
 
 // Map extensions and utilities
 export 'map/deep_equality_utils.dart';
+export 'map/deep_freeze_utils.dart';
 export 'map/map_deep_merge_extensions.dart';
 export 'map/map_deep_utils.dart';
 export 'map/map_default_extensions.dart';
@@ -331,6 +335,7 @@ export 'async/timeout_policy_utils.dart';
 export 'async/race_cancel_utils.dart';
 export 'async/idempotent_async_utils.dart';
 export 'async/stream_window_utils.dart';
+export 'async/stream_debounce_utils.dart';
 export 'async/heartbeat_utils.dart';
 
 // Parsing and validation
@@ -356,6 +361,10 @@ export 'parsing/changelog_section_utils.dart';
 export 'parsing/json_diff_patch_utils.dart';
 export 'parsing/nested_query_parser_utils.dart';
 export 'parsing/varint_utils.dart';
+export 'parsing/accept_language_utils.dart';
+export 'parsing/cron_utils.dart';
+export 'parsing/json_path_utils.dart';
+export 'parsing/range_header_utils.dart';
 
 // URL and path utilities
 export 'url/path_extension_utils.dart';
@@ -365,6 +374,7 @@ export 'url/url_build_utils.dart';
 export 'url/url_encode_utils.dart';
 export 'url/url_extensions.dart';
 export 'url/url_query_utils.dart';
+export 'url/url_canonicalize_utils.dart';
 export 'url/path_more_utils.dart';
 
 // UUID utilities

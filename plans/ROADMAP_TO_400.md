@@ -2,6 +2,8 @@
 
 **Purpose:** Candidate utility methods and small algorithms. Prioritized by usefulness, importance, complexity, and **impact on app size** (many ideas target common complex/boilerplate code so apps can delete their own copies).
 
+<!-- cspell:disable -->
+
 ---
 
 ## ⚠️ Tree-shaking is critical
@@ -35,13 +37,13 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | Section | Done | Total |
 |---------|------|-------|
 | String (1–30) | 30 | 30 |
-| Collections (31–70) | 20 | 40 |
-| Map/Object (71–90) | 19 | 20 |
+| Collections (31–70) | 23 | 40 |
+| Map/Object (71–90) | 20 | 20 |
 | DateTime (91–115) | 25 | 25 |
 | Number/Math (116–140) | 25 | 25 |
-| Parsing (141–160) | 13 | 20 |
-| URL/Path (161–175) | 12 | 15 |
-| Async (176–185) | 9 | 10 |
+| Parsing (141–160) | 17 | 20 |
+| URL/Path (161–175) | 13 | 15 |
+| Async (176–185) | 10 | 10 |
 | Regex (186–193) | 8 | 8 |
 | Caching (194–198) | 5 | 5 |
 | Object/Equality (199–210) | 12 | 12 |
@@ -59,7 +61,7 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | Testing/Debug (366–375) | 10 | 10 |
 | Niche More (376–390) | 15 | 15 |
 | Lower More (391–400) | 10 | 10 |
-| **Total** | **368** | **400** |
+| **Total** | **378** | **400** |
 
 ---
 
@@ -125,12 +127,12 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 49 | Zip with index ([(0,a),(1,b),...]) | High | High | Low | ✅ | ✅ |
 | 50 | Interleave two lists (a1,b1,a2,b2,...) | Medium | Medium | Low | ✅ | ✅ |
 | 51 | Top K elements (partial sort or heap) | High | High | High | ✅ | TODO |
-| 52 | Nth element (e.g. 2nd smallest) without full sort | Medium | Medium | High | ✅ | TODO |
+| 52 | Nth element (e.g. 2nd smallest) without full sort | Medium | Medium | High | ✅ | ✅ |
 | 53 | Take every Nth element | High | Medium | Low | ✅ | TODO |
 | 54 | Skip every Nth element | Medium | Low | Low | ✅ | TODO |
 | 55 | Rotate list left/right by N | High | Medium | Low | ✅ | TODO |
 | 56 | Shuffle with seed (reproducible) | High | High | Medium | ✅ | TODO |
-| 57 | Stable sort by key (preserve order for equal keys) | High | High | Medium | ✅ | TODO |
+| 57 | Stable sort by key (preserve order for equal keys) | High | High | Medium | ✅ | ✅ |
 | 58 | Topological sort (DAG) from edges | Medium | High | High | ✅ | TODO |
 | 59 | Split at index / split at predicate (first where true) | High | High | Low | ✅ | TODO |
 | 60 | Indexed map (map with (index, value)) | High | High | Low | ✅ | TODO |
@@ -142,7 +144,7 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 66 | Symmetric difference (A Δ B) | Medium | Medium | Medium | ✅ | TODO |
 | 67 | Intersection of two lists (with optional count) | High | High | Medium | ✅ | TODO |
 | 68 | Union of two lists (distinct) | High | High | Low | ✅ | TODO |
-| 69 | LCS (longest common subsequence) of two lists | Medium | Medium | High | ✅ | TODO |
+| 69 | LCS (longest common subsequence) of two lists | Medium | Medium | High | ✅ | ✅ |
 | 70 | Diff two lists (added/removed/unchanged) | High | High | High | ✅ | TODO |
 
 ---
@@ -170,7 +172,7 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 87 | Filter map by value predicate | High | High | Low | ✅ | ✅ |
 | 88 | Merge list of maps (reduce with merge) | High | High | Low | ✅ | ✅ |
 | 89 | Default map (return default for missing key, optional set) | Medium | Medium | Low | ✅ | ✅ |
-| 90 | Freeze / deep freeze (immutable view; if feasible in Dart) | Low | Low | High | ✅ | TODO |
+| 90 | Freeze / deep freeze (immutable view; if feasible in Dart) | Low | Low | High | ✅ | ✅ |
 
 ---
 
@@ -258,10 +260,10 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 154 | Parse list from string (e.g. "a,b,c" or JSON array string) | High | High | Medium | ✅ | TODO |
 | 155 | Validate non-empty after trim | High | High | Low | ✅ | TODO |
 | 156 | Coerce to int/double (parse or default) — extend existing | High | High | Low | — | TODO |
-| 157 | Parse JSON path (e.g. "$.a.b[0]") for dynamic access | Medium | Medium | High | ✅ | TODO |
-| 158 | Parse simple cron expression (next run time) | Low | Low | High | ✅ | TODO |
-| 159 | Parse Accept-Language header (q-values) | Medium | Medium | Medium | ✅ | TODO |
-| 160 | Parse Range header (bytes=0-499) | Low | Low | Medium | ✅ | TODO |
+| 157 | Parse JSON path (e.g. "$.a.b[0]") for dynamic access | Medium | Medium | High | ✅ | ✅ |
+| 158 | Parse simple cron expression (next run time) | Low | Low | High | ✅ | ✅ |
+| 159 | Parse Accept-Language header (q-values) | Medium | Medium | Medium | ✅ | ✅ |
+| 160 | Parse Range header (bytes=0-499) | Low | Low | Medium | ✅ | ✅ |
 
 ---
 
@@ -283,7 +285,7 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 172 | Parse data URL (e.g. data:image/png;base64,...) | Medium | Medium | Medium | ✅ | ✅ |
 | 173 | Strip fragment from URL | High | Medium | Low | ✅ | TODO |
 | 174 | Is absolute URL / is relative path | High | High | Low | ✅ | TODO |
-| 175 | Canonicalize URL (sort query, remove defaults) | Medium | Medium | Medium | ✅ | TODO |
+| 175 | Canonicalize URL (sort query, remove defaults) | Medium | Medium | Medium | ✅ | ✅ |
 
 ---
 
@@ -300,7 +302,7 @@ This package **must** remain fully tree-shakeable or it will be **dead** in prod
 | 182 | Batch async (e.g. 5 at a time) | High | High | Medium | ✅ | ✅ |
 | 183 | Cancel previous (only latest async wins) | High | High | Low | ✅ | ✅ |
 | 184 | Delay by duration (Future.delayed wrapper) | High | Medium | Low | ✅ | ✅ |
-| 185 | Debounce stream (emit after silence) | Medium | Medium | Medium | ✅ | TODO |
+| 185 | Debounce stream (emit after silence) | Medium | Medium | Medium | ✅ | ✅ |
 
 ---
 

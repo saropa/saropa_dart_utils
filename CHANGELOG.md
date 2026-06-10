@@ -2,36 +2,9 @@
 
 <!-- cspell:disable -->
 
-```text
-                                    ....
-                             -+shdmNMMMMNmdhs+-
-                          -odMMMNyo/-..``.++:+o+/-
-                       /dMMMMMM/               `````
-                      dMMMMMMMMNdhhhdddmmmNmmddhs+-
-                      /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/
-                    . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+
-                    o     ..~~~::~+==+~:/+sdNMMMMMMMMMMMo
-                    m                        .+NMMMMMMMMMN
-                    m+                         :MMMMMMMMMm
-                    /N:                        :MMMMMMMMM/
-                     oNs.                    +NMMMMMMMMo
-                      :dNy/.              ./smMMMMMMMMm:
-                       /dMNmhyso+++oosydNNMMMMMMMMMd/
-                          .odMMMMMMMMMMMMMMMMMMMMdo-
-                             -+shdNNMMMMNNdhs+-
-                                     ``
-
-Made by Saropa. All rights reserved.
-
-Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
-```
-
-
 **pub.dev** - [saropa_dart_utils](https://pub.dev/packages/saropa_dart_utils)
 
 **Published version**: See field `version` in [pubspec.yaml](./pubspec.yaml)
-
-**Older versions**: Entries for **0.5.9 and earlier** live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
 
 ---
 
@@ -56,6 +29,7 @@ cspell:disable
 ## [Unreleased]
 
 A handful of everyday helpers: skip nulls while mapping, a readable `none()` check, sum or average by a selector, middle-eliding for long strings and paths, and float comparison that shrugs off rounding error. The published download is slimmer, too.
+[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
 
 ### Added
 
@@ -64,30 +38,39 @@ A handful of everyday helpers: skip nulls while mapping, a readable `none()` che
 - **`Iterable.sumBy(selector)` / `Iterable.averageBy(selector)`** ([iterable_sum_by_extensions.dart](lib/iterable/iterable_sum_by_extensions.dart)) — numeric sum/mean over a selector, so reductions work on any element type. `sumBy` returns `0` for empty; `averageBy` returns `null` for empty (no silent `NaN`).
 - **`String.truncateMiddle(maxLength, {ellipsis})`** ([string_truncate_middle_extensions.dart](lib/string/string_truncate_middle_extensions.dart)) — elides the middle while keeping both ends visible (paths, hashes, IDs). Grapheme-cluster safe, so emoji are never split; degrades to a leading cut when the budget is too small.
 - **`double.isCloseTo(other, {relativeTolerance, absoluteTolerance})`** ([double_close_to_extensions.dart](lib/double/double_close_to_extensions.dart)) — tolerance-based float comparison (`(0.1 + 0.2).isCloseTo(0.3)` is `true`). Combines an absolute floor (meaningful near zero) with a relative tolerance (scales to large magnitudes); `NaN` is never close, same-sign infinities are.
+- **`nthSmallest` / `nthLargest`** ([quickselect_utils.dart](lib/collections/quickselect_utils.dart)) — k-th order statistic via quickselect (median-of-three pivot), O(n) average without a full sort; returns `null` for an out-of-range k and never mutates the input.
+- **`Iterable.stableSortBy` / `stableSort`** ([iterable_stable_sort_extensions.dart](lib/iterable/iterable_stable_sort_extensions.dart)) — stable sort that preserves the input order of equal elements, unlike Dart's `List.sort` (which is not guaranteed stable) — needed for correct multi-pass sorting.
+- **`longestCommonSubsequence` / `longestCommonSubsequenceLength`** ([lcs_sequence_utils.dart](lib/collections/lcs_sequence_utils.dart)) — LCS of two lists (order-preserving, gaps allowed), distinct from the existing contiguous LCS-substring; the length variant uses O(min) space.
+- **`deepFreeze`** ([deep_freeze_utils.dart](lib/map/deep_freeze_utils.dart)) — recursively unmodifiable copy of a map/list/set tree; any mutation at any depth throws `UnsupportedError`. A copy, so later edits to the original do not show through.
+- **`getByJsonPath`** ([json_path_utils.dart](lib/parsing/json_path_utils.dart)) — read a value from decoded JSON by a simple `$.a.b[0]` path; returns `null` for any missing/out-of-range segment. Deliberately not full JSONPath (no wildcards/filters/recursive descent).
+- **`CronSchedule.tryParse` + `nextRunAfter`** ([cron_utils.dart](lib/parsing/cron_utils.dart)) — parse a 5-field cron expression (`*`, lists, ranges, steps) and compute the next run after a given time, with Vixie-cron OR semantics for the two day fields; returns `null` for malformed expressions and for impossible schedules (no match within four years).
+- **`parseAcceptLanguage`** ([accept_language_utils.dart](lib/parsing/accept_language_utils.dart)) — parse an `Accept-Language` header into `LanguageRange`s ordered by quality (stable on ties); drops `q=0`, skips malformed entries.
+- **`parseRangeHeader`** ([range_header_utils.dart](lib/parsing/range_header_utils.dart)) — parse an HTTP `Range` header (`bytes=` unit) into `ByteRange`s, supporting explicit, open-ended, suffix, and multi-range forms; `null` on unsupported unit or any malformed range.
+- **`canonicalizeUrl`** ([url_canonicalize_utils.dart](lib/url/url_canonicalize_utils.dart)) — canonical URL form for dedupe/cache keys: lower-cased scheme/host, default port dropped, query parameters (and repeated values) sorted, optional fragment removal.
+- **`debounceStream`** ([stream_debounce_utils.dart](lib/async/stream_debounce_utils.dart)) — re-emits stream values only after a quiet gap (latest-wins per burst); flushes the trailing pending value on close and forwards errors immediately.
 
 ### Changed
 
 - **Trimmed the published pub.dev tarball via `.pubignore`.** Repo-internal directories that no consumer needs — `test/`, `plans/` (130 files), `tool/`, `bugs/`, `reports/`, `scripts/`, and the `coverage/` artifact — are now excluded from the package. `lib/`, `example/`, `assets/`, and the standard README/CHANGELOG/LICENSE/pubspec files remain. Takes effect on the next release; does not alter the already-published 1.1.6.
-
-[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+- **Every release in `CHANGELOG.md` and `CHANGELOG_HISTORY.md` now carries a plain-language opening line followed immediately by a `[log]` link to that version's tagged changelog** (`https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md`; `[Unreleased]` points at `main`). The maintenance-note template URL was corrected from the `saropa-log-capture` repo to `saropa_dart_utils`.
 
 ---
 
 ## [1.1.6]
 
 A republish fix: 1.1.5's exact content reaches pub.dev now that a missing test dependency is declared. No library changes.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.6/CHANGELOG.md)
 
 ### Fixed
 
 - **Release fix: `dart pub publish` failed validation (exit 65), so 1.1.5 never reached pub.dev.** `test/async/debounce_utils_test.dart` and `test/async/heartbeat_utils_test.dart` import `package:fake_async/fake_async.dart`, but `fake_async` was only available transitively (via `flutter_test`) and was not declared in `pubspec.yaml`. pub.dev rejects publishing a package whose sources import an undeclared library. Added `fake_async: ^1.3.3` to `dev_dependencies` (matching the version `flutter_test` resolves). No `lib/` changes — this republishes the 1.1.5 content under 1.1.6.
-
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.6/CHANGELOG.md)
 
 ---
 
 ## [1.1.5]
 
 We added a large batch of unit tests across the library and fixed the five correctness bugs they turned up — edit distance, value caching, an async barrier, CSV dialect detection, and search-query parsing.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.5/CHANGELOG.md)
 
 ### Fixed
 
@@ -124,13 +107,12 @@ These five correctness bugs were surfaced by the new unit tests (see Maintenance
 
 </details>
 
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.5/CHANGELOG.md)
-
 ---
 
 ## [1.1.4]
 
 We cleared three ambiguous-extension clashes that could break importing the package, and documented and tested the nullable helpers that shipped undocumented.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.4/CHANGELOG.md)
 
 ### Fixed
 
@@ -144,13 +126,12 @@ We cleared three ambiguous-extension clashes that could break importing the pack
 
 - **`nullable_more_extensions.dart` documentation and coverage** — added dartdoc with examples to every public member that previously had none (`whenNonNull`, `mapNonNull`, `orElse`, `tryCast`, `isType`, `asTypeOr`, `firstOfType`) and added a full test file (`test/object/nullable_more_extensions_test.dart`, 33 cases) covering each, including null receivers, falsy-but-non-null values, type mismatches, and the empty-list / no-match paths. The file shipped with no tests and no docs in the roadmap batch.
 
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.4/CHANGELOG.md)
-
 ---
 
 ## [1.1.3] - 2026-05-22
 
 Publishing works again: we declared a dependency that was only transitive and fixed the static-analysis score that had been quietly blocking pub.dev.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.3/CHANGELOG.md)
 
 ### Fixed
 
@@ -170,14 +151,11 @@ Publishing works again: we declared a dependency that was only transitive and fi
 
 </details>
 
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.3/CHANGELOG.md)
-
 ---
 
 ## [1.1.2]
 
 A version bump to push a release through publishing.
-
 [log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.2/CHANGELOG.md)
 
 ---
@@ -185,6 +163,7 @@ A version bump to push a release through publishing.
 ## [1.1.1]
 
 We fixed an invalid record return type and made map-key collisions explicit, so two source keys that collapse to one string no longer silently drop a value.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.1/CHANGELOG.md)
 
 ### Fixed
 
@@ -231,13 +210,12 @@ We fixed an invalid record return type and made map-key collisions explicit, so 
 
 </details>
 
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.1/CHANGELOG.md)
-
 ---
 
 ## [1.1.0]
 
 We dropped a `dart:io` dependency (you now pass the locale yourself), expanded HTML entity decoding to 278 named entities, and fixed a couple of async and name-collision bugs.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.0/CHANGELOG.md)
 
 ### Breaking
 
@@ -266,13 +244,12 @@ We dropped a `dart:io` dependency (you now pass the locale yourself), expanded H
 
 </details>
 
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.0/CHANGELOG.md)
-
 ---
 
 ## [1.0.8+1]
 
 A large expansion of the library (collections, graph, stats, validation, async, parsing, and many more string utilities), plus documentation and lint fixes.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.8+1/CHANGELOG.md)
 
 ### Added
 
@@ -314,13 +291,12 @@ New and expanded APIs (all exported from `package:saropa_dart_utils`):
 
 </details>
 
-[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.8+1/CHANGELOG.md)
-
 ---
 
 ## [1.0.8] - 2026-02-24
 
 In this release we introduce typed result classes for common operations, split JSON utilities into focused modules, and bring the code in line with lints (named parameters, narrower exceptions, @useResult). We aimed for clearer structure and safer APIs.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.8/CHANGELOG.md)
 
 ### Added
 
@@ -374,6 +350,7 @@ In this release we introduce typed result classes for common operations, split J
 ## [1.0.7] - 2026-02-22
 
 We split the large string and date-time extension files into smaller modules (everything stays backward compatible), fixed a bunch of lints, and switched to proper test matchers. The codebase is easier to work in and the linter is quieter.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.7/CHANGELOG.md)
 
 ### Fixed
 
@@ -425,6 +402,7 @@ We split the large string and date-time extension files into smaller modules (ev
 ## [1.0.6] - 2026-02-19
 
 We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji handling, and JSON/HTML edge cases. Behavior should be more reliable everywhere.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.0.6/CHANGELOG.md)
 
 ### Fixed (32 bugs resolved — full audit)
 
@@ -490,144 +468,33 @@ We ran a full bug audit and fixed 32 issues—date/time and string logic, emoji 
 
 </details>
 
-## [1.0.5] - 2026-01-08
+---
 
-We rewrote the README with before/after examples and real-world use cases so it’s easier to see what the library does and whether it fits your project.
-
-<details><summary>Maintenance</summary>
-
-**Documentation**
-
-- Rewrote README with compelling production-proven messaging
-- Added before/after code comparison table
-- Added real-world use cases section
-- Improved About section with library origin story
-
-</details>
-
-## [1.0.4] - 2026-01-08
-
-We fixed a flaky date/time test that sometimes failed in CI. Your test runs should be more reliable now.
-
-<details><summary>Maintenance</summary>
-
-**Tests**
-
-- Fix flaky DateTime test race condition in CI
-
-</details>
-
-## [1.0.3] - 2026-01-07
-
-We updated the GitHub Actions publish workflow to use OIDC authentication. Publishing to pub.dev works with the current GitHub setup again.
-
-<details><summary>Maintenance</summary>
-
-**Build/tooling**
-
-- Fix GitHub Actions publish workflow for OIDC authentication
-
-</details>
-
-## [1.0.2] - 2026-01-07
-
-We added a banner to the README so the project is easier to spot at a glance.
-
-<details><summary>Maintenance</summary>
-
-**Documentation**
-
-- Added a banner to README.md
-
-</details>
-
-## [1.0.0] - 2026-01-07
-
-First stable 1.0: we switched to the MIT license for broader use, turned on the full saropa_lints tier for quality, and added README badges so you can see pub points, method count, and coverage at a glance.
-
-### Changed
-
-- Migrated from GPL v3 to MIT license for broader adoption
-
-<details><summary>Maintenance</summary>
-
-**Lint**
-
-- Upgraded saropa_lints from `recommended` to `insanity` tier (all 500+ rules enabled)
-
-**Documentation**
-
-- Pub points badge (dynamic from pub.dev)
-- Methods count badge (480+ methods)
-- Coverage badge (100%)
-- Organized badge assets into `assets/badges/` folder
-
-</details>
-
-## [0.5.12] - 2026-01-05
-
-We switched to the saropa_lints package and custom_lint, and trimmed the analysis config from 255 lines to 69. You get the same level of checking with less to maintain.
-
-<details><summary>Maintenance</summary>
-
-**Build/tooling**
-
-- Replaced manually flattened lint rules with `saropa_lints: ^1.1.12`
-- Added `custom_lint: ^0.8.0` for custom lint rule support
-- Configured `recommended` tier (~150 rules)
-- Simplified `analysis_options.yaml` from 255 lines to 69 lines
-- Removed manually flattened flutter_lints/recommended/core rules
-
-</details>
-
-## [0.5.11]
-
-We added utilities for Base64 compression, UUID validation and formatting, HTML unescape and plain text, and double formatting (percentages, precision, clamping). All of it is covered by 103 new tests.
-
-### Added
-
-- `Base64Utils` - Text compression and decompression (`compressText`, `decompressText`)
-- `UuidUtils` - UUID validation and manipulation (`isUUID`, `addHyphens`, `removeHyphens`)
-- `HtmlUtils` - HTML text processing (`unescape`, `removeHtmlTags`, `toPlainText`)
-- `DoubleExtensions` - Double formatting (`hasDecimals`, `toPercentage`, `formatDouble`, `forceBetween`, `toPrecision`, `formatPrecision`)
-
-<details><summary>Maintenance</summary>
-
-**Tests**
-
-- 103 test cases covering all new utilities
-
-</details>
-
-## [0.5.10] - 2025-12-11
-
-We extended the publish script with version and branch parameters, dry-run validation, and checks for working tree and remote sync. Releases are safer and easier to script from CI.
-
-<details><summary>Maintenance</summary>
-
-**Build/tooling**
-
-- `-Version` parameter for CI/CD automation in publish script
-- `-Branch` parameter to specify target branch
-- Pre-publish validation step (`flutter pub publish --dry-run`)
-- `flutter analyze` step before publishing
-- Working tree status check with user confirmation
-- Remote sync check to prevent publishing when behind remote
-- Early CHANGELOG version validation
-- Step numbering in publish script (was skipping from 4 to 6)
-- `ErrorActionPreference` issue with try/catch for GitHub release check
-- Dynamic package name and repo URL extraction from pubspec.yaml and git remote
-- Excluded example folder from parent analysis
-
-</details>
+**Older versions**: Entries for **1.0.5 and earlier** live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
 
 ---
 
-**Older versions** (0.5.9 and earlier): see [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
+```text
+                                    ....
+                             -+shdmNMMMMNmdhs+-
+                          -odMMMNyo/-..``.++:+o+/-
+                       /dMMMMMM/               `````
+                      dMMMMMMMMNdhhhdddmmmNmmddhs+-
+                      /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh/
+                    . :sdmNNNNMMMMMNNNMMMMMMMMMMMMMMMMm+
+                    o     ..~~~::~+==+~:/+sdNMMMMMMMMMMMo
+                    m                        .+NMMMMMMMMMN
+                    m+                         :MMMMMMMMMm
+                    /N:                        :MMMMMMMMM/
+                     oNs.                    +NMMMMMMMMo
+                      :dNy/.              ./smMMMMMMMMm:
+                       /dMNmhyso+++oosydNNMMMMMMMMMd/
+                          .odMMMMMMMMMMMMMMMMMMMMdo-
+                             -+shdNNMMMMNNdhs+-
+                                     ``
 
----
+Made by Saropa. All rights reserved.
 
-```plain
-
-      Made by Saropa. All rights reserved.
+Learn more at https://saropa.com, or mailto://dev.tools@saropa.com
 ```
+
