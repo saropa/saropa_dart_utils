@@ -332,6 +332,7 @@ export 'string/email_quote_strip_utils.dart';
 export 'string/did_you_mean_utils.dart';
 export 'string/icu_message_utils.dart';
 export 'string/tokenizer_pipeline_utils.dart';
+export 'string/text_diff_structured_utils.dart';
 
 // Async utilities
 export 'async/debounce_utils.dart';
