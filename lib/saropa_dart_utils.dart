@@ -356,6 +356,7 @@ export 'async/async_more_utils.dart';
 
 // Parsing and validation
 export 'parsing/csv_parse_utils.dart';
+export 'parsing/csv_writer_utils.dart';
 export 'parsing/json_model_mapper_utils.dart';
 export 'parsing/email_validation_utils.dart';
 export 'parsing/hex_color_utils.dart';

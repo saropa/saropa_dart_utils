@@ -32,6 +32,7 @@ New algorithmic utilities from the Roadmap-to-700 set: a forgiving JSON-to-model
 ### Added
 
 - **`JsonModelReader`** ([json_model_mapper_utils.dart](lib/parsing/json_model_mapper_utils.dart)) — reads typed fields (`requireString`/`requireInt`/`requireBool`/`requireDouble`/`requireList`/`optionalString`/`child`) from decoded JSON, accumulating a `ValidationErrors` list instead of throwing on the first bad field. Distinguishes missing (`code: 'missing'`) from wrong-type (`code: 'type'`), widens `int`→`double`, and reports nested failures with dotted paths (`address.city`) on a shared collection. Roadmap #637.
+- **`writeCsvLine` / `writeCsv`** ([csv_writer_utils.dart](lib/parsing/csv_writer_utils.dart)) — the inverse of `parseCsvLine`: encode rows to CSV with RFC 4180 auto-quoting (a field is quoted only when it contains the delimiter, a quote, CR, or LF; embedded quotes are doubled). Configurable `delimiter` (TSV via `\t`), `eol` (CRLF default), and `forceQuote`. Round-trips with `parseCsvLine`. Roadmap #622.
 
 ## [1.2.0] - 2026-06-10
 
