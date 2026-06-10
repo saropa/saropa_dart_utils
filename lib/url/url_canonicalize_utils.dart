@@ -47,8 +47,8 @@ Uri canonicalizeUrl(Uri uri, {bool removeFragment = false}) {
     queryParameters: sortedQuery.isEmpty ? null : sortedQuery,
   );
 
-  // removeFragment() strips the fragment cleanly; replace(fragment: '') would
-  // leave a dangling '#'.
+  // Strip the fragment with the dedicated remover, which drops it cleanly;
+  // replacing the fragment with an empty value would leave a dangling hash.
   if (removeFragment) {
     result = result.removeFragment();
   }

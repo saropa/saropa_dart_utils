@@ -10,6 +10,8 @@ library;
 
 /// A single weighted language range from an `Accept-Language` header.
 class LanguageRange {
+  /// Creates a range pairing a [tag] (already lower-cased by the parser) with
+  /// its [quality] weight in 0.0..1.0.
   const LanguageRange(this.tag, this.quality);
 
   /// The language tag, lower-cased (e.g. `en-us`, `fr`, or `*`).

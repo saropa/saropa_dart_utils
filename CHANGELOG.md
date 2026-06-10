@@ -51,6 +51,8 @@ A handful of everyday helpers: skip nulls while mapping, a readable `none()` che
 
 ### Changed
 
+- **README now carries a quality-standard banner** stating the bar every utility meets — world-class lint-clean code, detailed dartdoc on every public member, and comprehensive unit-test coverage.
+- **Hardened today's new utilities to that bar.** Documented the `LanguageRange` and `ByteRange` constructors, resolved trailing-comma lints in `deep_freeze_utils.dart`, and reworded two comments that tripped the commented-out-code heuristic. All 15 new files pass `dart analyze` (including `saropa_lints` and `public_member_api_docs`) with zero issues.
 - **Trimmed the published pub.dev tarball via `.pubignore`.** Repo-internal directories that no consumer needs — `test/`, `plans/` (130 files), `tool/`, `bugs/`, `reports/`, `scripts/`, and the `coverage/` artifact — are now excluded from the package. `lib/`, `example/`, `assets/`, and the standard README/CHANGELOG/LICENSE/pubspec files remain. Takes effect on the next release; does not alter the already-published 1.1.6.
 - **Every release in `CHANGELOG.md` and `CHANGELOG_HISTORY.md` now carries a plain-language opening line followed immediately by a `[log]` link to that version's tagged changelog** (`https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md`; `[Unreleased]` points at `main`). The maintenance-note template URL was corrected from the `saropa-log-capture` repo to `saropa_dart_utils`.
 

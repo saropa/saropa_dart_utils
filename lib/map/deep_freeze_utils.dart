@@ -28,21 +28,27 @@ library;
 /// ```
 Object? deepFreeze(Object? value) {
   if (value is Map) {
-    return Map<Object?, Object?>.unmodifiable(<Object?, Object?>{
-      for (final MapEntry<Object?, Object?> e in value.entries) e.key: deepFreeze(e.value),
-    });
+    return Map<Object?, Object?>.unmodifiable(
+      <Object?, Object?>{
+        for (final MapEntry<Object?, Object?> e in value.entries) e.key: deepFreeze(e.value),
+      },
+    );
   }
   if (value is List) {
-    return List<Object?>.unmodifiable(<Object?>[
-      for (final Object? element in value) deepFreeze(element),
-    ]);
+    return List<Object?>.unmodifiable(
+      <Object?>[
+        for (final Object? element in value) deepFreeze(element),
+      ],
+    );
   }
   // Set checked after List/Map; a Set is not a List, so order is irrelevant
   // here, but keeping scalars last avoids needless is-checks on the common case.
   if (value is Set) {
-    return Set<Object?>.unmodifiable(<Object?>{
-      for (final Object? element in value) deepFreeze(element),
-    });
+    return Set<Object?>.unmodifiable(
+      <Object?>{
+        for (final Object? element in value) deepFreeze(element),
+      },
+    );
   }
   return value;
 }

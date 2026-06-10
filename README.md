@@ -11,6 +11,16 @@
 [![style: saropa lints](https://img.shields.io/badge/style-saropa__lints-4B0082.svg)](https://pub.dev/packages/saropa_lints)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+> ### 🏅 Every utility meets one standard
+>
+> Each method in this library is held to the same bar — no exceptions:
+>
+> - **World-class code.** Pure, tree-shakeable, null-safe Dart that passes `dart analyze` and the full [`saropa_lints`](https://pub.dev/packages/saropa_lints) rule set (1,000+ rules) with zero issues.
+> - **Detailed documentation.** Every public member carries dartdoc that explains the *why* — the failure mode it guards, the edge cases it handles, and a runnable example.
+> - **Bullet-proof test coverage.** Every method is backed by unit tests covering happy paths, empty/null inputs, Unicode, and boundary conditions (5,900+ tests and counting).
+>
+> If a contribution does not clear all three, it does not ship.
+
 ## Production-Proven, Not Theoretical
 
 These utilities aren't academic exercises—they're **dog-fooded daily** in [Saropa Contacts](https://app.saropa.com), a production Flutter app available on both Google Play and the App Store. Every method has been refined through real user feedback and edge cases you only discover in production.

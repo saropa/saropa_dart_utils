@@ -13,6 +13,8 @@ library;
 /// - suffix length → [start] null, [end] holds the number of trailing bytes
 ///   requested (e.g. `-500` → last 500 bytes).
 class ByteRange {
+  /// Creates a byte range from [start] and [end]; see the class doc for how a
+  /// null in either position encodes an open-ended or suffix range.
   const ByteRange(this.start, this.end);
 
   /// First byte offset (inclusive), or null for a suffix-length range.
