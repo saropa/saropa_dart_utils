@@ -413,6 +413,7 @@ export 'parsing/range_header_utils.dart';
 export 'parsing/ini_parser_utils.dart';
 export 'parsing/expression_evaluator_utils.dart';
 export 'parsing/sql_filter_utils.dart';
+export 'parsing/log_line_parser_utils.dart';
 
 // URL and path utilities
 export 'url/path_extension_utils.dart';
