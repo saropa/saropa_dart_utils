@@ -92,6 +92,13 @@ _DECL_RE = re.compile(
         r"(?:(?:[\w<>?,.]+\s+)+)?"
         r"([a-zA-Z_]\w*)"
         r"(?:\.[a-zA-Z_]\w*)?"
+        # Optional generic type parameters on the name, e.g. `nthSmallest<T>(`
+        # or `merge<T extends Comparable<T>>(`. WHY: without this the matcher
+        # missed every generic function/method, so they were invisible to the
+        # audit (uncounted for docs/tests) AND their inner closures were never
+        # seen as nested — `[^(]*` spans nested `>` while stopping before the
+        # parameter list's `(`.
+        r"(?:<[^(]*>)?"
         r"\s*\(([^)]*)\)\s*"
         r"(?:async\s*\*?|sync\s*\*)?\s*"
         r"(?::[^;{]+)?\s*"
@@ -112,6 +119,46 @@ _DECL_RE = re.compile(
 def _decl_name(m: re.Match[str]) -> str:
     """Return the declaration name from a `_DECL_RE` match (method or getter)."""
     return m.group(1) or m.group(3) or ""
+
+
+# Matches an enclosing type declaration so we can tell whether a member lives in
+# a PRIVATE type (e.g. `class _Node`), whose members are not public API.
+_TYPE_DECL_RE = re.compile(
+    r"^\s*(?:abstract\s+|final\s+|sealed\s+|base\s+|interface\s+|mixin\s+)*"
+    r"(?:class|mixin|enum|extension(?:\s+type)?)\s+(\w+)"
+)
+# A private named constructor, e.g. `LevenshteinUtils._();` — the name capture is
+# the (public) class name, but the `._` makes the constructor itself private.
+_PRIVATE_CTOR_RE = re.compile(r"\.\_\w*\s*\(")
+
+
+def _is_nonpublic_decl(lines_arr: list[str], line_1based: int, name: str) -> bool:
+    """True if a declaration is not part of the public API.
+
+    Covers three cases the public-API doc/test contract does NOT apply to, each
+    of which previously produced false positives:
+      1. Private members (`_`-prefixed names).
+      2. Private named constructors (`ClassName._()`), whose captured name is the
+         public class but whose `._` makes the constructor private.
+      3. Members of a private enclosing type (`class _Node { ... }`).
+    """
+    if name.startswith("_"):
+        return True
+    idx = line_1based - 1
+    if 0 <= idx < len(lines_arr) and _PRIVATE_CTOR_RE.search(lines_arr[idx]):
+        return True
+    # Walk up to the nearest enclosing type declaration. A `}` in column 0 means
+    # we left a sibling type without finding an opener, so this decl is top-level.
+    i = idx - 1
+    while i >= 0:
+        line = lines_arr[i]
+        if line.startswith("}"):
+            return False
+        m = _TYPE_DECL_RE.match(line)
+        if m:
+            return m.group(1).startswith("_")
+        i -= 1
+    return False
 
 
 def _section(lines: list[str], title: str) -> list[str]:
@@ -319,7 +366,25 @@ def _method_ranges(content: str) -> list[tuple[int, int, str]]:
                 if depth != 0:
                     ranges.append((decl_line_1based, len(lines), name))
         i += 1
-    return ranges
+
+    # Drop declarations nested inside another declaration's body — local
+    # closures such as an `emitPending()` helper defined inside a function.
+    # WHY: a real top-level function or class member never starts inside the
+    # line span of another matched declaration; a local closure always does.
+    # Without this, closures were audited as if they were public members (e.g.
+    # flagged for "missing doc header", which Dart does not even allow on a
+    # local function). Class/extension headers are not matched by `_DECL_RE`,
+    # so sibling members never contain each other — only bodies contain
+    # closures — making the containment test a clean nesting filter.
+    ranges.sort(key=lambda r: r[0])
+    filtered: list[tuple[int, int, str]] = []
+    last_end = 0
+    for start, end, nm in ranges:
+        if start <= last_end:
+            continue
+        filtered.append((start, end, nm))
+        last_end = end
+    return filtered
 
 
 def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
@@ -339,7 +404,15 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
         content = lib_path.read_text(encoding="utf-8")
         lines_arr = content.splitlines()
         for start_line, end_line, name in _method_ranges(content):
+            # Non-public declarations are not part of the public API, so the
+            # dartdoc contract (enforced repo-wide by `public_member_api_docs`)
+            # does not require docs on them. This covers private members, private
+            # named constructors, and members of private types — together ~half
+            # the false positives in this check.
+            if _is_nonpublic_decl(lines_arr, start_line, name):
+                continue
             doc_lines = []
+            is_override = False
             i = start_line - 2
             while i >= 0 and i < len(lines_arr):
                 l = lines_arr[i].strip()
@@ -353,10 +426,14 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
                 # getters like `anyTrue` (with 7 lines of `///` dartdoc above the
                 # `@useResult` line) were falsely reported as missing dartdoc.
                 elif l == "" or l.startswith("//") or l.startswith("@"):
+                    if l.startswith("@override"):
+                        is_override = True
                     i -= 1
                 else:
                     break
-            if not doc_lines:
+            # Overrides (toString, operator==, hashCode, ...) inherit their
+            # supertype's documentation, so a missing `///` is not a defect.
+            if not doc_lines and not is_override:
                 missing.append(f"  {lib_path.name}:{start_line}  {name}")
 
     report_lines: list[str] = []
@@ -375,7 +452,16 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
 # -----------------------------------------------------------------------------
 
 def audit_recursion_and_bad(lib_root: Path) -> tuple[list[str], list[str]]:
-    """Check for recursion and simple bad practices (empty catch, etc.)."""
+    """Flag genuine bad practices (empty catch blocks).
+
+    WHY no recursion check: a self-call by name is NOT a defect — recursion is
+    the correct, idiomatic implementation for tries, disjoint-set find, graph
+    traversal, tree walks, and deep-structure transforms (all present in this
+    library). Detecting recursion without base-case / termination analysis (which
+    a regex cannot do) only ever produces false positives — every legitimate
+    recursive helper was flagged. The check was removed; the empty-catch smell
+    (a real defect — silently swallowed errors) is kept.
+    """
     report_lines: list[str] = []
     issues: list[str] = []
 
@@ -383,35 +469,18 @@ def audit_recursion_and_bad(lib_root: Path) -> tuple[list[str], list[str]]:
         content = lib_path.read_text(encoding="utf-8")
         lines_arr = content.splitlines()
         for start_line, end_line, name in _method_ranges(content):
-            # WHY: previously the body slice was `lines_arr[start_line - 1 : end_line]`,
-            # which included the declaration line itself. That meant the recursion regex
-            # `\bname\s*\(` always matched the declaration's own `name(` token, flagging
-            # every single method as recursive. We now skip the declaration line so only
-            # actual body lines are scanned.
-            #
-            # Trade-off: real recursion in single-line expression bodies (e.g.
-            # `int fact(int n) => n < 2 ? 1 : n * fact(n - 1);`) will no longer be
-            # detected, because the recursive call sits on the declaration line. That's
-            # acceptable — the previous behavior produced ~793 false positives, so the
-            # heuristic was useless in practice. Single-line recursion is rare enough
-            # that grep handles it when needed.
+            # Skip the declaration line; scan only the body.
             body = "\n".join(lines_arr[start_line:end_line])
-            # Recursion: same name followed by `(`. The name capture from `_method_ranges`
-            # may include a `.named` constructor suffix; strip it for the recursion check
-            # so we look for self-calls by base name.
-            base_name = name.split(".", 1)[0]
-            if re.search(rf"\b{re.escape(base_name)}\s*\(", body):
-                issues.append(f"  {lib_path.name}:{start_line}  possible recursion: {name}()")
-            # Empty catch: catch (_) { } or catch (e) { }
+            # Empty catch: catch (_) { } or catch (e) { } — swallows errors.
             if re.search(r"catch\s*\([^)]+\)\s*\{\s*\}", body):
                 issues.append(f"  {lib_path.name}:{start_line}  empty catch block: {name}")
     if issues:
-        report_lines.append("Potential recursion or bad practices:")
+        report_lines.append("Empty catch blocks (errors silently swallowed):")
         report_lines.extend(issues[:30])
         if len(issues) > 30:
             report_lines.append(f"  ... and {len(issues) - 30} more")
     else:
-        report_lines.append("No obvious recursion or empty-catch issues found.")
+        report_lines.append("No empty-catch issues found.")
     return report_lines, issues
 
 
@@ -490,12 +559,19 @@ def audit_other_quality(project_dir: Path, lib_root: Path) -> list[str]:
     many_params: list[str] = []
     for p in lib_root.rglob("*.dart"):
         content = p.read_text(encoding="utf-8")
+        lines_arr = content.splitlines()
         for m in _DECL_RE.finditer(content):
             params = m.group(2)
             if not params or not params.strip():
                 continue
             name = _decl_name(m)
             if name in _DART_KEYWORD_SKIP:
+                continue
+            # Skip non-public declarations (private members/ctors, members of
+            # private types): the >3-params guideline targets the public API
+            # surface, and private helpers legitimately take more arguments.
+            line_no = content.count("\n", 0, m.start()) + 1
+            if _is_nonpublic_decl(lines_arr, line_no, name):
                 continue
             n = len([x for x in params.split(",") if x.strip()])
             if n > 3:
@@ -539,9 +615,6 @@ _BRANCH_KEYWORDS = ("if", "else", "switch", "case", "for", "while", "do")
 _ITER_CALLS_RE = re.compile(
     r"\.(?:forEach|map|where|fold|reduce|expand|every|any)\s*\("
 )
-# A local variable declaration. A leading binding keyword is the reliable signal
-# and avoids the false positives a general "Type name =" pattern would produce.
-_VAR_DECL_RE = re.compile(r"^\s*(?:final|var|const|late)\b")
 # A real inline comment line: starts with // but is NOT a dartdoc (///, which is
 # API documentation, counted separately) and NOT a // ignore: lint directive
 # (tooling instruction, not an explanation of the logic).
@@ -558,9 +631,17 @@ _MIN_COMMENT_RATIO = 0.34
 def _count_constructs_and_comments(body: list[str]) -> tuple[int, int]:
     """Count comment-worthy constructs and real inline comments in a method body.
 
-    Constructs = branch/loop keywords + functional iteration calls + local
-    variable declarations. Comments = standalone `//` lines plus trailing inline
-    `code // note` comments. Pure comment lines are not also counted as code.
+    Constructs = branch/loop keywords + functional iteration calls. Comments =
+    standalone `//` lines plus trailing inline `code // note` comments. Pure
+    comment lines are not also counted as code.
+
+    WHY only branches/loops (not variable declarations): the project comment
+    policy is "comment WHY on decisions, branches, loops, and invariants — well-
+    named identifiers cover WHAT." Plain `final`/`var` bindings with descriptive
+    names are self-documenting under that rule, so counting each one as a
+    construct demanding a comment contradicts the policy and over-flagged
+    variable-heavy but logic-light methods. Decision and iteration points are
+    what genuinely warrant a "why".
     """
     constructs = 0
     comments = 0
@@ -573,9 +654,6 @@ def _count_constructs_and_comments(body: list[str]) -> tuple[int, int]:
         # A trailing comment on a code line (`x = 1; // why`) still counts.
         if "//" in stripped and not stripped.startswith("//"):
             comments += 1
-        # A local binding (final/var/const/late) is one comment-worthy variable.
-        if _VAR_DECL_RE.match(raw):
-            constructs += 1
         # Each branch/loop keyword occurrence is a separate decision point;
         # `else if` legitimately counts as two (an else and a nested if).
         for keyword in _BRANCH_KEYWORDS:
@@ -646,12 +724,18 @@ def audit_code_comments(
 def _members_with_params(lib_path: Path) -> list[tuple[str, int, int]]:
     """Return (name, param_count, line_1based) for each declaration in a file."""
     text = lib_path.read_text(encoding="utf-8")
+    lines_arr = text.splitlines()
     out: list[tuple[str, int, int]] = []
     for m in _DECL_RE.finditer(text):
         name = _decl_name(m)
-        # Same keyword guard as `_find_public_members`: reject control-flow words
-        # the regex backtracking can place in the name slot.
         if not name or name in _DART_KEYWORD_SKIP:
+            continue
+        line_no = text.count("\n", 0, m.start()) + 1
+        # Skip non-public declarations: private members, private constructors,
+        # and members of private types cannot be referenced by name from a test
+        # file, so the per-parameter test floor is unsatisfiable for them — they
+        # are exercised transitively through the public API that calls them.
+        if _is_nonpublic_decl(lines_arr, line_no, name):
             continue
         params = m.group(2)  # None for getters (the getter branch has no params)
         param_count = (
@@ -659,8 +743,6 @@ def _members_with_params(lib_path: Path) -> list[tuple[str, int, int]]:
             if params and params.strip()
             else 0
         )
-        # Match start offset -> 1-based line via newline count up to the match.
-        line_no = text.count("\n", 0, m.start()) + 1
         out.append((name, param_count, line_no))
     return out
 
@@ -792,10 +874,10 @@ def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
         _section(param_lines, "5. PER-PARAMETER UNIT TEST COVERAGE")
     )
 
-    # 6. Recursion / bad practices
-    ui.print_info("Audit 6/10: Recursion and bad practices...")
+    # 6. Bad practices (empty catch)
+    ui.print_info("Audit 6/10: Bad practices (empty catch)...")
     rec_lines, rec_issues = audit_recursion_and_bad(lib_root)
-    all_lines.extend(_section(rec_lines, "6. RECURSION & BAD PRACTICES"))
+    all_lines.extend(_section(rec_lines, "6. BAD PRACTICES (empty catch)"))
 
     # 7. Try/catch
     ui.print_info("Audit 7/10: Try/catch usage...")
@@ -821,7 +903,8 @@ def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
         "  - Add inline comments to flagged branch/loop/variable-heavy methods.",
         "  - Add per-parameter tests for under-tested methods.",
         "  - Review methods with try/catch for proper error handling.",
-        "  - Address recursion/empty-catch and file length if policy requires.",
+        "  - Fix any empty-catch blocks (silently swallowed errors).",
+        "  - Address file length if policy requires.",
     ]
     all_lines.extend(_section(summary, "10. SUMMARY & RECOMMENDATIONS"))
 
@@ -853,7 +936,7 @@ def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
     if param_issues:
         findings["Thin per-parameter tests"] = param_issues
     if rec_issues:
-        findings["Recursion / bad practices"] = rec_issues
+        findings["Empty catch blocks"] = rec_issues
     if dup_details:
         findings["Duplicate class names"] = dup_details
 

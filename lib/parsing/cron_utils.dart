@@ -177,36 +177,46 @@ bool _parsePart(String part, int min, int max, Set<int> out) {
     step = parsedStep;
   }
 
+  // Resolve the range part into [rangeStart, rangeEnd]. Cron allows three
+  // forms here, each producing a different span that the step then walks.
   int rangeStart;
   int rangeEnd;
   if (rangePart == '*') {
+    // Wildcard: the whole legal span for this field (e.g. 0-59 for minutes).
     rangeStart = min;
     rangeEnd = max;
   } else if (rangePart.contains('-')) {
+    // Explicit range "a-b": exactly two numeric bounds, low <= high.
     final List<String> bounds = rangePart.split('-');
     if (bounds.length != 2) {
       return false;
     }
     final int? lo = int.tryParse(bounds[0]);
     final int? hi = int.tryParse(bounds[1]);
+    // Reject non-numeric bounds and inverted ranges (b < a is meaningless).
     if (lo == null || hi == null || lo > hi) {
       return false;
     }
     rangeStart = lo;
     rangeEnd = hi;
   } else {
+    // Single value. A bare "a" is just {a}; but "a/n" (a step with a single
+    // start) means "from a to the field max, every n", so widen the end when
+    // a step is present.
     final int? single = int.tryParse(rangePart);
     if (single == null) {
       return false;
     }
-    // A bare "a/n" means "from a to max, every n"; a bare "a" is just {a}.
     rangeStart = single;
     rangeEnd = step > 1 ? max : single;
   }
 
+  // Bounds guard: reject any value outside the field's legal range (e.g. a
+  // minute of 60, or day-of-month 32) before emitting.
   if (rangeStart < min || rangeEnd > max) {
     return false;
   }
+  // Emit every value in the resolved span, advancing by the step.
   for (int v = rangeStart; v <= rangeEnd; v += step) {
     out.add(v);
   }

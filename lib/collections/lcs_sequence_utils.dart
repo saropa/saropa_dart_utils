@@ -73,19 +73,27 @@ int longestCommonSubsequenceLength<T>(List<T> a, List<T> b) {
     return 0;
   }
 
-  // Keep two rolling rows rather than the whole table.
+  // Only two rows of the DP table are ever live at once, since each row depends
+  // solely on the row below it. Keep a rolling pair instead of the full table
+  // for linear space. Here prev is the already-computed lower row and curr is
+  // the row being filled.
   List<int> prev = List<int>.filled(b.length + 1, 0);
   List<int> curr = List<int>.filled(b.length + 1, 0);
+  // Fill from the bottom-right so each cell reads already-computed neighbors.
   for (int i = a.length - 1; i >= 0; i--) {
     for (int j = b.length - 1; j >= 0; j--) {
+      // On a match the LCS grows by one over the diagonal (row i+1, col j+1).
       if (a[i] == b[j]) {
         curr[j] = prev[j + 1] + 1;
       } else {
+        // No match: carry the better of dropping a[i] (down) or b[j] (right).
         final int down = prev[j];
         final int right = curr[j + 1];
         curr[j] = down > right ? down : right;
       }
     }
+    // Row i becomes the "previous" row for row i-1; reuse the old prev buffer
+    // as the next scratch row to avoid reallocating each iteration.
     final List<int> swap = prev;
     prev = curr;
     curr = swap;

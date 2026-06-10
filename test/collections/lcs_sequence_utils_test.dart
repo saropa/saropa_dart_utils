@@ -44,5 +44,14 @@ void main() {
     test('is zero for disjoint inputs', () {
       expect(longestCommonSubsequenceLength(<int>[1], <int>[2]), 0);
     });
+
+    test('is zero when either list is empty', () {
+      expect(longestCommonSubsequenceLength(<int>[], <int>[1, 2]), 0);
+      expect(longestCommonSubsequenceLength(<int>[1, 2], <int>[]), 0);
+    });
+
+    test('counts a fully shared run', () {
+      expect(longestCommonSubsequenceLength(<int>[1, 2, 3], <int>[1, 2, 3]), 3);
+    });
   });
 }

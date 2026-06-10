@@ -24,10 +24,10 @@
 cspell:disable
 -->
 
-## [Unreleased]
+## [1.2.0] - 2026-06-10
 
 A handful of everyday helpers: skip nulls while mapping, a readable `none()` check, sum or average by a selector, middle-eliding for long strings and paths, and float comparison that shrugs off rounding error. The published download is slimmer, too.
-[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.2.0/CHANGELOG.md)
 
 ### Added
 
@@ -57,6 +57,7 @@ A handful of everyday helpers: skip nulls while mapping, a readable `none()` che
 
 ### Changed
 
+- **Publish audit (`scripts/modules/audit.py`) heuristics corrected to stop false positives.** The audit flagged ~600 issues that were mostly artifacts of its regex declaration matcher, not real defects. Fixes: the doc-header and per-parameter-test checks now skip non-public declarations (private members, private named constructors like `ClassName._()`, and members of private types like `class _Node`) — the public-API contract does not apply to them; nested local closures are no longer audited as members (a containment filter); the declaration matcher now recognizes generic names (`name<T>(`), so generic functions are seen and their closures contained; the "possible recursion" check was removed entirely (every hit was legitimate recursion — tries, graph traversal, deep-structure transforms — and a regex cannot do base-case analysis), keeping the genuine empty-catch smell; and the inline-comment-density check no longer counts plain `final`/`var` declarations as comment-worthy (the project policy is "well-named identifiers cover WHAT; comment WHY on branches/loops/invariants"). Net on this repo: missing-doc-headers 94→7 (the 7 are residual matcher limits, not real gaps), recursion 29→0, sparse-comments 265→148, thin-per-param 246→199. Today's new utilities additionally received WHY-comments (`getByJsonPath`, `longestCommonSubsequenceLength`, cron `_parsePart`) and an extra `longestCommonSubsequenceLength` test, clearing them from the audit entirely.
 - **`publish.py` now regenerates `CAPABILITIES.md` automatically during release** (step 4, after the remote-sync check and before formatting), so the per-symbol index can never ship stale — the release commit stages it via `git add -A`. Non-fatal if the generator errors.
 - **`ROADMAP_TO_400.md` reached 400/400 and was archived to `plans/history/2026.06/2026.06.10/`.** All originally-outstanding items are implemented; `ROADMAP_TO_700.md` remains the active forward roadmap.
 - **README now carries a quality-standard banner** stating the bar every utility meets — world-class lint-clean code, detailed dartdoc on every public member, and comprehensive unit-test coverage.

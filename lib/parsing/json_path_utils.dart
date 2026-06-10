@@ -25,20 +25,28 @@ library;
 Object? getByJsonPath(Object? json, String path) {
   final List<Object> segments = _parseJsonPath(path);
 
+  // Walk the segments left to right, descending one level per step. Any step
+  // that cannot be taken collapses the whole lookup to null (the documented
+  // "missing path" contract) rather than throwing.
   Object? current = json;
   for (final Object segment in segments) {
+    // A null here means a prior step bottomed out (e.g. a key held null); there
+    // is nothing left to descend into.
     if (current == null) {
       return null;
     }
     // An int segment indexes a list; a String segment keys a map. A mismatch
     // (e.g. indexing a map, or out-of-range list access) resolves to null.
     if (segment is int) {
+      // List index: must be a list AND the index in range, else no match.
       if (current is List && segment >= 0 && segment < current.length) {
         current = current[segment];
       } else {
         return null;
       }
     } else {
+      // Map key: must be a map that actually holds the key (a present key with
+      // a null value is valid and yields null on the NEXT iteration's guard).
       if (current is Map && current.containsKey(segment)) {
         current = current[segment];
       } else {
