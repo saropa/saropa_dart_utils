@@ -20,8 +20,12 @@ List<double> simpleMovingAverage(List<num> values, int size) {
 /// Exponential moving average: [alpha] in (0,1]; first value = first input.
 List<double> exponentialMovingAverage(List<num> values, double alpha) {
   if (values.isEmpty) return <double>[];
+  // Out-of-range alpha (outside 0..1) is treated as "no smoothing": return the
+  // raw values so a bad parameter degrades gracefully instead of distorting.
   if (alpha <= 0 || alpha > 1) return values.map((num x) => x.toDouble()).toList();
   final List<double> out = <double>[];
+  // Seed with the first value (nothing earlier to blend), then each output is a
+  // weighted blend: alpha of the new value plus (1-alpha) of the prior average.
   double prev = values[0].toDouble();
   out.add(prev);
   for (int i = 1; i < values.length; i++) {

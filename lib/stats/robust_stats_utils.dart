@@ -21,13 +21,18 @@ double medianAbsoluteDeviation(List<num> values) {
 /// Trimmed mean: drop [trim] fraction from each tail (0..0.5), then average.
 double trimmedMean(List<num> values, double trim) {
   if (values.isEmpty) return double.nan;
+  // trim <= 0 is a plain mean (no trimming) — short-circuit without sorting.
   if (trim <= 0) {
     return values.fold<double>(0, (double s, num v) => s + v.toDouble()) / values.length;
   }
+  // Sort, then drop k = round(n * trim) elements from EACH end (trim capped at
+  // 0.5 so the two cuts can't overlap into negative territory) and average the
+  // middle. This discards outliers symmetrically for a robust central estimate.
   final List<num> sorted = List<num>.of(values)..sort();
   final int k = (sorted.length * trim.clamp(0.0, 0.5)).round();
   final int start = k;
   final int end = sorted.length - k;
+  // Nothing left after trimming (e.g. tiny input with large trim) -> undefined.
   if (start >= end) return double.nan;
   double sum = 0;
   for (int i = start; i < end; i++) {

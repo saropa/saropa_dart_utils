@@ -61,6 +61,7 @@ abstract final class MyersDiffUtils {
         start = i + 1;
       }
     }
+    // Trailing text after the last newline (no terminator) is the final line.
     if (start < s.length) out.add(s.substringSafe(start.clamp(0, s.length)));
     return out;
   }

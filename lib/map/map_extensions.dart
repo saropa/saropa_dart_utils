@@ -12,11 +12,16 @@ void _writeFormattedValue({
   required String indent,
 }) {
   final String doubleIndent = '$indent$indent';
+  // Render by shape: nested maps recurse for indented sub-formatting; lists are
+  // expanded one element per line inside brackets; anything else is written as
+  // its toString. This is debug/pretty output, not a strict serialization.
   switch (value) {
     case final Map<String, dynamic> nestedMap:
+      // Recurse so nested maps keep the indented multi-line format.
       buffer.write(nestedMap.formatMap());
       buffer.write('\n');
     case final List<dynamic> list:
+      // One item per line, indented a level deeper than the key.
       buffer.write('[\n');
       for (final dynamic listItem in list) {
         buffer
@@ -27,6 +32,7 @@ void _writeFormattedValue({
       buffer.write(indent);
       buffer.write(_listClosingBracket);
     default:
+      // Scalars (and anything else): write the value directly.
       buffer.write(value);
       buffer.write(',\n');
   }
