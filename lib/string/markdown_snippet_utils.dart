@@ -4,6 +4,7 @@ library;
 /// Extracts text under first heading matching [headingPattern] (e.g. r'^#\s+Install').
 String? extractSectionByHeading(String markdown, RegExp headingPattern) {
   final List<String> lines = markdown.split('\n');
+  // Find the matching heading; the section body starts on the line after it.
   int start = -1;
   for (int i = 0; i < lines.length; i++) {
     if (headingPattern.hasMatch(lines[i])) {
@@ -12,6 +13,8 @@ String? extractSectionByHeading(String markdown, RegExp headingPattern) {
     }
   }
   if (start < 0) return null;
+  // Collect lines until the NEXT heading (any line starting with '#'), which
+  // bounds the section. An all-whitespace body is treated as no section (null).
   final List<String> out = <String>[];
   for (int i = start; i < lines.length; i++) {
     if (lines[i].trimLeft().startsWith('#')) break;

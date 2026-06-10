@@ -3,9 +3,13 @@ library;
 
 /// Build histogram: [values] binned by [edges] (sorted). Returns count per bin; edges.length - 1 bins.
 List<int> histogramFixed(List<num> values, List<num> edges) {
+  // n edges define n-1 bins; counts[i] tallies values in [edges[i], edges[i+1]).
   if (edges.length < 2) return <int>[];
   final List<int> counts = List.filled(edges.length - 1, 0);
   for (final num v in values) {
+    // Find the first bin the value falls in. Bins are half-open on the right
+    // EXCEPT the last, which is closed so a value equal to the top edge still
+    // lands in the final bin rather than being dropped.
     for (int i = 0; i < edges.length - 1; i++) {
       if (v >= edges[i] && (i == edges.length - 2 ? v <= edges[i + 1] : v < edges[i + 1])) {
         counts[i]++;
