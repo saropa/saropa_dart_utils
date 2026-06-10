@@ -16,7 +16,7 @@ import 'dart:math' as math;
 
 import 'package:meta/meta.dart';
 
-/// One half-open... no — one inclusive interval `[low, high]` carrying a [value].
+/// One inclusive interval `[low, high]` carrying a [value].
 @immutable
 class IntervalEntry<T> {
   /// Creates an interval `[low, high]` (inclusive) labeled with [value].
