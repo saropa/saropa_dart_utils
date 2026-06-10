@@ -168,8 +168,11 @@ class SlaCalculator {
   }
 }
 
-/// Local-midnight calendar day of [d] (strips time + zone for day-stepping).
-DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+/// Midnight on [d]'s calendar day, preserving its UTC-ness so window instants
+/// built from it stay in the same zone as the caller's input.
+DateTime _dateOnly(DateTime d) =>
+    d.isUtc ? DateTime.utc(d.year, d.month, d.day) : DateTime(d.year, d.month, d.day);
 
-/// Calendar-field day shift (not a `Duration`), DST-safe.
-DateTime _addDays(DateTime d, int days) => DateTime(d.year, d.month, d.day + days);
+/// Calendar-field day shift (not a `Duration`), DST-safe and UTC-preserving.
+DateTime _addDays(DateTime d, int days) =>
+    d.isUtc ? DateTime.utc(d.year, d.month, d.day + days) : DateTime(d.year, d.month, d.day + days);

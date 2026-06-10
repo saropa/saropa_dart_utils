@@ -128,5 +128,13 @@ void main() {
         expect(sla.workingTimeBetween(start, due), equals(const Duration(hours: 10)));
       });
     });
+
+    test('should keep UTC inputs in UTC', () {
+      // Mon 15:00 UTC + 4h = 2h Mon + 2h Tue (from 09:00) = Tue 11:00 UTC.
+      final DateTime due = sla.addWorkingTime(DateTime.utc(2026, 6, 1, 15), const Duration(hours: 4));
+
+      expect(due, equals(DateTime.utc(2026, 6, 2, 11)));
+      expect(due.isUtc, isTrue);
+    });
   });
 }
