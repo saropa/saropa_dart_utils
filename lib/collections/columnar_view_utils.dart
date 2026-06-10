@@ -9,6 +9,9 @@ List<Object?> columnValues(List<Map<String, Object?>> rows, String key) =>
 
 /// Returns map of key -> list of values for all keys in [rows].
 Map<String, List<Object?>> toColumnar(List<Map<String, Object?>> rows) {
+  // Inverse of columnarToRows: turn row maps into column-major lists. The first
+  // row defines the column set (and order); each column pulls its value from
+  // every row via columnValues, so the schema is taken from row 0.
   if (rows.isEmpty) return <String, List<Object?>>{};
   final Map<String, List<Object?>> out = <String, List<Object?>>{};
   final firstRow = rows.firstOrNull;
