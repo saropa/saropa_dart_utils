@@ -78,6 +78,9 @@ extension IterableSegment<T> on Iterable<T> {
   List<List<T>> segmentBy(bool Function(T, T) predicate) {
     final List<T> list = toList();
     if (list.isEmpty) return <List<T>>[];
+    // Group consecutive runs: predicate(prev, curr) decides whether curr stays
+    // in the current run or begins a new one. The final run is flushed after the
+    // loop, since there is no boundary past the last element to trigger it.
     final List<List<T>> out = <List<T>>[];
     List<T> current = <T>[list[0]];
     for (int i = 1; i < list.length; i++) {

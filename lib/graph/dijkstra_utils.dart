@@ -28,6 +28,8 @@ List<double> dijkstraDistances(WeightedAdjacency graph, int source) {
 
 /// Returns (distances, parent array). The parent list entry at index i is the predecessor on shortest path from source.
 (List<double> dist, List<int?> parent) dijkstraWithParents(WeightedAdjacency graph, int source) {
+  // Same as dijkstraDistances, but also records each node's predecessor so the
+  // actual shortest path (not just its length) can be reconstructed.
   final List<double> dist = List.filled(graph.length, double.infinity);
   final List<int?> parent = List.filled(graph.length, null);
   dist[source] = 0;
@@ -39,6 +41,7 @@ List<double> dijkstraDistances(WeightedAdjacency graph, int source) {
       final double d = dist[u] + w;
       if (d < dist[v]) {
         dist[v] = d;
+        // Record how we reached v so the path back to source can be traced.
         parent[v] = u;
         if (!heap.contains(v)) heap.add(v);
       }

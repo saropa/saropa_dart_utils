@@ -8,6 +8,8 @@ import 'graph_utils.dart';
   Adjacency before,
   Adjacency after,
 ) {
+  // Flatten each adjacency list into a set of directed (from, to) edge pairs so
+  // the diff reduces to plain set subtraction, regardless of neighbor ordering.
   final Set<(int, int)> b = <(int, int)>{};
   for (int i = 0; i < before.length; i++) {
     for (final int j in before[i]) {
@@ -20,5 +22,6 @@ import 'graph_utils.dart';
       a.add((i, j));
     }
   }
+  // Added = in after but not before; removed = in before but not after.
   return (a.difference(b).toList(), b.difference(a).toList());
 }
