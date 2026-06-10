@@ -39,6 +39,7 @@ export 'datetime/injectable_clock_utils.dart';
 export 'datetime/timebox_exception.dart';
 export 'datetime/date_format_preset_utils.dart';
 export 'datetime/rrule_parse_utils.dart';
+export 'datetime/recurrence_iterator_utils.dart';
 
 // Double extensions
 export 'double/double_close_to_extensions.dart';
