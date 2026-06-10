@@ -1,8 +1,12 @@
 /// Is prime (small numbers), prime factors. Roadmap #126–127.
 bool isPrime(int n) {
+  // Primes are >= 2; handle 2 (the only even prime) and reject other evens so
+  // the trial-division loop can step by 2 over odd candidates only.
   if (n < 2) return false;
   if (n == 2) return true;
   if (n % 2 == 0) return false;
+  // A composite n has a factor <= sqrt(n), so testing odd divisors up to the
+  // integer square root is sufficient (and far cheaper than testing to n).
   final int limit = _isqrt(n);
   // ignore: saropa_lints/prefer_correct_for_loop_increment -- steps by 2 to skip even candidates
   for (int d = 3; d <= limit; d += 2) {
