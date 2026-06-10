@@ -136,6 +136,7 @@ export 'collections/quickselect_utils.dart';
 export 'collections/lcs_sequence_utils.dart';
 export 'collections/multi_key_group_utils.dart';
 export 'collections/interval_tree_utils.dart';
+export 'collections/dependency_resolver_utils.dart';
 
 // Graph (roadmap 531+)
 export 'graph/graph_utils.dart';
