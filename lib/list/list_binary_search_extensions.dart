@@ -58,6 +58,9 @@ List<T> mergeSorted<T>(List<T> a, List<T> b, [int Function(T a, T b)? compare]) 
       (T a, T b) => a is Comparable<dynamic>
           ? a.compareTo(b)
           : (throw ArgumentError(_kErrTMustImplementComparable));
+  // Standard merge step (as in merge sort): advance two cursors, always taking
+  // the smaller head. `<= 0` keeps it stable — equal elements from `a` come
+  // first. Inputs MUST already be sorted by cmp; this does not sort them.
   final List<T> result = <T>[];
   int i = 0;
   int j = 0;
@@ -68,6 +71,7 @@ List<T> mergeSorted<T>(List<T> a, List<T> b, [int Function(T a, T b)? compare]) 
       result.add(b[j++]);
     }
   }
+  // One list is exhausted; append whatever remains of the other (already sorted).
   while (i < a.length) {
     result.add(a[i++]);
   }

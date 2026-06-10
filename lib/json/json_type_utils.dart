@@ -38,6 +38,9 @@ abstract final class JsonTypeUtils {
     Object? json, {
     String separator = ',',
   }) {
+    // Accept the shapes a JSON field can arrive as, cheapest first: an already-
+    // typed list passes through; a dynamic list is element-checked then cast; a
+    // delimited string is split/trimmed. Anything else is unconvertible (null).
     if (json == null) return null;
     if (json is List<String>) return json;
     if (json is List && json.every((Object? e) => e is String)) {
@@ -60,6 +63,8 @@ abstract final class JsonTypeUtils {
   /// is not possible.
   @useResult
   static List<int>? toIntListJson(Object? json) {
+    // Same multi-shape acceptance as the string variant: typed list through,
+    // dynamic list element-converted (non-ints dropped), comma string parsed.
     if (json == null) return null;
     if (json is List<int>) return json;
     if (json is List) return json.map(toIntJson).whereType<int>().toList();
@@ -107,6 +112,8 @@ abstract final class JsonTypeUtils {
   /// is not possible.
   @useResult
   static List<double>? toDoubleListJson(Object? json) {
+    // Same multi-shape acceptance as the int variant: typed list through,
+    // dynamic list element-converted (unparseable dropped), comma string parsed.
     if (json == null) return null;
     if (json is List<double>) return json;
     if (json is List) {

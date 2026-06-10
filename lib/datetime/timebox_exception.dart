@@ -9,9 +9,13 @@ const String _kTimeboxExceeded = 'Timebox exceeded';
 
 /// Runs [fn]; if not completed in [timeout], returns [onTimeout] result (or throws).
 Future<T> timebox<T>(Future<T> Function() fn, Duration timeout, {T? onTimeout}) async {
+  // Race fn() against a timer via a single Completer: whichever finishes first
+  // wins, and the isCompleted guards make the loser a no-op (a Completer can be
+  // completed only once).
   final Completer<T> c = Completer<T>();
   Timer? t;
   t = Timer(timeout, () {
+    // Timer fired first: settle with the fallback if one was given, else fail.
     if (!c.isCompleted) {
       if (onTimeout != null) {
         c.complete(onTimeout);
