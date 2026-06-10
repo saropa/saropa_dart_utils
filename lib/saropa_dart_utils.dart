@@ -129,6 +129,7 @@ export 'collections/priority_map_utils.dart';
 export 'collections/seeded_shuffle_utils.dart';
 export 'collections/quickselect_utils.dart';
 export 'collections/lcs_sequence_utils.dart';
+export 'collections/multi_key_group_utils.dart';
 
 // Graph (roadmap 531+)
 export 'graph/graph_utils.dart';
