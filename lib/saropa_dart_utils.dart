@@ -367,6 +367,7 @@ export 'async/observability_utils.dart';
 export 'parsing/csv_parse_utils.dart';
 export 'parsing/csv_writer_utils.dart';
 export 'parsing/json_model_mapper_utils.dart';
+export 'parsing/json_schema_utils.dart';
 export 'parsing/email_validation_utils.dart';
 export 'parsing/hex_color_utils.dart';
 export 'parsing/isbn_utils.dart';
