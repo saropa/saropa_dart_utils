@@ -167,6 +167,7 @@ export 'stats/metric_rollup_utils.dart';
 export 'stats/log_transform_utils.dart';
 export 'stats/feature_encoding_utils.dart';
 export 'stats/cdf_utils.dart';
+export 'stats/grouped_stats_utils.dart';
 
 // JSON utilities
 export 'json/json_epoch_scale.dart';
