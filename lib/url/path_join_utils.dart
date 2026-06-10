@@ -20,12 +20,16 @@ String pathJoin(Iterable<String> segments) {
 
 /// Normalize path (resolve . and ..). Roadmap #162.
 String pathNormalize(String path) {
+  // Normalize separators (backslash -> '/', collapse runs), then resolve the
+  // segments: '.' and empty drop out, '..' pops the previous real segment.
   final String p = path.replaceAll(r'\', '/').replaceAll(RegExp(r'/+'), '/');
   final List<String> parts = p.split('/');
   final List<String> out = <String>[];
   for (final String seg in parts) {
     if (seg.isEmpty || seg == '.') continue;
     if (seg == '..') {
+      // Pop the parent; a leading '..' with nothing to pop is dropped (this does
+      // not produce '../' prefixes, matching pathJoin's behavior).
       if (out.isNotEmpty) out.removeLast();
       continue;
     }

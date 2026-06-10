@@ -118,6 +118,9 @@ extension StringMoreExtensions on String {
   /// Returns true if this string reads the same forwards and backwards (optionally ignoring case/punctuation).
   @useResult
   bool isPalindrome({bool ignoreCase = true, bool ignorePunctuation = false}) {
+    // Normalize per the flags first, then compare with two cursors moving inward
+    // from both ends; one mismatch disproves it. The cursors meeting (i >= j)
+    // means every mirrored pair matched.
     String normalized = this;
     if (ignoreCase) normalized = normalized.toLowerCase();
     if (ignorePunctuation) normalized = normalized.replaceAll(RegExp(r'[^\w]'), '');
