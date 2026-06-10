@@ -62,6 +62,9 @@ class _Acc {
   num max = 0;
 
   void add(num value) {
+    // Streaming accumulation (one pass, no stored values). The first value seeds
+    // min and max directly — they start at 0, which would be wrong for an all-
+    // negative or all-positive series, so the count==0 case must not compare.
     if (count == 0) {
       min = value;
       max = value;

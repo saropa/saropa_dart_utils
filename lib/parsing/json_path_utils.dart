@@ -95,6 +95,9 @@ List<Object> _parseJsonPath(String path) {
 /// Parses a run of `[n][m]...` brackets, appending each index as an int.
 void _appendBracketIndices(String brackets, List<Object> out) {
   int i = 0;
+  // Consume consecutive `[...]` groups. Stop at the first character that is not
+  // an opening bracket, or at an unclosed bracket — malformed trailing input is
+  // ignored rather than throwing. Non-integer contents are skipped silently.
   while (i < brackets.length) {
     if (brackets[i] != '[') {
       break;
@@ -103,10 +106,12 @@ void _appendBracketIndices(String brackets, List<Object> out) {
     if (close < 0) {
       break;
     }
+    // ignore: avoid_string_substring -- bounds come from indexOf/loop guard above
     final int? index = int.tryParse(brackets.substring(i + 1, close).trim());
     if (index != null) {
       out.add(index);
     }
+    // Advance past this closing bracket to the next group (if any).
     i = close + 1;
   }
 }

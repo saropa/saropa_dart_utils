@@ -4,6 +4,9 @@ library;
 /// Percentile rank of [value] in [sorted] (0..1). Assumes [sorted] is sorted ascending.
 double percentileRank(List<num> sorted, num value) {
   if (sorted.isEmpty) return double.nan;
+  // Fraction of values strictly below `value`. Relies on the input being sorted
+  // ascending: once an element is >= value, all later ones are too, so the scan
+  // can stop early. Result is in 0..1 (count of smaller elements over total).
   int count = 0;
   for (final num x in sorted) {
     if (x < value) {
