@@ -376,6 +376,7 @@ export 'async/rate_limiter_utils.dart';
 export 'async/sliding_window_rate_limiter_utils.dart';
 export 'async/resource_pool_utils.dart';
 export 'async/bounded_work_queue_utils.dart';
+export 'async/read_write_lock_utils.dart';
 
 // Parsing and validation
 export 'parsing/csv_parse_utils.dart';
