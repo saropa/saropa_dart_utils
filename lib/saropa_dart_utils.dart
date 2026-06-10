@@ -374,6 +374,7 @@ export 'async/observability_utils.dart';
 export 'async/task_scheduler_utils.dart';
 export 'async/rate_limiter_utils.dart';
 export 'async/resource_pool_utils.dart';
+export 'async/bounded_work_queue_utils.dart';
 
 // Parsing and validation
 export 'parsing/csv_parse_utils.dart';
