@@ -83,6 +83,10 @@ String renderUnifiedDiff(
   return out.toString();
 }
 
+// Renders one diff line — its marker [prefix] (+/-/space) and text — in the
+// requested output format. Plain ignores [color]; ANSI wraps in SGR escape
+// codes; HTML wraps in a CSS-classed span and escapes the text. A null/other
+// color falls through to the unstyled/context form in each format.
 String _prefix(DiffOutputFormat format, String prefix, String line, String? color) {
   switch (format) {
     case DiffOutputFormat.plain:

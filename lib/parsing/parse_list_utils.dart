@@ -8,6 +8,9 @@ const String _kLogParseListJsonFailed = 'parseListFromString: JSON decode failed
 List<String> parseListFromString(String input, {String delimiter = ','}) {
   final String s = input.trim();
   if (s.isEmpty) return <String>[];
+  // Bracketed input is parsed as a JSON-style array first so quoted commas are
+  // respected; a failed parse falls through to delimiter splitting rather than
+  // throwing, so malformed brackets still yield a best-effort list.
   if (s.startsWith('[') && s.endsWith(']')) {
     try {
       final Object? decoded = _jsonDecode(s);
@@ -18,6 +21,7 @@ List<String> parseListFromString(String input, {String delimiter = ','}) {
       dev.log(_kLogParseListJsonFailed, error: e);
     }
   }
+  // Plain mode: split on the delimiter, trimming and dropping empty pieces.
   return s.split(delimiter).map((String x) => x.trim()).where((String x) => x.isNotEmpty).toList();
 }
 

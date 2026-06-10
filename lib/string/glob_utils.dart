@@ -44,11 +44,16 @@ abstract final class GlobUtils {
     return _matchSegments(pathSegs, pi + 1, patternSegs, qi + 1);
   }
 
+  // Matches one path segment against one glob pattern segment (no '/' inside).
+  // '*' matches any run within the segment, '?' exactly one char, anything else
+  // is a literal. '*' is the only backtracking point.
   static bool _matchSegment(String seg, String pat) {
     int segmentIdx = 0;
     int patternIdx = 0;
     while (patternIdx < pat.length) {
       if (pat[patternIdx] == '*') {
+        // Try matching the rest of the pattern at every split of the remaining
+        // segment (shortest match first); succeed if any split works.
         patternIdx++;
         while (segmentIdx <= seg.length) {
           if (_matchSegmentRest(seg, segmentIdx, pat, patternIdx)) return true;
@@ -57,15 +62,18 @@ abstract final class GlobUtils {
         return false;
       }
       if (pat[patternIdx] == '?') {
+        // One arbitrary character — requires a character to be present.
         if (segmentIdx >= seg.length) return false;
         segmentIdx++;
         patternIdx++;
         continue;
       }
+      // Literal char must match exactly.
       if (segmentIdx >= seg.length || seg[segmentIdx] != pat[patternIdx]) return false;
       segmentIdx++;
       patternIdx++;
     }
+    // Pattern exhausted: match only if the segment is fully consumed too.
     return segmentIdx >= seg.length;
   }
 

@@ -148,6 +148,9 @@ List<DiffOp> _mergeOps({
   required List<String> a,
   required List<String> b,
 }) {
+  // Coalesce the per-token edit script into runs: consecutive edits of the same
+  // kind (equal / insert / delete) become one DiffOp carrying their joined text,
+  // so callers get "−this whole line / +that whole line" instead of char-by-char.
   final List<DiffOp> result = List.filled(edits.length, DiffOp(DiffOpKind.equal, ''));
   int resultIndex = 0;
   final StringBuffer buf = StringBuffer();
@@ -155,6 +158,8 @@ List<DiffOp> _mergeOps({
   while (idx < edits.length) {
     final DiffOpKind k = edits[idx]._kind;
     buf.clear();
+    // Consume the maximal run of the current kind, pulling text from the source
+    // it refers to: equal/delete read from a, insert reads from b.
     int i = idx;
     while (i < edits.length && edits[i]._kind == k) {
       if (k == DiffOpKind.equal) {
@@ -169,5 +174,6 @@ List<DiffOp> _mergeOps({
     result[resultIndex++] = DiffOp(k, buf.toString());
     idx = i;
   }
+  // result was sized to the edit count (an upper bound); trim to the runs made.
   return result.sublist(0, resultIndex);
 }
