@@ -4,6 +4,7 @@ import json
 import re
 import shutil
 import subprocess
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -541,19 +542,35 @@ def create_github_release(
         )
         return True, None
 
-    result = run_mod.run_capture(
-        [
-            "gh",
-            "release",
-            "create",
-            tag_name,
-            "--title",
-            f"Release {tag_name}",
-            "--notes",
-            release_notes,
-        ],
-        project_dir,
+    # Pass release notes via a temp file, NOT inline --notes. On Windows
+    # run_capture runs with shell=True (required to find flutter.bat etc.), so an
+    # inline multi-line --notes value is handed to cmd.exe, which interprets the
+    # changelog's newlines and metacharacters (& | ( ) < > backticks) and corrupts
+    # the command — the exact failure that returned exit 1 here while a one-word
+    # note succeeded. --notes-file keeps the body off the command line entirely.
+    notes_file = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".md", delete=False, encoding="utf-8"
     )
+    try:
+        notes_file.write(release_notes)
+        notes_file.close()
+        result = run_mod.run_capture(
+            [
+                "gh",
+                "release",
+                "create",
+                tag_name,
+                "--title",
+                f"Release {tag_name}",
+                "--notes-file",
+                notes_file.name,
+            ],
+            project_dir,
+        )
+    finally:
+        # Remove the temp file regardless of gh's outcome; it has served its
+        # purpose once the command has run (or failed to).
+        Path(notes_file.name).unlink(missing_ok=True)
 
     if result.returncode == 0:
         ui.print_success(f"Created GitHub release {tag_name}")
@@ -572,6 +589,11 @@ def create_github_release(
             "      Then run: gh auth status"
         )
 
+    # Surface gh's own message: a bare "exit code 1" hid the real cause last time
+    # (a shell-corrupted --notes value), forcing a manual reproduction to diagnose.
+    detail = error_output.strip()
+    if detail:
+        return False, f"GitHub release failed (exit code {result.returncode}): {detail}"
     return False, f"GitHub release failed (exit code {result.returncode})"
 
 

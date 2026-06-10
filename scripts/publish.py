@@ -59,7 +59,7 @@ This script automates the complete release workflow for a Dart/Flutter package.
         only exits 0 once pub.dev serves the new version; a workflow that reports
         success while pub.dev got nothing exits PUBLISH_FAILED.
 
-Version:   2.8
+Version:   2.9
 Author:    Saropa
 Copyright: (c) 2025 Saropa
 
