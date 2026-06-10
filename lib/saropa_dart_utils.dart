@@ -233,6 +233,7 @@ export 'regex/regex_common_utils.dart';
 export 'regex/regex_match_utils.dart';
 
 // Caching
+export 'caching/cache_interface.dart';
 export 'caching/lru_cache.dart';
 export 'caching/memoize_sync_utils.dart';
 export 'caching/size_limit_cache.dart';

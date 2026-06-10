@@ -1,8 +1,11 @@
+import 'package:saropa_dart_utils/caching/cache_interface.dart';
+
 /// Cache with size limit (evict oldest). Roadmap #198.
 ///
 /// Optional [ttl] expires entries after the given duration; expired entries
-/// are treated as missing on [get].
-class SizeLimitCache<K extends Object, V extends Object> {
+/// are treated as missing on [get]. Implements [Cache] so it is swappable with
+/// the other eviction policies behind that interface.
+class SizeLimitCache<K extends Object, V extends Object> implements Cache<K, V> {
   /// Creates a cache holding at most [maxSize] entries (must be positive).
   /// When [ttl] is set, entries expire that long after they were stored.
   SizeLimitCache(int maxSize, {Duration? ttl})

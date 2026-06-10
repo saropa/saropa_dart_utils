@@ -1,5 +1,10 @@
+import 'package:saropa_dart_utils/caching/cache_interface.dart';
+
 /// TTL cache (expire after duration). Roadmap #195.
-class TtlCache<K extends Object, V extends Object> {
+///
+/// Implements [Cache] so it is swappable with the other eviction policies
+/// behind that interface.
+class TtlCache<K extends Object, V extends Object> implements Cache<K, V> {
   /// Creates a cache whose entries each expire [ttl] after being stored.
   TtlCache(Duration ttl) : _ttl = ttl;
 
