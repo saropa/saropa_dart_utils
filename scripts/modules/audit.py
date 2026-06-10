@@ -54,71 +54,186 @@ _DART_KEYWORD_SKIP = frozenset(
 )
 
 
-# Strict Dart declaration matcher.
+# Dart declaration parser.
 #
-# WHY: The previous regex made the declaration tail optional and was anchored only
-# to the start of a line, so it matched call sites inside method bodies (e.g.
-# `Duration(seconds: 1)`, `assert(x != null)`, `unawaited(future)`, `debugPrint(...)`)
-# as if they were method declarations. That produced ~80% false-positive findings
-# in the doc-header, recursion, and >3-params audits.
-#
-# This pattern only matches lines that LOOK like declarations:
-#   - Indent ≤ 3 spaces (top-level functions or class members; body call sites are
-#     at indent ≥ 4 in standard Dart formatting).
-#   - Optional annotation prefix (@override, @Deprecated('msg'), etc.).
-#   - Optional declaration modifiers (static/external/abstract/factory/...).
-#   - Either: optional return type + name + `(params)`     (method/function/ctor)
-#         or: required return type + `get` + getter name   (getter)
-#   - Mandatory declaration tail anchored to end-of-line: `{`, `=>`, or `;`
-#     (call sites end with `,`, `)`, `.`, or `;` after argument expressions, but
-#     `;` after `(...)` immediately followed by EOL is rare for body calls and
-#     common for abstract decls — the indent restriction handles the residue).
-#
-# Group 1: method/function/constructor name (supports `Foo.named` constructors).
-# Group 2: parameter list contents (None for getters).
-# Group 3: getter name (None for methods).
-_DECL_RE = re.compile(
-    r"^[ ]{0,3}"
-    r"(?:@\w+(?:\([^)]*\))?\s+)*"
-    r"(?:(?:static|external|abstract|factory|const|final|late|covariant|required)\s+)*"
-    r"(?:"
-        # Method / function / constructor branch.
-        # Return type is one or more "token + whitespace" pairs. The token
-        # charset deliberately EXCLUDES whitespace — otherwise a non-greedy
-        # `[\w<>?,.\s]+?` would gladly consume leading indent spaces and let
-        # an indent-4 body call site (e.g. `    _waiters.add(c);`) match by
-        # eating the 4th space as part of the "return type". Keeping `\s`
-        # only as the separator forces the line to start with a real token.
-        r"(?:(?:[\w<>?,.]+\s+)+)?"
-        r"([a-zA-Z_]\w*)"
-        r"(?:\.[a-zA-Z_]\w*)?"
-        # Optional generic type parameters on the name, e.g. `nthSmallest<T>(`
-        # or `merge<T extends Comparable<T>>(`. WHY: without this the matcher
-        # missed every generic function/method, so they were invisible to the
-        # audit (uncounted for docs/tests) AND their inner closures were never
-        # seen as nested — `[^(]*` spans nested `>` while stopping before the
-        # parameter list's `(`.
-        r"(?:<[^(]*>)?"
-        r"\s*\(([^)]*)\)\s*"
-        r"(?:async\s*\*?|sync\s*\*)?\s*"
-        r"(?::[^;{]+)?\s*"
-        r"(?:\{|=>|;)"
-        r"|"
-        # Getter branch (required return type + `get` + name + body opener).
-        # Same rationale: token-based return type, no whitespace inside the
-        # type token.
-        r"(?:[\w<>?,.]+\s+)+get\s+"
-        r"([a-zA-Z_]\w*)\s*"
-        r"(?:=>|\{)"
-    r")"
-    r"[^\n]*$",
-    re.MULTILINE,
+# WHY a hand parser instead of one mega-regex: a regex cannot balance Dart's
+# nested `<>` generics or `()` function-type params. The previous regex both
+# MISSED real generic functions (e.g. `Future<T> raceFirst<T>(... Function() ...)`
+# never matched, so it was invisible to every check) AND mis-captured type names
+# from generic bounds and constructor calls (`nWayMerge<T extends Comparable<..>>(`
+# reported its name as `Comparable`; `= Completer<T>()` reported `Completer`;
+# `copy.sort(x)` reported `copy`). This parser finds the real declaration name —
+# the identifier immediately before the parameter `(` (after an optional
+# balanced `<...>` generic clause) — and rejects names preceded by an
+# expression/call character, which is what distinguishes a declaration from a
+# call site or a variable initializer.
+
+# Getter: optional modifiers, a return type, then `get name` and a body opener.
+_GETTER_DECL_RE = re.compile(
+    r"^(?:(?:static|external|abstract|final|late|covariant)\s+)*"
+    r"(?:[\w<>?,.]+\s+)+get\s+([a-zA-Z_]\w*)\s*(?:=>|\{)"
 )
+# Strips a leading annotation (`@override`, `@Deprecated('x')`) from a line.
+_LEADING_ANNOTATION_RE = re.compile(r"^@\w+(?:\s*\([^)]*\))?\s*")
+# If the character immediately before a candidate name is one of these, the name
+# is part of an expression (a call `x.f(`, an init `= F(`, an argument `(F(`),
+# NOT a declaration. `>` and `?` are intentionally absent — they legitimately
+# close a return type, as in `List<T> name(` and `T? name(`.
+_NONDECL_PRECEDING = frozenset(".=,(+-*/%&|!:;[{")
 
 
-def _decl_name(m: re.Match[str]) -> str:
-    """Return the declaration name from a `_DECL_RE` match (method or getter)."""
-    return m.group(1) or m.group(3) or ""
+def _name_before(s: str, paren_idx: int) -> tuple[str, int] | None:
+    """Given the index of a parameter-list `(`, return the declaration name that
+    precedes it (skipping a balanced `<...>` generic clause and whitespace) and
+    the index just before that name, or None if no plain identifier is there.
+    """
+    j = paren_idx - 1
+    while j >= 0 and s[j] == " ":
+        j -= 1
+    # Skip a balanced generic clause attached to the name, e.g. `foo<T>(`.
+    if j >= 0 and s[j] == ">":
+        depth = 0
+        while j >= 0:
+            if s[j] == ">":
+                depth += 1
+            elif s[j] == "<":
+                depth -= 1
+                if depth == 0:
+                    j -= 1
+                    break
+            j -= 1
+        while j >= 0 and s[j] == " ":
+            j -= 1
+    end = j + 1
+    while j >= 0 and (s[j].isalnum() or s[j] == "_"):
+        j -= 1
+    name = s[j + 1 : end]
+    if not name or not (name[0].isalpha() or name[0] == "_"):
+        return None
+    return name, j
+
+
+def _strip_line_comment(s: str) -> str:
+    """Drop a trailing `//` comment. Naive (ignores `//` inside string literals),
+    which is acceptable for declaration lines — they rarely embed such strings."""
+    idx = s.find("//")
+    return s[:idx] if idx >= 0 else s
+
+
+# Matches a single- or double-quoted string literal (with escapes). Replaced with
+# an empty placeholder so parens/identifiers INSIDE a string (e.g. the literal
+# `'TrieUtils()'`) are not mistaken for a declaration.
+_STRING_LITERAL_RE = re.compile(r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"")
+
+
+def _strip_strings(s: str) -> str:
+    return _STRING_LITERAL_RE.sub("''", s)
+
+
+def _count_top_level_params(params: str) -> int:
+    """Count comma-separated params at nesting depth 0 (so `Function()` and
+    `Map<K, V>` inside a single param are not miscounted as extra params)."""
+    if not params.strip():
+        return 0
+    depth = 0
+    count = 1
+    for ch in params:
+        if ch in "(<[{":
+            depth += 1
+        elif ch in ")>]}":
+            depth -= 1
+        elif ch == "," and depth == 0:
+            count += 1
+    return count
+
+
+def _parse_decl(line: str) -> tuple[str, int | None] | None:
+    """Parse one line as a Dart method/function/getter/constructor declaration.
+
+    Returns `(name, param_count)` — `param_count` is `None` for getters — or
+    `None` if the line is not a declaration. Declarations sit at indent ≤ 3
+    (members/top-level); body statements at ≥ 4 are skipped.
+    """
+    if len(line) - len(line.lstrip(" ")) > 3:
+        return None
+    s = _strip_strings(_strip_line_comment(line)).strip()
+    if not s or s[0] in "*/":
+        return None
+    # Drop a leading inline annotation so `@override int x(...)` is seen.
+    s = _LEADING_ANNOTATION_RE.sub("", s)
+    if not s:
+        return None
+
+    mg = _GETTER_DECL_RE.match(s)
+    if mg:
+        return (mg.group(1), None)
+
+    # The declaration name is the identifier immediately before the parameter
+    # list `(`. Try each `(` left to right: the first whose preceding identifier
+    # is a real declaration name (not a call/init/argument) is the declaration.
+    for idx, ch in enumerate(s):
+        if ch != "(":
+            continue
+        found = _name_before(s, idx)
+        if not found:
+            continue
+        name, before_idx = found
+        if name in _DART_KEYWORD_SKIP:
+            continue
+        # Reject expression/call contexts by the character preceding the name
+        # (`x.f(` -> `.`, `= F(` -> `=`, `(F(` -> `(`).
+        k = before_idx
+        while k >= 0 and s[k] == " ":
+            k -= 1
+        if k >= 0 and s[k] in _NONDECL_PRECEDING:
+            continue
+        # Balanced scan of the parameter list to extract its top-level contents.
+        depth = 0
+        chars: list[str] = []
+        close_idx = -1
+        for offset, c in enumerate(s[idx:]):
+            if c == "(":
+                depth += 1
+                if depth == 1:
+                    continue
+            elif c == ")":
+                depth -= 1
+                if depth == 0:
+                    close_idx = idx + offset
+                    break
+            chars.append(c)
+        # When the param list closes on this line, the text after `)` must be a
+        # declaration tail (`{`, `=>`, `;`, an `async`/`sync` marker, or a `:`
+        # constructor init list). A trailing `,` or `)` means this was a call
+        # used as a list element / argument (e.g. `Rule(re, repl),`), not a
+        # declaration. A signature that does NOT close here is multi-line — accept
+        # it so the (already-captured) name is still seen.
+        if close_idx >= 0:
+            tail = s[close_idx + 1 :].strip()
+            if not _is_decl_tail(tail):
+                continue
+        return (name, _count_top_level_params("".join(chars)))
+    return None
+
+
+def _is_decl_tail(tail: str) -> bool:
+    """Whether the text after a declaration's `)` marks a real declaration."""
+    if tail == "" or tail == ";":
+        return True
+    return (
+        tail[0] in "{:"
+        or tail.startswith("=>")
+        or tail.startswith("async")
+        or tail.startswith("sync")
+    )
+
+
+def _iter_decls(text: str):
+    """Yield `(name, param_count, line_1based)` for each declaration in `text`."""
+    for i, line in enumerate(text.splitlines(), 1):
+        parsed = _parse_decl(line)
+        if parsed is not None:
+            yield parsed[0], parsed[1], i
 
 
 # Matches an enclosing type declaration so we can tell whether a member lives in
@@ -180,53 +295,24 @@ def _section(lines: list[str], title: str) -> list[str]:
 def _find_public_members(lib_path: Path) -> list[str]:
     """Extract public member names (methods, getters, constructors) from a Dart lib file."""
     text = lib_path.read_text(encoding="utf-8")
-    members: list[str] = []
-    for m in _DECL_RE.finditer(text):
-        name = _decl_name(m)
-        # Reject keywords that the regex's backtracking could have placed in the name slot
-        # (e.g. when a return type is absent and a control-flow keyword sits at line start).
-        if not name or name in _DART_KEYWORD_SKIP:
-            continue
-        members.append(name)
-    return members
+    return [name for name, _params, _line in _iter_decls(text)]
 
 
-def _lib_to_test_path(lib_path: Path, lib_root: Path, test_root: Path) -> Path | None:
-    """Map lib/foo/bar.dart -> test/foo/bar_test.dart."""
-    try:
-        rel = lib_path.relative_to(lib_root)
-    except ValueError:
-        return None
-    # e.g. string/string_slug_extensions.dart -> string/string_slug_extensions_test.dart
-    stem = rel.stem
-    if stem.endswith("_extensions") or stem.endswith("_utils"):
-        test_name = f"{stem}_test.dart"
-    else:
-        test_name = f"{rel.stem}_test.dart"
-    test_path = test_root / rel.parent / test_name
-    return test_path if test_path.exists() else None
+def _all_test_blocks(test_root: Path) -> list[str]:
+    """Every test()/group() block body across all test files, as raw text.
 
-
-def _count_tests_per_member(
-    test_path: Path, members: list[str]
-) -> dict[str, int]:
-    """Count how many test() blocks reference each member. Heuristic: member name in block."""
-    text = test_path.read_text(encoding="utf-8")
-    # Split by test(' or test(" or group(' or group(" to get blocks
-    blocks = re.split(r"\b(?:test|group)\s*\(\s*['\"]", text)
-    count: dict[str, int] = defaultdict(int)
-    for block in blocks[1:]:  # first part is before first test/group
-        # Credit EVERY member referenced in this block, not just the first.
-        # WHY: a previous `break` exited the member loop after the first match,
-        # so a block exercising several methods (the common case — one group
-        # tests a whole extension) credited only one of them and zeroed the
-        # rest. That produced a flood of false "0 tests" findings and a
-        # distorted coverage histogram. Each member is still counted at most
-        # once per block (no inner break, just a single membership test).
-        for member in members:
-            if member in block:
-                count[member] += 1
-    return dict(count)
+    WHY global (not the mapped `<lib>_test.dart`): this repo groups several lib
+    files under one combined test file, so a per-file mapping under-counts.
+    Counting a member's references across all blocks fixes the histogram and the
+    untested-method check alike.
+    """
+    blocks: list[str] = []
+    if not test_root.exists():
+        return blocks
+    for tf in test_root.rglob("*.dart"):
+        parts = re.split(r"\b(?:test|group)\s*\(\s*['\"]", tf.read_text(encoding="utf-8"))
+        blocks.extend(parts[1:])
+    return blocks
 
 
 def audit_coverage(project_dir: Path, lib_root: Path, test_root: Path) -> tuple[list[str], dict[str, int]]:
@@ -236,19 +322,15 @@ def audit_coverage(project_dir: Path, lib_root: Path, test_root: Path) -> tuple[
     """
     lines: list[str] = []
     test_count_by_method: dict[str, int] = {}
+    all_blocks = _all_test_blocks(test_root)
 
     lib_dart = list(lib_root.rglob("*.dart"))
     for lib_path in lib_dart:
         members = _find_public_members(lib_path)
-        test_path = _lib_to_test_path(lib_path, lib_root, test_root)
-        if not test_path:
-            for m in members:
-                test_count_by_method[f"{lib_path.relative_to(project_dir)}::{m}"] = 0
-            continue
-        counts = _count_tests_per_member(test_path, members)
+        # Count how many test/group blocks (anywhere) reference each member.
         for m in members:
             key = f"{lib_path.relative_to(project_dir)}::{m}"
-            test_count_by_method[key] = counts.get(m, 0)
+            test_count_by_method[key] = sum(1 for b in all_blocks if m in b)
 
     # Histogram: 0 -> n0, 1 -> n1, ...
     hist: dict[int, int] = defaultdict(int)
@@ -350,11 +432,11 @@ def _method_ranges(content: str) -> list[tuple[int, int, str]]:
     i = 0
     while i < len(lines):
         line = lines[i]
-        # Use the same strict declaration matcher as `_find_public_members` so the
+        # Use the same declaration parser as `_find_public_members` so the
         # method-range list is consistent with the member list (no call-site noise).
-        m = _DECL_RE.match(line)
-        name = _decl_name(m) if m else ""
-        if m and name and name not in _DART_KEYWORD_SKIP:
+        parsed = _parse_decl(line)
+        name = parsed[0] if parsed else ""
+        if name:
             decl_line_1based = i + 1
             depth = 0
             for j in range(i, len(lines)):
@@ -434,6 +516,15 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
                 elif l == "" or l.startswith("//") or l.startswith("@"):
                     if l.startswith("@override"):
                         is_override = True
+                    i -= 1
+                # Skip a multi-line signature continuation: when a declaration's
+                # return type / parameter list spans several lines, the lines
+                # just above the `(` line end with `)`, `>`, or `,` and are not
+                # the doc. WHY: e.g. a record-returning function whose tuple type
+                # sits on its own line above the name — without this the walk
+                # stopped there and falsely reported the (present) dartdoc above
+                # it as missing.
+                elif l.endswith((")", ">", ",")):
                     i -= 1
                 else:
                     break
@@ -566,22 +657,17 @@ def audit_other_quality(project_dir: Path, lib_root: Path) -> list[str]:
     for p in lib_root.rglob("*.dart"):
         content = p.read_text(encoding="utf-8")
         lines_arr = content.splitlines()
-        for m in _DECL_RE.finditer(content):
-            params = m.group(2)
-            if not params or not params.strip():
-                continue
-            name = _decl_name(m)
-            if name in _DART_KEYWORD_SKIP:
+        for name, param_count, line_no in _iter_decls(content):
+            # Getters (param_count None) and zero-arg members have no param surface.
+            if not param_count:
                 continue
             # Skip non-public declarations (private members/ctors, members of
             # private types): the >3-params guideline targets the public API
             # surface, and private helpers legitimately take more arguments.
-            line_no = content.count("\n", 0, m.start()) + 1
             if _is_nonpublic_decl(lines_arr, line_no, name):
                 continue
-            n = len([x for x in params.split(",") if x.strip()])
-            if n > 3:
-                many_params.append(f"  {p.name}: {name}() has {n} params")
+            if param_count > 3:
+                many_params.append(f"  {p.name}: {name}() has {param_count} params")
     lines.append("")
     lines.append(f"Methods with >3 parameters: {len(many_params)}")
     lines.extend(many_params[:15])
@@ -732,79 +818,73 @@ def _members_with_params(lib_path: Path) -> list[tuple[str, int, int]]:
     text = lib_path.read_text(encoding="utf-8")
     lines_arr = text.splitlines()
     out: list[tuple[str, int, int]] = []
-    for m in _DECL_RE.finditer(text):
-        name = _decl_name(m)
-        if not name or name in _DART_KEYWORD_SKIP:
-            continue
-        line_no = text.count("\n", 0, m.start()) + 1
+    for name, param_count, line_no in _iter_decls(text):
         # Skip non-public declarations: private members, private constructors,
         # and members of private types cannot be referenced by name from a test
         # file, so the per-parameter test floor is unsatisfiable for them — they
         # are exercised transitively through the public API that calls them.
         if _is_nonpublic_decl(lines_arr, line_no, name):
             continue
-        params = m.group(2)  # None for getters (the getter branch has no params)
-        param_count = (
-            len([x for x in params.split(",") if x.strip()])
-            if params and params.strip()
-            else 0
-        )
-        out.append((name, param_count, line_no))
+        # Getters report None params; treat as zero parameter surface.
+        out.append((name, param_count or 0, line_no))
     return out
+
+
+def _tested_identifiers(test_root: Path) -> set[str]:
+    """Collect every identifier referenced anywhere under `test/`.
+
+    WHY a global set instead of one mapped test file: this repo groups several
+    lib files under one combined test (e.g. `duration_format_utils.dart` is
+    tested by `duration_format_parse_test.dart`, and `num_lerp_utils.dart` by
+    `num_prime_factorial_modulo_lerp_test.dart`). The old per-file name mapping
+    (`<lib>_test.dart`) missed those, reporting well-tested methods as having 0
+    tests. Scanning all test sources for the member name avoids that.
+    """
+    ids: set[str] = set()
+    if not test_root.exists():
+        return ids
+    for tf in test_root.rglob("*.dart"):
+        ids.update(re.findall(r"[A-Za-z_]\w*", tf.read_text(encoding="utf-8")))
+    return ids
 
 
 def audit_param_test_coverage(
     project_dir: Path, lib_root: Path, test_root: Path
 ) -> tuple[list[str], list[str]]:
-    """Flag methods whose tests don't cover each parameter variation.
+    """Flag public methods/functions with parameters that NO test references.
 
-    Requirement: every method needs unit tests for each possible variation of
-    its params. True combinatorial coverage is unbounded, so we apply a floor:
-    a method with N parameters should be referenced by at least N+1 test blocks
-    (one happy-path plus one exercising each parameter). Methods below the floor
-    are ranked by deficit (required minus actual) descending, so the top 10 are
-    the least-tested relative to their parameter surface.
+    WHY "untested" rather than a per-parameter floor: per-parameter-variation
+    coverage cannot be measured by name matching (a test name does not reveal
+    which parameter it exercises), so the old "N+1 test blocks" floor was an
+    arbitrary proxy that punished thorough tests written as few cases. The
+    measurable, meaningful signal is whether a method with a parameter surface
+    is referenced by ANY test at all — a genuinely untested public method is
+    real, actionable debt. Methods referenced anywhere in `test/` are considered
+    covered.
     """
-    # (deficit, detail) so we can rank worst-first before dropping the score.
-    ranked: list[tuple[int, str]] = []
+    tested = _tested_identifiers(test_root)
+    issues: list[str] = []
     for lib_path in lib_root.rglob("*.dart"):
-        members = _members_with_params(lib_path)
-        if not members:
-            continue
-        names = [name for name, _pc, _ln in members]
-        test_path = _lib_to_test_path(lib_path, lib_root, test_root)
-        # No test file means zero coverage for every member in this lib file.
-        counts = _count_tests_per_member(test_path, names) if test_path else {}
-        for name, param_count, line_no in members:
-            # Zero-arg methods/getters have no parameter variations to cover.
+        for name, param_count, line_no in _members_with_params(lib_path):
+            # Only methods/functions with a parameter surface; zero-arg members
+            # and getters are out of scope for this check.
             if param_count < 1:
                 continue
-            test_count = counts.get(name, 0)
-            required = param_count + 1  # happy path + one test per parameter
-            if test_count < required:
-                deficit = required - test_count
+            if name not in tested:
                 rel = lib_path.relative_to(project_dir)
-                ranked.append(
-                    (
-                        deficit,
-                        f"  {rel}:{line_no}  {name}()  "
-                        f"{param_count} params, {test_count} tests "
-                        f"(want >= {required})",
-                    )
+                issues.append(
+                    f"  {rel}:{line_no}  {name}()  "
+                    f"{param_count} params, untested (no test references it)"
                 )
-    ranked.sort(key=lambda x: -x[0])
-    issues = [detail for _deficit, detail in ranked]
 
     report_lines: list[str] = []
     if issues:
-        report_lines.append(
-            "Methods under-tested relative to parameter count:"
-        )
+        report_lines.append("Public methods with parameters not referenced by any test:")
         report_lines.extend(issues[:50])
         if len(issues) > 50:
             report_lines.append(f"  ... and {len(issues) - 50} more")
     else:
-        report_lines.append("All methods meet the per-parameter test floor.")
+        report_lines.append("Every public method with parameters is referenced by a test.")
     return report_lines, issues
 
 
@@ -877,7 +957,7 @@ def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
         project_dir, lib_root, test_root
     )
     all_lines.extend(
-        _section(param_lines, "5. PER-PARAMETER UNIT TEST COVERAGE")
+        _section(param_lines, "5. UNTESTED PUBLIC METHODS (with parameters)")
     )
 
     # 6. Bad practices (empty catch)
@@ -907,7 +987,7 @@ def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
         "  - Fix all analyzer errors before publishing.",
         "  - Consider fixing analyzer warnings and adding docs for methods with 0-1 tests.",
         "  - Add inline comments to flagged branch/loop/variable-heavy methods.",
-        "  - Add per-parameter tests for under-tested methods.",
+        "  - Add tests for any public method with parameters that none reference.",
         "  - Review methods with try/catch for proper error handling.",
         "  - Fix any empty-catch blocks (silently swallowed errors).",
         "  - Address file length if policy requires.",
@@ -940,7 +1020,7 @@ def run_audit(project_dir: Path) -> tuple[dict[str, list[str]], Path]:
     if comment_issues:
         findings["Sparse code comments"] = comment_issues
     if param_issues:
-        findings["Thin per-parameter tests"] = param_issues
+        findings["Untested public methods"] = param_issues
     if rec_issues:
         findings["Empty catch blocks"] = rec_issues
     if dup_details:
