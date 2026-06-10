@@ -1,6 +1,6 @@
 # Capabilities Index
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1278 public symbols** across **351 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1391 public symbols** across **352 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -10,34 +10,34 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ## Categories
 
-- [Async](#async) — 66 symbols
+- [Async](#async) — 69 symbols
 - [Base64](#base64) — 7 symbols
 - [Bool](#bool) — 13 symbols
 - [Caching](#caching) — 17 symbols
-- [Collections](#collections) — 123 symbols
-- [DateTime](#datetime) — 153 symbols
+- [Collections](#collections) — 127 symbols
+- [DateTime](#datetime) — 184 symbols
 - [Double](#double) — 14 symbols
 - [Enum](#enum) — 3 symbols
-- [Gesture](#gesture) — 15 symbols
+- [Gesture](#gesture) — 36 symbols
 - [Graph](#graph) — 35 symbols
-- [HTML](#html) — 5 symbols
+- [HTML](#html) — 8 symbols
 - [Hex](#hex) — 4 symbols
 - [Integer](#integer) — 12 symbols
-- [Iterable](#iterable) — 59 symbols
-- [JSON](#json) — 24 symbols
+- [Iterable](#iterable) — 61 symbols
+- [JSON](#json) — 27 symbols
 - [List](#list) — 46 symbols
-- [Map](#map) — 55 symbols
+- [Map](#map) — 56 symbols
 - [Niche](#niche) — 23 symbols
 - [Number](#number) — 74 symbols
 - [Object & Null](#object--null) — 21 symbols
-- [Parsing](#parsing) — 59 symbols
+- [Parsing](#parsing) — 70 symbols
 - [Regex](#regex) — 6 symbols
 - [Stats](#stats) — 40 symbols
-- [String](#string) — 306 symbols
+- [String](#string) — 338 symbols
 - [Testing](#testing) — 8 symbols
-- [URL & Path](#url--path) — 42 symbols
+- [URL & Path](#url--path) — 43 symbols
 - [UUID](#uuid) — 5 symbols
-- [Validation](#validation) — 43 symbols
+- [Validation](#validation) — 44 symbols
 
 ---
 
@@ -53,6 +53,7 @@ Async barrier: wait for N events — roadmap #676.
 |--------|------|-------------|
 | `AsyncBarrierUtils` | class | Barrier that completes when [count] signals received. |
 | `AsyncBarrierUtils` | constructor | Creates a barrier that completes after [count] calls to [signal]. |
+| `count` | field | Total number of signals required for the barrier to complete. |
 | `signal` | method | Decrements the remaining count; completes the barrier when count reaches zero. |
 | `future` | getter | Future that completes when the barrier has received [count] signals. |
 
@@ -91,6 +92,7 @@ Async semaphore with permits (roadmap #651).
 | `AsyncAction` | typedef | Callback that produces a future result. |
 | `AsyncSemaphoreUtils` | class | Semaphore: at most [permits] concurrent acquisitions. |
 | `AsyncSemaphoreUtils` | constructor | Creates a semaphore allowing at most [permits] concurrent acquisitions. |
+| `permits` | field | Maximum number of concurrent acquisitions allowed. |
 | `run` | method | Acquires a permit, runs [fn], then releases; ensures release on exception. |
 | `acquire` | method | Waits for a permit, then acquires it (decrements available count). |
 | `release` | method | Releases one permit (increments available count); unblocks one waiter if any. |
@@ -116,6 +118,7 @@ Batch/flush: collect events and flush on size/time — roadmap #671.
 |--------|------|-------------|
 | `BatchFlushUtils` | class | Collects items and flushes when [batchSize] reached or [flush] called. |
 | `BatchFlushUtils` | constructor | Creates a batcher that flushes via [onFlush] once [batchSize] items accumulate (or when [flush] is called explicitly). |
+| `batchSize` | field | Size at which the buffer is automatically flushed. |
 | `Function` | constructor | Callback invoked with the buffered batch when a flush occurs. |
 | `add` | method | Appends [item]; flushes when buffer length reaches the batch size. |
 | `flush` | method | Invokes [onFlush] with current buffer contents and clears the buffer. |
@@ -822,6 +825,10 @@ Sliding window aggregations (min/max/sum/avg over moving window) — roadmap #45
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `WindowAggregate` | enum | Aggregation kind for a sliding window. |
+| `min` | enum value | Smallest value in each window. |
+| `max` | enum value | Largest value in each window. |
+| `sum` | enum value | Sum of all values in each window. |
+| `avg` | enum value | Arithmetic mean of the values in each window. |
 | `slidingWindow` | method | Returns a list where each element is the [agg] of [values] over a window of length [size]. |
 
 ### `collections/stream_quantile_utils.dart`
@@ -935,10 +942,39 @@ Window functions (lag, lead, row_number) over ordered data — roadmap #471.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
+| `minMonth` | field | Minimum valid month number (January). |
+| `maxMonth` | field | Maximum valid month number (December). |
+| `maxYear` | field | Maximum valid year in DateTime (9999). |
+| `maxHour` | field | Maximum valid hour (23 for 24-hour format, 0-23 range). |
+| `maxMinuteOrSecond` | field | Maximum valid minute or second (59 for 0-59 range). |
+| `maxMillisecondOrMicrosecond` | field | Maximum valid millisecond or microsecond (999 for 0-999 range). |
+| `minDaysInAnyMonth` | field | Minimum number of days that exist in any month (February in non-leap years). |
+| `daysToAddToGetNextMonth` | field | Days to add to safely reach next month (28 + 4 = 32 days > any month). |
+| `daysInFebLeapYear` | field | Number of days in February during a leap year. |
+| `defaultLeapYearCheckYear` | field | Default year to use for leap year calculations when year is not specified (chosen as a leap year). |
+| `leapYearModulo4` | field | Modulo divisor for basic leap year check (divisible by 4). |
+| `leapYearModulo100` | field | Modulo divisor for century leap year exception (divisible by 100). |
+| `leapYearModulo400` | field | Modulo divisor for century leap year exception override (divisible by 400). |
+| `dayStartHour` | field | Hour threshold for start of "day" time (after 7am). |
+| `dayEndHour` | field | Hour threshold for end of "day" time (before 6pm/18:00). |
+| `daysPerWeek` | field | Number of days in a week. |
+| `lastDayOffsetInWeek` | field | Days from start of week to end of week (0-based index of last weekday). |
+| `monthsPerQuarter` | field | Number of months per quarter. |
+| `isoWeekOffset` | field | Offset used in the ISO 8601 week number formula. |
+| `isoWeekReferenceDay` | field | December day used to determine ISO weeks in a year. |
+| `yearStringWidth` | field | Number of digits in a year for zero-padded formatting. |
+| `minutesPerHour` | field | Number of minutes in one hour. |
+| `decemberLastDay` | field | Last day of December. |
+| `coppaMinAge` | field | Minimum age for non-child content access under COPPA. |
 | `MonthUtils` | class | Utility class for month name operations. |
+| `monthLongNames` | field | Full month names indexed by month number (1-12). |
+| `monthShortNames` | field | Abbreviated month names indexed by month number (1-12). |
+| `monthNumbers` | field | List of all month numbers (1-12). |
 | `getMonthLongName` | method | Returns the full name of the given [month] (1-12), or `null` if invalid. |
 | `getMonthShortName` | method | Returns the abbreviated name of the given [month] (1-12), or `null` if [month] is `null` or invalid. |
 | `WeekdayUtils` | class | Utility class for weekday name operations. |
+| `dayLongNames` | field | Full weekday names indexed by DateTime weekday constant (1 = Monday, 7 = Sunday). |
+| `dayShortNames` | field | Abbreviated weekday names indexed by DateTime weekday constant. |
 | `getDayLongName` | method | Returns the full name of the given [dayOfWeek] (1=Monday, 7=Sunday), or `null` if [dayOfWeek] is `null` or invalid. |
 | `getDayShortName` | method | Returns the abbreviated name of the given [dayOfWeek] (1=Monday, 7=Sunday), or `null` if [dayOfWeek] is `null` or invalid. |
 | `SerialDateUtils` | class | Utility class for serial date string parsing. |
@@ -1219,7 +1255,7 @@ Injectable clock for tests (consistent "now") — roadmap #614.
 | `FixedClock` | class | Fixed clock for tests. |
 | `FixedClock` | constructor | Creates a clock whose [now] always returns the fixed [DateTime]. |
 | `defaultClock` | getter | Current clock used by code that depends on injectable time. |
-| `defaultClock` | method | Sets the injectable clock (e.g. |
+| `defaultClock` | setter | Sets the injectable clock (e.g. |
 
 ### `datetime/period_split_utils.dart`
 
@@ -1248,6 +1284,8 @@ Relative date bucketing ("today", "yesterday", "last 7 days") — roadmap #616.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `TimeEmojiUtils` | class | Utility class for handling time-related emojis, specifically for day/night representation. |
+| `sunEmoji` | field | Emoji representing the sun (☀️). |
+| `moonEmoji` | field | Emoji representing the moon (🌙). |
 | `getEmojiDayOrNight` | method | Returns `sunEmoji` if the given hour is during daytime (7am inclusive to 6pm exclusive), otherwise returns `moonEmoji`. |
 | `EmojiDateTimeExtensions` on `DateTime` | extension | Extension on [DateTime] to easily access day/night emoji representation. |
 | `emojiDayOrNight` | getter | Returns [TimeEmojiUtils.sunEmoji] if the [DateTime]'s hour is during daytime (7am inclusive to 6pm exclusive), otherwise returns [TimeEmojiUtils.moonEmoji]. |
@@ -1340,6 +1378,7 @@ Timebox: run within time budget — roadmap #618.
 |--------|------|-------------|
 | `GestureUtils` | class | This is a utility class that contains static methods related to gesture processing. |
 | `getSwipeSpeed` | method | Method to get the swipe speed based on the thresholds defined in [_swipeSpeedThresholds]. |
+| `swipeMagnitudeThresholds` | field | Map for swipe magnitude thresholds. |
 
 ### `gesture/swipe_properties.dart`
 
@@ -1348,11 +1387,31 @@ Timebox: run within time budget — roadmap #618.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `SwipeSpeed` | enum | Enum for swipe speed. |
+| `minimal` | enum value | For very slow swipes. |
+| `slow` | enum value | For slow swipes. |
+| `normal` | enum value | For regular speed swipes. |
+| `fast` | enum value | For fast swipes. |
 | `SwipeDirection` | enum | Enum for swipe direction. |
+| `left` | enum value | For swipes to the left. |
+| `right` | enum value | For swipes to the right. |
+| `up` | enum value | For swipes up. |
+| `down` | enum value | For swipes down. |
 | `SwipeMagnitude` | enum | Enum for swipe magnitude. |
+| `minimal` | enum value | For very small swipes. |
+| `small` | enum value | For small swipes. |
+| `medium` | enum value | For medium swipes. |
+| `large` | enum value | For large swipes. |
+| `massive` | enum value | For very large swipes. |
 | `SwipeAngle` | enum | Enum for swipe angle. |
+| `horizontal` | enum value | For horizontal swipes. |
+| `diagonal` | enum value | For diagonal swipes. |
+| `vertical` | enum value | For vertical swipes. |
 | `SwipeProperties` | class | Record for a swipe gesture. |
 | `SwipeProperties` | constructor | Creates a new [SwipeProperties] record. |
+| `direction` | field | The direction of the swipe. |
+| `speed` | field | The speed of the swipe. |
+| `magnitude` | field | The magnitude of the swipe. |
+| `angle` | field | The angle of the swipe. |
 | `toString` | method | Meaningful string for debugging and logging (avoids default "Instance of 'Swipe'"). |
 | `SwipePropsExt` on `DragEndDetails` | extension | The DragEndDetailsProperties extension adds additional properties to [DragEndDetails] instances, allowing you to easily determine the direction and speed of... |
 | `swipeDirection` | getter | Method to get the swipe direction. |
@@ -1538,6 +1597,18 @@ Tree utilities (LCA, depth, subtree size) — roadmap #555.
 ---
 
 ## HTML
+
+### `html/html_entity_data.dart`
+
+Length of the longest key in [htmlNamedEntities].
+
+`import 'package:saropa_dart_utils/html/html_entity_data.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `htmlEntityMaxKeyLength` | field | Length of the longest key in [htmlNamedEntities]. |
+| `htmlEntityMaxLegacyLength` | field | Longest legacy entity (without trailing semicolon) in [htmlNamedEntities]. |
+| `htmlNamedEntities` | field | HTML5 named character reference map. |
 
 ### `html/html_utils.dart`
 
@@ -1821,6 +1892,8 @@ Min/max by key (return element).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `Occurrence` | constructor | Creates an [Occurrence] with the given [value] and [count]. |
+| `value` | field | The value that was found in the collection. |
+| `count` | field | How many times [value] appears in the collection. |
 
 ### `iterable/run_length_utils.dart`
 
@@ -1844,6 +1917,9 @@ Scale for epoch timestamp parsing.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `JsonEpochScale` | enum | Scale for epoch timestamp parsing. |
+| `seconds` | enum value | Seconds since Unix epoch. |
+| `milliseconds` | enum value | Milliseconds since Unix epoch. |
+| `microseconds` | enum value | Microseconds since Unix epoch. |
 
 ### `json/json_iterables_utils.dart`
 
@@ -2075,6 +2151,7 @@ Deep copy for maps and lists.
 |--------|------|-------------|
 | `MapDefaultExtensions` | class | Default map: returns a default value for missing keys. |
 | `MapDefaultExtensions` | constructor | Creates a default map with the wrapped map and [defaultValue]. |
+| `defaultValue` | field | Value returned for missing keys. |
 | `withDefault` | method | Returns a [MapDefaultExtensions] view that returns [defaultValue] for missing keys. |
 
 ### `map/map_diff_utils.dart`
@@ -2655,6 +2732,8 @@ Parse an HTTP `Accept-Language` header into ranked language ranges.
 |--------|------|-------------|
 | `LanguageRange` | class | A single weighted language range from an `Accept-Language` header. |
 | `LanguageRange` | constructor | Creates a range pairing a [tag] (already lower-cased by the parser) with its [quality] weight in 0.0..1.0. |
+| `tag` | field | The language tag, lower-cased (e.g. |
+| `quality` | field | The quality weight in 0.0..1.0 (absent `q=` defaults to 1.0). |
 | `parseAcceptLanguage` | method | Parses [header] into language ranges ordered most-preferred first. |
 
 ### `parsing/canonicalize_json_utils.dart`
@@ -2696,6 +2775,13 @@ Parse a standard 5-field cron expression and compute its next run time.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `CronSchedule` | class | A parsed 5-field cron expression. |
+| `minutes` | field | Allowed minute values (0-59). |
+| `hours` | field | Allowed hour values (0-23). |
+| `daysOfMonth` | field | Allowed day-of-month values (1-31). |
+| `months` | field | Allowed month values (1-12). |
+| `daysOfWeek` | field | Allowed day-of-week values (0-6, Sunday=0). |
+| `isDayOfMonthRestricted` | field | Whether the day-of-month field was something other than `*`. |
+| `isDayOfWeekRestricted` | field | Whether the day-of-week field was something other than `*`. |
 | `tryParse` | method | Parses [expression] (5 whitespace-separated fields), or returns `null` if it is malformed or any field is out of range. |
 | `nextRunAfter` | method | Returns the first matching time strictly after [from] (at minute resolution), or `null` if none occurs within four years. |
 
@@ -2843,6 +2929,8 @@ Parse an HTTP `Range` request header (`bytes=` unit only).
 |--------|------|-------------|
 | `ByteRange` | class | One requested byte range. |
 | `ByteRange` | constructor | Creates a byte range from [start] and [end]; see the class doc for how a null in either position encodes an open-ended or suffix range. |
+| `start` | field | First byte offset (inclusive), or null for a suffix-length range. |
+| `end` | field | Last byte offset (inclusive), or null for an open-ended range; for a suffix range it is the count of trailing bytes. |
 | `parseRangeHeader` | method | Parses [header] (e.g. |
 
 ### `parsing/semver_utils.dart`
@@ -3170,6 +3258,7 @@ Apply patch (edit script) to string with validation (roadmap #403).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `BetweenResult` | constructor | Creates a [BetweenResult] with the given [content] and [remaining]. |
+| `content` | field | The content found between the delimiters. |
 
 ### `string/code_block_extract_utils.dart`
 
@@ -3201,6 +3290,9 @@ Diff → colored/HTML/ANSI unified diff renderer (roadmap #402).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `DiffOutputFormat` | enum | Format for unified diff output. |
+| `plain` | enum value | Plain text with +/- prefix (no color). |
+| `ansi` | enum value | ANSI escape codes for terminal (green add, red remove). |
+| `html` | enum value | HTML spans with classes (add/remove for styling). |
 | `renderUnifiedDiff` | method | Renders a list of [DiffOp] to a unified-diff-style string. |
 
 ### `string/duplicate_doc_utils.dart`
@@ -3330,6 +3422,9 @@ Myers diff for strings: minimal edit script (roadmap #401).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `DiffOpKind` | enum | Kind of diff operation in an edit script. |
+| `equal` | enum value | Line (or segment) is unchanged in both inputs. |
+| `insert` | enum value | Line exists only in the "new" (right) text — insert into old to get new. |
+| `delete` | enum value | Line exists only in the "old" (left) text — delete from old to get new. |
 | `MyersDiffUtils` | class | Myers-style minimal edit script between two strings (line-based). |
 | `diffLines` | method | Computes a minimal line-based edit script transforming [oldText] into [newText], returned as merged [DiffOp]s (equal, insert, delete). |
 | `DiffOp` | class | A single operation in a minimal edit script. |
@@ -3384,6 +3479,8 @@ Simplified search query parser (AND/OR, quotes, minus) — roadmap #418.
 | `parseSearchQuery` | method | Parses [query] into a list of [QueryTerm] (words/phrases, AND/OR, minus). |
 | `QueryTerm` | class | Parsed query term: phrase or word, optional negated. |
 | `QueryTerm` | constructor | Creates a query term for [text]; set [isNegated] for excluded ("-word") terms. |
+| `text` | field | The word or quoted phrase to match (without the leading "-" if negated). |
+| `isNegated` | field | True when this term must be excluded from results (entered as "-term"). |
 
 ### `string/sensitive_scrub_utils.dart`
 
@@ -3395,6 +3492,8 @@ Sensitive data scrubber with pluggable patterns (roadmap #425).
 |--------|------|-------------|
 | `SensitiveScrubUtils` | class | A scrubber rule: [pattern] is replaced by [replacement] when matched. |
 | `SensitiveScrubUtils` | constructor | Creates a rule that replaces every match of [pattern] with [replacement]. |
+| `pattern` | field | Regular expression identifying the sensitive substrings to mask. |
+| `replacement` | field | Text substituted in place of each [pattern] match (e.g. |
 | `defaultScrubRules` | getter | Default rules: mask emails, phone-like digits, card-like numbers, SSN-like. |
 | `scrubSensitive` | method | Returns [text] with all matches of [rules] replaced by their replacement string. |
 
@@ -3549,6 +3648,24 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `StringExtensions` on `String` | extension | Extensions for presentation, like adding quotes, truncating text, and formatting. |
+| `accentedQuoteOpening` | field | Left single curly quotation mark ("smart" opening quote, U+2018). |
+| `accentedQuoteClosing` | field | Right single curly quotation mark ("smart" closing quote, U+2019). |
+| `accentedDoubleQuoteOpening` | field | Left double curly quotation mark ("smart" opening double quote, U+201C). |
+| `accentedDoubleQuoteClosing` | field | Right double curly quotation mark ("smart" closing double quote, U+201D). |
+| `ellipsis` | field | Horizontal ellipsis character (U+2026), the single-glyph "\u2026". |
+| `doubleChevron` | field | Right-pointing double angle quotation mark "\u00BB" (U+00BB). |
+| `apostrophe` | field | Typographic apostrophe (U+2019), preferred over the straight ASCII quote. |
+| `hyphen` | field | Unicode hyphen (U+2010), the typographically correct hyphen glyph. |
+| `softHyphen` | field | Soft Hyphen character (U+00AD). |
+| `newLine` | field | Line feed character (`\n`) used to separate lines of text. |
+| `lineBreak` | field | Alias for [newLine]; reads more naturally when joining display text. |
+| `blank` | field | Hangul filler (U+3164), a whitespace-like glyph that survives UI trimming where a normal space would be collapsed. |
+| `nonBreakingSpace` | field | Non-breaking space (U+00A0); keeps adjacent words on the same line. |
+| `nonBreakingHyphen` | field | For not breaking words into newline at hyphen in Text. |
+| `bullet` | field | Bullet point character. |
+| `dot` | field | Alias for `bullet`. |
+| `dotJoiner` | field | A dot with spaces for joining items (e.g., "Item 1 • Item 2"). |
+| `commonWordEndings` | field | Common word-ending characters for text processing. |
 | `wrap` | method | Returns this string wrapped with [before] prepended and [after] appended. |
 | `wrapWith` | method | Returns this string wrapped with [before] prepended and [after] appended, or `null` if the string is empty. |
 | `wrapSingleQuotes` | method | Returns this string wrapped in single quotes: `'string'`. |
@@ -3749,6 +3866,9 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `SearchMatchType` | enum | Search match type for string matching operations. |
+| `contains` | enum value | Match if the string contains the search term. |
+| `startsWith` | enum value | Match if the string starts with the search term. |
+| `exact` | enum value | Match if the string exactly equals the search term. |
 | `StringSearchExtensions` on `String` | extension | Extension methods for string searching and matching. |
 | `isEqualsAny` | method | Returns `true` if this string equals any item in [list]. |
 | `isContainsDigits` | method | Returns true if this string contains any digits. |
@@ -4070,6 +4190,7 @@ URL encode/decode (component vs full).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
+| `flutterImageExtensions` | field | Common image file extensions supported by Flutter. |
 | `UriExtensions` on `Uri` | extension | Extension methods for URI manipulation. |
 | `removeQuery` | method | Returns a new URI with query parameters removed. |
 | `isImageUri` | getter | Returns true if this URI points to an image file. |
@@ -4279,6 +4400,7 @@ Normalized error model (code, message, details) for validation (roadmap #683).
 |--------|------|-------------|
 | `ValidationErrorUtils` | class | Single validation error with optional path and code. |
 | `ValidationErrorUtils` | constructor | Creates an error with a human-readable [message], optional machine-readable [code], and optional [path] identifying the offending field. |
+| `message` | field | Human-readable description of what failed. |
 | `code` | getter | Optional machine-readable error code. |
 | `path` | getter | Optional path (e.g. |
 | `ValidationErrors` | class | Aggregates multiple validation errors (roadmap #684). |

@@ -43,6 +43,18 @@ decl_exttype = re.compile(r"^\s*extension\s+type\s+(\w+)")
 decl_typedef = re.compile(r"^\s*typedef\s+(\w+)")
 decl_getter = re.compile(r"\bget\s+(\w+)")
 decl_callable = re.compile(r"([A-Za-z_]\w*)\s*(?:<[^>]*>)?\s*\(")
+decl_operator = re.compile(r"\boperator\s*([^\s(]+)\s*\(")
+decl_setter = re.compile(r"\bset\s+(\w+)\s*\(")
+# A field/typed-variable declaration: optional modifiers, a type, a lowerCamel
+# name, then `=` or `;`. Only applied to doc-preceded lines with no `(`, so it
+# never matches a method signature or a local inside a body.
+decl_field = re.compile(
+    r"^\s*(?:static\s+|final\s+|const\s+|late\s+|covariant\s+)*"
+    r"[\w$][\w<>,?.\s]*?\s+([a-z_]\w*)\s*(?:=|;)"
+)
+# An enum constant: a bare lowerCamel/UPPER name optionally followed by an
+# enhanced-enum constructor call, then a comma or the `;` that ends the list.
+decl_enum_value = re.compile(r"^\s*([A-Za-z_]\w*)\s*(?:\([^)]*\))?\s*[,;]\s*$")
 
 
 def first_sentence(doc):
@@ -56,13 +68,29 @@ def first_sentence(doc):
     return text
 
 
-def symbol_name(line):
+def symbol_name(line, in_enum_constants):
+    op = decl_operator.search(line)
+    if op:
+        return "operator " + op.group(1), "operator"
+    sg = decl_setter.search(line)
+    if sg:
+        return sg.group(1), "setter"
     g = decl_getter.search(line)
     if g and "get " in line.split("(")[0]:
         return g.group(1), "getter"
     m = decl_callable.search(line)
     if m and m.group(1) not in KEYWORDS:
         return m.group(1), "method"
+    # No parentheses: an enum constant (when inside an enum's constant list) or
+    # a field/typed variable.
+    if "(" not in line.split(";")[0].split("=")[0]:
+        if in_enum_constants:
+            ev = decl_enum_value.match(line)
+            if ev and ev.group(1) not in KEYWORDS:
+                return ev.group(1), "enum value"
+        fld = decl_field.match(line)
+        if fld and fld.group(1) not in KEYWORDS:
+            return fld.group(1), "field"
     return None, None
 
 
@@ -71,6 +99,11 @@ def parse_file(path):
         lines = f.readlines()
     doc = []
     symbols = []
+    # Enum-constant tracking: the constant list runs from the `enum X {` line up
+    # to the first `;` inside the body (after which only methods/fields follow).
+    depth = 0
+    enum_body_depth = None
+    in_enum_constants = False
     for raw in lines:
         stripped = raw.strip()
         if stripped.startswith("///"):
@@ -96,7 +129,7 @@ def parse_file(path):
             elif mtd:
                 kind, name = "typedef", mtd.group(1)
             else:
-                name, kind = symbol_name(raw)
+                name, kind = symbol_name(raw, in_enum_constants)
             if name and not name.startswith("_"):
                 # A callable whose name is TypeCase is a constructor, not a method.
                 if kind == "method" and name[0].isupper():
@@ -105,6 +138,18 @@ def parse_file(path):
                 if not symbols or symbols[-1][:2] != entry[:2]:
                     symbols.append(entry)
         doc = []
+        # Update enum-constant context AFTER processing this line's declaration.
+        mt2 = decl_type.match(raw)
+        if mt2 and mt2.group(1) == "enum":
+            enum_body_depth = depth + 1
+            in_enum_constants = True
+        if in_enum_constants and enum_body_depth is not None and depth >= enum_body_depth and ";" in raw:
+            # The constant list ends at the first `;` inside the enum body.
+            in_enum_constants = False
+        depth += raw.count("{") - raw.count("}")
+        if enum_body_depth is not None and depth < enum_body_depth:
+            enum_body_depth = None
+            in_enum_constants = False
 
     # File purpose = the first /// block at the very top of the file.
     top = []
