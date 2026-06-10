@@ -18,6 +18,9 @@ String? validateStartBeforeEnd(
 
 /// Returns null if at least one of [values] is non-null and non-empty (for strings).
 String? validateOneOfRequired(List<Object?> values, {String fieldNames = _kDefaultFieldNames}) {
+  // "Provided" means non-null, but strings get a stricter test: a whitespace-only
+  // string is treated as empty (not provided) so "   " does not satisfy a
+  // required field. Any other non-null value counts as present.
   final bool hasAny = values.any(
     (Object? v) {
       if (v == null) return false;

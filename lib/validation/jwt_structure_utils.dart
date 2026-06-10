@@ -21,14 +21,24 @@ bool isJwtStructure(String token) {
 
 /// Decodes payload (middle part) as JSON map; returns null if invalid.
 Map<String, Object?>? jwtPayload(String token) {
+  // Validate structure first so the index access below is safe: isJwtStructure
+  // guarantees exactly three non-empty parts, making the [1] read on the split
+  // result an established invariant rather than an unchecked subscript.
   if (!isJwtStructure(token)) return null;
+  // Decoding can fail many ways (bad base64url, non-UTF8 bytes, malformed JSON,
+  // a non-object payload); catch broadly and report null rather than throwing
+  // into the caller, logging only in debug to aid diagnosis.
   try {
     final String payload = token.split('.')[_jwtPayloadPartIndex];
+    // base64url omits '=' padding, but base64Url.decode requires the length to be
+    // a multiple of four — restore the stripped padding before decoding.
     final int padLen = _base64PaddingBlockSize - payload.length % _base64PaddingBlockSize;
     final String padded = payload + '=' * padLen;
     final Uint8List bytes = Uint8List.fromList(base64Url.decode(padded));
     final String json = String.fromCharCodes(bytes);
     final decoded = jsonDecode(json);
+    // A well-formed JWT payload is a JSON object; anything else (array, scalar)
+    // is not a claims set.
     if (decoded is! Map) return null;
     return Map<String, Object?>.from(decoded);
   } on Object catch (e, st) {

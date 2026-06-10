@@ -254,6 +254,9 @@ abstract final class DateTimeUtils {
   }) {
     final List<String> parts = <String>[];
 
+    // Append a segment only when its unit is non-zero so the rendered string
+    // skips empty units entirely ("2 years, 3 days" rather than "2 years,
+    // 0 months, 3 days"); each segment also picks singular vs plural by count.
     if (years > 0) {
       parts.add('$years ${_pluralLabel(count: years, singular: _yearLabel, plural: _yearsLabel)}');
     }
@@ -264,6 +267,8 @@ abstract final class DateTimeUtils {
       );
     }
 
+    // The days segment is also gated by includeRemainingDays so a caller asking
+    // for a years+months-only summary can suppress the trailing day count.
     if (includeRemainingDays && remainingDaysInt > 0) {
       parts.add(
         '$remainingDaysInt ${_pluralLabel(count: remainingDaysInt, singular: _dayLabel, plural: _daysLabel)}',

@@ -60,7 +60,9 @@ void main() {
 
   group('uriWithQueryParams', () {
     test('adds parameters to a uri', () {
-      final Uri result = uriWithQueryParams(Uri.parse('https://x.com/a'), <String, String>{'b': '2'});
+      final Uri result = uriWithQueryParams(Uri.parse('https://x.com/a'), <String, String>{
+        'b': '2',
+      });
       expect(result.queryParameters['b'], '2');
     });
 

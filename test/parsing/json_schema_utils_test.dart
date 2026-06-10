@@ -61,15 +61,21 @@ void main() {
 
     test('JsonType.number accepts int and double; integer rejects double', () {
       expect(
-        validateJsonSchema(<String, Object?>{'x': 1.5}, <String, FieldSchema>{
-          'x': const FieldSchema(JsonType.number),
-        }).isEmpty,
+        validateJsonSchema(
+          <String, Object?>{'x': 1.5},
+          <String, FieldSchema>{
+            'x': const FieldSchema(JsonType.number),
+          },
+        ).isEmpty,
         isTrue,
       );
       expect(
-        validateJsonSchema(<String, Object?>{'x': 1.5}, <String, FieldSchema>{
-          'x': const FieldSchema(JsonType.integer),
-        }).isEmpty,
+        validateJsonSchema(
+          <String, Object?>{'x': 1.5},
+          <String, FieldSchema>{
+            'x': const FieldSchema(JsonType.integer),
+          },
+        ).isEmpty,
         isFalse,
       );
     });

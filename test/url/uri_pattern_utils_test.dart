@@ -4,8 +4,9 @@ import 'package:saropa_dart_utils/url/uri_pattern_utils.dart';
 void main() {
   group('UriPattern.match', () {
     test('captures named segment params', () {
-      final Map<String, String>? m =
-          UriPattern('/users/{id}/posts/{slug}').match('/users/42/posts/hello');
+      final Map<String, String>? m = UriPattern(
+        '/users/{id}/posts/{slug}',
+      ).match('/users/42/posts/hello');
       expect(m, <String, String>{'id': '42', 'slug': 'hello'});
     });
 

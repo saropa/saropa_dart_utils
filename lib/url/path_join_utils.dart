@@ -40,14 +40,20 @@ String pathNormalize(String path) {
 
 /// Relative path from base to target. Roadmap #163.
 String pathRelative(String base, String target) {
+  // Normalize then drop empty segments so leading/trailing/double slashes do not
+  // create phantom segments that would throw off the common-prefix match below.
   final List<String> b = pathNormalize(base).split('/').where((String s) => s.isNotEmpty).toList();
   final List<String> t = pathNormalize(
     target,
   ).split('/').where((String s) => s.isNotEmpty).toList();
+  // Advance through the shared leading segments; i ends at the first point where
+  // base and target diverge (or the end of the shorter path).
   int i = 0;
   while (i < b.length && i < t.length && b[i] == t[i]) {
     i++;
   }
+  // Climb out of every base segment past the divergence with "..", then descend
+  // into target's remaining segments — that concatenation is the relative path.
   final List<String> ups = List<String>.filled(b.length - i, '..');
   final List<String> rest = t.sublist(i);
   return pathJoin(<String>[...ups, ...rest]);

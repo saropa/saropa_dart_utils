@@ -27,7 +27,8 @@ String prettyPrintJson(Object? value, {int indent = 2, bool sortKeys = false}) {
   final Object? prepared = sortKeys ? canonicalizeJson(value) : value;
   // indent <= 0 selects the compact encoder (no newlines); otherwise indent
   // each nesting level by that many spaces.
-  final JsonEncoder encoder =
-      indent <= 0 ? const JsonEncoder() : JsonEncoder.withIndent(' ' * indent);
+  final JsonEncoder encoder = indent <= 0
+      ? const JsonEncoder()
+      : JsonEncoder.withIndent(' ' * indent);
   return encoder.convert(prepared);
 }

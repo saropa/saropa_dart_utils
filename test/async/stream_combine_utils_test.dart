@@ -40,8 +40,11 @@ void main() {
       final StreamController<int> a = StreamController<int>();
       final StreamController<String> b = StreamController<String>();
       final List<String> out = <String>[];
-      final StreamSubscription<String> sub =
-          combineLatestStreams(a.stream, b.stream, (int x, String y) => '$x$y').listen(out.add);
+      final StreamSubscription<String> sub = combineLatestStreams(
+        a.stream,
+        b.stream,
+        (int x, String y) => '$x$y',
+      ).listen(out.add);
 
       a.add(1);
       await _pump(); // no emit: b unseen

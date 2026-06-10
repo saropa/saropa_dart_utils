@@ -7,8 +7,12 @@ extension StringMoreExtensions on String {
   /// Removes leading and trailing occurrences of [substring] until none remain.
   @useResult
   String stripSubstring(String substring) {
+    // An empty substring must short-circuit: startsWith('') / endsWith('') are
+    // always true, so the loops below would never terminate.
     if (substring.isEmpty) return this;
     String current = this;
+    // Peel repeated leading copies, then repeated trailing copies, so e.g.
+    // stripping "ab" from "abababXabab" removes every bounding copy, not just one.
     while (current.startsWith(substring)) {
       current = current.substringSafe(substring.length);
     }
@@ -25,12 +29,20 @@ extension StringMoreExtensions on String {
   /// Wraps this string at [width] character boundaries (grapheme-safe). Returns chunks joined by newline.
   @useResult
   String wrapAtChars(int width) {
+    // A width below one has no sensible chunk size, and a string already within
+    // the width needs no wrapping — return it unchanged in both cases.
     if (width < 1) return this;
+    // Measure and slice in grapheme clusters (Characters), not code units, so an
+    // emoji or combining mark is never split across a line boundary.
     final Characters charSeq = characters;
     if (charSeq.length <= width) return this;
+    // Pre-size the parts list to the exact ceil(length/width) so it is filled by
+    // index without intermediate growth.
     final int partCount = (charSeq.length / width).ceil();
     final List<String> parts = List<String>.filled(partCount, '');
     for (int i = 0; i < partCount; i++) {
+      // Clamp the final chunk's end to the sequence length so the last (short)
+      // line does not read past the end.
       final int start = i * width;
       final int end = (start + width) > charSeq.length ? charSeq.length : start + width;
       parts[i] = charSeq.getRange(start, end).string;
@@ -101,11 +113,19 @@ extension StringMoreExtensions on String {
 
   /// Returns all start indices where [substring] occurs (non-overlapping).
   List<int> allIndicesOf(String substring) {
+    // An empty needle has no well-defined positions, so report none.
     if (substring.isEmpty) return <int>[];
+    // Pre-size to the maximum possible non-overlapping match count (string length
+    // divided by needle length, plus one slack) to fill a fixed list rather than
+    // grow it; the trailing sublist trims the unused tail. The `> 0 ? : 1` is a
+    // defensive guard against division by zero even though the empty case already
+    // returned above.
     final int maxOccurrences = length ~/ (substring.length > 0 ? substring.length : 1) + 1;
     final List<int> out = List<int>.filled(maxOccurrences, 0);
     int i = 0;
     int idx = 0;
+    // Advance past each match by the needle length so overlapping matches are not
+    // counted twice (e.g. "aa" in "aaaa" reports indices 0 and 2, not 0,1,2).
     while (true) {
       i = indexOf(substring, i);
       if (i == -1) break;

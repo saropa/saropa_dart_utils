@@ -22,8 +22,34 @@ void main() {
 
     test('uses supplied localized names', () {
       const DateFormatNames fr = DateFormatNames(
-        months: <String>['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
-        monthsShort: <String>['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'],
+        months: <String>[
+          'janvier',
+          'février',
+          'mars',
+          'avril',
+          'mai',
+          'juin',
+          'juillet',
+          'août',
+          'septembre',
+          'octobre',
+          'novembre',
+          'décembre',
+        ],
+        monthsShort: <String>[
+          'janv',
+          'févr',
+          'mars',
+          'avr',
+          'mai',
+          'juin',
+          'juil',
+          'août',
+          'sept',
+          'oct',
+          'nov',
+          'déc',
+        ],
         weekdays: <String>['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'],
       );
       expect(formatDateMedium(d, names: fr), 'juin 10, 2026');

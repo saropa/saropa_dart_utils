@@ -14,10 +14,14 @@ Map<String, int> termFrequencies(List<String> tokens) {
 
 /// Cosine similarity between two term-frequency maps (0.0 to 1.0).
 double cosineSimilarity(Map<String, int> a, Map<String, int> b) {
+  // An empty vector has no direction, so similarity is undefined — report 0.
   if (a.isEmpty || b.isEmpty) return 0.0;
   double dot = 0.0;
   double normA = 0.0;
   double normB = 0.0;
+  // Iterate the union of terms; a term missing from one side contributes a count
+  // of zero (so it adds nothing to the dot product but still counts toward the
+  // other vector's magnitude).
   final Set<String> keys = <String>{...a.keys, ...b.keys};
   for (final String term in keys) {
     final int countA = a[term] ?? 0;
@@ -26,8 +30,12 @@ double cosineSimilarity(Map<String, int> a, Map<String, int> b) {
     normA += pow(countA, 2).toDouble();
     normB += pow(countB, 2).toDouble();
   }
+  // A zero magnitude (all counts zero on one side) would divide by zero; treat
+  // it as no similarity.
   if (normA == 0 || normB == 0) return 0.0;
   final double denom = sqrt(normA) * sqrt(normB);
+  // Clamp because floating-point rounding can nudge the ratio a hair above 1.0,
+  // which would be an invalid cosine value for callers.
   final double sim = dot / denom;
   return sim.clamp(0.0, 1.0);
 }

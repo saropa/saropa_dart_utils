@@ -34,7 +34,9 @@ void main() {
 
   group('tryJsonDecodeListMap', () {
     test('decodes a JSON array of objects', () {
-      final List<Map<String, dynamic>>? result = JsonUtils.tryJsonDecodeListMap('[{"a":1},{"b":2}]');
+      final List<Map<String, dynamic>>? result = JsonUtils.tryJsonDecodeListMap(
+        '[{"a":1},{"b":2}]',
+      );
       expect(result, hasLength(2));
       expect(result!.first['a'], 1);
     });

@@ -144,8 +144,12 @@ extension IterableArgMinMax<T> on Iterable<T> {
 extension IterableAllEqual<T> on Iterable<T> {
   /// True if empty or all elements are equal.
   bool get allEqual {
+    // Empty is vacuously "all equal" — there is no pair that differs.
     final Iterator<T> it = iterator;
     if (!it.moveNext()) return true;
+    // Compare every element against the first via the iterator so the scan can
+    // bail on the first mismatch without materializing a set or list; equality
+    // is whatever Object.== the element type defines.
     final T first = it.current;
     while (it.moveNext()) {
       if (it.current != first) return false;

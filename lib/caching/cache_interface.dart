@@ -35,7 +35,7 @@ abstract interface class Cache<K, V> {
 /// cached and the error propagates to every waiter; the next call retries.
 // Expiration is the wrapped Cache's responsibility (pass a TtlCache to get it);
 // this adapter only coordinates loads and intentionally has no TTL of its own.
-// ignore: require_cache_expiration -- delegated to the wrapped Cache
+// ignore: saropa_lints/require_cache_expiration -- delegated to the wrapped Cache
 class WriteThroughCache<K, V extends Object> {
   /// Wraps [cache], filling misses by awaiting [loader].
   WriteThroughCache(this._cache, this._loader);

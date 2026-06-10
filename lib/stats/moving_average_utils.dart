@@ -3,13 +3,20 @@ library;
 
 /// Simple moving average of [values] over window [size].
 List<double> simpleMovingAverage(List<num> values, int size) {
+  // No window fits when size is non-positive or larger than the data, so there
+  // are no averages to emit — return empty rather than a partial/garbage window.
   if (size < 1 || values.length < size) return <double>[];
   final List<double> out = <double>[];
+  // Seed the running sum with the first full window.
   double sum = 0;
   for (int i = 0; i < size; i++) {
     sum += values[i].toDouble();
   }
   out.add(sum / size);
+  // Slide the window by adjusting the running sum — subtract the element leaving
+  // the window, add the one entering — so each step is constant-time;
+  // recomputing the whole window sum at every position would instead make the
+  // total cost grow with the window size.
   for (int i = size; i < values.length; i++) {
     sum = sum - values[i - size].toDouble() + values[i].toDouble();
     out.add(sum / size);

@@ -16,7 +16,10 @@ void main() {
         const MultiKey(<Object?>['US', 2024]).hashCode,
         const MultiKey(<Object?>['US', 2024]).hashCode,
       );
-      expect(const MultiKey(<Object?>['US', 2024]) == const MultiKey(<Object?>['US', 2025]), isFalse);
+      expect(
+        const MultiKey(<Object?>['US', 2024]) == const MultiKey(<Object?>['US', 2025]),
+        isFalse,
+      );
     });
   });
 
@@ -24,7 +27,10 @@ void main() {
     test('buckets rows by the composite (country, year) key', () {
       final Map<MultiKey, List<Map<String, Object>>> groups = groupByKeys(
         rows,
-        <Object? Function(Map<String, Object>)>[(Map<String, Object> r) => r['country'], (Map<String, Object> r) => r['year']],
+        <Object? Function(Map<String, Object>)>[
+          (Map<String, Object> r) => r['country'],
+          (Map<String, Object> r) => r['year'],
+        ],
       );
       expect(groups, hasLength(3));
       expect(groups[const MultiKey(<Object?>['US', 2024])], hasLength(2));
@@ -55,7 +61,10 @@ void main() {
     test('counts per composite key', () {
       final Map<MultiKey, int> counts = aggregateByKeys(
         rows,
-        <Object? Function(Map<String, Object>)>[(Map<String, Object> r) => r['country'], (Map<String, Object> r) => r['year']],
+        <Object? Function(Map<String, Object>)>[
+          (Map<String, Object> r) => r['country'],
+          (Map<String, Object> r) => r['year'],
+        ],
         (List<Map<String, Object>> g) => g.length,
       );
       expect(counts[const MultiKey(<Object?>['US', 2024])], 2);
@@ -66,7 +75,8 @@ void main() {
       final Map<MultiKey, int> sales = aggregateByKeys(
         rows,
         <Object? Function(Map<String, Object>)>[(Map<String, Object> r) => r['country']],
-        (List<Map<String, Object>> g) => g.fold<int>(0, (int s, Map<String, Object> r) => s + (r['sales']! as int)),
+        (List<Map<String, Object>> g) =>
+            g.fold<int>(0, (int s, Map<String, Object> r) => s + (r['sales']! as int)),
       );
       expect(sales[const MultiKey(<Object?>['US'])], 22);
       expect(sales[const MultiKey(<Object?>['CA'])], 3);

@@ -2,6 +2,11 @@ import 'package:collection/collection.dart';
 
 /// Get/set nested value by path (list of keys).
 Object? getNested(Map<String, dynamic> map, List<String> path, [Object? defaultValue]) {
+  // Descend one path segment at a time. The type check guards against indexing
+  // into a leaf that turned out not to be a map (a shorter-than-expected path),
+  // and a null at any level means the path does not resolve — both fall back to
+  // defaultValue rather than throwing. Caveat: a genuine stored null is
+  // indistinguishable from "missing" and also yields defaultValue.
   dynamic current = map;
   for (final String key in path) {
     if (current is! Map<String, dynamic>) return defaultValue;

@@ -1,6 +1,6 @@
 # Capabilities Index
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1391 public symbols** across **352 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1484 public symbols** across **367 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -10,12 +10,12 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ## Categories
 
-- [Async](#async) — 69 symbols
+- [Async](#async) — 73 symbols
 - [Base64](#base64) — 7 symbols
 - [Bool](#bool) — 13 symbols
-- [Caching](#caching) — 17 symbols
-- [Collections](#collections) — 127 symbols
-- [DateTime](#datetime) — 184 symbols
+- [Caching](#caching) — 22 symbols
+- [Collections](#collections) — 132 symbols
+- [DateTime](#datetime) — 193 symbols
 - [Double](#double) — 14 symbols
 - [Enum](#enum) — 3 symbols
 - [Gesture](#gesture) — 36 symbols
@@ -30,12 +30,12 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [Niche](#niche) — 23 symbols
 - [Number](#number) — 74 symbols
 - [Object & Null](#object--null) — 21 symbols
-- [Parsing](#parsing) — 70 symbols
+- [Parsing](#parsing) — 97 symbols
 - [Regex](#regex) — 6 symbols
-- [Stats](#stats) — 40 symbols
-- [String](#string) — 338 symbols
+- [Stats](#stats) — 55 symbols
+- [String](#string) — 362 symbols
 - [Testing](#testing) — 8 symbols
-- [URL & Path](#url--path) — 43 symbols
+- [URL & Path](#url--path) — 47 symbols
 - [UUID](#uuid) — 5 symbols
 - [Validation](#validation) — 44 symbols
 
@@ -218,6 +218,17 @@ Idempotent async wrapper (deduplicate concurrent calls by key) — roadmap #668.
 |--------|------|-------------|
 | `Function` | constructor | Cache single async result (memoize Future). |
 
+### `async/observability_utils.dart`
+
+Observability helpers: wrap operations with timing and outcome hooks — roadmap #680.
+
+`import 'package:saropa_dart_utils/async/observability_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `observeAsync` | method | Runs the async [operation], measures its wall-clock duration, and reports the outcome through the optional hooks, then returns the result (or rethrows the op... |
+| `observeSync` | method | Synchronous counterpart of [observeAsync]: times [operation], reports the outcome through the optional hooks, and returns the result (or rethrows after [onEr... |
+
 ### `async/race_cancel_utils.dart`
 
 Race with cancellation (first success wins, cancel rest) — roadmap #667.
@@ -268,6 +279,17 @@ Stream buffering (bufferCount, bufferTime-style) — roadmap #664.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `bufferCount` | method | Buffers [stream] into lists of size [count]. |
+
+### `async/stream_combine_utils.dart`
+
+Stream join/zip/combineLatest operators — roadmap #661.
+
+`import 'package:saropa_dart_utils/async/stream_combine_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `zipStreams` | method | Pairs [a] and [b] by index, emitting `combine(aᵢ, bᵢ)` for each index until either stream completes (the standard "zip" operator). |
+| `combineLatestStreams` | method | Emits `combine(latestA, latestB)` whenever EITHER [a] or [b] emits, but only once both have produced at least one value (the standard "combineLatest"). |
 
 ### `async/stream_debounce_utils.dart`
 
@@ -387,9 +409,21 @@ Stub gzip implementation for platforms without `dart:io` (e.g., web).
 
 ## Caching
 
-### `caching/lru_cache.dart`
+### `caching/cache_interface.dart`
 
-LRU cache (max size, pure Dart).
+Generic synchronous cache interface + a write-through async adapter — roadmap #523.
+
+`import 'package:saropa_dart_utils/caching/cache_interface.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `Cache` | class | The common contract shared by the in-memory caches ([LruCache], [TtlCache], [SizeLimitCache]): look up a key, store a value, clear everything. |
+| `get` | method | Returns the value cached under [key], or null if absent or expired. |
+| `clear` | method | Removes every entry. |
+| `WriteThroughCache` | constructor | Wraps [cache], filling misses by awaiting [loader]. |
+| `getOrLoad` | method | Returns the cached value for [key]; on a miss, loads it once via the loader, stores it, and returns it. |
+
+### `caching/lru_cache.dart`
 
 `import 'package:saropa_dart_utils/caching/lru_cache.dart';`
 
@@ -414,8 +448,6 @@ Memoize sync function (by argument equality).
 
 ### `caching/size_limit_cache.dart`
 
-Cache with size limit (evict oldest).
-
 `import 'package:saropa_dart_utils/caching/size_limit_cache.dart';`
 
 | Symbol | Kind | Description |
@@ -427,8 +459,6 @@ Cache with size limit (evict oldest).
 | `clear` | method | Removes all entries. |
 
 ### `caching/ttl_cache.dart`
-
-TTL cache (expire after duration).
 
 `import 'package:saropa_dart_utils/caching/ttl_cache.dart';`
 
@@ -670,6 +700,20 @@ Multi-criteria sort with weighted comparators — roadmap #462.
 |--------|------|-------------|
 | `sortByCriteria` | method | Returns a new list with [list]'s elements sorted by [compare]. |
 | `Function` | constructor | Builds a comparator that uses [primary] and then [thenByCompare] for ties. |
+
+### `collections/multi_key_group_utils.dart`
+
+Group and aggregate by several keys at once — roadmap #477.
+
+`import 'package:saropa_dart_utils/collections/multi_key_group_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `MultiKey` | class | A composite grouping key built from several selector values. |
+| `MultiKey` | constructor | Wraps the ordered selector [values] that make up this composite key. |
+| `values` | field | The selector values in selector order (e.g. |
+| `groupByKeys` | method | Groups [items] by applying every selector in [keys], bucketing rows whose composite key is equal. |
+| `aggregateByKeys` | method | Groups [items] by [keys] and reduces each bucket with [aggregator], returning a map from composite key to the aggregate (e.g. |
 
 ### `collections/multiset_utils.dart`
 
@@ -979,6 +1023,24 @@ Window functions (lag, lead, row_number) over ordered data — roadmap #471.
 | `getDayShortName` | method | Returns the abbreviated name of the given [dayOfWeek] (1=Monday, 7=Sunday), or `null` if [dayOfWeek] is `null` or invalid. |
 | `SerialDateUtils` | class | Utility class for serial date string parsing. |
 | `serialToDateTime` | method | Parses a serial date string (ISO 8601 format) to DateTime. |
+
+### `datetime/date_format_preset_utils.dart`
+
+Dashboard date-format presets (short / medium / long) — roadmap #615.
+
+`import 'package:saropa_dart_utils/datetime/date_format_preset_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DateFormatNames` | class | Month and weekday names used by the medium/long presets, injectable so the presets can render in any language without a locale database. |
+| `DateFormatNames` | constructor | Creates a name set. |
+| `months` | field | Full month names, January..December (index = month - 1). |
+| `monthsShort` | field | Abbreviated month names, Jan..Dec (index = month - 1). |
+| `weekdays` | field | Full weekday names, Monday..Sunday (index = weekday - 1). |
+| `DateFormatNames` | constructor | English default used when no localized names are supplied. |
+| `formatDateShort` | method | Short preset: unambiguous ISO-8601 calendar date `yyyy-MM-dd` (e.g. |
+| `formatDateMedium` | method | Medium preset: abbreviated month, day, year (e.g. |
+| `formatDateLong` | method | Long preset: weekday, full month, day, year (e.g. |
 
 ### `datetime/date_time_arithmetic_extensions.dart`
 
@@ -2809,6 +2871,17 @@ Parse one CSV line (handle quoted fields, commas inside quotes).
 |--------|------|-------------|
 | `parseCsvLine` | method | Parse one CSV line (handle quoted fields, commas inside quotes). |
 
+### `parsing/csv_writer_utils.dart`
+
+CSV writer with configurable dialect and RFC 4180 auto-quoting — roadmap #622.
+
+`import 'package:saropa_dart_utils/parsing/csv_writer_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `writeCsvLine` | method | Encodes one row of [fields] as a single CSV line (no trailing newline). |
+| `writeCsv` | method | Encodes [rows] as a full CSV document, joining lines with [eol] (default CRLF, the RFC 4180 line terminator). |
+
 ### `parsing/email_validation_utils.dart`
 
 Email validation (reasonable regex, not RFC-perfect).
@@ -2831,6 +2904,25 @@ ISBN-10/13 validation.
 | `isValidIsbn10` | method | ISBN-10/13 validation. |
 | `isValidIsbn13` | method | Returns `true` if [isbn] is a valid ISBN-13. |
 
+### `parsing/json_model_mapper_utils.dart`
+
+Read typed fields from decoded JSON, collecting errors instead of throwing — roadmap #637.
+
+`import 'package:saropa_dart_utils/parsing/json_model_mapper_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `JsonModelReader` | class | Reads typed values from a decoded-JSON object, accumulating a [ValidationErrors] list for missing or wrong-typed fields instead of throwing on the first prob... |
+| `JsonModelReader` | constructor | Wraps [source], the decoded JSON object to read. |
+| `ValidationErrors` | constructor | Accumulated errors for every failed read on this object. |
+| `requireString` | method | Required [String]; records an error and returns null if absent/non-string. |
+| `requireInt` | method | Required [int]; records an error and returns null if absent/non-int. |
+| `requireBool` | method | Required [bool]; records an error and returns null if absent/non-bool. |
+| `requireDouble` | method | Required number as [double]; an [int] is widened. |
+| `optionalString` | method | Optional [String]: returns [fallback] when the key is absent, but still records an error when the key is present with a non-string value (bad data is a real... |
+| `requireList` | method | Required homogeneous list. |
+| `child` | method | Required nested object as a child reader sharing this reader's error list, so a nested failure surfaces with a dotted [_at] path on the SAME [errors] collect... |
+
 ### `parsing/json_path_utils.dart`
 
 Read a value from decoded JSON by a simple dotted/indexed path.
@@ -2840,6 +2932,39 @@ Read a value from decoded JSON by a simple dotted/indexed path.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `getByJsonPath` | method | Returns the value at [path] within decoded JSON [json] (maps/lists/scalars as produced by `jsonDecode`), or `null` if any segment is missing or the path is m... |
+
+### `parsing/json_pretty_print_utils.dart`
+
+Pretty-print decoded JSON with configurable indentation and key sorting — roadmap #436.
+
+`import 'package:saropa_dart_utils/parsing/json_pretty_print_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `prettyPrintJson` | method | Renders a decoded-JSON [value] (the `Map`/`List`/`num`/`String`/`bool`/null tree returned by `jsonDecode`) as an indented string. |
+
+### `parsing/json_schema_utils.dart`
+
+Declarative schema validation for JSON-like data — roadmap #636.
+
+`import 'package:saropa_dart_utils/parsing/json_schema_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `JsonType` | enum | The JSON value kinds a [FieldSchema] can require. |
+| `string` | enum value | A `String`. |
+| `integer` | enum value | An `int` specifically (not a fractional number). |
+| `number` | enum value | Any `num` (int or double). |
+| `boolean` | enum value | A `bool`. |
+| `list` | enum value | A `List`. |
+| `object` | enum value | A `Map` (nested object). |
+| `any` | enum value | Any non-null value (no type constraint). |
+| `FieldSchema` | class | The constraints on a single field: its [type], whether it must be present ([isRequired]), and an optional [allowed] set of values (an enum). |
+| `FieldSchema` | constructor | Describes a field of [type]. |
+| `type` | field | The required value kind. |
+| `isRequired` | field | Whether an absent (or null) value is an error. |
+| `allowed` | field | When non-null, the value must equal one of these (an enum constraint). |
+| `validateJsonSchema` | method | Validates a decoded JSON [object] against [schema], returning a [ValidationErrors] collecting every problem (it never throws). |
 
 ### `parsing/luhn_utils.dart`
 
@@ -3048,6 +3173,22 @@ Bucketed aggregation (sum/count/avg/min/max per bucket) — roadmap #570.
 | `bucketBy` | method | Groups [values] by [keyOf](index, value), then returns map of key -> list of values. |
 | `bucketAggregate` | method | For each bucket, compute [aggregate] (sum, count, avg, min, max). |
 
+### `stats/cdf_utils.dart`
+
+Empirical CDF and cumulative histogram for numeric samples — roadmap #574.
+
+`import 'package:saropa_dart_utils/stats/cdf_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `CdfPoint` | class | One step of an empirical CDF: a sample [value] and the cumulative probability [p] = (count of samples ≤ value) / n, in `[0, 1]`. |
+| `CdfPoint` | constructor | Creates a CDF step at [value] with cumulative probability [p]. |
+| `value` | field | A distinct sample value, ascending across the returned list. |
+| `p` | field | Fraction of all samples that are ≤ [value]; the last point's [p] is 1.0. |
+| `empiricalCdf` | method | Builds the empirical CDF of [values]: one [CdfPoint] per DISTINCT value in ascending order, with `p` the running fraction of samples ≤ that value. |
+| `cdfAt` | method | The empirical CDF of [values] evaluated at [x]: the fraction of samples that are ≤ [x], in `[0, 1]`. |
+| `cumulativeHistogram` | method | Cumulative histogram: the running total of `histogramFixed(values, edges)`, so bin `i` holds the count of samples in bins `0..i` — the CDF in bin form. |
+
 ### `stats/confidence_interval_utils.dart`
 
 Confidence interval for mean (normal approximation) — roadmap #562.
@@ -3103,6 +3244,23 @@ Funnel analysis (drop-off between ordered steps) — roadmap #580.
 | `name` | getter | The step's display name. |
 | `count` | getter | Number of users who reached this step. |
 | `funnelConversionRates` | method | Returns conversion rate from step i to i+1 (and overall to last step). |
+
+### `stats/grouped_stats_utils.dart`
+
+Per-key descriptive statistics over an iterable — roadmap #571.
+
+`import 'package:saropa_dart_utils/stats/grouped_stats_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `NumericStats` | class | Descriptive statistics for one group of numeric values. |
+| `NumericStats` | constructor | Creates a stat bundle. |
+| `count` | field | Number of values in the group (≥ 1). |
+| `sum` | field | Sum of the values. |
+| `min` | field | Smallest value. |
+| `max` | field | Largest value. |
+| `mean` | field | Arithmetic mean (`sum / count`). |
+| `groupedStats` | method | Groups [items] by [keyOf] and computes a [NumericStats] bundle over [valueOf] for each group, in a single pass. |
 
 ### `stats/linear_regression_utils.dart`
 
@@ -3378,6 +3536,17 @@ Human name parser (first/middle/last/suffix) — roadmap #409.
 | `last` | getter | Family (last) name, or null when none was detected. |
 | `suffix` | getter | Generational/honorific suffix such as "Jr.", "Sr.", or "III"; null if absent. |
 | `parseHumanName` | method | Simple split: "Last, First Middle" or "First Middle Last". |
+
+### `string/icu_message_utils.dart`
+
+ICU-style message formatting lite: pluralization and `select` (gender) — roadmap #414.
+
+`import 'package:saropa_dart_utils/string/icu_message_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `icuPlural` | method | Selects a plural form for [count] and replaces every `#` in the chosen form with the count. |
+| `icuSelect` | method | ICU `select` lite: returns the [cases] entry whose key equals [value], falling back to [other] for any missing or unknown key. |
 
 ### `string/levenshtein_utils.dart`
 
@@ -4016,6 +4185,26 @@ Text segmentation into chunks for indexing (size and sentence boundaries) — ro
 |--------|------|-------------|
 | `chunkText` | method | Splits [text] into chunks of at most [maxChars] characters, trying to break at sentence boundaries (.). |
 
+### `string/text_diff_structured_utils.dart`
+
+Structured diff of two texts by sentences and by words — roadmap #415.
+
+`import 'package:saropa_dart_utils/string/text_diff_structured_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `SeqDiffKind` | enum | The kind of change an edit-script step represents. |
+| `equal` | enum value | The value is present in both inputs (unchanged). |
+| `insert` | enum value | The value is present only in the new input (added). |
+| `delete` | enum value | The value is present only in the old input (removed). |
+| `SeqDiffOp` | class | One step of an edit script: a [kind] and the [value] it applies to. |
+| `SeqDiffOp` | constructor | Creates an op of [kind] carrying [value]. |
+| `kind` | field | Whether this value was kept, added, or removed. |
+| `value` | field | The unit (word, sentence, or generic element) this op describes. |
+| `diffSequences` | method | Computes the LCS-based edit script that turns [a] into [b]: a list of `equal` / `delete` / `insert` ops in input order. |
+| `diffWords` | method | Word-level structured diff of [oldText] vs [newText], reusing `tokenizeWords` to split into words (punctuation stripped). |
+| `diffSentences` | method | Sentence-level structured diff of [oldText] vs [newText], reusing `tokenizeSentences` to split on sentence boundaries. |
+
 ### `string/text_fingerprint_utils.dart`
 
 Text fingerprinting (simhash-style) — roadmap #417.
@@ -4063,6 +4252,26 @@ Tokenize text into sentences and words (roadmap #404).
 |--------|------|-------------|
 | `tokenizeSentences` | method | Splits [text] into sentences (split on . |
 | `tokenizeWords` | method | Splits [text] into words (non-empty runs of letters/numbers). |
+
+### `string/tokenizer_pipeline_utils.dart`
+
+Customizable tokenizer pipeline: ordered regex rules with keep/skip — roadmap #434.
+
+`import 'package:saropa_dart_utils/string/tokenizer_pipeline_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `TokenRule` | class | One tokenizer rule: a [type] label, the [pattern] to match at the cursor, and whether matches are dropped ([skip]) instead of emitted. |
+| `TokenRule` | constructor | Creates a rule labelled [type] matching [pattern]. |
+| `type` | field | The label attached to tokens this rule produces (e.g. |
+| `pattern` | field | The pattern matched as a prefix at the current cursor position. |
+| `shouldSkip` | field | When true, matches advance the cursor but emit no token. |
+| `Token` | class | A produced token: its rule [type], the matched [value], and the [start] offset into the original input. |
+| `Token` | constructor | Creates a token of [type] holding [value], found at [start]. |
+| `type` | field | The label from the [TokenRule] that produced this token. |
+| `value` | field | The exact matched substring. |
+| `start` | field | The 0-based offset of [value] in the original input. |
+| `tokenize` | method | Tokenizes [input] by trying [rules] in order at each cursor position; the first rule whose pattern matches as a prefix wins. |
 
 ### `string/url_extract_utils.dart`
 
@@ -4143,6 +4352,19 @@ URL/Path More: directory from path, base name, path separator, is absolute, etc.
 | `pathCollapseSeparators` | method | Collapses runs of `/` or `\` in [path] into a single forward slash. |
 | `pathAppend` | method | Joins [segment] onto [path] with a single forward slash. |
 | `parseBearerToken` | method | Extracts the token from a `Bearer <token>` [authorizationHeader]. |
+
+### `url/uri_pattern_utils.dart`
+
+URI path-template matcher with typed params — roadmap #630.
+
+`import 'package:saropa_dart_utils/url/uri_pattern_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `UriPattern` | class | A compiled path template such as `/users/{id}/posts/{slug}` that matches concrete request paths and extracts the named segment parameters. |
+| `UriPattern` | constructor | Compiles [template] into matchable segments. |
+| `match` | method | Matches [path] against this template. |
+| `isIntOnly` | field | Whether a captured value must parse as an integer to match. |
 
 ### `url/url_absolute_utils.dart`
 

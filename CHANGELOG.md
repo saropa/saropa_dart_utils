@@ -24,10 +24,10 @@
 cspell:disable
 -->
 
-## [Unreleased]
+## [1.3.0]
 
 Ten new utilities from the Roadmap-to-700 set: a forgiving JSON-to-model reader, a CSV writer, a path-template matcher, stream zip/combine operators, multi-key grouping, a swappable cache interface with a write-through loader, date-format presets, ICU plural/select message lite, timing wrappers, and a JSON pretty-printer.
-[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.3.0/CHANGELOG.md)
 
 ### Added
 
@@ -51,6 +51,7 @@ Ten new utilities from the Roadmap-to-700 set: a forgiving JSON-to-model reader,
 
 - **Lint cleanup across `lib/` (no API or behavior change).** Resolved 68 of the live saropa_lints violations a full insanity-tier scan surfaced: added explicit type arguments to 46 empty collection literals (`<int>[]`, `<Map<String, Object?>>[]`, etc.) so they match the codebase's double-explicit convention; reused an already-assigned local in `deepMerge` instead of re-reading `MapEntry.value`; and extended the existing documented `// ignore` directives on the diagnostic `debugPrint` sites in `JsonUtils`, `Base64Utils`, and `async_more_utils` to also cover the sibling `avoid_debug_print` / `avoid_stack_trace_in_production` rules. Reworded two prose design-notes so they no longer trip `prefer_no_commented_out_code`, and suppressed the Flutter-app-lifecycle rules (`avoid_work_in_paused_state`, `require_workmanager_for_background`) on `HeartbeatUtils` with a reason, since they do not apply to a pure-Dart timer primitive. The remaining `prefer_list_first` hits are string-index false positives (`String` has no `.first`) and were left unchanged.
 - **Publish-audit accuracy + coverage (no API or behavior change).** Rebuilt the `scripts/modules/audit.py` declaration matcher and test-discovery so the publish audit stops reporting false positives: doc-header findings 94→0, recursion findings 29→0 (the check was removed — every hit was legitimate recursion), and per-method "0 tests" false positives eliminated via a global tested-identifier scan (methods tested in combined files like `duration_format_parse_test.dart` are now credited). Wrote tests for the 29 genuinely-untested public methods (new `*_untested_test.dart` / feature test files under `test/`). Added explanatory WHY-comments to 61 of 92 under-commented function bodies across `lib/` (algorithm intent: k-way merge, A\*, Dijkstra, Floyd–Warshall, knapsack, LIS, Rabin-Karp, kmeans, trial-division primes, LCS, bin-packing, inverted index, and more); 31 remain as tracked documentation debt.
+- **Closed the remaining 31 under-commented bodies + fixed the last audit warning (no API or behavior change).** Added WHY-comments to the final 31 function bodies the audit still flagged (`prefixFrequencyTable`, `maxWeightIntervals`, `rank`, `addBusinessDays`, `_buildDurationParts`, `roundMinutes`, `lowestCommonAncestor`, `diff`, `takeEveryNth`/`skipEveryNth`, `allEqual`, `renameKeys`, `upsert`, `getNested`, `abbreviateName`, `decodeVarint`, `linearRegression`, `simpleMovingAverage`, `outlierIndicesByMAD`, `stratifiedSampleIndices`, `didYouMean`, `stripSubstring`, `wrapAtChars`, `allIndicesOf`, `textFingerprint`, `cosineSimilarity`, `tokenizeSentences`, `pathRelative`, `validateOneOfRequired`, `parseIpv4`, `jwtPayload`) — documenting the invariants and failure modes the names alone can't carry (window-sort precondition, MAD-zero divide guard, varint overflow bail-out, base64url padding restore, and so on), with the big-O prose phrased to avoid `prefer_no_commented_out_code` false positives. Corrected the lone live analyzer warning by prefixing the `WriteThroughCache` suppression with the plugin namespace (`// ignore: saropa_lints/require_cache_expiration`) so it is actually honored — expiration is delegated to the wrapped `Cache`. `dart analyze` is now clean across `lib/`.
 
 ## [1.2.0] - 2026-06-10
 

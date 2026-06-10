@@ -48,8 +48,14 @@ extension MapRenameKey<K, V> on Map<K, V> {
   /// New map with keys renamed according to [oldToNew].
   @useResult
   Map<K, V> renameKeys(Map<K, K> oldToNew) {
+    // Rename on a copy so the receiver is left unmodified (the @useResult
+    // contract — callers expect a new map, not a mutation).
     final Map<K, V> out = Map<K, V>.from(this);
     for (final MapEntry<K, K> e in oldToNew.entries) {
+      // Only act on keys that are actually present; remove-then-reinsert under
+      // the new key performs the rename. The v != null guard means a key whose
+      // stored value is null is silently dropped rather than re-added — an
+      // accepted caveat for maps that hold null values.
       if (out.containsKey(e.key)) {
         final v = out.remove(e.key);
         if (v != null) out[e.value] = v;
@@ -71,9 +77,14 @@ extension MapEnsureKey<K, V> on Map<K, V> {
 extension MapUpsert<K, V> on Map<K, V> {
   /// If [key] absent: this[key] = insert(); else this[key] = update(this[key]).
   void upsert(K key, V Function() insert, V Function(V existing) update) {
+    // Branch on presence, not on the looked-up value: a key can be present with
+    // a null value, and treating that as "absent" would wrongly call insert().
     if (!containsKey(key)) {
       this[key] = insert();
     } else {
+      // The `is V` test both narrows the nullable lookup to non-null and skips
+      // the rare case where the stored value is null (V itself nullable), so
+      // update only ever receives a genuine existing V.
       final v = this[key];
       if (v is V) this[key] = update(v);
     }

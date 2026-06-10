@@ -235,14 +235,23 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// Takes every [n]-th element (1-based: first, then 1+n, 1+2n, ...). [n] must be positive.
   @useResult
   Iterable<T> takeEveryNth(int n) {
+    // n < 1 would make the modulo selection meaningless (n == 0 divides by zero,
+    // negatives never match), so reject it up front rather than yield garbage.
     if (n < 1) throw ArgumentError(_kErrNPositive, _kParamN);
+    // zipWithIndex is 0-based, so position 0 (the first element) satisfies
+    // index % n == 0 — that is why "every n-th" keeps the first element and then
+    // every n-th after it, matching the 1-based wording in the doc.
     return zipWithIndex().where(((int, T) p) => p.$1 % n == 0).map(((int, T) p) => p.$2);
   }
 
   /// Skips every [n]-th element. [n] must be positive.
   @useResult
   Iterable<T> skipEveryNth(int n) {
+    // Same positivity guard as takeEveryNth: a non-positive n has no valid
+    // periodic selection.
     if (n < 1) throw ArgumentError(_kErrNPositive, _kParamN);
+    // Exact complement of takeEveryNth: drop the positions it would keep
+    // (index % n == 0, including the first element) and yield the rest.
     return zipWithIndex().where(((int, T) p) => p.$1 % n != 0).map(((int, T) p) => p.$2);
   }
 

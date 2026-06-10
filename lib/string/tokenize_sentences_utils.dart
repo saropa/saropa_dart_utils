@@ -3,7 +3,12 @@ library;
 
 /// Splits [text] into sentences (split on . ! ? followed by space or end).
 List<String> tokenizeSentences(String text) {
+  // Whitespace-only input has no sentences; guard so the split below cannot
+  // emit a single empty token.
   if (text.trim().isEmpty) return <String>[];
+  // The lookbehind splits on whitespace that follows a terminator (. ! ?) so the
+  // punctuation stays attached to the sentence it ends rather than being consumed
+  // by the split. Trim each piece and drop any that became empty.
   return text
       .split(RegExp(r'(?<=[.!?])\s+'))
       .map((String s) => s.trim())
