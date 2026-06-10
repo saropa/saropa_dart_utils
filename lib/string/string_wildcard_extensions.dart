@@ -34,11 +34,15 @@ extension StringWildcardExtensions on String {
     required String pattern,
     required int patternIndex,
   }) {
+    // Walk pattern and string in lockstep from the given offsets.
     int si = stringIndex;
     int pi = patternIndex;
     while (pi < pattern.length) {
       final String pc = pattern[pi];
       if (pc == '*') {
+        // '*' matches any run (including empty). A trailing '*' matches the rest
+        // outright; otherwise try to match the remaining pattern at every split
+        // point of the remaining string (this is the backtracking branch).
         pi++;
         if (pi >= pattern.length) return true;
         while (si <= string.length) {
@@ -54,16 +58,20 @@ extension StringWildcardExtensions on String {
         }
         return false;
       }
+      // Past '*', any non-'*' token needs a character to consume.
       if (si >= string.length) return false;
       if (pc == '?') {
+        // '?' matches exactly one arbitrary character.
         si++;
         pi++;
       } else {
+        // Literal: must match the current character exactly.
         if (string[si] != pc) return false;
         si++;
         pi++;
       }
     }
+    // Pattern consumed: it matches only if the string is also fully consumed.
     return si >= string.length;
   }
 }

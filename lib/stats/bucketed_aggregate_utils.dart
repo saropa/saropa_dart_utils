@@ -22,6 +22,8 @@ const String _kAggMax = 'max';
 
 /// For each bucket, compute [aggregate] (sum, count, avg, min, max).
 double bucketAggregate(List<num> bucket, String aggregate) {
+  // NaN signals "no value" for an empty bucket — avg would divide by zero and
+  // min/max have no defined element, so every branch below assumes non-empty.
   if (bucket.isEmpty) return double.nan;
   switch (aggregate) {
     case _kAggSum:
@@ -31,14 +33,17 @@ double bucketAggregate(List<num> bucket, String aggregate) {
     case _kAggAvg:
       return bucket.fold<double>(0, (s, x) => s + x.toDouble()) / bucket.length;
     case _kAggMin:
+      // Seed with +infinity so the first real element always wins the min fold.
       return bucket
           .map((num x) => x.toDouble())
           .fold<double>(double.infinity, (a, b) => a < b ? a : b);
     case _kAggMax:
+      // Seed with -infinity so the first real element always wins the max fold.
       return bucket
           .map((num x) => x.toDouble())
           .fold<double>(double.negativeInfinity, (a, b) => a > b ? a : b);
     default:
+      // Unknown aggregate name — NaN rather than a silent wrong number.
       return double.nan;
   }
 }
