@@ -115,6 +115,97 @@ void main() {
     });
   });
 
+  group('removeEndNullable', () {
+    // Happy path: a real suffix is present and gets stripped once.
+    test('should strip a matching suffix', () {
+      expect('hello.txt'.removeEndNullable('.txt'), 'hello');
+    });
+
+    test('should leave string unchanged when suffix absent', () {
+      expect('hello'.removeEndNullable('.txt'), 'hello');
+    });
+
+    // The "nothing to strip" branch: a null/empty find returns the receiver.
+    test('should return receiver unchanged for null find', () {
+      expect('hello'.removeEndNullable(null), 'hello');
+    });
+
+    test('should return receiver unchanged for empty find', () {
+      expect('hello'.removeEndNullable(''), 'hello');
+    });
+
+    // The deliberate null-vs-empty split: empty receiver + a real suffix is
+    // the ONLY case that yields null (no source to carry the suffix).
+    test('should return null for empty receiver with non-empty find', () {
+      expect(''.removeEndNullable('x'), isNull);
+    });
+
+    test('should return empty (unchanged) for empty receiver with null find', () {
+      expect(''.removeEndNullable(null), '');
+    });
+
+    test('should return empty (unchanged) for empty receiver with empty find', () {
+      expect(''.removeEndNullable(''), '');
+    });
+
+    // Whole-string match strips to '' — null is reserved for the empty-source
+    // case above, so this must NOT collapse to null.
+    test('should strip whole-string match to empty string, not null', () {
+      expect('abc'.removeEndNullable('abc'), '');
+    });
+
+    // Suffix longer than the receiver cannot match: receiver returned as-is.
+    test('should return unchanged when suffix longer than receiver', () {
+      expect('ab'.removeEndNullable('xabc'), 'ab');
+    });
+
+    // find contains the whole receiver plus a prefix: still no suffix match.
+    test('should return unchanged when find contains receiver plus more', () {
+      expect('x'.removeEndNullable('yx'), 'x');
+    });
+
+    // Delegates to removeEnd, which removes only ONE trailing occurrence.
+    test('should remove only one trailing occurrence of a repeated suffix', () {
+      expect('aaa'.removeEndNullable('a'), 'aa');
+    });
+
+    // Suffix matching is case-sensitive: a case mismatch is not stripped.
+    test('should be case-sensitive (no strip on case mismatch)', () {
+      expect('Hello.TXT'.removeEndNullable('.txt'), 'Hello.TXT');
+    });
+
+    // Multi-byte (combining) and surrogate-pair suffixes strip cleanly.
+    test('should strip a multi-byte accented-letter suffix', () {
+      expect('café'.removeEndNullable('é'), 'caf');
+    });
+
+    test('should strip a surrogate-pair emoji suffix without leaving a lone surrogate', () {
+      // U+1F642 is a single code point stored as a UTF-16 surrogate pair; the
+      // full pair is the suffix, so the result must be a clean 'hi'.
+      final String result = 'hi🙂'.removeEndNullable('🙂')!;
+      expect(result, 'hi');
+      expect(result.codeUnits, 'hi'.codeUnits);
+    });
+
+    // Code-unit matching is NOT grapheme-aware: stripping a bare combining
+    // mark off a base+mark cluster is documented behavior, not a defect.
+    test('should strip a bare combining mark (UTF-16 matching, not grapheme-aware)', () {
+      final String acute = String.fromCharCode(0x0301); // combining acute accent
+      // 'e' + combining acute is one grapheme; removing the mark leaves 'e'.
+      expect(('e$acute').removeEndNullable(acute), 'e');
+    });
+
+    // Whitespace suffixes, including non-breaking space, are ordinary matches.
+    test('should strip a trailing ASCII space suffix', () {
+      expect('hi '.removeEndNullable(' '), 'hi');
+    });
+
+    test('should strip a trailing non-breaking space suffix', () {
+      final String nbsp = String.fromCharCode(0x00A0);
+      expect(('hi$nbsp').removeEndNullable(nbsp), 'hi');
+    });
+  });
+
   group('removeFirstChar / removeLastChar / removeFirstLastChar', () {
     test('removeFirstChar should drop the first character', () {
       expect('abc'.removeFirstChar(), 'bc');

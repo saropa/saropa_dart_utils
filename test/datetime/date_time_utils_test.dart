@@ -290,6 +290,138 @@ void main() {
       });
     });
 
+    group('monthDayCountSafe', () {
+      // Ported from Saropa Contacts (monthDayCountNullable); raw-int matchers
+      // wrapped in equals() per saropa_lints/avoid_misused_test_matchers.
+      group('ported sample cases', () {
+        test('should return 31 for January in a leap year', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 1), equals(31));
+        });
+
+        test('should return 29 for February in a leap year', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 2), equals(29));
+        });
+
+        test('should return 28 for February in a non-leap year', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2023, month: 2), equals(28));
+        });
+
+        test('should return 30 for April', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 4), equals(30));
+        });
+      });
+
+      // The whole reason the nullable variant exists: a null year cannot
+      // resolve leap-ness, so February must fall back to its 28-day minimum.
+      group('null year branch', () {
+        test('should return 28 for February when year is null', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: null, month: 2), equals(28));
+        });
+
+        test('should return 31 for every 31-day month when year is null', () {
+          for (final int month in <int>[1, 3, 5, 7, 8, 10, 12]) {
+            expect(
+              DateTimeUtils.monthDayCountSafe(year: null, month: month),
+              equals(31),
+              reason: 'month $month should have 31 days',
+            );
+          }
+        });
+
+        test('should return 30 for every 30-day month when year is null', () {
+          for (final int month in <int>[4, 6, 9, 11]) {
+            expect(
+              DateTimeUtils.monthDayCountSafe(year: null, month: month),
+              equals(30),
+              reason: 'month $month should have 30 days',
+            );
+          }
+        });
+      });
+
+      // Distinct from monthDayCount, which throws on a bad month. This pins
+      // the documented (footgun) silent-30 fall-through behavior.
+      group('out-of-range month (non-throwing, returns 30)', () {
+        test('should return 30 for month 0', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 0), equals(30));
+        });
+
+        test('should return 30 for month 13', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 13), equals(30));
+        });
+
+        test('should return 30 for month -1', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: -1), equals(30));
+        });
+
+        test('should return 30 for month 100', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 100), equals(30));
+        });
+
+        test('should return 30 for month 1 << 31 without overflow', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2024, month: 1 << 31), equals(30));
+        });
+
+        test('should not throw for a bad month (contrast monthDayCount)', () {
+          expect(() => DateTimeUtils.monthDayCountSafe(year: 2024, month: 0), returnsNormally);
+          expect(() => DateTimeUtils.monthDayCount(year: 2024, month: 0), throwsArgumentError);
+        });
+      });
+
+      // Feb day count must track the proleptic Gregorian leap rule at the
+      // century / 400-year boundaries.
+      group('leap-year boundaries for February', () {
+        test('should return 29 for year 2000 (divisible by 400)', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2000, month: 2), equals(29));
+        });
+
+        test('should return 28 for year 1900 (divisible by 100, not 400)', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 1900, month: 2), equals(28));
+        });
+
+        test('should return 28 for years 2100, 2200, 2300 (century non-leap)', () {
+          for (final int year in <int>[2100, 2200, 2300]) {
+            expect(
+              DateTimeUtils.monthDayCountSafe(year: year, month: 2),
+              equals(28),
+              reason: 'year $year is not a leap year',
+            );
+          }
+        });
+
+        test('should return 29 for year 2400 (divisible by 400)', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 2400, month: 2), equals(29));
+        });
+
+        test('should return 29 for year 0 (0 % 400 == 0)', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: 0, month: 2), equals(29));
+        });
+
+        test('should return 29 for year -4 (leap by formula)', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: -4, month: 2), equals(29));
+        });
+
+        test('should return 28 for year -1 (not divisible by 4)', () {
+          expect(DateTimeUtils.monthDayCountSafe(year: -1, month: 2), equals(28));
+        });
+      });
+
+      // Modulo math must stay well-defined at the int extremes; no crash.
+      group('extreme year values', () {
+        test('should not crash for year near 2^63 - 1 in February', () {
+          const int maxInt = 0x7FFFFFFFFFFFFFFF; // 9223372036854775807, odd → not leap
+          expect(DateTimeUtils.monthDayCountSafe(year: maxInt, month: 2), equals(28));
+        });
+
+        test('should not crash for minimum int year in February', () {
+          // Dart ints are 64-bit two's complement on the VM; -2^63 % 4 == 0,
+          // % 100 != 0, so it is a leap year by the proleptic formula.
+          const int minInt = -0x8000000000000000;
+          expect(DateTimeUtils.monthDayCountSafe(year: minInt, month: 2), equals(29));
+        });
+      });
+    });
+
     group('isValidDateParts', () {
       test('1. Valid year', () {
         expect(DateTimeUtils.isValidDateParts(year: 2023), isTrue);
@@ -430,6 +562,52 @@ void main() {
       });
       test('40. Negative minute', () {
         expect(DateTimeUtils.isValidDateParts(minute: -1), isFalse);
+      });
+
+      // Spec bulletproofing additions: per-month day ceilings, lower-bound
+      // day failures, and the library-specific null-year Feb 29 divergence.
+      test('41. Day 31 invalid for every 30-day month', () {
+        for (final int month in <int>[4, 6, 9, 11]) {
+          expect(
+            DateTimeUtils.isValidDateParts(month: month, day: 31),
+            isFalse,
+            reason: 'month $month has only 30 days',
+          );
+        }
+      });
+
+      test('42. Day 30 valid for every 30-day month', () {
+        for (final int month in <int>[4, 6, 9, 11]) {
+          expect(
+            DateTimeUtils.isValidDateParts(month: month, day: 30),
+            isTrue,
+            reason: 'month $month has 30 days',
+          );
+        }
+      });
+
+      test('43. Negative day is invalid', () {
+        expect(DateTimeUtils.isValidDateParts(month: 1, day: -5), isFalse);
+      });
+
+      // Library divergence locked: with year null but month==Feb and day==29,
+      // _isValidDay falls back to defaultLeapYearCheckYear (2000, a leap year)
+      // so the library ACCEPTS, where the Contacts source rejected. This is
+      // the intended library semantics.
+      test('44. Feb 29 with null year is accepted (defaultLeapYearCheckYear fallback)', () {
+        expect(DateTimeUtils.isValidDateParts(month: 2, day: 29), isTrue);
+      });
+
+      test('45. Day with null month is invalid', () {
+        expect(DateTimeUtils.isValidDateParts(day: 15), isFalse);
+      });
+
+      test('46. Very large year is invalid without overflow', () {
+        expect(DateTimeUtils.isValidDateParts(year: 0x7FFFFFFFFFFFFFFF), isFalse);
+      });
+
+      test('47. Very large hour is invalid without overflow', () {
+        expect(DateTimeUtils.isValidDateParts(hour: 0x7FFFFFFFFFFFFFFF), isFalse);
       });
     });
   });

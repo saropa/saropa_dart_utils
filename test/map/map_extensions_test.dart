@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/map/map_extensions.dart';
 import 'package:saropa_dart_utils/map/map_nullable_extensions.dart';
 
@@ -509,6 +510,193 @@ void main() {
       };
       expect(MapExtensions.countItems(map), 3);
     });
+
+    // Bulletproofing gaps from SPEC-map-count-items.md — edge cases beyond the
+    // happy-path coverage above.
+
+    test('should return 0 when all values are empty', () {
+      final Map<String, List<int>> map = <String, List<int>>{
+        'a': <int>[],
+        'b': <int>[],
+      };
+      expect(MapExtensions.countItems(map), 0);
+    });
+
+    test('should return 1 for a single key with a single element', () {
+      expect(
+        MapExtensions.countItems(<String, List<int>>{
+          'a': <int>[1],
+        }),
+        1,
+      );
+    });
+
+    // Order-independence: an empty value placed FIRST must yield the same total
+    // as one placed LAST, since addition is commutative.
+    test('should be order-independent with empty value first', () {
+      final Map<String, List<int>> map = <String, List<int>>{
+        'a': <int>[],
+        'b': <int>[1, 2, 3],
+      };
+      expect(MapExtensions.countItems(map), 3);
+    });
+
+    test('should be order-independent with empty value last', () {
+      final Map<String, List<int>> map = <String, List<int>>{
+        'a': <int>[1, 2, 3],
+        'b': <int>[],
+      };
+      expect(MapExtensions.countItems(map), 3);
+    });
+
+    // Set values are counted post-dedup: {1, 1} collapses to {1}, so the
+    // contribution is 1, not the 2 values that were written.
+    test('should count Set values after deduplication, not insertion count', () {
+      final Map<String, Set<int>> map = <String, Set<int>>{
+        // The duplicate literal is intentional: it proves the count reflects
+        // the deduped Set ({1}) rather than the two values written.
+        // ignore: equal_elements_in_set
+        'a': <int>{1, 1},
+      };
+      expect(MapExtensions.countItems(map), 1);
+    });
+
+    test('should count distinct Set elements across keys', () {
+      final Map<String, Set<int>> map = <String, Set<int>>{
+        // Duplicate literals are intentional — see dedup test above.
+        // ignore: equal_elements_in_set
+        'a': <int>{1, 2, 2, 3},
+        // ignore: equal_elements_in_set
+        'b': <int>{3, 3},
+      };
+      // {1,2,3} -> 3, {3} -> 1.
+      expect(MapExtensions.countItems(map), 4);
+    });
+
+    // A lazy Iterable (never a List) must materialize its length correctly so
+    // the fold sees real element counts, not 0.
+    test('should materialize length of a lazy generated Iterable', () {
+      final Map<String, Iterable<int>> map = <String, Iterable<int>>{
+        'a': Iterable<int>.generate(5, (int i) => i),
+      };
+      expect(MapExtensions.countItems(map), 5);
+    });
+
+    test('should materialize length of a lazy mapped Iterable', () {
+      final Map<String, Iterable<int>> map = <String, Iterable<int>>{
+        'a': <int>[1, 2, 3, 4].map((int e) => e * 2),
+      };
+      expect(MapExtensions.countItems(map), 4);
+    });
+
+    // 64-bit int fold must not overflow on a very large value plus many keys.
+    test('should sum a single huge value without overflow', () {
+      const int big = 1 << 20; // 1,048,576 elements
+      final Map<String, Iterable<int>> map = <String, Iterable<int>>{
+        'a': Iterable<int>.generate(big, (int i) => i),
+      };
+      expect(MapExtensions.countItems(map), big);
+    });
+
+    test('should sum many keys to the expected total', () {
+      final Map<int, List<int>> map = <int, List<int>>{
+        for (int i = 0; i < 1000; i++) i: <int>[i],
+      };
+      expect(MapExtensions.countItems(map), 1000);
+    });
+
+    // Key-type genericity: enum keys must work with no constraint on K.
+    test('should accept enum keys', () {
+      final Map<_Section, List<int>> map = <_Section, List<int>>{
+        _Section.first: <int>[1, 2],
+        _Section.second: <int>[3],
+      };
+      expect(MapExtensions.countItems(map), 3);
+    });
+
+    // Custom-object keys with == / hashCode prove K is unconstrained; two
+    // equal keys collapse to one map entry, so only the surviving value counts.
+    test('should accept custom-object keys with == and hashCode', () {
+      final Map<_PointKey, List<int>> map = <_PointKey, List<int>>{
+        const _PointKey(1, 2): <int>[1, 2, 3],
+        const _PointKey(3, 4): <int>[4],
+      };
+      expect(MapExtensions.countItems(map), 4);
+    });
+
+    test('should collapse equal custom-object keys to one entry', () {
+      final Map<_PointKey, List<int>> map = <_PointKey, List<int>>{
+        const _PointKey(1, 2): <int>[1],
+        // Equal-key literal is intentional: it verifies the two entries collapse
+        // to one (last value wins) so only that survivor's length is counted.
+        // ignore: equal_keys_in_map
+        const _PointKey(1, 2): <int>[1, 2, 3],
+      };
+      // The two literals are equal, so the map holds only the second value.
+      expect(MapExtensions.countItems(map), 3);
+    });
+
+    // Element CONTENT must be irrelevant: a multi-code-unit emoji and a
+    // combining-mark string each count as exactly ONE element, because only
+    // the iterable's .length is read.
+    test('should count emoji and accented strings as one element each', () {
+      final Map<String, List<String>> map = <String, List<String>>{
+        'a': <String>[String.fromCharCode(0x1F600), 'café'],
+      };
+      expect(MapExtensions.countItems(map), 2);
+    });
+
+    test('should ignore string content and count only element positions', () {
+      final Map<String, List<String>> map = <String, List<String>>{
+        'a': <String>['', 'a', 'a'], // duplicates and empty still count
+      };
+      expect(MapExtensions.countItems(map), 3);
+    });
+
+    // Nullable element type: null entries still occupy a position and count
+    // toward .length.
+    test('should count null elements toward the total', () {
+      final Map<String, List<int?>> map = <String, List<int?>>{
+        'a': <int?>[null, 1, null],
+      };
+      expect(MapExtensions.countItems(map), 3);
+    });
+
+    // Fold associativity sanity check: one big value equals many small values
+    // when the total element count is the same.
+    test('should equal across one-huge-value vs many-small-values shapes', () {
+      final Map<String, List<int>> oneBig = <String, List<int>>{
+        'a': List<int>.generate(100, (int i) => i),
+      };
+      final Map<int, List<int>> manySmall = <int, List<int>>{
+        for (int i = 0; i < 100; i++) i: <int>[i],
+      };
+      expect(MapExtensions.countItems(oneBig), MapExtensions.countItems(manySmall));
+      expect(MapExtensions.countItems(oneBig), 100);
+    });
+
+    // Immutability: countItems must only READ lengths. Snapshot the map and
+    // each value before the call, then assert nothing changed afterward.
+    test('should not mutate the input map or its values', () {
+      final Map<String, List<int>> map = <String, List<int>>{
+        'a': <int>[1, 2],
+        'b': <int>[3],
+      };
+      final Map<String, List<int>> snapshot = <String, List<int>>{
+        for (final MapEntry<String, List<int>> e in map.entries)
+          e.key: List<int>.of(e.value),
+      };
+
+      // The return value is irrelevant here; this test only asserts that the
+      // call leaves [map] and its values untouched.
+      // ignore: unused_result
+      MapExtensions.countItems(map);
+
+      expect(map.keys.toList(), snapshot.keys.toList());
+      expect(map['a'], snapshot['a']);
+      expect(map['b'], snapshot['b']);
+      expect(map, hasLength(2));
+    });
   });
 
   group('MapExtensions.mapToggleValue', () {
@@ -813,4 +1001,25 @@ void main() {
       expect(m.isMapNullOrEmpty, isTrue);
     });
   });
+}
+
+/// Enum key used to prove `countItems` places no constraint on its key type
+/// `K`: a non-`String`, non-`int` key must still group and count correctly.
+enum _Section { first, second }
+
+/// Custom-object key with value-based `==` / `hashCode`, used to prove `K` is
+/// unconstrained and that two equal keys collapse to a single map entry.
+@immutable
+class _PointKey {
+  const _PointKey(this.x, this.y);
+
+  final int x;
+  final int y;
+
+  @override
+  bool operator ==(Object other) =>
+      other is _PointKey && other.x == x && other.y == y;
+
+  @override
+  int get hashCode => Object.hash(x, y);
 }

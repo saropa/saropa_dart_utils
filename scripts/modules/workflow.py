@@ -720,7 +720,8 @@ def verify_published(
     run_id: str | None = None
     workflow_succeeded = False
     last_reported_status = ""
-    deadline = time.monotonic() + timeout_seconds
+    start = time.monotonic()
+    deadline = start + timeout_seconds
 
     while time.monotonic() < deadline:
         if _pubdev_has_version(package_name, version):
@@ -758,6 +759,16 @@ def verify_published(
                         ui.Color.YELLOW,
                     )
                     return False
+
+        # Heartbeat: status only prints on a transition, so without this the
+        # terminal sits silent through every poll sleep and reads as a hang.
+        # One elapsed/max line per cycle proves the loop is alive.
+        elapsed = int(time.monotonic() - start)
+        ui.print_colored(
+            f"      still waiting... {elapsed // 60}:{elapsed % 60:02d} "
+            f"/ {timeout_seconds // 60}:00 elapsed (re-checking in {poll_seconds}s)",
+            ui.Color.WHITE,
+        )
 
         time.sleep(poll_seconds)
 

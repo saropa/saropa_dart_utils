@@ -47,6 +47,13 @@ abstract final class DateConstants {
   /// Number of days in February during a leap year.
   static const int daysInFebLeapYear = 29;
 
+  /// Number of days in a 31-day month (Jan, Mar, May, Jul, Aug, Oct, Dec).
+  static const int daysInThirtyOneDayMonth = 31;
+
+  /// Number of days in a 30-day month (Apr, Jun, Sep, Nov), also the
+  /// non-throwing default for an out-of-range month.
+  static const int daysInThirtyDayMonth = 30;
+
   /// Default year to use for leap year calculations when year is not specified
   /// (chosen as a leap year).
   static const int defaultLeapYearCheckYear = 2000;

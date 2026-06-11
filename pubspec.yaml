@@ -28,10 +28,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # International date formats
+  # International date formats. Required by the intl-coupled
+  # date_time_intl_display_extensions module (locale-correct skeleton ordering
+  # and 12h/24h clock detection). The rest of lib/datetime/ stays intl-free by
+  # design; only that one opt-in module pulls intl.
   # https://pub.dev/packages/intl/changelog
-  # NOTE: intl comes with a horrible mess of dependencies ... it would be great to resolve this once and for all
-  # intl: ^0.20.2
+  intl: ^0.20.2
 
   # Jiffy is a Flutter (Android, IOS and Web) date time package inspired by moment js for parsing, manipulating, querying and formatting dates
   # https://pub.dev/packages/jiffy/changelog

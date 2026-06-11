@@ -355,6 +355,65 @@ abstract final class DateTimeUtils {
     return daysInMonth[month - 1];
   }
 
+  /// The 31-day months by number (Jan, Mar, May, Jul, Aug, Oct, Dec).
+  ///
+  /// Used by [monthDayCountSafe] to classify a month without indexing a
+  /// per-month table — a `contains` check is range-independent, so an
+  /// out-of-range month simply falls through to the 30-day default rather
+  /// than throwing an index error, which is the no-throw contract that
+  /// distinguishes [monthDayCountSafe] from [monthDayCount].
+  static const List<int> _thirtyOneDayMonths = <int>[1, 3, 5, 7, 8, 10, 12];
+
+  /// Returns the number of days in [month], tolerating a `null` [year] and
+  /// an out-of-range [month] without throwing.
+  ///
+  /// This is the null-year-tolerant, non-throwing companion to
+  /// [monthDayCount]. Two contract differences make it safe for partial or
+  /// untrusted date parts:
+  ///
+  /// - **Nullable [year]:** when [year] is `null`, February returns `28`
+  ///   because a leap year cannot be resolved without a year. A known leap
+  ///   year still yields `29`. ([monthDayCount] requires a non-null year.)
+  /// - **No throw on bad [month]:** any [month] that is not February and not
+  ///   in the 31-day set returns `30`, including out-of-range values such as
+  ///   `0`, `13`, `-1`, or very large ints. ([monthDayCount] throws
+  ///   [ArgumentError] for [month] outside 1–12.)
+  ///
+  /// The silent `30` for an invalid [month] is intentional but is a footgun:
+  /// validate [month] separately (e.g. via [isValidDateParts]) when you need
+  /// to reject bad input rather than coerce it. Negative years are accepted
+  /// and follow the proleptic Gregorian leap rule (e.g. `-4` is a leap year).
+  ///
+  /// Example:
+  /// ```dart
+  /// DateTimeUtils.monthDayCountSafe(year: 2024, month: 2); // 29 (leap)
+  /// DateTimeUtils.monthDayCountSafe(year: 2023, month: 2); // 28
+  /// DateTimeUtils.monthDayCountSafe(year: null, month: 2); // 28 (year unknown)
+  /// DateTimeUtils.monthDayCountSafe(year: null, month: 1); // 31
+  /// DateTimeUtils.monthDayCountSafe(year: 2024, month: 13); // 30 (no throw)
+  /// ```
+  @useResult
+  static int monthDayCountSafe({required int? year, required int month}) {
+    // February is the only month whose length depends on the year, so it is
+    // the only branch that consults the leap-year rule — and only when the
+    // year is known. An unknown year cannot resolve leap-ness, so it falls
+    // back to the always-safe 28 (the minimum February length).
+    if (month == 2) {
+      if (year != null && isLeapYear(year: year)) {
+        return DateConstants.daysInFebLeapYear;
+      }
+
+      return DateConstants.minDaysInAnyMonth;
+    }
+
+    // Non-February: a membership test (not a table index) keeps the lookup
+    // total over all ints, so out-of-range months coerce to 30 instead of
+    // throwing — the deliberate no-throw contract.
+    return _thirtyOneDayMonths.contains(month)
+        ? DateConstants.daysInThirtyOneDayMonth
+        : DateConstants.daysInThirtyDayMonth;
+  }
+
   /// Returns `true` if [value] is `null` or within [min]..[max] inclusive.
   static bool _isInRange({required int? value, required int min, required int max}) {
     if (value == null) {

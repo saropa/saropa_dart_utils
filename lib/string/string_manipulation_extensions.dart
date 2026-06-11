@@ -108,8 +108,51 @@ extension StringManipulationExtensions on String {
   }
 
   /// Returns a new string with [end] removed from the end, if it exists.
+  ///
+  /// Suffix matching is UTF-16 code-unit based (via [String.endsWith]), so the
+  /// cut point `length - end.length` is a guaranteed-valid code-unit boundary.
+  /// Uses plain [String.substring] (not the grapheme-aware `substringSafe`)
+  /// because the latter would reinterpret that code-unit index as a grapheme
+  /// index, refusing to split a base+combining-mark cluster and leaving the
+  /// suffix un-stripped. Code-unit slicing keeps the contract consistent: a
+  /// bare combining mark passed as [end] is stripped, matching `endsWith`.
   @useResult
-  String removeEnd(String end) => endsWith(end) ? substringSafe(0, length - end.length) : this;
+  String removeEnd(String end) => endsWith(end) ? substring(0, length - end.length) : this;
+
+  /// Removes [find] from the end of this string, tolerating a null/empty
+  /// [find], and signals "no source to strip from" with `null`.
+  ///
+  /// The nullable-aware companion to [removeEnd]. The three-way result lets a
+  /// caller distinguish "stripped to nothing" (`''`) from "there was no source
+  /// string to strip" (`null`) — a distinction a plain `String removeEnd`
+  /// cannot express. Branch semantics:
+  ///
+  /// - When [find] is `null` or empty, there is nothing to strip: returns this
+  ///   string unchanged (including when this string is itself empty).
+  /// - When this string is empty AND [find] is a real, non-empty suffix,
+  ///   returns `null` — an empty source cannot carry the requested suffix, so
+  ///   `null` (rather than `''`) marks the "no source" case distinctly. This
+  ///   asymmetry is deliberate; do not "normalize" it to `''`.
+  /// - Otherwise delegates to [removeEnd], so only ONE trailing occurrence is
+  ///   removed and a whole-string match strips to `''` (NOT `null`).
+  ///
+  /// Matching is case-sensitive UTF-16 code-unit suffix matching (inherited
+  /// from [removeEnd]/[String.endsWith]), NOT grapheme-aware: stripping a
+  /// combining mark or a fragment of a surrogate pair can split a cluster.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'hello.txt'.removeEndNullable('.txt'); // 'hello'
+  /// 'hello'.removeEndNullable(null);       // 'hello' (nothing to strip)
+  /// 'abc'.removeEndNullable('abc');        // ''     (stripped to nothing)
+  /// ''.removeEndNullable('x');             // null   (no source to strip)
+  /// ```
+  @useResult
+  String? removeEndNullable(String? find) => find == null || find.isEmpty
+      ? this
+      : isEmpty
+      ? null
+      : removeEnd(find);
 
   /// Returns a new string with the first character removed.
   @useResult

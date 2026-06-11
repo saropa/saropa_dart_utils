@@ -1,3 +1,7 @@
+// Only the [DateTimeRange] type is needed here. Importing the whole material
+// library would pull a heavy UI surface into a pure date-math file, so the
+// `show` clause keeps the dependency narrow (mirrors iso_interval_parse_utils.dart).
+import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_utils.dart';
@@ -146,4 +150,62 @@ extension DateTimeBoundsExtensions on DateTime {
     other.millisecond,
     other.microsecond,
   );
+
+  /// The month/day of this date pinned to the sentinel year 0 — the canonical
+  /// "recurring annual date" form (birthday, anniversary, holiday-without-year).
+  ///
+  /// Stripping the year lets two dates be compared on month/day alone. Year 0
+  /// is the agreed sentinel for "any year": this is the blessed producer for
+  /// the existing consumer
+  /// [DateTimeComparisonExtensions.isAnnualDateInRange], which treats a year-0
+  /// [DateTime] as a month/day match against any year covered by a range.
+  ///
+  /// Edge cases / guarantees:
+  /// - Time-of-day is dropped — the result is year-0 midnight (hour, minute,
+  ///   second, millisecond, microsecond all 0).
+  /// - Feb 29 survives. Year 0 is a leap year in Dart's proleptic Gregorian
+  ///   calendar, so `DateTime(2024, 2, 29).toAnnualDate` is `DateTime(0, 2, 29)`
+  ///   and does NOT roll over to Mar 1.
+  /// - The result is a **local** (non-UTC) [DateTime], even when called on a
+  ///   `DateTime.utc(...)`, because the year-0 value is built with the local
+  ///   [DateTime] constructor. Annual dates carry no real instant, so the UTC
+  ///   flag is intentionally not preserved.
+  /// - Idempotent: a value already at year 0 maps to an equal value.
+  ///
+  /// Example:
+  /// ```dart
+  /// DateTime(2024, 3, 15, 10, 30).toAnnualDate; // DateTime(0, 3, 15)
+  /// DateTime(1999, 3, 15).toAnnualDate == DateTime(2024, 3, 15).toAnnualDate; // true
+  /// ```
+  @useResult
+  DateTime get toAnnualDate => DateTime(0, month, day);
+
+  /// The full local calendar day of this date as a [DateTimeRange]:
+  /// [startOfDay] (00:00:00.000000) to [endOfDay] (23:59:59.999999).
+  ///
+  /// Composes the existing day-bound getters so the bounds keep a single source
+  /// of truth — a future change to [startOfDay] / [endOfDay] flows through here
+  /// automatically. The end is the last representable instant before the next
+  /// midnight (microsecond precision), deliberately NOT the millisecond-
+  /// truncated `...59.999` form, so no real sub-millisecond instant of the day
+  /// falls outside the range.
+  ///
+  /// Edge cases / guarantees:
+  /// - Both bounds stay on this calendar day; Feb 29, Dec 31, and Jan 1 inputs
+  ///   do not bleed into an adjacent day.
+  /// - Bounds use wall-clock [DateTime] arithmetic, so on a DST-transition day
+  ///   the range's real-time [DateTimeRange.duration] is NOT a clean
+  ///   23h59m59.999999s — it is shorter (spring-forward) or longer (fall-back)
+  ///   by the offset shift. This is intentional local-wall-clock semantics, not
+  ///   a bug.
+  /// - The bounds are **local** even for a UTC receiver, because [startOfDay] /
+  ///   [endOfDay] build local [DateTime]s.
+  ///
+  /// Example:
+  /// ```dart
+  /// DateTime(2024, 3, 15, 10, 30).toDayRange();
+  /// // start: DateTime(2024, 3, 15), end: DateTime(2024, 3, 15, 23, 59, 59, 999, 999)
+  /// ```
+  @useResult
+  DateTimeRange toDayRange() => DateTimeRange(start: startOfDay, end: endOfDay);
 }

@@ -210,8 +210,38 @@ extension StringMapExtensions on Map<String, dynamic> {
 
 /// Utility class for map operations.
 abstract final class MapExtensions {
-  /// Returns the total number of items across all iterable values in
-  /// [inputMap].
+  /// Total number of elements across every iterable value in [inputMap].
+  ///
+  /// Folds the `.length` of each value into a single running `int`, so the
+  /// result is the combined element count of all the iterables, ignoring the
+  /// keys entirely. Generic over key type `K` and element type `V`, so it
+  /// works on any `Map<K, List<V>>`, `Map<K, Set<V>>`, or
+  /// `Map<K, Iterable<V>>`. Typical use is sizing grouped collections such as
+  /// `Map<Section, List<Item>>` (e.g. counting selected items across grouped
+  /// sections).
+  ///
+  /// Edge cases:
+  /// - Empty map or all-empty values: returns `0`.
+  /// - `Set` values: counts the post-deduplication `.length`, not the number
+  ///   of values that were inserted (`{1, 1}` contributes `1`, not `2`).
+  /// - Lazy iterables (from `Iterable.generate`, `map(...)`, `where(...)`):
+  ///   `.length` materializes the iterable, so the count is correct.
+  /// - Element CONTENT is irrelevant — only `.length` is read. A multi-code-
+  ///   unit emoji, a combining-mark string, and `null` each count as exactly
+  ///   one element.
+  /// - Order-independent: rearranging keys or empty/non-empty values does not
+  ///   change the result, because addition is commutative.
+  /// - Non-mutating: neither [inputMap] nor any of its iterable values is
+  ///   altered; `fold` only reads `.length`.
+  ///
+  /// Example:
+  /// ```dart
+  /// MapExtensions.countItems(<String, List<int>>{
+  ///   'a': <int>[1, 2],
+  ///   'b': <int>[3],
+  ///   'c': <int>[],
+  /// }); // 3
+  /// ```
   @useResult
   static int countItems<K, V>(Map<K, Iterable<V>> inputMap) =>
       inputMap.values.fold<int>(0, (int sum, Iterable<V> iter) => sum + iter.length);
