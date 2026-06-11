@@ -38,8 +38,8 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 
 | Section | Done | Total |
 |---------|------|-------|
-| Advanced String & Text (401–440) | 32 | 40 |
-| Advanced Collections & Algorithms (441–490) | 39 | 50 |
+| Advanced String & Text (401–440) | 36 | 40 |
+| Advanced Collections & Algorithms (441–490) | 45 | 50 |
 | Data Structures & Indexes (491–530) | 11 | 40 |
 | Graphs & Pathfinding (531–560) | 17 | 30 |
 | Statistics & Analytics (561–590) | 18 | 30 |
@@ -47,7 +47,7 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | Parsing & Formats, Structured Data (621–650) | 8 | 30 |
 | Async, Concurrency & Streams (651–680) | 18 | 30 |
 | Validation, Security & Robustness (681–700) | 13 | 20 |
-| **Total** | **161** | **300** |
+| **Total** | **171** | **300** |
 
 ---
 
@@ -68,7 +68,7 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 409 | Human name parser/normalizer (first/middle/last/suffix with locale‑aware rules) | High | High | High | ✅ | ✅ |
 | 410 | Smart excerpt generator (best snippet around query terms with ellipsis) | High | High | High | ✅ | ✅ |
 | 411 | Slug deduplicator (append incremental suffixes based on taken slugs) | High | High | Medium | ✅ | ✅ |
-| 412 | Text folding/unfolding (wrap and unwrap while preserving quote markers, e.g. email replies) | Medium | Medium | High | ✅ | |
+| 412 | Text folding/unfolding (wrap and unwrap while preserving quote markers, e.g. email replies) | Medium | Medium | High | ✅ | ✅ |
 | 413 | Template engine with conditionals and loops (safe subset, no eval) | High | High | High | ✅ | ✅ |
 | 414 | ICU‑style message formatting lite (pluralization, simple gender forms) | High | High | High | ✅ | |
 | 415 | Diff of two paragraphs by sentences and words with structured result (for UIs) | High | High | High | ✅ | |
@@ -84,12 +84,12 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 425 | Sensitive data scrubber (emails, phones, card numbers, SSNs) with pluggable patterns | High | Critical | High | ✅ | ✅ |
 | 426 | Levenshtein automaton based “did you mean?” over dictionary | Medium | High | High | ✅ | ✅ |
 | 427 | String compression helpers (DEFLATE/gzip wrapper for UTF‑8 text, with size thresholds) | Medium | Medium | Medium | ✅ | |
-| 428 | Detect dominant language of short text (simple n‑gram profile) | Medium | Medium | High | ✅ | |
+| 428 | Detect dominant language of short text (simple n‑gram profile) | Medium | Medium | High | ✅ | ✅ |
 | 429 | Acronym/initialism extractor from document (e.g. “Saropa Dart Utils (SDU)”) | Medium | Medium | Medium | ✅ | ✅ |
 | 430 | Text segmentation into “chunks” for indexing (by size and semantic boundaries) | High | High | High | ✅ | ✅ |
 | 431 | Change log/semantic version section parser (extract version sections from text) | Medium | Medium | Medium | ✅ | |
-| 432 | Keyphrase extractor (TF‑IDF over small corpus / doc) | Medium | Medium | High | ✅ | |
-| 433 | Redline generator (track changes: who edited what and when, line‑based) | Medium | Medium | High | ✅ | |
+| 432 | Keyphrase extractor (TF‑IDF over small corpus / doc) | Medium | Medium | High | ✅ | ✅ |
+| 433 | Redline generator (track changes: who edited what and when, line‑based) | Medium | Medium | High | ✅ | ✅ |
 | 434 | Customizable tokenizer pipeline (regex tokens with skip/keep rules) | High | High | High | ✅ | |
 | 435 | CSV/TSV dialect detector (delimiter, quote char, header presence) | High | High | High | ✅ | |
 | 436 | Pretty‑printer for nested JSON/YAML‑like text within strings (indent, sort keys) | High | High | Medium | ✅ | |
@@ -113,13 +113,13 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 445 | Interval scheduling (max non‑overlapping intervals) | High | High | High | ✅ | ✅ |
 | 446 | Weighted interval scheduling (max weight, DP) | Medium | High | High | ✅ | ✅ |
 | 447 | Greedy set cover approximation (for recommendation/grouping) | Medium | High | High | ✅ | ✅ |
-| 448 | Stable matching (Gale–Shapley) utilities | Medium | Medium | High | ✅ | |
+| 448 | Stable matching (Gale–Shapley) utilities | Medium | Medium | High | ✅ | ✅ |
 | 449 | K‑means clustering on numeric vectors (small K, small N) | Medium | Medium | High | ✅ | ✅ |
-| 450 | Hierarchical clustering (single/complete/average linkage) | Low | Medium | High | ✅ | |
+| 450 | Hierarchical clustering (single/complete/average linkage) | Low | Medium | High | ✅ | ✅ |
 | 451 | Sliding window aggregations (min/max/sum/avg over moving window) | High | High | High | ✅ | ✅ |
 | 452 | Reservoir sampling for streaming data | High | High | High | ✅ | ✅ |
 | 453 | Stream quantile/percentile estimation (e.g. P² algorithm or t‑digest‑lite) | Medium | High | High | ✅ | ✅ |
-| 454 | Approximate distinct count (HyperLogLog‑lite) | Medium | Medium | High | ✅ | |
+| 454 | Approximate distinct count (HyperLogLog‑lite) | Medium | Medium | High | ✅ | ✅ |
 | 455 | Bloom filter with tunable false positive rate | Medium | High | High | ✅ | ✅ |
 | 456 | In‑memory inverted index builder for small datasets | Medium | Medium | High | ✅ | ✅ |
 | 457 | N‑way merge of multiple sorted iterables | High | High | Medium | ✅ | ✅ |
@@ -128,7 +128,7 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 460 | Sliding window distinct count (using approximate structures) | Medium | Medium | High | ✅ | |
 | 461 | Deduplicate by similarity (cluster near‑duplicates using similarity function) | Medium | Medium | High | ✅ | |
 | 462 | Multi‑criteria sort helper with weighted comparators | Medium | Medium | Medium | ✅ | ✅ |
-| 463 | Pareto frontier computation (dominance filtering in 2–3 dimensions) | Medium | Medium | High | ✅ | |
+| 463 | Pareto frontier computation (dominance filtering in 2–3 dimensions) | Medium | Medium | High | ✅ | ✅ |
 | 464 | Multi‑set utilities (bag union/intersection/difference) | Medium | High | Medium | ✅ | ✅ |
 | 465 | Chunk + overlap windows (for streaming batch processing) | High | High | Medium | ✅ | ✅ |
 | 466 | Online mean/variance for numeric streams | High | High | Medium | ✅ | ✅ |
@@ -144,8 +144,8 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 476 | Random subset selection with constraints (weights, exclusion sets) | Medium | Medium | High | ✅ | |
 | 477 | Multi‑key group/aggregate (group by several keys with aggregator functions) | High | High | High | ✅ | |
 | 478 | Sparse matrix helpers (CSR/CSC simple representation for 2D data) | Low | Medium | High | ✅ | |
-| 479 | Time‑decayed counters (weights decay exponentially over time) | Medium | Medium | High | ✅ | |
-| 480 | LRU/LFU hybrid eviction policy utilities (beyond simple LRU/TTL) | Medium | Medium | High | ✅ | |
+| 479 | Time‑decayed counters (weights decay exponentially over time) | Medium | Medium | High | ✅ | ✅ |
+| 480 | LRU/LFU hybrid eviction policy utilities (beyond simple LRU/TTL) | Medium | Medium | High | ✅ | ✅ |
 | 481 | Prefix frequency table builder (e.g. for autocomplete suggestions) | Medium | Medium | High | ✅ | ✅ |
 | 482 | Rolling hash utilities (Rabin–Karp style) for substring search | Medium | Medium | High | ✅ | ✅ |
 | 483 | Segment tree / Fenwick tree helpers for range queries | Low | Medium | High | ✅ | |

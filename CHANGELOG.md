@@ -24,6 +24,24 @@
 cspell:disable
 -->
 
+## [1.5.0]
+
+Ten advanced algorithm utilities from the roadmap-to-700 batch — quote-aware text folding, language detection, TF-IDF keyphrases, line-based redline diffs, Gale–Shapley stable matching, hierarchical clustering, HyperLogLog distinct counts, Pareto frontiers, time-decayed counters, and an LRU/LFU hybrid cache — each its own tree-shakeable file so apps pull in only what they use.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.5.0/CHANGELOG.md)
+
+### Added
+
+- **`foldText` / `unfoldText` / `FoldOptions`** ([text_fold_utils.dart](lib/string/text_fold_utils.dart)) — quote-aware hard-wrap and unwrap for email-reply text: `foldText` wraps each line to `FoldOptions.width` while repeating the leading quote prefix (`> `, `> > `) on every continuation; `unfoldText` merges soft-wrapped continuations back into one logical line per quote level. Words longer than the available width are emitted whole (never split — no infinite loop), blank lines are paragraph boundaries, and quote-depth changes are join boundaries. Roadmap #412.
+- **`detectLanguage` / `LanguageGuess`** ([language_detect_utils.dart](lib/string/language_detect_utils.dart)) — best-effort dominant-language detection over a short string using character-trigram out-of-place rank distance against six compact built-in profiles (en/es/fr/de/it/pt). Returns the closest match with a `0..1` confidence, or `null` when the text is too short (fewer than 3 trigrams) to decide. Heuristic, no data files, Unicode-safe. Roadmap #428.
+- **`extractKeyphrases` / `Keyphrase` / `KeyphraseOptions`** ([keyphrase_utils.dart](lib/string/keyphrase_utils.dart)) — TF-IDF keyphrase extraction over a single document against a corpus, returning the top-K ranked phrases (optional bigrams). Smoothed IDF guards the single-doc div-by-zero case; built-in English stopword filtering; deterministic tie-breaking. (`termFrequencies` is also defined here but hidden from the barrel — the established `text_similarity_utils` export keeps that name; import the file directly to use this one.) Roadmap #432.
+- **`redlineDiff` / `RedlineEntry` / `RedlineOp`** ([redline_utils.dart](lib/string/redline_utils.dart)) — line-based track-changes diff: an LCS alignment classifies each line as unchanged / added / removed / changed (adjacent remove+add runs paired into `changed`), each entry carrying its old and new line numbers. Immutable result, built for diff UIs. Roadmap #433.
+- **`stableMatching` / `StableMatchingPrefs`** ([stable_matching_utils.dart](lib/collections/stable_matching_utils.dart)) — proposer-optimal Gale–Shapley stable matching from two-sided strict preference lists. Handles unequal set sizes and incomplete lists (unranked parties stay unmatched), and throws `ArgumentError` on malformed input. Roadmap #448.
+- **`hierarchicalCluster` / `cutClustersByCount` / `cutClustersByDistance` / `ClusterLinkage`** ([hierarchical_cluster_utils.dart](lib/collections/hierarchical_cluster_utils.dart)) — agglomerative hierarchical clustering on numeric vectors with single / complete / average linkage (Lance–Williams updates), producing a dendrogram you can cut at K clusters or a distance threshold. Default Euclidean distance, pluggable via `VectorDistance`. Small-N intent (naive O(n³)). Roadmap #450.
+- **`HyperLogLogUtils`** ([hyperloglog_utils.dart](lib/collections/hyperloglog_utils.dart)) — HyperLogLog-lite approximate distinct count: configurable precision (`2^p` registers), register-of-leading-zeros over a SplitMix64-mixed hash, harmonic-mean estimator with linear-counting small-range correction, and a pure register-wise `merge`. Roadmap #454.
+- **`paretoFrontier` / `ParetoOptions` / `ParetoDirection`** ([pareto_frontier_utils.dart](lib/collections/pareto_frontier_utils.dart)) — Pareto frontier (dominance filtering) over 2–3 objectives with per-dimension minimize/maximize directions; returns the non-dominated set in original order, retaining duplicates and all-equal points. Roadmap #463.
+- **`TimeDecayCounter`** ([time_decay_counter_utils.dart](lib/collections/time_decay_counter_utils.dart)) — exponential time-decayed counter with O(1) memory via lazy decay (stored value + last-updated millis), a configurable half-life, and explicit injected timestamps (no wall-clock reads, fully deterministic). Defends against out-of-order timestamps. Roadmap #479.
+- **`LruLfuCacheUtils`** ([lru_lfu_cache_utils.dart](lib/collections/lru_lfu_cache_utils.dart)) — bounded cache with hybrid eviction: lowest frequency first, least-recently-used as the tie-breaker. `get`/`put`/`remove`/`length`, with documented behavior for capacity 0/1 and key updates. Roadmap #480.
+
 ## [1.4.1]
 
 Small ergonomic utilities pulled from the Saropa Contacts adoption review — trailing-character trim, an integer-string predicate, and a natural-language Oxford-comma list join — so the app can delete its hand-rolled local copies.

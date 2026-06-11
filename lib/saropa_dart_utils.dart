@@ -141,6 +141,12 @@ export 'collections/multi_key_group_utils.dart';
 export 'collections/interval_tree_utils.dart';
 export 'collections/dependency_resolver_utils.dart';
 export 'collections/multi_index_collection_utils.dart';
+export 'collections/stable_matching_utils.dart';
+export 'collections/hierarchical_cluster_utils.dart';
+export 'collections/hyperloglog_utils.dart';
+export 'collections/pareto_frontier_utils.dart';
+export 'collections/time_decay_counter_utils.dart';
+export 'collections/lru_lfu_cache_utils.dart';
 
 // Graph (roadmap 531+)
 export 'graph/graph_utils.dart';
@@ -346,6 +352,10 @@ export 'string/did_you_mean_utils.dart';
 export 'string/icu_message_utils.dart';
 export 'string/tokenizer_pipeline_utils.dart';
 export 'string/text_diff_structured_utils.dart';
+export 'string/text_fold_utils.dart';
+export 'string/language_detect_utils.dart';
+export 'string/keyphrase_utils.dart' hide termFrequencies;
+export 'string/redline_utils.dart';
 
 // Async utilities
 export 'async/debounce_utils.dart';
