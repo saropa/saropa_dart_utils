@@ -1,3 +1,12 @@
+// ignore_for_file: require_timezone_display -- These are locale clock-RENDERING
+// primitives; the timezone-display decision belongs to the caller's display
+// context, not the formatter, so the rule's harm rationale ("users misinterpret
+// a displayed time") cannot apply to a reusable formatter. The jm formatter
+// below is read only for its pattern string (locale-hour detection) and is never
+// used to format a value, so nothing is ever displayed — a provable false
+// positive. Filed upstream as a saropa_lints false-positive bug report covering
+// this pattern-introspection case and the seconds-only rendering case in the
+// sibling render file.
 part of 'date_time_intl_display_extensions.dart';
 
 /// Locale-correct clock renderings. [locale] is an intl locale string (e.g.

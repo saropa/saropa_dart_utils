@@ -1,3 +1,11 @@
+// ignore_for_file: require_timezone_display -- These are locale clock-RENDERING
+// primitives; the timezone-display decision belongs to the caller's display
+// context, not the formatter, so the rule's harm rationale ("users misinterpret
+// a displayed time") cannot apply to a reusable formatter. The seconds-only
+// formatter here renders the seconds field, which is timezone-invariant (offsets
+// are never finer than minutes) — a provable false positive. Filed upstream as a
+// saropa_lints false-positive bug report covering this rendering-primitive case
+// and the pattern-introspection case in the sibling extensions file.
 part of 'date_time_intl_display_extensions.dart';
 
 // Private rendering helpers for [DateTimeIntlDisplayExtensions]. These were
