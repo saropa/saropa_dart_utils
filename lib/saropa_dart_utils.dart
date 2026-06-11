@@ -303,6 +303,7 @@ export 'string/string_case_extensions.dart';
 export 'string/string_character_extensions.dart';
 export 'string/string_diacritics_extensions.dart';
 export 'string/string_extensions.dart';
+export 'string/string_compare_extensions.dart';
 export 'string/string_manipulation_extensions.dart';
 export 'string/string_nullable_extensions.dart';
 export 'string/string_number_extensions.dart';
