@@ -1,7 +1,7 @@
 # TEST COVERAGE — migrated-util test cases harvested from Saropa Contacts
 
 **Type:** Test-coverage offering (not a bug)
-**Status:** Open — for maintainer review
+**Status:** Resolved 2026-06-11 — deltas adopted (see Resolution at end)
 
 ---
 
@@ -282,3 +282,47 @@ group('debounceDistinct', () {
 - saropa_dart_utils: 1.4.1
 - Source: Saropa Contacts `test/lib/utils/primitive/date_time/date_time_primitive_test.dart`
   and `test/utils/primitive/string/string_utils_test.dart` (removed there 2026-06-11).
+
+---
+
+## Resolution (2026-06-11)
+
+Each block was diffed against the library's own suite; only the genuine deltas
+were adopted (existing coverage was already strong). All four touched test files
+pass and `dart analyze` is clean.
+
+**Adopted:**
+
+- **`weekOfYear`** — new group in
+  `test/datetime/date_time_calendar_extensions_test.dart`. This getter was
+  **untested** (the suite covered `weekNumber()` and `numOfWeeks()` only). Added
+  Jan-1/Jan-7 week-1 cases plus the documented raw week-`0` underflow
+  (2023-01-01) and its `weekNumber()` correction to 52.
+- **`String.removeLastChars`** — added precomposed (U+00E9) and decomposed
+  (base `e` + U+0301) accent cases in
+  `test/string/string_manipulation_extensions_test.dart`, built via
+  `String.fromCharCode` so they are normalization-proof. The harvested note
+  assumed code-unit trimming; the actual implementation trims by **grapheme
+  cluster** (it delegates to `substringSafe`, which uses the `characters`
+  package), so the decomposed test asserts that real behavior instead.
+- **`List<String>.joinDisplayList`** — added 4- and 5-element Oxford-comma cases
+  (the existing 3-element case cannot exercise more than one mid-list comma).
+- **`StreamDebounceExtensions.debounceAfterFirst`** — added the late-consumer
+  regression (Future-backed upstream, consumer subscribes late) and the
+  upstream-cancel-on-consumer-cancel case.
+
+**Not adopted (already covered or N/A):**
+
+- **`MonthUtils` / `WeekdayUtils`** — `test/datetime/date_constants_test.dart`
+  already covers every harvested assertion (and more).
+- **`joinDisplayList` nullable-element cases** — the extension is declared
+  `on List<String>`, so `List<String?>` literals do not resolve the method;
+  those harvested tests do not apply to this library's API.
+- **`debounce` / `debounceDistinct`** — equivalent cases already present in
+  `test/async/stream_debounce_utils_test.dart`.
+
+**Discrepancy surfaced (not changed):** `removeLastChars`'s dartdoc claims it
+"Counts UTF-16 code units like `String.length`" and warns it can split a
+cluster, but it actually trims by grapheme cluster (via `substringSafe`) and
+never splits one. The doc and the bounds check (`length` is code units) are
+inconsistent. Left as-is pending maintainer decision.

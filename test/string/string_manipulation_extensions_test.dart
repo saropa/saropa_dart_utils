@@ -169,24 +169,28 @@ void main() {
       expect('a😀'.removeLastChars(2), 'a');
     });
 
-    test('precomposed accent counts as a single code unit', () {
-      // Built with an explicit precomposed e-acute (U+00E9) so the assertion
-      // holds regardless of how this source file is normalized on disk: 'H' + é
-      // + 'llo' is 5 code units, so removing the last 2 yields 'H' + é + 'l' with
-      // the accent intact — the accented letter is one unit, not base + mark.
+    test('keeps a precomposed accented letter intact', () {
+      // Precomposed e-acute (U+00E9), built explicitly so the assertion holds
+      // regardless of how this source file is normalized on disk. 'H' + é +
+      // 'llo' removing the last 2 yields 'H' + é + 'l' with the accent intact.
       final String acute = String.fromCharCode(0x00E9);
       expect('H${acute}llo'.removeLastChars(2), 'H${acute}l');
     });
 
-    test('decomposed combining mark is stripped independently of its base', () {
+    test('treats a decomposed base+combining-mark pair as one grapheme', () {
       // Built explicitly as base 'e' + combining acute (U+0301) so the value is
       // genuinely decomposed regardless of source-file normalization: 'Cafe' +
-      // U+0301 is 5 code units with the accent as the LAST unit. Removing 1 code
-      // unit drops only the combining mark, leaving 'Cafe' unaccented — proof
-      // this is code-unit, not grapheme-cluster, trimming. Use the characters
-      // package for the latter.
+      // U+0301 is 5 UTF-16 code units but only 4 grapheme clusters (the final
+      // 'e' + mark fuse into one). removeLastChars delegates the cut to
+      // substringSafe, which counts grapheme clusters, so it never splits the
+      // accent off its base: removing 2 drops the whole accented cluster ('Caf')
+      // and removing 1 lands on the cluster boundary, leaving the string intact.
+      // (The method's own dartdoc still claims code-unit counting — see the
+      // suggestion surfaced to the maintainer.)
       final String combiningAcute = String.fromCharCode(0x0301);
-      expect('Cafe$combiningAcute'.removeLastChars(1), 'Cafe');
+      final String decomposed = 'Cafe$combiningAcute';
+      expect(decomposed.removeLastChars(2), 'Caf');
+      expect(decomposed.removeLastChars(1), decomposed);
     });
   });
 

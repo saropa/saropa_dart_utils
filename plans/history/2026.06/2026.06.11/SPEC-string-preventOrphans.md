@@ -103,3 +103,49 @@ group('preventOrphans', () {
 - **Grapheme width** — `length` counts code units; a token of emoji/combining
   marks may be "short" by code units but visually wide. Note the limit.
 - **Idempotency** — `x.preventOrphans().preventOrphans()` must equal once-applied.
+
+---
+
+## Finish Report (2026-06-11)
+
+**Scope:** (A) Dart library code — `lib/string/`, `test/string/`. No Flutter UI, no l10n, no extension.
+
+**What shipped:** `String.preventOrphans({int minWrapChars = 4})` added to the existing
+`StringWrapExtensions` in `lib/string/string_wrap_extensions.dart`. Implementation matches the
+harvested source, with the non-breaking space written as the Dart escape `\u{00A0}` (constant
+`_kNonBreakingSpace`) so it survives transit instead of flattening to ASCII. Already exported via
+the `lib/saropa_dart_utils.dart` barrel — no export edit needed.
+
+**Contract decisions for the bulletproofing gaps (all resolved + tested):**
+- Multiple consecutive spaces: kept `split(' ')` on a single ASCII space. Empty edge/interior
+  tokens (length 0) are below any positive minimum, so their adjoining spaces fuse. `'a  b'` →
+  `'a' + nbsp + nbsp + 'b'`. Documented in the dartdoc; tabs/newlines are NOT split (not
+  generalized to `\s`).
+- Leading/trailing spaces: produce empty edge tokens that fuse — `' a'` → `nbsp + 'a'`,
+  `'a '` → `'a' + nbsp`. Tested.
+- `minWrapChars <= 0`: fuses nothing (no token length is `< 0`); oversized minimum fuses
+  everything. Both tested (0, -1, 100).
+- Grapheme width: length is UTF-16 code units, not graphemes — documented as a known limit.
+- Idempotency: a fused short token is absorbed into a longer non-breaking-joined token, so a
+  re-split never re-sees it as a separate short token. Tested with a mixed multi-orphan string.
+
+**Tests:** 19 `preventOrphans` cases in `test/string/string_wrap_extensions_test.dart` (the 10 spec
+cases + 9 bulletproofing/boundary cases). Non-breaking space declared as `const nbsp = '\u{00A0}'`
+in the test and composed into expectations so raw U+00A0 never enters source.
+
+**Verification:**
+- `flutter test test/string/string_wrap_extensions_test.dart` → `+25 All tests passed!` (7 pre-existing + 18 new top-level + grouped).
+- `flutter analyze` on the two changed files → `No issues found!`.
+- Test audit: grepped `test/` for `preventOrphans` / `StringWrapExtensions` /
+  `string_wrap_extensions` — only this one test file matched; no pre-existing assertions broken.
+
+**Maintenance:** CHANGELOG.md `[Unreleased] → Added` entry added; CODE_INDEX.md row added; README
+verified — no update needed (README does not enumerate individual extension methods).
+
+**Files (code committed in 1b50ff8):**
+- `lib/string/string_wrap_extensions.dart` — new method + nbsp constant
+- `test/string/string_wrap_extensions_test.dart` — 19 new tests
+- `CHANGELOG.md`, `CODE_INDEX.md` — documentation
+- `plans/SPEC-string-preventOrphans.md` — status flip + this report (archived to history this pass)
+
+**Outstanding:** none. Plan fully complete.

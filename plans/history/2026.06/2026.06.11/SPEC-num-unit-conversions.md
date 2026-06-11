@@ -119,3 +119,74 @@ group('WeightConversionUtils', () {
 - **i18n of unit names** — the English `feet/inches/pounds/kilograms` literals are
   the opinionated part; consider injecting names (like `DateFormatNames`) or
   returning a structured value and leaving formatting to the caller.
+
+---
+
+## Finish Report (2026-06-11)
+
+### Scope
+
+(A) Flutter/Dart app code — new `lib/num/unit_conversion_utils.dart` + test + barrel
+export + CHANGELOG + CODE_INDEX. No extension (B) or docs-only (C) surface.
+
+### What shipped
+
+`LengthConversionUtils` and `WeightConversionUtils` (abstract final classes, the
+two-class split kept verbatim from the spec because the proposed tests reference
+those exact names). Dependency-free `convert*` primitives; `*ToString` formatters
+delegating decimal rendering to the existing `DoubleExtensions.formatDouble`.
+
+### Deep review notes
+
+- **Logic & safety**: `feetToString` had three real edge cases, all closed:
+  (1) `floor()` throws on NaN/∞ in Dart, so the inches path is guarded by
+  `!feet.isFinite` and falls back to the single-value form; (2) the 12-inch carry
+  is computed by rounding inches to the chosen precision (numeric `pow`-based
+  round, not string round-trip — `double.parse` tripped `prefer_try_parse_for_dynamic_data`)
+  then testing `>= 12`; (3) negatives format on the magnitude with a re-applied
+  sign so `floor()` of a negative can't push inches positive.
+- **Architecture**: reuses `formatDouble` rather than re-implementing decimal
+  trimming; conversion factors are single-source consts. The `_feetInchesString`
+  private helper keeps `feetToString` small and isolates the boundary logic.
+- **Contract for non-finite `convert*`**: propagate (IEEE-754 multiply/divide),
+  documented in dartdoc rather than throwing — matches the "bulletproof
+  dependency-free core" framing.
+- **i18n gap**: NOT closed. Kept English literals; dartdoc directs localizing
+  callers to format the raw `convert*` output. Building name injection is a larger
+  API surface I did not add unprompted. This is the one spec "bulletproofing gap"
+  intentionally left as a documented limitation rather than implemented.
+- **Parameter count**: `feetToString` has 4 named params, exceeding the project
+  ≤3 guideline. Kept the spec's verbatim public signature. Flagged to the user as
+  an open decision (fold into an options object vs. leave as-specced).
+
+### Testing
+
+- Audit: grepped `test/` for `ConversionUtils`, `convertMeters`, `feetToString`,
+  `unit_conversion` — no pre-existing tests referenced any touched symbol (new
+  file, additive barrel export). Nothing to update.
+- New test `test/num/unit_conversion_utils_test.dart`: 19 tests covering
+  round-trips, known values, zero/negative, NaN/∞ propagation, large/small
+  magnitudes, the 12-inch carry (both default and `decimalPlaces: 0`), non-carry,
+  negative formatting, whole-feet, and non-finite string fallback.
+- `flutter test test/num/unit_conversion_utils_test.dart` → **19/19 pass**.
+- `flutter analyze lib/num/unit_conversion_utils.dart test/num/unit_conversion_utils_test.dart`
+  → **No issues found**. `flutter analyze lib/saropa_dart_utils.dart` (barrel,
+  catches export collisions) → **No issues found**.
+
+### Maintenance
+
+- CHANGELOG: new `[Unreleased]` section added.
+- CODE_INDEX: new "Unit Conversion Capabilities" table.
+- README verified — no updates needed (README does not enumerate per-utility APIs).
+- ROADMAP_TO_700 reviewed — no unit-conversion line item to remove.
+
+### Files
+
+- Added: `lib/num/unit_conversion_utils.dart`, `test/num/unit_conversion_utils_test.dart`
+- Modified: `lib/saropa_dart_utils.dart`, `CHANGELOG.md`, `CODE_INDEX.md`
+- This plan: appended report + archived to `plans/history/2026.06/2026.06.11/`.
+
+### Outstanding
+
+- i18n name injection (documented limitation, not a bug).
+- `feetToString` 4-param signature — user decision pending.
