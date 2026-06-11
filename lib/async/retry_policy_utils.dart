@@ -14,11 +14,23 @@ const Duration retryPolicyDefaultBackoffBase = Duration(milliseconds: 100);
 /// Default jitter range for [retryWithJitter].
 const Duration retryPolicyDefaultBackoffJitter = Duration(milliseconds: 50);
 
-/// Retries [fn] up to [maxAttempts] with [delay] between attempts. Optional [onRetry].
+/// Retries [fn] up to [maxAttempts] with [delay] between attempts.
+///
+/// [retryIf] decides whether a given error is even worth retrying: when it
+/// returns `false` the error is rethrown immediately, without consuming the
+/// remaining attempts or waiting [delay]. This is how you retry only transient
+/// failures (a timeout, a 503) and fail fast on permanent ones (a 400, an
+/// `ArgumentError`). When [retryIf] is `null` (default) every error is retried.
+///
+/// [onRetry] is invoked after each failed attempt that will be retried, with
+/// the error and the 1-based attempt number — useful for logging or metrics. It
+/// does NOT fire on the final attempt (which rethrows) or on a [retryIf]-vetoed
+/// error.
 Future<T> retryWithPolicy<T>(
   Future<T> Function() fn, {
   int maxAttempts = 3,
   Duration delay = retryPolicyDefaultDelay,
+  bool Function(Object error)? retryIf,
   void Function(Object error, int attempt)? onRetry,
 }) async {
   int attempt = 0;
@@ -28,6 +40,10 @@ Future<T> retryWithPolicy<T>(
     } on Object catch (e, st) {
       log('retryWithPolicy attempt $attempt', error: e);
       attempt++;
+      // Non-retryable error: surface it now rather than burning attempts and
+      // delaying on something that will never succeed.
+      // ignore: saropa_lints/avoid_ignoring_return_values -- throwWithStackTrace returns Never; there is no value to capture
+      if (retryIf != null && !retryIf(e)) Error.throwWithStackTrace(e, st);
       // ignore: saropa_lints/avoid_ignoring_return_values -- throwWithStackTrace returns Never; there is no value to capture
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
       onRetry?.call(e, attempt);

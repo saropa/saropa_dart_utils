@@ -85,6 +85,57 @@ void main() {
       // 2 attempts -> onRetry only after attempt 1.
       expect(retries, 1);
     });
+
+    test('retryIf false rethrows immediately without consuming attempts', () async {
+      int calls = 0;
+      await expectLater(
+        retryWithPolicy<int>(
+          () async {
+            calls++;
+            throw ArgumentError('permanent');
+          },
+          maxAttempts: 5,
+          delay: Duration.zero,
+          // Only retry StateError; an ArgumentError is permanent.
+          retryIf: (Object e) => e is StateError,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+      // Failed on the first call and was NOT retried.
+      expect(calls, 1);
+    });
+
+    test('retryIf true keeps retrying up to maxAttempts', () async {
+      int calls = 0;
+      final int r = await retryWithPolicy<int>(
+        () async {
+          calls++;
+          if (calls < 3) throw StateError('transient');
+          return 7;
+        },
+        maxAttempts: 5,
+        delay: Duration.zero,
+        retryIf: (Object e) => e is StateError,
+      );
+      expect(r, 7);
+      expect(calls, 3);
+    });
+
+    test('retryIf veto skips onRetry', () async {
+      int retries = 0;
+      await expectLater(
+        retryWithPolicy<int>(
+          () async => throw ArgumentError('x'),
+          maxAttempts: 5,
+          delay: Duration.zero,
+          retryIf: (Object e) => e is StateError,
+          onRetry: (_, __) => retries++,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+      // Vetoed before onRetry could fire.
+      expect(retries, 0);
+    });
   });
 
   group('retryWithJitter', () {

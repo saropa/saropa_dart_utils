@@ -73,4 +73,59 @@ void main() {
       expect(appleMatch.index, 1);
     });
   });
+
+  group('partialRatio', () {
+    test('scores a substring match as a perfect 1.0', () {
+      // The shorter string aligns exactly with a window of the longer one.
+      expect(partialRatio('New York', 'New York City'), 1.0);
+    });
+
+    test('is case-insensitive', () {
+      expect(partialRatio('apple', 'APPLE pie'), 1.0);
+    });
+
+    test('two empty strings score 1.0', () {
+      expect(partialRatio('', ''), 1.0);
+    });
+
+    test('empty against non-empty scores 0.0', () {
+      expect(partialRatio('', 'abc'), 0.0);
+    });
+
+    test('a poor partial match scores below 1.0', () {
+      expect(partialRatio('cat', 'dog house'), lessThan(1.0));
+    });
+  });
+
+  group('tokenSortRatio', () {
+    test('is order-insensitive (full match on reordered words)', () {
+      expect(tokenSortRatio('York New', 'New York'), 1.0);
+    });
+
+    test('is case-insensitive', () {
+      expect(tokenSortRatio('New York', 'new york'), 1.0);
+    });
+
+    test('collapses runs of whitespace between tokens', () {
+      expect(tokenSortRatio('a   b', 'b a'), 1.0);
+    });
+  });
+
+  group('tokenSetRatio', () {
+    test('a token superset scores a perfect 1.0 on the shared core', () {
+      expect(tokenSetRatio('apple pie', 'apple pie with cinnamon'), 1.0);
+    });
+
+    test('identical token sets score 1.0 regardless of order', () {
+      expect(tokenSetRatio('red blue green', 'green red blue'), 1.0);
+    });
+
+    test('is case-insensitive', () {
+      expect(tokenSetRatio('Apple Pie', 'apple pie'), 1.0);
+    });
+
+    test('disjoint token sets score below 1.0', () {
+      expect(tokenSetRatio('cat dog', 'fish bird'), lessThan(1.0));
+    });
+  });
 }
