@@ -58,3 +58,21 @@ Pre-existing `unicode_class_type.dart` (346 lines) is over the limit but was not
 - **Plan archival**: all 27 `plans/SPEC-*.md` moved to `plans/history/2026.06/2026.06.11/` (mirrors the existing `SPEC-num-unit-conversions.md` / `SPEC-sort-diacritic-fold.md` siblings already archived there).
 
 `Finish report saved: plans/history/2026.06/2026.06.11/spec-batch-build-color-datetime-string-num.md`
+
+## Finish Report (2026-06-11) — follow-up: UnicodeClassType range-doc dedup
+
+Closes the `## Not yet verified` item above (`unicode_class_type.dart` was 346 lines, over the 200-line hard limit). User instruction: "fix it".
+
+**Change (commit a56b555):** Removed the 105 duplicated `/// Hex range: XXXX - XXXX` per-member doc comments from the `UnicodeClassType` enum. Those ranges already live once in `unicodeClassRanges` (`lib/string/unicode_class_blocks.dart`) — the single source `findUnicodeClassType` actually reads — so the enum docs were a stale-drift risk (edit a bound in the table, the enum comment silently goes wrong) and were the sole cause of the file exceeding the limit. The enum header dartdoc now directs auditors to that table for ranges. File 346 → 147 lines.
+
+**Why doc-removal, not an enum split:** Dart cannot split a single `enum` declaration across files, so a `part`-based split is impossible here. The principled fix targets the actual defect (value duplication per the project's single-source-of-truth rule), which also resolves the size.
+
+**Verification:**
+- Member integrity: 105 enum members, identical order; the enum member set exactly equals the `unicodeClassRanges` table set (diff-confirmed, empty). No member added/removed/reordered.
+- Test audit: only `test/string/unicode_class_utils_test.dart` references the changed symbols; grep confirmed NO test pinned the removed `Hex range` doc text, so the doc-only change breaks no assertion. The table-completeness test (each `UnicodeClassType` appears exactly once in `unicodeClassRanges`) is unaffected.
+- Gate: `flutter analyze lib/string/unicode_class_type.dart` → No issues found; `flutter test test/string/unicode_class_utils_test.dart` → 47/47 pass.
+- CHANGELOG: `### Changed` entry added under `[Unreleased]`.
+
+**Outcome:** Every lib file in the 27-SPEC batch is now ≤200 lines. No behavior change; pure documentation/structure cleanup.
+
+`Finish report appended: plans/history/2026.06/2026.06.11/spec-batch-build-color-datetime-string-num.md`
