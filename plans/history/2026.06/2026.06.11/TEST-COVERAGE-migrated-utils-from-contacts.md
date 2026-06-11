@@ -1,7 +1,7 @@
 # TEST COVERAGE — migrated-util test cases harvested from Saropa Contacts
 
 **Type:** Test-coverage offering (not a bug)
-**Status:** Resolved 2026-06-11 — deltas adopted (see Resolution at end)
+**Status:** Fixed 2026-06-11 — deltas adopted (see Resolution + Finish Report at end)
 
 ---
 
@@ -326,3 +326,62 @@ pass and `dart analyze` is clean.
 cluster, but it actually trims by grapheme cluster (via `substringSafe`) and
 never splits one. The doc and the bounds check (`length` is code units) are
 inconsistent. Left as-is pending maintainer decision.
+
+---
+
+## Finish Report (2026-06-11)
+
+### Scope
+
+(A) Dart test code only. No `lib/` production code changed — this task migrated
+harvested test cases and filled coverage gaps. CHANGELOG + this bug file updated.
+
+### What changed
+
+Four test files extended with the genuine deltas (each diffed against the
+library's existing suite first; only true gaps adopted):
+
+- `test/datetime/date_time_calendar_extensions_test.dart` — new `weekOfYear`
+  group (getter was previously untested; only `weekNumber`/`numOfWeeks` covered),
+  including the documented raw week-0 boundary and its `weekNumber()` correction.
+- `test/string/string_manipulation_extensions_test.dart` — precomposed (U+00E9)
+  and decomposed (`e` + U+0301) accent cases for `removeLastChars`, built with
+  `String.fromCharCode` so they are source-normalization-proof. The decomposed
+  case asserts the ACTUAL grapheme-cluster behavior (delegates to
+  `substringSafe`), not the code-unit behavior the harvested note assumed.
+- `test/list/list_string_extensions_test.dart` — 4- and 5-element Oxford-comma
+  cases for `joinDisplayList` (the 3-element case cannot exercise >1 mid-comma).
+- `test/async/stream_debounce_utils_test.dart` — `debounceAfterFirst`
+  late-consumer regression (Future-backed upstream, late subscribe) and
+  upstream-cancel-on-consumer-cancel cases.
+
+### Not adopted (with reason)
+
+- `MonthUtils` / `WeekdayUtils` — already fully covered in
+  `test/datetime/date_constants_test.dart`.
+- `joinDisplayList` nullable-element (`List<String?>`) cases — the extension is
+  `on List<String>`; those literals do not resolve the method. N/A to this API.
+- `debounce` / `debounceDistinct` harvested cases — equivalents already present.
+
+### Test results
+
+`flutter test` on all four files: **151 passed, 0 failed.**
+`dart analyze` on the four files: **No issues found.**
+
+### Discrepancy surfaced to maintainer (not changed — needs sign-off)
+
+`lib/string/string_manipulation_extensions.dart:122` `removeLastChars` dartdoc
+claims code-unit counting and warns it can split a cluster, but it trims by
+grapheme cluster (via `substringSafe`) and never splits one; the code-unit
+`length` bounds check is inconsistent with that. Doc fix / bounds reconciliation
+left for maintainer decision.
+
+### Git note
+
+A parallel process committed the working tree mid-task; these test edits, the
+CHANGELOG entry, and this file landed across commits `1b50ff8` and `59cf751`
+(all in HEAD). This archival + report is a follow-up commit.
+
+### Outstanding
+
+None for this task. The dartdoc discrepancy above awaits a separate decision.
