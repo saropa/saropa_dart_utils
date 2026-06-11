@@ -201,7 +201,7 @@ extension DateFormatting on DateTime {
       // clock portion is non-broken; any ", N secs" suffix stays breakable.
       final String clock = DateFormat(pattern, locale)
           .format(this)
-          .replaceAll(' ', ' ');
+          .replaceAll(' ', '\u00A0');
       return clock + displaySeconds;
     } on Object {
       return null;
@@ -224,7 +224,7 @@ extension DateFormatting on DateTime {
       UtcTimeDisplayEnum.twelveHour => DateFormat('h:mm', locale).format(this),
       UtcTimeDisplayEnum.amPmOnly => DateFormat('a', locale).format(this),
     };
-    return formatted.replaceAll(' ', ' ');
+    return formatted.replaceAll(' ', '\u00A0');
   }
 
   /// Locale-ordered full month name, day, year:
@@ -331,10 +331,10 @@ void main() {
 
     test('en_US default renders 12h AM/PM', () {
       // clock joined to AM/PM with a non-breaking space U+00A0
-      expect(at1530.makeDisplayTime(locale: 'en_US'), equals('3:30 PM'));
+      expect(at1530.makeDisplayTime(locale: 'en_US'), equals('3:30\u00A0PM'));
     });
     test('en_US default omits :00 minutes on the hour', () {
-      expect(at1500.makeDisplayTime(locale: 'en_US'), equals('3 PM'));
+      expect(at1500.makeDisplayTime(locale: 'en_US'), equals('3\u00A0PM'));
     });
     test('explicit hour24 + showAMPM:false forces a 24h clock', () {
       expect(at1530.makeDisplayTime(hour24: true, showAMPM: false),
@@ -352,7 +352,7 @@ void main() {
   group('makeDisplayTime non-breaking clock', () {
     test('joins the clock and AM/PM with a non-breaking space', () {
       final DateTime at2031 = DateTime(2026, 1, 15, 20, 31);
-      expect(at2031.makeDisplayTime(locale: 'en_US'), equals('8:31 PM'));
+      expect(at2031.makeDisplayTime(locale: 'en_US'), equals('8:31\u00A0PM'));
       // No ASCII space survives in the clock portion.
       expect(at2031.makeDisplayTime(locale: 'en_US')!.contains(' '), isFalse);
     });

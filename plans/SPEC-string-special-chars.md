@@ -76,12 +76,12 @@ extension StringExtensions on String {
   static const String doubleChevron = '»';
   static const String apostrophe = '’';
   static const String hyphen = '‐';
-  static const String softHyphen = '­';
+  static const String softHyphen = '\u00AD';
   static const String newLine = '\n';
   static const String lineBreak = newLine;
   static const String blank = 'ㅤ';
-  static const String zeroWidth = '​';
-  static const String nonBreakingSpace = ' ';
+  static const String zeroWidth = '\u200B';
+  static const String nonBreakingSpace = '\u00A0';
   static const String nonBreakingHyphen = '‑';
   static const String bullet = '•';
   static const String dot = bullet;

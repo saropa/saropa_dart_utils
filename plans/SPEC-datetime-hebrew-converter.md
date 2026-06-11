@@ -1,12 +1,12 @@
-# SPEC: HebrewDateConverter (Gregorian → Hebrew calendar) — for inclusion
+# SPEC: HebrewDateConverter (Gregorian \u2192 Hebrew calendar) \u2014 for inclusion
 
 **Status:** Proposed (from Saropa Contacts)
 **Proposed location:** lib/datetime/hebrew_date_converter.dart
 **Portability:** Pure Dart. Only external dependency is `package:meta`
-(`@useResult`) — already a transitive/dev dep in this library. No Flutter, no
+(`@useResult`) \u2014 already a transitive/dev dep in this library. No Flutter, no
 `intl`, no I/O, no platform channels. All methods are static; the class is
 `abstract final` (non-instantiable). Hebrew script appears only in the
-`monthNamesHebrew` / numeral output strings — pure data, no rendering.
+`monthNamesHebrew` / numeral output strings \u2014 pure data, no rendering.
 
 ## Overlap with installed library (saropa_dart_utils 1.4.1)
 
@@ -20,13 +20,13 @@ calendar converter present.
 **Result: NET-NEW.** No symbol overlaps; this adds a whole calendar system the
 library does not currently model.
 
-## Purpose — what it does + why it is general-purpose
+## Purpose \u2014 what it does + why it is general-purpose
 
 `HebrewDateConverter` converts a Gregorian `DateTime` to a Hebrew-calendar date
 and formats it. The Hebrew calendar is a lunisolar calendar (12 or 13 months;
 years counted from the traditional date of Creation, 3761 BCE). The
 implementation is the fixed arithmetic algorithm from "Calendrical
-Calculations" (Reingold & Dershowitz) via a Julian-Day-Number bridge — no
+Calculations" (Reingold & Dershowitz) via a Julian-Day-Number bridge \u2014 no
 network lookup, no astronomical observation, deterministic for any
 `DateTime`.
 
@@ -42,14 +42,14 @@ General-purpose, not proprietary:
 
 ### Excluded members (and why)
 
-None excluded by content — the entire class is general-purpose calendar math.
+None excluded by content \u2014 the entire class is general-purpose calendar math.
 The private helpers (`_elapsedMonths`, `_elapsedDays`, `_isLongCheshvan`,
 `_isShortKislev`, `_gregorianToJulianDay`, `_hebrewNewYearJd`,
 `_julianDayToHebrew`, `_numberToHebrewNumerals`, and the `_hebrewEpochJd` /
 `_hebrewNumerals` constants) are kept verbatim because the public API depends on
 them, but they remain private. There is **no** debug/`DebugType`/Crashlytics
 logging, no `AppLocalizations`/`l10n` call, no Font Awesome icon, and no app
-search-query syntax in this file — nothing had to be stripped. The
+search-query syntax in this file \u2014 nothing had to be stripped. The
 `// cspell:disable` pragma is retained (it only silences the spell-checker over
 the Hebrew transliterations and is harmless to keep).
 
@@ -61,7 +61,7 @@ Public surface proposed for inclusion:
 | `monthNamesHebrew` | `static const List<String>` | Hebrew-script names |
 | `isHebrewLeapYear(int)` | static | `bool` |
 | `monthsInHebrewYear(int)` | static | `int` (12 or 13) |
-| `daysInHebrewYear(int)` | static | `int` (353–355 / 383–385) |
+| `daysInHebrewYear(int)` | static | `int` (353\u2013355 / 383\u2013385) |
 | `daysInHebrewMonth(int, int)` | static | `int` (29 or 30) |
 | `fromGregorian(DateTime)` | static | `({int year, int month, int day})` |
 | `getMonthName(int, int, {bool useHebrew})` | static | `String` |
@@ -70,7 +70,7 @@ Public surface proposed for inclusion:
 | `format(DateTime, {bool useHebrew})` | static | `String` |
 | `formatDayMonth(DateTime, {bool useHebrew})` | static | `String` |
 
-## Source (from Saropa Contacts) — verbatim, Hebrew as `\u` escapes
+## Source (from Saropa Contacts) \u2014 verbatim, Hebrew as `\u` escapes
 
 > Hebrew-script string literals are shown as Dart `\u`-escapes to survive
 > transit. They compile identically to the original glyphs. No debug logging
@@ -107,28 +107,28 @@ abstract final class HebrewDateConverter {
 
   /// Hebrew month names in Hebrew script.
   static const List<String> monthNamesHebrew = <String>[
-    'תִּשְׁרֵי', // Tishrei
-    'חֶשְׁוָן', // Cheshvan
-    'כִּסְלֵו', // Kislev
-    'טֵבֵת', // Tevet
-    'שְׁבָט', // Shevat
-    'אֲדָר', // Adar (or Adar I)
-    'אֲדָר ב׳', // Adar II
-    'נִיסָן', // Nisan
-    'אִיָּר', // Iyar
-    'סִיוָן', // Sivan
-    'תַּמּוּז', // Tammuz
-    'אָב', // Av
-    'אֱלוּל', // Elul
+    '\u05EA\u05B4\u05BC\u05E9\u05B0\u05C1\u05E8\u05B5\u05D9', // Tishrei
+    '\u05D7\u05B6\u05E9\u05B0\u05C1\u05D5\u05B8\u05DF', // Cheshvan
+    '\u05DB\u05B4\u05BC\u05E1\u05B0\u05DC\u05B5\u05D5', // Kislev
+    '\u05D8\u05B5\u05D1\u05B5\u05EA', // Tevet
+    '\u05E9\u05B0\u05C1\u05D1\u05B8\u05D8', // Shevat
+    '\u05D0\u05B2\u05D3\u05B8\u05E8', // Adar (or Adar I)
+    '\u05D0\u05B2\u05D3\u05B8\u05E8 \u05D1\u05F3', // Adar II
+    '\u05E0\u05B4\u05D9\u05E1\u05B8\u05DF', // Nisan
+    '\u05D0\u05B4\u05D9\u05B8\u05BC\u05E8', // Iyar
+    '\u05E1\u05B4\u05D9\u05D5\u05B8\u05DF', // Sivan
+    '\u05EA\u05B7\u05BC\u05DE\u05BC\u05D5\u05BC\u05D6', // Tammuz
+    '\u05D0\u05B8\u05D1', // Av
+    '\u05D0\u05B1\u05DC\u05D5\u05BC\u05DC', // Elul
   ];
 
   /// Hebrew numerals for numbers 1-30 (used for days).
   static const List<String> _hebrewNumerals = <String>[
     '', // 0 placeholder
-    'א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ז׳', 'ח׳', 'ט׳', // 1-9
-    'י׳', 'י״א', 'י״ב', 'י״ג', 'י״ד', 'ט״ו', 'ט״ז', 'י״ז', 'י״ח', 'י״ט', // 10-19
-    'כ׳', 'כ״א', 'כ״ב', 'כ״ג', 'כ״ד', 'כ״ה', 'כ״ו', 'כ״ז', 'כ״ח', 'כ״ט', // 20-29
-    'ל׳', // 30
+    '\u05D0\u05F3', '\u05D1\u05F3', '\u05D2\u05F3', '\u05D3\u05F3', '\u05D4\u05F3', '\u05D5\u05F3', '\u05D6\u05F3', '\u05D7\u05F3', '\u05D8\u05F3', // 1-9
+    '\u05D9\u05F3', '\u05D9\u05F4\u05D0', '\u05D9\u05F4\u05D1', '\u05D9\u05F4\u05D2', '\u05D9\u05F4\u05D3', '\u05D8\u05F4\u05D5', '\u05D8\u05F4\u05D6', '\u05D9\u05F4\u05D6', '\u05D9\u05F4\u05D7', '\u05D9\u05F4\u05D8', // 10-19
+    '\u05DB\u05F3', '\u05DB\u05F4\u05D0', '\u05DB\u05F4\u05D1', '\u05DB\u05F4\u05D2', '\u05DB\u05F4\u05D3', '\u05DB\u05F4\u05D4', '\u05DB\u05F4\u05D5', '\u05DB\u05F4\u05D6', '\u05DB\u05F4\u05D7', '\u05DB\u05F4\u05D8', // 20-29
+    '\u05DC\u05F3', // 30
   ];
 
   /// Returns true if the given Hebrew year is a leap year.
@@ -337,7 +337,7 @@ abstract final class HebrewDateConverter {
       if (month <= 5) {
         return names[month - 1];
       } else if (month == 6) {
-        return useHebrew ? 'אֲדָר א׳' : 'Adar I';
+        return useHebrew ? '\u05D0\u05B2\u05D3\u05B8\u05E8 \u05D0\u05F3' : 'Adar I';
       } else if (month == 7) {
         return names[6]; // Adar II
       } else {
@@ -363,10 +363,10 @@ abstract final class HebrewDateConverter {
 
   /// Formats a Hebrew year using Hebrew numerals.
   ///
-  /// Years are typically written without the thousands digit (5785 → תשפ״ה).
+  /// Years are typically written without the thousands digit (5785 \u2192 \u05EA\u05E9\u05E4\u05F4\u05D4).
   @useResult
   static String formatYearHebrew(int year) {
-    // Remove thousands (5785 → 785)
+    // Remove thousands (5785 \u2192 785)
     final int shortYear = year % 1000;
 
     return _numberToHebrewNumerals(shortYear);
@@ -381,7 +381,7 @@ abstract final class HebrewDateConverter {
     int remaining = number;
 
     // Hundreds
-    const List<String> hundreds = <String>['', 'ק', 'ר', 'ש', 'ת', 'תק', 'תר', 'תש', 'תת', 'תתק'];
+    const List<String> hundreds = <String>['', '\u05E7', '\u05E8', '\u05E9', '\u05EA', '\u05EA\u05E7', '\u05EA\u05E8', '\u05EA\u05E9', '\u05EA\u05EA', '\u05EA\u05EA\u05E7'];
     if (remaining >= 100) {
       result.write(hundreds[remaining ~/ 100]);
       remaining %= 100;
@@ -389,33 +389,33 @@ abstract final class HebrewDateConverter {
 
     // Special cases for 15 and 16 (avoid spelling God's name)
     if (remaining == 15) {
-      result.write('ט״ו');
+      result.write('\u05D8\u05F4\u05D5');
       return result.toString();
     }
     if (remaining == 16) {
-      result.write('ט״ז');
+      result.write('\u05D8\u05F4\u05D6');
       return result.toString();
     }
 
     // Tens
-    const List<String> tens = <String>['', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ'];
+    const List<String> tens = <String>['', '\u05D9', '\u05DB', '\u05DC', '\u05DE', '\u05E0', '\u05E1', '\u05E2', '\u05E4', '\u05E6'];
     if (remaining >= 10) {
       result.write(tens[remaining ~/ 10]);
       remaining %= 10;
     }
 
     // Units
-    const List<String> units = <String>['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
+    const List<String> units = <String>['', '\u05D0', '\u05D1', '\u05D2', '\u05D3', '\u05D4', '\u05D5', '\u05D6', '\u05D7', '\u05D8'];
     if (remaining > 0) {
       result.write(units[remaining]);
     }
 
-    // Add gershayim (״) before the last letter
+    // Add gershayim (\u05F4) before the last letter
     final String str = result.toString();
     if (str.length > 1) {
-      return '${str.substring(0, str.length - 1)}״${str.substring(str.length - 1)}';
+      return '${str.substring(0, str.length - 1)}\u05F4${str.substring(str.length - 1)}';
     } else if (str.isNotEmpty) {
-      return '$str׳';
+      return '$str\u05F3';
     }
 
     return str;
@@ -428,7 +428,7 @@ abstract final class HebrewDateConverter {
   ///
   /// Examples:
   /// - English: "1 Tishrei 5785"
-  /// - Hebrew: "א׳ תִּשְׁרֵי תשפ״ה"
+  /// - Hebrew: "\u05D0\u05F3 \u05EA\u05B4\u05BC\u05E9\u05B0\u05C1\u05E8\u05B5\u05D9 \u05EA\u05E9\u05E4\u05F4\u05D4"
   static String format(DateTime date, {bool useHebrew = false}) {
     final ({int year, int month, int day}) hebrew = fromGregorian(date);
     final String monthName = getMonthName(hebrew.month, hebrew.year, useHebrew: useHebrew);
@@ -449,7 +449,7 @@ abstract final class HebrewDateConverter {
   ///
   /// Examples:
   /// - English: "1 Tishrei"
-  /// - Hebrew: "א׳ תִּשְׁרֵי"
+  /// - Hebrew: "\u05D0\u05F3 \u05EA\u05B4\u05BC\u05E9\u05B0\u05C1\u05E8\u05B5\u05D9"
   static String formatDayMonth(DateTime date, {bool useHebrew = false}) {
     final ({int year, int month, int day}) hebrew = fromGregorian(date);
     final String monthName = getMonthName(hebrew.month, hebrew.year, useHebrew: useHebrew);
@@ -463,10 +463,10 @@ abstract final class HebrewDateConverter {
 }
 ```
 
-## Test cases — existing tests (verbatim, Hebrew as `\u` escapes)
+## Test cases \u2014 existing tests (verbatim, Hebrew as `\u` escapes)
 
 From `test/lib/utils/primitive/date_time/date_time_primitive_test.dart`
-(group `HebrewDateConverter`, lines 445–934). Reproduced verbatim; Hebrew
+(group `HebrewDateConverter`, lines 445\u2013934). Reproduced verbatim; Hebrew
 string literals shown as `\u`-escapes (they compile to the same glyphs).
 
 ```dart
@@ -743,52 +743,52 @@ group('HebrewDateConverter', () {
     });
 
     test('returns Hebrew month names when requested', () {
-      expect(HebrewDateConverter.getMonthName(1, 5785, useHebrew: true), equals('תִּשְׁרֵי'));
-      expect(HebrewDateConverter.getMonthName(6, 5784, useHebrew: true), equals('אֲדָר א׳'));
-      expect(HebrewDateConverter.getMonthName(7, 5784, useHebrew: true), equals('אֲדָר ב׳'));
+      expect(HebrewDateConverter.getMonthName(1, 5785, useHebrew: true), equals('\u05EA\u05B4\u05BC\u05E9\u05B0\u05C1\u05E8\u05B5\u05D9'));
+      expect(HebrewDateConverter.getMonthName(6, 5784, useHebrew: true), equals('\u05D0\u05B2\u05D3\u05B8\u05E8 \u05D0\u05F3'));
+      expect(HebrewDateConverter.getMonthName(7, 5784, useHebrew: true), equals('\u05D0\u05B2\u05D3\u05B8\u05E8 \u05D1\u05F3'));
     });
   });
 
   group('formatDayHebrew', () {
     test('formats single digit days correctly', () {
-      expect(HebrewDateConverter.formatDayHebrew(1), equals('א׳'));
-      expect(HebrewDateConverter.formatDayHebrew(5), equals('ה׳'));
-      expect(HebrewDateConverter.formatDayHebrew(9), equals('ט׳'));
+      expect(HebrewDateConverter.formatDayHebrew(1), equals('\u05D0\u05F3'));
+      expect(HebrewDateConverter.formatDayHebrew(5), equals('\u05D4\u05F3'));
+      expect(HebrewDateConverter.formatDayHebrew(9), equals('\u05D8\u05F3'));
     });
 
     test('formats teens correctly', () {
-      expect(HebrewDateConverter.formatDayHebrew(10), equals('י׳'));
-      expect(HebrewDateConverter.formatDayHebrew(11), equals('י״א'));
-      expect(HebrewDateConverter.formatDayHebrew(15), equals('ט״ו')); // Special case
-      expect(HebrewDateConverter.formatDayHebrew(16), equals('ט״ז')); // Special case
-      expect(HebrewDateConverter.formatDayHebrew(19), equals('י״ט'));
+      expect(HebrewDateConverter.formatDayHebrew(10), equals('\u05D9\u05F3'));
+      expect(HebrewDateConverter.formatDayHebrew(11), equals('\u05D9\u05F4\u05D0'));
+      expect(HebrewDateConverter.formatDayHebrew(15), equals('\u05D8\u05F4\u05D5')); // Special case
+      expect(HebrewDateConverter.formatDayHebrew(16), equals('\u05D8\u05F4\u05D6')); // Special case
+      expect(HebrewDateConverter.formatDayHebrew(19), equals('\u05D9\u05F4\u05D8'));
     });
 
     test('formats twenties correctly', () {
-      expect(HebrewDateConverter.formatDayHebrew(20), equals('כ׳'));
-      expect(HebrewDateConverter.formatDayHebrew(21), equals('כ״א'));
-      expect(HebrewDateConverter.formatDayHebrew(29), equals('כ״ט'));
-      expect(HebrewDateConverter.formatDayHebrew(30), equals('ל׳'));
+      expect(HebrewDateConverter.formatDayHebrew(20), equals('\u05DB\u05F3'));
+      expect(HebrewDateConverter.formatDayHebrew(21), equals('\u05DB\u05F4\u05D0'));
+      expect(HebrewDateConverter.formatDayHebrew(29), equals('\u05DB\u05F4\u05D8'));
+      expect(HebrewDateConverter.formatDayHebrew(30), equals('\u05DC\u05F3'));
     });
   });
 
   group('formatYearHebrew', () {
     test('formats year 5785 correctly', () {
-      // 5785 -> 785 -> תשפ״ה
+      // 5785 -> 785 -> \u05EA\u05E9\u05E4\u05F4\u05D4
       final String formatted = HebrewDateConverter.formatYearHebrew(5785);
-      expect(formatted, equals('תשפ״ה'));
+      expect(formatted, equals('\u05EA\u05E9\u05E4\u05F4\u05D4'));
     });
 
     test('formats year 5784 correctly', () {
-      // 5784 -> 784 -> תשפ״ד
+      // 5784 -> 784 -> \u05EA\u05E9\u05E4\u05F4\u05D3
       final String formatted = HebrewDateConverter.formatYearHebrew(5784);
-      expect(formatted, equals('תשפ״ד'));
+      expect(formatted, equals('\u05EA\u05E9\u05E4\u05F4\u05D3'));
     });
 
     test('formats year 5800 correctly', () {
-      // 5800 -> 800 -> ת״ת
+      // 5800 -> 800 -> \u05EA\u05F4\u05EA
       final String formatted = HebrewDateConverter.formatYearHebrew(5800);
-      expect(formatted, equals('ת״ת'));
+      expect(formatted, equals('\u05EA\u05F4\u05EA'));
     });
   });
 
@@ -801,7 +801,7 @@ group('HebrewDateConverter', () {
     test('formats date in Hebrew correctly', () {
       final DateTime date = DateTime(2024, 10, 3); // 1 Tishrei 5785
       final String formatted = HebrewDateConverter.format(date, useHebrew: true);
-      expect(formatted, equals('א׳ תִּשְׁרֵי תשפ״ה'));
+      expect(formatted, equals('\u05D0\u05F3 \u05EA\u05B4\u05BC\u05E9\u05B0\u05C1\u05E8\u05B5\u05D9 \u05EA\u05E9\u05E4\u05F4\u05D4'));
     });
 
     test('formats Yom Kippur correctly', () {
@@ -823,7 +823,7 @@ group('HebrewDateConverter', () {
 
     test('formats day and month in Hebrew', () {
       final DateTime date = DateTime(2024, 10, 3); // 1 Tishrei
-      expect(HebrewDateConverter.formatDayMonth(date, useHebrew: true), equals('א׳ תִּשְׁרֵי'));
+      expect(HebrewDateConverter.formatDayMonth(date, useHebrew: true), equals('\u05D0\u05F3 \u05EA\u05B4\u05BC\u05E9\u05B0\u05C1\u05E8\u05B5\u05D9'));
     });
   });
 
@@ -966,63 +966,63 @@ group('HebrewDateConverter', () {
 > carries no app dependency and ports as-is. Rename the group if the
 > app-fixture reference reads oddly out of context.
 
-## Bulletproofing gaps — concrete cases to add for massive coverage
+## Bulletproofing gaps \u2014 concrete cases to add for massive coverage
 
-The existing suite covers the common modern window (Hebrew years ~5750–5800 /
-Gregorian ~1990–2030) well: holidays, leap-year Adar I/II, month/year
-boundaries, year-length invariants, day increment, gematria 1–30 with the
+The existing suite covers the common modern window (Hebrew years ~5750\u20135800 /
+Gregorian ~1990\u20132030) well: holidays, leap-year Adar I/II, month/year
+boundaries, year-length invariants, day increment, gematria 1\u201330 with the
 15/16 special cases. To make it bulletproof, add:
 
 **Extreme / far-range years**
-- Conversion at and just after the Hebrew epoch (1 Tishrei year 1 → Julian
+- Conversion at and just after the Hebrew epoch (1 Tishrei year 1 \u2192 Julian
   Day 347997): `fromGregorian` on the Gregorian proleptic equivalent; verify
   `year == 1, month == 1, day == 1`.
-- Very early Gregorian dates (year 1 CE, year 100, year 1000) — confirm no
+- Very early Gregorian dates (year 1 CE, year 100, year 1000) \u2014 confirm no
   off-by-one in the `_gregorianToJulianDay` proleptic formula and that
   `_julianDayToHebrew`'s `while`-search terminates (the approximate-year seed
   `(jd - epoch) ~/ 365 + 3761` must converge without infinite loop).
-- Far-future years (year 3000, 9999) — ensure 64-bit int math doesn't overflow
+- Far-future years (year 3000, 9999) \u2014 ensure 64-bit int math doesn't overflow
   and the leap-cycle pattern still holds.
 - BCE / negative Gregorian years: `DateTime(-1, ...)`, `DateTime(0, ...)`.
-  Decide and assert documented behavior — Hebrew years before the epoch should
+  Decide and assert documented behavior \u2014 Hebrew years before the epoch should
   go negative or the converter should define a floor; pin it with a test.
 
 **Leap-year completeness**
 - Assert the full 19-year leap pattern over an entire cycle (e.g. years
-  5757–5775 covering one complete cycle), not just the 5780–5800 window — verify
+  5757\u20135775 covering one complete cycle), not just the 5780\u20135800 window \u2014 verify
   exactly years at cycle-positions {3,6,8,11,14,17,19} are leap.
 - Cross-cycle boundary: last leap year of one cycle to first of next.
 - `daysInHebrewMonth` for Cheshvan (long vs short) AND Kislev (long vs short)
-  in deficient (353/383), regular (354/384), and complete (355/385) years —
+  in deficient (353/383), regular (354/384), and complete (355/385) years \u2014
   pick concrete years for all six year-length classes and assert each month
   length, not just the always-fixed months.
 
 **Adar edge logic**
 - `getMonthName(6, leapYear)` returns "Adar I" and `getMonthName(7, leapYear)`
-  returns "Adar II" — covered; add the Hebrew-script counterparts for month 6
+  returns "Adar II" \u2014 covered; add the Hebrew-script counterparts for month 6
   and 7 in a leap year, and confirm month 6 in a NON-leap year is plain "Adar"
   (no roman numeral) in both scripts.
 - Round-trip a date in Adar I vs Adar II of the same leap year and confirm the
   `fromGregorian` month indices (6 vs 7) match `getMonthName`.
 
 **`getMonthName` / `formatDayHebrew` boundaries (off-array)**
-- `getMonthName` with month `0`, `13` in a non-leap year, `14`, and negative —
+- `getMonthName` with month `0`, `13` in a non-leap year, `14`, and negative \u2014
   currently indexes `names[month]` / `names[month-1]` with no bounds guard, so
   these throw `RangeError`. Add tests pinning the thrown behavior OR (preferred
   for "bulletproof") add a guard returning empty/`month.toString()` and test it.
-- `formatDayHebrew(0)`, `(-1)`, `(31)`, `(100)` — the `< 1 || > 30` guard
-  returns `day.toString()`; assert all four explicitly (only 1–30 currently
+- `formatDayHebrew(0)`, `(-1)`, `(31)`, `(100)` \u2014 the `< 1 || > 30` guard
+  returns `day.toString()`; assert all four explicitly (only 1\u201330 currently
   tested).
 
 **Gematria (`formatYearHebrew` / `_numberToHebrewNumerals` via public path)**
 - `formatYearHebrew` for a year whose short form is exactly a multiple of 100
-  with no tens/units (e.g. 5100 → 100 → single hundreds letter) — exercises the
+  with no tens/units (e.g. 5100 \u2192 100 \u2192 single hundreds letter) \u2014 exercises the
   single-character gershayim-vs-geresh branch (`str.length == 1`).
 - Years producing 15/16 in the tens+units position WITH a hundreds prefix
-  (e.g. short value 215, 316) — confirm the 15/16 special-case `return` does
+  (e.g. short value 215, 316) \u2014 confirm the 15/16 special-case `return` does
   not drop the hundreds already written. (Read the code: the early `return`
   after writing 15/16 includes the hundreds buffer, but this path is untested.)
-- `formatYearHebrew` where `year % 1000 == 0` (e.g. 6000) → short value 0 →
+- `formatYearHebrew` where `year % 1000 == 0` (e.g. 6000) \u2192 short value 0 \u2192
   `_numberToHebrewNumerals(0)` returns empty string. Assert the empty result is
   the intended output.
 - Negative / zero year into `formatYearHebrew`.
@@ -1032,16 +1032,16 @@ boundaries, year-length invariants, day increment, gematria 1–30 with the
   and Hebrew, asserting the full composed string (only Tishrei/Yom Kippur/
   Hanukkah are asserted today).
 - Confirm output string length / codepoint count for Hebrew results
-  (guard against the niqqud/cantillation marks being silently dropped) — assert
+  (guard against the niqqud/cantillation marks being silently dropped) \u2014 assert
   `result.runes.length` for a known Hebrew month name.
 
 **DateTime input hygiene**
 - `fromGregorian` ignores time-of-day: pass `DateTime(2024,10,3,23,59,59)` and
-  `DateTime(2024,10,3,0,0,0)` → identical Hebrew date (verify the converter
+  `DateTime(2024,10,3,0,0,0)` \u2192 identical Hebrew date (verify the converter
   uses only y/m/d and is unaffected by the hour). The Hebrew day actually
   starts at sunset, so document that this converter is a civil-date mapping,
   not sunset-aware, and test that hour has no effect.
-- UTC vs local `DateTime` with the same y/m/d → identical result
+- UTC vs local `DateTime` with the same y/m/d \u2192 identical result
   (`DateTime.utc(2024,10,3)` vs `DateTime(2024,10,3)`).
 - A date on a Gregorian leap day (Feb 29, 2024) converts without error.
 
