@@ -35,7 +35,7 @@ dependencies:
 
   # Jiffy is a Flutter (Android, IOS and Web) date time package inspired by moment js for parsing, manipulating, querying and formatting dates
   # https://pub.dev/packages/jiffy/changelog
-  jiffy: ^6.4.4
+  jiffy: ^6.4.5
 
   # Annotations (@visibleForTesting, @immutable, ...) imported across lib/.
   # Must be a DIRECT dependency, not transitive: pub.dev rejects publishing a
@@ -71,7 +71,7 @@ dev_dependencies:
   # 1,000+ lint rules for Flutter and Dart. Free. Open source.
   # https://pub.dev/packages/saropa_lints/changelog
   # e.g. dart run saropa_lints:init --tier essential
-  saropa_lints: ^13.12.5
+  saropa_lints: ^13.12.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

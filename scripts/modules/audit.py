@@ -246,6 +246,12 @@ _TYPE_DECL_RE = re.compile(
 # the (public) class name, but the `._` makes the constructor itself private.
 _PRIVATE_CTOR_RE = re.compile(r"\.\_\w*\s*\(")
 
+# A `final` instance field declaration inside a class body, e.g. `final int
+# lineNumber;` or `final List<CsvRowError> errors;`. The non-greedy type segment
+# lets the trailing `\s(\w+);` capture the field name. Used to credit a value
+# class's field reads toward its constructor's test coverage.
+_FIELD_DECL_RE = re.compile(r"^\s*final\s+[\w<>,?.\s]+?\s(\w+)\s*;")
+
 
 def _enclosing_type_name(lines_arr: list[str], line_1based: int) -> str | None:
     """Return the name of the type that lexically encloses the declaration at
@@ -897,6 +903,57 @@ def _members_with_params(lib_path: Path) -> list[tuple[str, int, int]]:
     return out
 
 
+def _constructor_field_names(
+    lines_arr: list[str], ctor_line_1based: int, name: str
+) -> set[str] | None:
+    """If the declaration at `ctor_line_1based` is a constructor (its name equals
+    the enclosing type), return the set of public `final` instance field names
+    declared in that type's body; otherwise return None.
+
+    WHY: a data/result class constructor is frequently never called by name in a
+    test — instances are produced by the public function under test and verified
+    by reading their fields (e.g. `parseCsv(...).errors.first.lineNumber`). The
+    literal `CsvRowError(` token then never appears in `test/`, so a pure
+    name-match flags the constructor as untested even though its output is fully
+    asserted. Crediting field reads fixes that false positive while still flagging
+    the genuine gap when a field is never read (the caller requires ALL fields).
+    """
+    type_name = _enclosing_type_name(lines_arr, ctor_line_1based)
+    if type_name is None or type_name != name:
+        return None
+
+    # Walk up to the class declaration that opens this constructor's body. A `}`
+    # in column 0 means we left a sibling type, so bail (treat as no fields).
+    start = None
+    i = ctor_line_1based - 2
+    while i >= 0:
+        if _TYPE_DECL_RE.match(lines_arr[i]):
+            start = i
+            break
+        if lines_arr[i].startswith("}"):
+            break
+        i -= 1
+    if start is None:
+        return set()
+
+    # Brace-match from the class declaration to its closing brace, collecting
+    # public `final` field names along the way.
+    fields: set[str] = set()
+    depth = 0
+    seen_open = False
+    for j in range(start, len(lines_arr)):
+        line = lines_arr[j]
+        m = _FIELD_DECL_RE.match(line)
+        if m and not m.group(1).startswith("_"):
+            fields.add(m.group(1))
+        depth += line.count("{") - line.count("}")
+        if "{" in line:
+            seen_open = True
+        if seen_open and depth <= 0:
+            break
+    return fields
+
+
 def _tested_identifiers(test_root: Path) -> set[str]:
     """Collect every identifier referenced anywhere under `test/`.
 
@@ -932,17 +989,25 @@ def audit_param_test_coverage(
     tested = _tested_identifiers(test_root)
     issues: list[str] = []
     for lib_path in lib_root.rglob("*.dart"):
+        lines_arr = lib_path.read_text(encoding="utf-8").splitlines()
         for name, param_count, line_no in _members_with_params(lib_path):
             # Only methods/functions with a parameter surface; zero-arg members
             # and getters are out of scope for this check.
             if param_count < 1:
                 continue
-            if name not in tested:
-                rel = lib_path.relative_to(project_dir)
-                issues.append(
-                    f"  {rel}:{line_no}  {name}()  "
-                    f"{param_count} params, untested (no test references it)"
-                )
+            if name in tested:
+                continue
+            # A value-class constructor is exercised when its instances are built
+            # by the function under test and every field is asserted, even if the
+            # type name is never written in a test. Credit that before flagging.
+            fields = _constructor_field_names(lines_arr, line_no, name)
+            if fields and fields <= tested:
+                continue
+            rel = lib_path.relative_to(project_dir)
+            issues.append(
+                f"  {rel}:{line_no}  {name}()  "
+                f"{param_count} params, untested (no test references it)"
+            )
 
     report_lines: list[str] = []
     if issues:

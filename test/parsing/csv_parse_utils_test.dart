@@ -46,6 +46,27 @@ void main() {
     });
   });
 
+  group('CsvRowError', () {
+    test('exposes the line number, raw line, and message it was built with', () {
+      const CsvRowError error = CsvRowError(7, '"oops,b', 'unterminated quote');
+      expect(error.lineNumber, 7);
+      expect(error.line, '"oops,b');
+      expect(error.message, 'unterminated quote');
+    });
+
+    test('toString names the line number and message for log output', () {
+      const CsvRowError error = CsvRowError(7, '"oops,b', 'unterminated quote');
+      expect(error.toString(), 'CsvRowError(line 7: unterminated quote)');
+    });
+
+    test('parseCsv populates the raw line on a rejected row', () {
+      // The .line field is the only way a caller recovers the exact source text
+      // that failed, so assert parseCsv carries it through verbatim.
+      final CsvParseResult result = parseCsv('a,b\n"oops,b\n1,2');
+      expect(result.errors.first.line, '"oops,b');
+    });
+  });
+
   group('parseCsv (error-accumulating)', () {
     test('parses every row when all are valid', () {
       final CsvParseResult result = parseCsv('a,b,c\n1,2,3\n4,5,6');

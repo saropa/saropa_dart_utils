@@ -42,6 +42,14 @@ Small ergonomic utilities pulled from the Saropa Contacts adoption review — tr
 - **`retryWithPolicy` gains `retryIf`** ([retry_policy_utils.dart](lib/async/retry_policy_utils.dart)) — a `bool Function(Object error)? retryIf` predicate so only transient failures are retried; returning `false` rethrows immediately without consuming the remaining attempts, the delay, or firing `onRetry` (which already existed). `retryWithJitter` is intentionally untouched. ENH-008 (part 2).
 - **`partialRatio` / `tokenSortRatio` / `tokenSetRatio`** ([fuzzy_search_utils.dart](lib/string/fuzzy_search_utils.dart)) — fuzzywuzzy-style standalone string-similarity scores in `[0, 1]`, so a consumer doing single-best-match selection with its own threshold can compute these directly and drop the external `fuzzywuzzy` dependency. (The per-result `score` on `fuzzySearch` was already public — this adds the missing ratio *variants*.) `partialRatio` slides a window for the best substring alignment (`'New York'` vs `'New York City'` → 1.0); `tokenSortRatio` sorts tokens first for order-insensitivity; `tokenSetRatio` compares the shared token core against each side's remainder (forgiving of extra words). All case-insensitive, reusing `LevenshteinUtils.ratio`. ENH-008 (part 3).
 
+### Tests
+
+- **`CsvRowError` direct-construction coverage** ([csv_parse_utils_test.dart](test/parsing/csv_parse_utils_test.dart)) — adds a `CsvRowError` test group asserting all three fields (`lineNumber`, `line`, `message`) and `toString()`. The prior `parseCsv` tests only read `lineNumber`/`message` off returned errors, leaving the `line` field and `toString()` unexercised; this closes that gap.
+
+### Tooling
+
+- **Publish audit: credit value-class constructors by field reads** ([audit.py](scripts/modules/audit.py)) — the "untested public methods" check matched the constructor's name token in `test/`, so a result/data class only ever built inside library code and returned (e.g. `CsvRowError`, produced by `parseCsv`) was flagged untested even when every field was asserted off the returned instance. The check now credits a constructor as covered when all its declared `final` instance fields are referenced in tests, and still flags the real gap when a field is never read. Internal tooling only — not shipped to package consumers.
+
 
 ## [1.4.0]
 
