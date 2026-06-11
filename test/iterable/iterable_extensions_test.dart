@@ -209,6 +209,28 @@ void main() {
         expect(result, isNotNull);
         expect(result, allOf(greaterThanOrEqualTo(0), lessThan(100)));
       });
+      test('11. Same seed returns the same element across calls', () {
+        final List<int> list = List<int>.generate(100, (int i) => i);
+        final int? first = list.randomElement(seed: 1234);
+        final int? second = list.randomElement(seed: 1234);
+        expect(first, equals(second));
+      });
+      test('12. Seeded pick is repeatable on a fresh list of equal contents', () {
+        final List<int> a = List<int>.generate(50, (int i) => i);
+        final List<int> b = List<int>.generate(50, (int i) => i);
+        expect(a.randomElement(seed: 7), equals(b.randomElement(seed: 7)));
+      });
+      test('13. Empty list with a seed still returns null', () {
+        expect(<int>[].randomElement(seed: 99), isNull);
+      });
+      test('14. Seeded pick works on a non-List iterable (Set)', () {
+        final Set<int> set = <int>{10, 20, 30, 40, 50};
+        final int? first = set.randomElement(seed: 3);
+        final int? second = set.randomElement(seed: 3);
+        expect(set.contains(first), isTrue);
+        // Set iteration order is stable within a run, so a fixed seed is stable.
+        expect(first, equals(second));
+      });
     });
 
     group('containsAll', () {

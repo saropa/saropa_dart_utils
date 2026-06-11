@@ -1,7 +1,7 @@
 import 'dart:collection';
-import 'dart:math';
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/iterable/occurrence.dart';
+import 'package:saropa_dart_utils/random/common_random.dart';
 
 const String _kErrSizePositive = 'size must be positive';
 const String _kParamSize = 'size';
@@ -86,16 +86,22 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
     return Occurrence<T>(leastCommonEntry.key, leastCommonEntry.value);
   }
 
-  /// Returns a random element from this iterable.
+  /// Returns a random element from this iterable, or `null` if it is empty.
   ///
-  /// Returns null if the iterable is empty.
+  /// Pass [seed] for a deterministic pick: the same [seed] over the same
+  /// iterable always returns the same element, which is what reproducible demo
+  /// data and stable widget tests need. Omitting [seed] gives a fresh pick each
+  /// run (seeded from the wall clock via [CommonRandom]).
+  ///
+  /// Picks by index via [elementAt], so the iterable is not materialized to a
+  /// list — only the chosen element is realized.
   @useResult
-  T? randomElement() {
+  T? randomElement({int? seed}) {
     if (isEmpty) {
       return null;
     }
 
-    return elementAt(Random().nextInt(length));
+    return elementAt(CommonRandom(seed).nextInt(length));
   }
 
   /// Returns true if this iterable contains all elements from [other].
