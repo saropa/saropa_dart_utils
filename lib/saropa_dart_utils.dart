@@ -24,6 +24,7 @@ export 'datetime/date_time_list_extensions.dart';
 export 'datetime/date_time_nullable_extensions.dart';
 export 'datetime/date_time_overlap_utils.dart';
 export 'datetime/date_time_range_utils.dart';
+export 'datetime/month_weekday_utils.dart';
 export 'datetime/date_time_relative_utils.dart';
 export 'datetime/date_time_utils.dart';
 export 'datetime/date_time_week_extensions.dart';
