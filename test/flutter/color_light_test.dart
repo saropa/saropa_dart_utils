@@ -117,8 +117,15 @@ void main() {
     });
 
     group('valid amounts adjust lightness', () {
+      late HSLColor original;
+
+      // Shared baseline for every lightness comparison below; recomputed per
+      // test via setUp so no mutable state leaks between cases.
+      setUp(() {
+        original = HSLColor.fromColor(opaqueBlue);
+      });
+
       test('should lighten a color by the given amount', () {
-        final HSLColor original = HSLColor.fromColor(opaqueBlue);
         final HSLColor lightened = HSLColor.fromColor(opaqueBlue.lighten(0.2));
         expect(lightened.lightness, greaterThan(original.lightness));
       });
@@ -129,13 +136,11 @@ void main() {
       });
 
       test('should preserve hue when lightening', () {
-        final HSLColor original = HSLColor.fromColor(opaqueBlue);
         final HSLColor lightened = HSLColor.fromColor(opaqueBlue.lighten(0.2));
         expect(lightened.hue, closeTo(original.hue, 0.5));
       });
 
       test('should preserve saturation when lightening', () {
-        final HSLColor original = HSLColor.fromColor(opaqueBlue);
         final HSLColor lightened = HSLColor.fromColor(opaqueBlue.lighten(0.2));
         expect(lightened.saturation, closeTo(original.saturation, 0.01));
       });

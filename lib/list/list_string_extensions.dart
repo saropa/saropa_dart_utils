@@ -163,7 +163,7 @@ extension ListStringExtensions on List<String> {
       return firstOrNull;
     }
 
-    // sublist(0, length - 1) drops the final element so [finalSeparator] (not
+    // Drop the final element via a sublist so [finalSeparator] (not
     // [separator]) precedes it; `last` is safe because length >= 2 here.
     return '${sublist(0, length - 1).join(separator)} '
         '$finalSeparator $last';

@@ -124,9 +124,8 @@ abstract final class ColorUtils {
   ///
   /// A typed replacement for the stringly/int-indexed `color[500]!`: the
   /// exhaustive [MaterialShade] switch guarantees every level is handled at
-  /// compile time. The `!` is safe for the standard Material swatches in
-  /// [materialColors], which define all ten levels; a custom `MaterialColor`
-  /// missing a level would throw, so do not pass partial swatches here.
+  /// compile time, and each arm reads the non-nullable `shadeNNN` getter, so
+  /// there is no null-assertion that could crash on a malformed swatch.
   ///
   /// Example:
   /// ```dart
@@ -136,15 +135,15 @@ abstract final class ColorUtils {
   // error, not a silent fall-through to a wrong tone.
   static Color getColor(MaterialShade shade, final MaterialColor color) =>
       switch (shade) {
-        MaterialShade.shade50 => color[50]!,
-        MaterialShade.shade100 => color[100]!,
-        MaterialShade.shade200 => color[200]!,
-        MaterialShade.shade300 => color[300]!,
-        MaterialShade.shade400 => color[400]!,
-        MaterialShade.shade500 => color[500]!,
-        MaterialShade.shade600 => color[600]!,
-        MaterialShade.shade700 => color[700]!,
-        MaterialShade.shade800 => color[800]!,
-        MaterialShade.shade900 => color[900]!,
+        MaterialShade.shade50 => color.shade50,
+        MaterialShade.shade100 => color.shade100,
+        MaterialShade.shade200 => color.shade200,
+        MaterialShade.shade300 => color.shade300,
+        MaterialShade.shade400 => color.shade400,
+        MaterialShade.shade500 => color.shade500,
+        MaterialShade.shade600 => color.shade600,
+        MaterialShade.shade700 => color.shade700,
+        MaterialShade.shade800 => color.shade800,
+        MaterialShade.shade900 => color.shade900,
       };
 }

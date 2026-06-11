@@ -385,19 +385,14 @@ abstract final class HebrewDateConverter {
         return names[month - 1];
       } else if (month == 6) {
         return useHebrew ? 'אֲדָר א׳' : 'Adar I';
-      } else if (month == 7) {
-        return names[6]; // Adar II
       } else {
-        return names[month - 1]; // Nisan onwards
+        // Month 7 is Adar II (index 6); 8+ is Nisan onwards (index month - 1).
+        return month == 7 ? names[6] : names[month - 1];
       }
     } else {
       // Regular year: months 1-6 are direct; from 7 on, index by [month] (not
       // month-1) to skip the Adar II slot at index 6 and land on Nisan etc.
-      if (month <= 6) {
-        return names[month - 1];
-      } else {
-        return names[month];
-      }
+      return month <= 6 ? names[month - 1] : names[month];
     }
   }
 
@@ -475,14 +470,14 @@ abstract final class HebrewDateConverter {
       return result.toString();
     }
 
-    // Tens.
+    // Append the tens-place letter.
     const List<String> tens = <String>['', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ'];
     if (remaining >= 10) {
       result.write(tens[remaining ~/ 10]);
       remaining %= 10;
     }
 
-    // Units.
+    // Append the units-place letter.
     const List<String> units = <String>['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
     if (remaining > 0) {
       result.write(units[remaining]);
@@ -538,10 +533,8 @@ abstract final class HebrewDateConverter {
     final ({int year, int month, int day}) hebrew = fromGregorian(date);
     final String monthName = getMonthName(hebrew.month, hebrew.year, useHebrew: useHebrew);
 
-    if (useHebrew) {
-      return '${formatDayHebrew(hebrew.day)} $monthName';
-    } else {
-      return '${hebrew.day} $monthName';
-    }
+    return useHebrew
+        ? '${formatDayHebrew(hebrew.day)} $monthName'
+        : '${hebrew.day} $monthName';
   }
 }

@@ -122,7 +122,7 @@ extension DurationClockFormatExtensions on Duration {
   /// [int.remainder] (sign-preserving) rather than `%` so the joined output
   /// matches the source app's behavior for negative inputs.
   List<String> _unitParts({required bool showLeadingZeros, required bool shortForm}) {
-    // Pad to two digits only when the value is single-digit AND padding asked.
+    /// Pad to two digits only when the value is single-digit AND padding asked.
     String twoDigits(int n) => n >= 10 || !showLeadingZeros ? '$n' : '0$n';
 
     final int minRemainder = inMinutes.remainder(60);

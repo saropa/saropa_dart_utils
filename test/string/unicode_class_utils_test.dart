@@ -359,8 +359,8 @@ void main() {
         // accidental duplicate range row.
         for (final UnicodeClassType type in UnicodeClassType.values) {
           expect(
-            typesInTable.where((UnicodeClassType t) => t == type).length,
-            1,
+            typesInTable.where((UnicodeClassType t) => t == type),
+            hasLength(1),
             reason: '$type must appear exactly once in unicodeClassRanges',
           );
         }

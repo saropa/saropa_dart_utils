@@ -61,8 +61,8 @@ abstract final class TextDirectionParseUtils {
   /// TextDirectionParseUtils.tryParse(null);      // null
   /// ```
   static TextWritingDirection? tryParse(String? value) =>
-      // Null-safe chain: `?.` short-circuits a null input to the `_ => null`
-      // arm, and switch's exhaustive default makes every unmatched token null,
+      // Total by construction: a null input maps straight to null, and the
+      // switch's exhaustive default turns every unmatched token into null,
       // so no path can throw regardless of the string's content.
       switch (value == null ? null : _trim(value).toLowerCase()) {
         'rtl' => TextWritingDirection.rtl,

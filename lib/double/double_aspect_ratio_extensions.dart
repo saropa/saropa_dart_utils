@@ -55,9 +55,9 @@ extension DoubleAspectRatioExtensions on double {
   /// ```
   @useResult
   (int, int)? toAspectRatio() {
-    // Guard non-finite input first: the whole-number branch below truncates via
-    // toInt(), which throws UnsupportedError on NaN/Infinity. Returning null
-    // keeps this a total function instead of leaking that throw to callers.
+    // Guard non-finite input first: the whole-number branch below truncates
+    // with an int conversion that throws UnsupportedError on NaN/Infinity.
+    // Returning null keeps this total instead of leaking that throw to callers.
     if (isNaN || isInfinite) {
       return null;
     }
