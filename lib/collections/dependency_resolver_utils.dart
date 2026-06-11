@@ -146,8 +146,9 @@ List<String> _installOrder(Map<String, String> chosen, Map<String, List<PackageM
   final List<List<int>> adjacency = List<List<int>>.generate(names.length, (_) => <int>[]);
   for (int nameIndex = 0; nameIndex < names.length; nameIndex++) {
     final String name = names[nameIndex];
-    final PackageManifest? manifest =
-        byName[name]?.firstWhereOrNull((PackageManifest m) => m.version == chosen[name]);
+    final PackageManifest? manifest = byName[name]?.firstWhereOrNull(
+      (PackageManifest m) => m.version == chosen[name],
+    );
     // Edge dependency → dependent, so Kahn emits the dependency first. Only
     // edges between resolved packages matter; a dep outside `chosen` is skipped.
     for (final String dep in manifest?.dependencies.keys ?? const <String>[]) {

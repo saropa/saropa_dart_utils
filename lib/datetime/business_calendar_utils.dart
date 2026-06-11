@@ -24,9 +24,11 @@ class BusinessCalendar {
   }) : weekendDays = Set<int>.unmodifiable(
          weekendDays ?? const <int>{DateTime.saturday, DateTime.sunday},
        ),
-       _holidays = Set<DateTime>.unmodifiable(<DateTime>{
-         for (final DateTime h in holidays) _dateOnly(h),
-       });
+       _holidays = Set<DateTime>.unmodifiable(
+         <DateTime>{
+           for (final DateTime h in holidays) _dateOnly(h),
+         },
+       );
 
   /// The `DateTime.weekday` values treated as non-working (default Sat + Sun).
   final Set<int> weekendDays;

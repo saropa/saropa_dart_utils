@@ -131,7 +131,8 @@ _IsoDuration _parseIsoDuration(String value) {
   final double seconds = double.tryParse(m.group(7) ?? '0') ?? 0;
   // Sub-day fields become one fixed Duration; weeks fold into days. Years and
   // months stay as calendar units for applyTo to add via the DateTime ctor.
-  final int micros = ((hours * 3600 + minutes * 60 + seconds) * Duration.microsecondsPerSecond).round();
+  final int micros = ((hours * 3600 + minutes * 60 + seconds) * Duration.microsecondsPerSecond)
+      .round();
   return _IsoDuration(
     int.tryParse(m.group(1) ?? '0') ?? 0,
     int.tryParse(m.group(2) ?? '0') ?? 0,

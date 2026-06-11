@@ -21,6 +21,7 @@ class MultiIndexCollection<T> {
   /// Creates a collection whose [indexers] map an index name to a key extractor
   /// (e.g. `{'email': (u) => u.email, 'city': (u) => u.city}`). At least one
   /// index is required.
+  // ignore: saropa_lints/prefer_correct_callback_field_name -- indexers is a map of key extractors, not an event callback
   MultiIndexCollection(Map<String, Object Function(T)> indexers)
     : assert(indexers.isNotEmpty, 'at least one index is required'),
       _indexers = Map<String, Object Function(T)>.unmodifiable(indexers),

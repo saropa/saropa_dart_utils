@@ -26,14 +26,35 @@ const String barrel = 'saropa_dart_utils.dart';
 
 // Human label per top-level dir under lib/.
 const Map<String, String> categoryLabels = <String, String>{
-  'string': 'String', 'datetime': 'DateTime', 'iterable': 'Iterable',
-  'list': 'List', 'collections': 'Collections', 'graph': 'Graph',
-  'stats': 'Stats', 'validation': 'Validation', 'async': 'Async',
-  'num': 'Number', 'int': 'Integer', 'double': 'Double', 'bool': 'Bool',
-  'map': 'Map', 'parsing': 'Parsing', 'caching': 'Caching', 'url': 'URL & Path',
-  'niche': 'Niche', 'object': 'Object & Null', 'enum': 'Enum', 'json': 'JSON',
-  'base64': 'Base64', 'hex': 'Hex', 'html': 'HTML', 'uuid': 'UUID',
-  'random': 'Random', 'regex': 'Regex', 'gesture': 'Gesture', 'testing': 'Testing',
+  'string': 'String',
+  'datetime': 'DateTime',
+  'iterable': 'Iterable',
+  'list': 'List',
+  'collections': 'Collections',
+  'graph': 'Graph',
+  'stats': 'Stats',
+  'validation': 'Validation',
+  'async': 'Async',
+  'num': 'Number',
+  'int': 'Integer',
+  'double': 'Double',
+  'bool': 'Bool',
+  'map': 'Map',
+  'parsing': 'Parsing',
+  'caching': 'Caching',
+  'url': 'URL & Path',
+  'niche': 'Niche',
+  'object': 'Object & Null',
+  'enum': 'Enum',
+  'json': 'JSON',
+  'base64': 'Base64',
+  'hex': 'Hex',
+  'html': 'HTML',
+  'uuid': 'UUID',
+  'random': 'Random',
+  'regex': 'Regex',
+  'gesture': 'Gesture',
+  'testing': 'Testing',
 };
 
 /// One catalog row: a public declaration with its kind and one-line summary.
@@ -66,8 +87,20 @@ class FileSyms {
 // Abbreviations whose trailing period must NOT be read as a sentence boundary,
 // so an inline example like "(e.g. 0.01 for 1%)" survives intact (BUG-002).
 const Set<String> abbreviations = <String>{
-  'e.g', 'i.e', 'etc', 'vs', 'cf', 'al', 'approx', 'fig',
-  'no', 'dr', 'mr', 'ms', 'mrs', 'st',
+  'e.g',
+  'i.e',
+  'etc',
+  'vs',
+  'cf',
+  'al',
+  'approx',
+  'fig',
+  'no',
+  'dr',
+  'mr',
+  'ms',
+  'mrs',
+  'st',
 };
 
 bool _isAlpha(String ch) =>
@@ -130,8 +163,7 @@ int? sentenceEnd(String text) {
 /// that is not API documentation and must not reach the customer-facing catalog
 /// (BUG-003). Handles the dash-prefixed form and a bare "roadmap #NNN".
 String stripInternalRefs(String text) {
-  var t = text.replaceAll(
-      RegExp(r'\s*[—–-]\s*roadmap\s*#\d+', caseSensitive: false), '');
+  var t = text.replaceAll(RegExp(r'\s*[—–-]\s*roadmap\s*#\d+', caseSensitive: false), '');
   t = t.replaceAll(RegExp(r'\s*\broadmap\s*#\d+', caseSensitive: false), '');
   return t.trim();
 }
@@ -226,10 +258,10 @@ void addMember(List<Sym> out, ClassMember m, String enclosing) {
     final String kind = m.isGetter
         ? 'getter'
         : m.isSetter
-            ? 'setter'
-            : m.isOperator
-                ? 'operator'
-                : 'method';
+        ? 'setter'
+        : m.isOperator
+        ? 'operator'
+        : 'method';
     final String label = m.isOperator ? 'operator $name' : name;
     out.add(Sym(kind, label, null, firstSentence(docText(m))));
   } else if (m is FieldDeclaration) {
@@ -290,7 +322,11 @@ List<Sym> parseUnit(CompilationUnit unit) {
     } else if (d is FunctionDeclaration) {
       final String name = d.name.lexeme;
       if (name.startsWith('_')) continue;
-      final String kind = d.isGetter ? 'getter' : d.isSetter ? 'setter' : 'function';
+      final String kind = d.isGetter
+          ? 'getter'
+          : d.isSetter
+          ? 'setter'
+          : 'function';
       out.add(Sym(kind, name, null, firstSentence(docText(d))));
     } else if (d is TopLevelVariableDeclaration) {
       for (final v in d.variables.variables) {
@@ -309,8 +345,7 @@ List<Sym> parseUnit(CompilationUnit unit) {
 
 String importPath(String rel) => "package:saropa_dart_utils/${rel.replaceAll('\\', '/')}";
 
-String anchorFor(String cat) =>
-    cat.toLowerCase().replaceAll(' & ', '--').replaceAll(' ', '-');
+String anchorFor(String cat) => cat.toLowerCase().replaceAll(' & ', '--').replaceAll(' ', '-');
 
 String escapeCell(String s) => s.replaceAll('|', r'\|');
 
@@ -338,28 +373,23 @@ void main() {
   var totalFiles = 0;
   var totalSyms = 0;
 
-  final List<File> dartFiles = lib
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((f) => f.path.endsWith('.dart') && !f.path.endsWith(barrel))
-      .toList()
-    ..sort((a, b) => a.path.compareTo(b.path));
+  final List<File> dartFiles =
+      lib
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart') && !f.path.endsWith(barrel))
+          .toList()
+        ..sort((a, b) => a.path.compareTo(b.path));
 
   for (final file in dartFiles) {
-    final String rel = file.path
-        .substring(lib.path.length + 1)
-        .replaceAll('\\', '/');
-    final parsed =
-        parseString(content: file.readAsStringSync(), throwIfDiagnostics: false);
+    final String rel = file.path.substring(lib.path.length + 1).replaceAll('\\', '/');
+    final parsed = parseString(content: file.readAsStringSync(), throwIfDiagnostics: false);
     final List<Sym> syms = parseUnit(parsed.unit);
     if (syms.isEmpty) continue;
 
     final String topDir = rel.split('/').first;
-    final String cat = categoryLabels[topDir] ??
-        '${topDir[0].toUpperCase()}${topDir.substring(1)}';
-    cats
-        .putIfAbsent(cat, () => <FileSyms>[])
-        .add(FileSyms(rel, filePurpose(parsed.unit), syms));
+    final String cat = categoryLabels[topDir] ?? '${topDir[0].toUpperCase()}${topDir.substring(1)}';
+    cats.putIfAbsent(cat, () => <FileSyms>[]).add(FileSyms(rel, filePurpose(parsed.unit), syms));
     totalFiles++;
     totalSyms += syms.length;
   }
@@ -368,8 +398,7 @@ void main() {
   final DateTime now = DateTime.now();
   final String today =
       '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-  final String releaseLabel =
-      version != null ? 'Release $version' : 'Release (version unknown)';
+  final String releaseLabel = version != null ? 'Release $version' : 'Release (version unknown)';
 
   final List<String> out = <String>['# Capabilities Index', ''];
   out
@@ -400,8 +429,7 @@ void main() {
 
   final List<String> sortedCats = cats.keys.toList()..sort();
   for (final cat in sortedCats) {
-    final int count =
-        cats[cat]!.fold(0, (sum, fs) => sum + fs.symbols.length);
+    final int count = cats[cat]!.fold(0, (sum, fs) => sum + fs.symbols.length);
     out.add('- [$cat](#${anchorFor(cat)}) — $count symbols');
   }
   out
@@ -413,8 +441,7 @@ void main() {
     out
       ..add('## $cat')
       ..add('');
-    final List<FileSyms> files = cats[cat]!
-      ..sort((a, b) => a.rel.compareTo(b.rel));
+    final List<FileSyms> files = cats[cat]!..sort((a, b) => a.rel.compareTo(b.rel));
     for (final fs in files) {
       out.add('### `${fs.rel}`');
       if (fs.purpose.isNotEmpty) {

@@ -80,7 +80,10 @@ void main() {
       ]);
 
       expect(lunchAndNight.isQuiet(DateTime(2026, 6, 1, 12, 30)), isTrue);
-      expect(lunchAndNight.quietUntil(DateTime(2026, 6, 1, 12, 30)), equals(DateTime(2026, 6, 1, 13)));
+      expect(
+        lunchAndNight.quietUntil(DateTime(2026, 6, 1, 12, 30)),
+        equals(DateTime(2026, 6, 1, 13)),
+      );
       expect(lunchAndNight.isQuiet(DateTime(2026, 6, 1, 15)), isFalse);
     });
 

@@ -19,8 +19,7 @@ typedef ScheduledTask<T> = Future<T> Function();
 class TaskScheduler {
   /// Creates a scheduler that runs at most [concurrency] tasks concurrently.
   /// [concurrency] must be at least 1.
-  TaskScheduler({required this.concurrency})
-    : assert(concurrency >= 1, 'concurrency must be >= 1');
+  TaskScheduler({required this.concurrency}) : assert(concurrency >= 1, 'concurrency must be >= 1');
 
   /// Maximum number of tasks allowed to run at the same time.
   final int concurrency;
@@ -92,7 +91,8 @@ class TaskScheduler {
   }
 
   @override
-  String toString() => 'TaskScheduler(concurrency: $concurrency, running: $_running, pending: $pending)';
+  String toString() =>
+      'TaskScheduler(concurrency: $concurrency, running: $_running, pending: $pending)';
 }
 
 /// One queued task: its [priority], submission [sequence], and the [start]
@@ -102,6 +102,7 @@ class _PendingTask {
 
   final int priority;
   final int sequence;
+  // ignore: saropa_lints/prefer_correct_callback_field_name -- start is an execution thunk, not an event callback; an "on" prefix would invert its meaning
   final void Function() start;
 
   /// Whether this task should stay ahead of [other] in the queue: strictly

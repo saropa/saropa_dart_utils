@@ -68,7 +68,11 @@ void main() {
         () => resolveDependencies(
           root: <String, String>{'a': '^1.0.0', 'b': '^1.0.0'},
           universe: <PackageManifest>[
-            const PackageManifest('a', '1.0.0', dependencies: <String, String>{'shared': '>=2.0.0'}),
+            const PackageManifest(
+              'a',
+              '1.0.0',
+              dependencies: <String, String>{'shared': '>=2.0.0'},
+            ),
             const PackageManifest('b', '1.0.0', dependencies: <String, String>{'shared': '<1.0.0'}),
             const PackageManifest('shared', '1.5.0'),
           ],

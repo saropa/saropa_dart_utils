@@ -18,8 +18,7 @@ library;
 import 'dart:convert' show utf8;
 
 /// Characters never percent-encoded (RFC 3986 unreserved).
-const String _unreserved =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+const String _unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
 
 /// Reserved set kept unencoded by the `+` and `#` operators (allow = U+R).
 const String _reserved = ":/?#[]@!\$&'()*+,;=";
@@ -48,6 +47,7 @@ class _Op {
   final String separator;
 
   /// Whether each value is rendered as `name=value` (`; ? &`).
+  // ignore: saropa_lints/prefer_boolean_prefixes -- "named" is RFC 6570 operator terminology (named expansion); a prefix would obscure the spec mapping
   final bool named;
 
   /// What follows the name when a named value is empty (`` for `;`, `=` for `?`/`&`).
@@ -85,11 +85,19 @@ String expandUriTemplate(String template, Map<String, Object?> variables) =>
 
 /// Expands one expression body (the text between the braces).
 String _expandExpression(String expression, Map<String, Object?> variables) {
+  // The first character may be an RFC 6570 operator (`+`, `#`, `.`, `/`, ...)
+  // that changes the prefix/separator/encoding; if it isn't one of those, fall
+  // back to the default (simple) operator and treat the whole text as varspecs.
   final _Op op = expression.isEmpty ? _defaultOp : (_operators[expression[0]] ?? _defaultOp);
+  // Strip the operator char only when one was actually matched (its symbol is
+  // non-empty); the default operator has no leading char to drop.
   // ignore: avoid_string_substring -- symbol is non-empty only when expression starts with the operator char
   final String body = op.symbol.isEmpty ? expression : expression.substring(1);
   final List<String> parts = <String>[];
+  // Expand each comma-separated varspec independently; undefined variables
+  // yield null and are omitted entirely (not rendered as empty).
   for (final String spec in body.split(',')) {
+    // An empty spec (e.g. a trailing comma) has no variable to expand.
     if (spec.isEmpty) {
       continue;
     }
@@ -98,6 +106,8 @@ String _expandExpression(String expression, Map<String, Object?> variables) {
       parts.add(piece);
     }
   }
+  // When every variable was undefined the expansion is empty (no prefix); else
+  // join with the operator's separator behind its leading char (e.g. `?a=1&b=2`).
   return parts.isEmpty ? '' : op.first + parts.join(op.separator);
 }
 
@@ -138,11 +148,13 @@ String? _expandList(String name, List<Object?> values, _Op op, {required bool ex
   if (values.isEmpty) {
     return null;
   }
-  final Iterable<String> encoded =
-      values.map((Object? v) => _pctEncode(v.toString(), allowReserved: op.allowReserved));
+  final Iterable<String> encoded = values.map(
+    (Object? v) => _pctEncode(v.toString(), allowReserved: op.allowReserved),
+  );
   if (explode) {
-    final Iterable<String> items =
-        op.named ? encoded.map((String e) => _named(name, e, op)) : encoded;
+    final Iterable<String> items = op.named
+        ? encoded.map((String e) => _named(name, e, op))
+        : encoded;
     return items.join(op.separator);
   }
   final String joined = encoded.join(',');

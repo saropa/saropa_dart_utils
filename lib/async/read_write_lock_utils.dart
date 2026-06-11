@@ -22,6 +22,7 @@ class ReadWriteLock {
   ReadWriteLock({this.writerPreferred = true});
 
   /// Whether a waiting writer blocks newly-arriving readers (anti-starvation).
+  // ignore: saropa_lints/prefer_boolean_prefixes -- public API name kept deliberately; "isWriterPreferred" obscures the writer-preference policy (see read-write-lock-653 plan)
   final bool writerPreferred;
 
   int _activeReaders = 0;
@@ -116,6 +117,7 @@ class ReadWriteLock {
       _grantAllReaders();
       return;
     }
+    // ignore: saropa_lints/avoid_ignoring_return_values -- the grant-succeeded bool is irrelevant in this fallback; we simply hand off to a waiting writer if one exists
     _grantWriter();
   }
 

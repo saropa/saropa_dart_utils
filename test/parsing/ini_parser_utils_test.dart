@@ -48,7 +48,9 @@ void main() {
     });
 
     test('should strip matching surrounding quotes', () {
-      final Map<String, Map<String, String>> result = parseIni('[s]\na = "  spaced  "\nb = \'lit\'');
+      final Map<String, Map<String, String>> result = parseIni(
+        '[s]\na = "  spaced  "\nb = \'lit\'',
+      );
 
       expect(result['s']!['a'], equals('  spaced  '));
       expect(result['s']!['b'], equals('lit'));

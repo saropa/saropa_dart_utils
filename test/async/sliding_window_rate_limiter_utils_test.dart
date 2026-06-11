@@ -12,10 +12,14 @@ void main() {
         SlidingWindowRateLimiter(limit: limit, window: window, now: clock);
 
     test('should assert on a non-positive limit or window', () {
-      expect(() => SlidingWindowRateLimiter(limit: 0, window: const Duration(seconds: 1)),
-          throwsA(isA<AssertionError>()));
-      expect(() => SlidingWindowRateLimiter(limit: 1, window: Duration.zero),
-          throwsA(isA<AssertionError>()));
+      expect(
+        () => SlidingWindowRateLimiter(limit: 0, window: const Duration(seconds: 1)),
+        throwsA(isA<AssertionError>()),
+      );
+      expect(
+        () => SlidingWindowRateLimiter(limit: 1, window: Duration.zero),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
     test('should allow up to the limit then deny', () {
@@ -61,7 +65,10 @@ void main() {
       });
 
       test('should report the wait until the oldest event expires', () {
-        final SlidingWindowRateLimiter limiter = make(limit: 1, window: const Duration(seconds: 10));
+        final SlidingWindowRateLimiter limiter = make(
+          limit: 1,
+          window: const Duration(seconds: 10),
+        );
 
         now = DateTime(2026, 1, 1, 0, 0, 0);
         limiter.tryAcquire();

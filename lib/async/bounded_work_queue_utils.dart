@@ -46,6 +46,7 @@ class BoundedWorkQueue<T> {
   int get pendingConsumers => _pullWaiters.length;
 
   /// Whether [close] has been called.
+  // ignore: saropa_lints/prefer_correct_handler_name -- isClosed is a boolean state getter, not an event handler; the rule only matches the "Closed" suffix
   bool get isClosed => _isClosed;
 
   /// Enqueues [item], returning a future that completes once it is buffered (or

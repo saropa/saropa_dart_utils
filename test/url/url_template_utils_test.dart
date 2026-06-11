@@ -102,21 +102,27 @@ void main() {
 
       test('should comma-join a list without explode', () {
         expect(
-          expandUriTemplate('{list}', <String, Object?>{'list': <String>['a', 'b', 'c']}),
+          expandUriTemplate('{list}', <String, Object?>{
+            'list': <String>['a', 'b', 'c'],
+          }),
           equals('a,b,c'),
         );
       });
 
       test('should explode a list with * under a query operator', () {
         expect(
-          expandUriTemplate('{?tags*}', <String, Object?>{'tags': <String>['x', 'y']}),
+          expandUriTemplate('{?tags*}', <String, Object?>{
+            'tags': <String>['x', 'y'],
+          }),
           equals('?tags=x&tags=y'),
         );
       });
 
       test('should explode a list with / segments', () {
         expect(
-          expandUriTemplate('{/parts*}', <String, Object?>{'parts': <String>['a', 'b']}),
+          expandUriTemplate('{/parts*}', <String, Object?>{
+            'parts': <String>['a', 'b'],
+          }),
           equals('/a/b'),
         );
       });

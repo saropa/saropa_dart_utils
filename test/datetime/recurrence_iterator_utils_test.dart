@@ -9,7 +9,10 @@ void main() {
 
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 1)).toList();
 
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 2), DateTime(2026, 1, 3)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 2), DateTime(2026, 1, 3)]),
+      );
     });
 
     test('should honor INTERVAL on a daily rule', () {
@@ -17,7 +20,10 @@ void main() {
 
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 1)).toList();
 
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 3), DateTime(2026, 1, 5)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 3), DateTime(2026, 1, 5)]),
+      );
     });
 
     test('should expand a weekly BYDAY rule in date order', () {
@@ -44,7 +50,10 @@ void main() {
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 7)).toList();
 
       expect(dates.first, equals(DateTime(2026, 1, 7)));
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 7), DateTime(2026, 1, 12), DateTime(2026, 1, 14)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 7), DateTime(2026, 1, 12), DateTime(2026, 1, 14)]),
+      );
     });
 
     test('should honor a weekly INTERVAL of 2', () {
@@ -52,7 +61,10 @@ void main() {
 
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 5)).toList();
 
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 5), DateTime(2026, 1, 19), DateTime(2026, 2, 2)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 5), DateTime(2026, 1, 19), DateTime(2026, 2, 2)]),
+      );
     });
 
     test('should expand monthly on a fixed BYMONTHDAY', () {
@@ -60,7 +72,10 @@ void main() {
 
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 1)).toList();
 
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 15), DateTime(2026, 2, 15), DateTime(2026, 3, 15)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 15), DateTime(2026, 2, 15), DateTime(2026, 3, 15)]),
+      );
     });
 
     test('should skip months without a day-31 when BYMONTHDAY=31', () {
@@ -86,7 +101,10 @@ void main() {
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 1)).toList();
 
       // Last day of Jan (31), Feb (28, 2026 non-leap), Mar (31).
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 31), DateTime(2026, 2, 28), DateTime(2026, 3, 31)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 31), DateTime(2026, 2, 28), DateTime(2026, 3, 31)]),
+      );
     });
 
     test('should default monthly to the start day-of-month', () {
@@ -118,7 +136,10 @@ void main() {
 
       final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 1)).toList();
 
-      expect(dates, equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 2), DateTime(2026, 1, 3)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 2), DateTime(2026, 1, 3)]),
+      );
     });
 
     test('should cap with the limit argument on an unbounded rule', () {
@@ -143,7 +164,10 @@ void main() {
 
       final List<DateTime> dates = expandRecurrence(rule, DateTime.utc(2026, 1, 1, 9, 30)).toList();
 
-      expect(dates, equals(<DateTime>[DateTime.utc(2026, 1, 1, 9, 30), DateTime.utc(2026, 1, 2, 9, 30)]));
+      expect(
+        dates,
+        equals(<DateTime>[DateTime.utc(2026, 1, 1, 9, 30), DateTime.utc(2026, 1, 2, 9, 30)]),
+      );
       expect(dates.first.isUtc, isTrue);
     });
   });

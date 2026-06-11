@@ -160,21 +160,29 @@ class _RuleParts {
   /// the holder (mutating `this`, not a parameter) so each parser stays small.
   /// An unknown name throws so an unsupported constraint can't be dropped.
   void apply(String name, String value) {
+    // One case per RFC 5545 RRULE part name. Each delegates to a typed parser
+    // that validates and throws on malformed input, so a bad value can't reach
+    // a field. The default throws to reject any part outside the supported set.
     switch (name) {
+      // FREQ is the only required part; _parseFreq maps the token to the enum.
       case 'FREQ':
         frequency = _parseFreq(value);
+      // INTERVAL/COUNT must be positive integers (0 or negative is meaningless).
       case 'INTERVAL':
         interval = _parsePositiveInt(value, 'INTERVAL');
       case 'COUNT':
         count = _parsePositiveInt(value, 'COUNT');
+      // UNTIL is an inclusive end date/time bound on the series.
       case 'UNTIL':
         until = _parseUntil(value);
+      // BY* parts are comma lists that narrow which occurrences are emitted.
       case 'BYDAY':
         byWeekDays = _parseWeekdays(value);
       case 'BYMONTHDAY':
         byMonthDays = _parseMonthDays(value);
       case 'BYMONTH':
         byMonths = _parseMonths(value);
+      // WKST sets which weekday starts the week (affects WEEKLY/INTERVAL math).
       case 'WKST':
         weekStart = _parseWeekday(value);
       default:

@@ -43,10 +43,7 @@ class IntervalEntry<T> {
 
   @override
   bool operator ==(Object other) =>
-      other is IntervalEntry<T> &&
-      other.low == low &&
-      other.high == high &&
-      other.value == value;
+      other is IntervalEntry<T> && other.low == low && other.high == high && other.value == value;
 
   @override
   int get hashCode => Object.hash(low, high, value);
@@ -58,12 +55,12 @@ class IntervalEntry<T> {
 /// A balanced binary search tree of [IntervalEntry] keyed by `low`, augmented
 /// with the maximum `high` in each subtree so overlap queries can prune whole
 /// branches.
-class _Node<T> {
-  _Node(this.entry) : maxHigh = entry.high;
+class _IntervalNode<T> {
+  _IntervalNode(this.entry) : maxHigh = entry.high;
 
   final IntervalEntry<T> entry;
-  _Node<T>? left;
-  _Node<T>? right;
+  _IntervalNode<T>? left;
+  _IntervalNode<T>? right;
 
   /// Largest `high` in this node's subtree; the augmentation that lets a query
   /// skip a branch once its reach falls short of the query's lower bound.
@@ -81,7 +78,7 @@ class IntervalTree<T> {
     _root = _build(sorted, 0, sorted.length - 1);
   }
 
-  _Node<T>? _root;
+  _IntervalNode<T>? _root;
   int _size = 0;
 
   /// Number of intervals in the tree.
@@ -112,13 +109,13 @@ class IntervalTree<T> {
 
   /// Builds a balanced subtree from `sorted[lo..hi]`, picking the median as the
   /// root so the tree height stays `O(log n)`, then setting each node's
-  /// [_Node.maxHigh] bottom-up.
-  _Node<T>? _build(List<IntervalEntry<T>> sorted, int lo, int hi) {
+  /// [_IntervalNode.maxHigh] bottom-up.
+  _IntervalNode<T>? _build(List<IntervalEntry<T>> sorted, int lo, int hi) {
     if (lo > hi) {
       return null;
     }
     final int mid = (lo + hi) >> 1;
-    final _Node<T> node = _Node<T>(sorted[mid])
+    final _IntervalNode<T> node = _IntervalNode<T>(sorted[mid])
       ..left = _build(sorted, lo, mid - 1)
       ..right = _build(sorted, mid + 1, hi);
     node.maxHigh = math.max(
@@ -130,11 +127,11 @@ class IntervalTree<T> {
 
   /// The subtree's `maxHigh`, or negative infinity for an absent child so it
   /// never wins the `max`.
-  num _subtreeMax(_Node<T>? node) => node?.maxHigh ?? double.negativeInfinity;
+  num _subtreeMax(_IntervalNode<T>? node) => node?.maxHigh ?? double.negativeInfinity;
 
-  /// In-order walk collecting every overlap, pruning branches via [_Node.maxHigh]
+  /// In-order walk collecting every overlap, pruning branches via [_IntervalNode.maxHigh]
   /// (left) and the node's own `low` (right).
-  void _collect(_Node<T>? node, num low, num high, List<IntervalEntry<T>> out) {
+  void _collect(_IntervalNode<T>? node, num low, num high, List<IntervalEntry<T>> out) {
     // No interval in this subtree reaches `low`, so none can overlap.
     if (node == null || node.maxHigh < low) {
       return;
@@ -151,16 +148,24 @@ class IntervalTree<T> {
   }
 
   /// Same pruning as [_collect] but returns on the first overlap found.
-  bool _anyOverlap(_Node<T>? node, num low, num high) {
+  bool _anyOverlap(_IntervalNode<T>? node, num low, num high) {
+    // Augmented-tree prune: node.maxHigh is the largest endpoint in this whole
+    // subtree, so if it ends before the query starts, nothing here can overlap.
+    // This is what keeps the search sublinear instead of visiting every node.
     if (node == null || node.maxHigh < low) {
       return false;
     }
+    // Search the left subtree first; short-circuit the moment any branch hits.
     if (_anyOverlap(node.left, low, high)) {
       return true;
     }
+    // Then test this node's own interval.
     if (node.entry.overlaps(low, high)) {
       return true;
     }
+    // Only descend right when this node starts at/before the query end: intervals
+    // are ordered by low, so a node starting past `high` (and all its right
+    // children) cannot overlap — skipping them is the second pruning rule.
     return node.entry.low <= high && _anyOverlap(node.right, low, high);
   }
 }

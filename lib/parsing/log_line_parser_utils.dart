@@ -74,7 +74,9 @@ final RegExp _placeholder = RegExp(r'\{(\w+)(?::([^}]+))?\}');
     buffer.write('(?<$name>$pattern)');
     last = m.end;
   }
-  // ignore: avoid_string_substring -- last <= template.length, a valid index
+  // Two consecutive buffer writes kept as statements; cascading them would push
+  // the substring call off the line its avoid_string_substring ignore guards.
+  // ignore: avoid_string_substring, saropa_lints/prefer_cascade_over_chained -- last <= template.length, a valid index; cascade conflicts with this line-scoped ignore
   buffer.write(RegExp.escape(template.substring(last)));
   buffer.write(r'$');
   return (RegExp(buffer.toString()), fields);

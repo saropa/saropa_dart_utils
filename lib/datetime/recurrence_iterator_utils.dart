@@ -66,6 +66,10 @@ bool _reachedLimit(RecurrenceRule rule, int? limit, int emitted) {
 
 /// The sorted candidate occurrences within the period represented by [anchor].
 List<DateTime> _candidatesFor(RecurrenceRule rule, DateTime start, DateTime anchor) {
+  // Dispatch to the frequency-specific generator. Each returns the occurrences
+  // that fall inside the single period [anchor] names (one day, one week, one
+  // month, one year) — the caller advances [anchor] and calls again to page
+  // through the series, so this only ever produces one period's worth.
   switch (rule.frequency) {
     case RecurFrequency.daily:
       return _dailyCandidates(rule, start, anchor);
@@ -95,23 +99,36 @@ DateTime _advanceAnchor(RecurrenceRule rule, DateTime anchor) {
 
 /// DAILY: the single anchor day, kept only if it passes every active BY filter.
 List<DateTime> _dailyCandidates(RecurrenceRule rule, DateTime start, DateTime anchor) {
+  // DAILY produces at most the anchor day itself. Each active BY* filter is an
+  // independent gate: if the day fails any one, the period yields nothing (empty
+  // list), and the iterator moves to the next interval. An absent filter (empty
+  // list) is treated as "matches everything", so it's skipped.
+
+  // BYMONTH: drop the day unless its month is in the allowed set.
   if (rule.byMonths.isNotEmpty && !rule.byMonths.contains(anchor.month)) {
     return const <DateTime>[];
   }
-  if (rule.byWeekDays.isNotEmpty && !rule.byWeekDays.any((RecurWeekday d) => d.isoWeekday == anchor.weekday)) {
+  // BYDAY: drop unless the day's weekday is listed (ISO weekday, Mon=1..Sun=7).
+  if (rule.byWeekDays.isNotEmpty &&
+      !rule.byWeekDays.any((RecurWeekday d) => d.isoWeekday == anchor.weekday)) {
     return const <DateTime>[];
   }
-  if (rule.byMonthDays.isNotEmpty && !_resolvedDays(rule, anchor.year, anchor.month).contains(anchor.day)) {
+  // BYMONTHDAY: drop unless the day-of-month is in the resolved set (which
+  // expands negatives like -1 to the actual last day for this month/year).
+  if (rule.byMonthDays.isNotEmpty &&
+      !_resolvedDays(rule, anchor.year, anchor.month).contains(anchor.day)) {
     return const <DateTime>[];
   }
+  // Passed every active filter: emit the day, carrying [start]'s time-of-day.
   return <DateTime>[_dateWith(start, anchor.year, anchor.month, anchor.day)];
 }
 
 /// WEEKLY: each BYDAY weekday within the anchor's week (BYDAY empty → the start's
 /// weekday), positioned relative to WKST, then BYMONTH-filtered and sorted.
 List<DateTime> _weeklyCandidates(RecurrenceRule rule, DateTime start, DateTime anchor) {
-  final List<RecurWeekday> days =
-      rule.byWeekDays.isEmpty ? <RecurWeekday>[RecurWeekday.values[start.weekday - 1]] : rule.byWeekDays;
+  final List<RecurWeekday> days = rule.byWeekDays.isEmpty
+      ? <RecurWeekday>[RecurWeekday.values[start.weekday - 1]]
+      : rule.byWeekDays;
   final DateTime weekStart = _weekStartDate(anchor, rule.weekStart);
   final List<DateTime> out = <DateTime>[];
   for (final RecurWeekday day in days) {

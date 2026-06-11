@@ -89,10 +89,16 @@ class QuietHours {
   DateTime? _latestEndCovering(DateTime at) {
     final int minute = _minuteOfDay(at);
     DateTime? latest;
+    // Windows can overlap, so [at] may sit inside several at once. The caller
+    // needs the furthest-out end (when quiet hours actually lift), hence we keep
+    // the maximum end instant rather than returning on the first match.
     for (final QuietWindow w in windows) {
+      // Skip windows that don't cover this minute-of-day.
       if (!w.containsMinute(minute)) {
         continue;
       }
+      // Resolve the covering window's end to an absolute instant (today or
+      // tomorrow for a midnight-wrapping window) and track the latest seen.
       final DateTime end = _endInstant(at, w, minute);
       if (latest == null || end.isAfter(latest)) {
         latest = end;

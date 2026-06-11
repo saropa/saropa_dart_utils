@@ -76,7 +76,10 @@ void main() {
       test('should list the working days in a span', () {
         final List<DateTime> days = calendar.businessDaysIn(DateTime(2026), DateTime(2026, 1, 8));
 
-        expect(days, equals(<DateTime>[DateTime(2026, 1, 5), DateTime(2026, 1, 6), DateTime(2026, 1, 7)]));
+        expect(
+          days,
+          equals(<DateTime>[DateTime(2026, 1, 5), DateTime(2026, 1, 6), DateTime(2026, 1, 7)]),
+        );
       });
     });
 

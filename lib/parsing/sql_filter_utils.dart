@@ -70,6 +70,7 @@ class _FilterParser {
   RowPredicate _or() {
     RowPredicate left = _and();
     while (_matchKeyword('OR')) {
+      // ignore: saropa_lints/prefer_reusing_assigned_local -- _and() consumes tokens; re-invocation is required, not a redundant recompute
       final RowPredicate right = _and();
       final RowPredicate previous = left;
       left = (Map<String, Object?> row) => previous(row) || right(row);
@@ -80,6 +81,7 @@ class _FilterParser {
   RowPredicate _and() {
     RowPredicate left = _not();
     while (_matchKeyword('AND')) {
+      // ignore: saropa_lints/prefer_reusing_assigned_local -- _not() consumes tokens; re-invocation is required, not a redundant recompute
       final RowPredicate right = _not();
       final RowPredicate previous = left;
       left = (Map<String, Object?> row) => previous(row) && right(row);
@@ -102,11 +104,15 @@ class _FilterParser {
 
   RowPredicate _comparison() {
     final String field = _expectField();
+    // `field IS NULL` / `IS NOT NULL`: the optional NOT flips the null test.
+    // XOR against `negated` gives `IS NULL` when false, `IS NOT NULL` when true.
     if (_matchKeyword('IS')) {
       final bool negated = _matchKeyword('NOT');
       _expectKeyword('NULL');
       return (Map<String, Object?> row) => (row[field] == null) != negated;
     }
+    // `field LIKE 'pattern'`: compile the SQL pattern to a RegExp once, then the
+    // returned predicate matches only String cell values (non-strings never match).
     if (_matchKeyword('LIKE')) {
       final RegExp regex = _likeToRegExp(_expectString());
       return (Map<String, Object?> row) {
@@ -114,10 +120,13 @@ class _FilterParser {
         return value is String && regex.hasMatch(value);
       };
     }
+    // `field IN (a, b, c)`: membership test against the parsed literal list.
     if (_matchKeyword('IN')) {
       final List<Object?> values = _valueList();
       return (Map<String, Object?> row) => values.contains(row[field]);
     }
+    // Fallthrough: a binary comparison operator (`=`, `!=`, `<`, `>=`, ...)
+    // followed by a single literal, applied per-row by _applyOperator.
     final String op = _expectOp();
     final Object? literal = _value();
     return (Map<String, Object?> row) => _applyOperator(op, row[field], literal);
@@ -135,15 +144,20 @@ class _FilterParser {
 
   Object? _value() {
     final Token? token = _peek();
+    // A literal is required here; end-of-input means a trailing operator or an
+    // empty `IN ()` — surface it rather than dereferencing a null token.
     if (token == null) {
       throw const FormatException('expected a value but reached end of input');
     }
     _pos++;
     switch (token.type) {
+      // Numeric literal: tryParse guards lexer-accepted but unparseable shapes.
       case 'num':
         return num.tryParse(token.value) ?? (throw FormatException('bad number "${token.value}"'));
+      // Quoted string literal: drop the surrounding quotes.
       case 'str':
         return _unquote(token.value);
+      // Bare word: only the TRUE/FALSE/NULL keyword literals are valid values.
       case 'id':
         return _keywordLiteral(token.value);
       default:
@@ -152,6 +166,9 @@ class _FilterParser {
   }
 
   Object? _keywordLiteral(String word) {
+    // Case-insensitive so `true`, `TRUE`, `True` all map to the same literal,
+    // matching SQL keyword conventions. Anything else is a parse error — a bare
+    // identifier is never a value here (fields are matched earlier, by position).
     switch (word.toUpperCase()) {
       case 'TRUE':
         return true;
@@ -243,6 +260,9 @@ bool _applyOperator(String op, Object? fieldValue, Object? literal) {
 }
 
 bool _applyOrder(String op, int order) {
+  // [order] is a Comparable result: <0 means left precedes right, 0 equal, >0
+  // after. Each operator reduces to a sign test on that one comparison, so the
+  // same _orderCompare result serves every relational operator.
   switch (op) {
     case '<':
       return order < 0;

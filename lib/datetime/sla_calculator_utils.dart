@@ -56,9 +56,11 @@ class BusinessHours {
     },
   }) {
     final OpenWindow window = OpenWindow(openMinute, closeMinute);
-    return BusinessHours(<int, List<OpenWindow>>{
-      for (final int day in days) day: <OpenWindow>[window],
-    });
+    return BusinessHours(
+      <int, List<OpenWindow>>{
+        for (final int day in days) day: <OpenWindow>[window],
+      },
+    );
   }
 
   final Map<int, List<OpenWindow>> _windows;

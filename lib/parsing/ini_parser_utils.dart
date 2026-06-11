@@ -145,17 +145,21 @@ String _unescapeDouble(String s) {
 
 /// Maps a single escape letter to its character; unknown letters pass through.
 String _escapeChar(String c) {
+  // Decodes the character that followed a backslash. Only the standard INI
+  // escapes are recognized; an unknown letter passes through verbatim (the
+  // default), so `\z` becomes `z` rather than throwing — matching lenient INI
+  // readers that treat a stray backslash as a literal prefix.
   switch (c) {
     case 'n':
-      return '\n';
+      return '\n'; // newline
     case 't':
-      return '\t';
+      return '\t'; // tab
     case 'r':
-      return '\r';
+      return '\r'; // carriage return
     case r'\':
-      return r'\';
+      return r'\'; // literal backslash
     case '"':
-      return '"';
+      return '"'; // literal quote (so it doesn't close a quoted value)
     default:
       return c;
   }

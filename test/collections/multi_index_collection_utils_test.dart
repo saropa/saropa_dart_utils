@@ -10,11 +10,12 @@ class _User {
 
 void main() {
   group('MultiIndexCollection', () {
-    MultiIndexCollection<_User> build() => MultiIndexCollection<_User>(<String, Object Function(_User)>{
-      'id': (_User u) => u.id,
-      'email': (_User u) => u.email,
-      'city': (_User u) => u.city,
-    });
+    MultiIndexCollection<_User> build() =>
+        MultiIndexCollection<_User>(<String, Object Function(_User)>{
+          'id': (_User u) => u.id,
+          'email': (_User u) => u.email,
+          'city': (_User u) => u.city,
+        });
 
     test('should require at least one index', () {
       expect(

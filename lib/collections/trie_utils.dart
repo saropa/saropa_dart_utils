@@ -4,14 +4,14 @@ library;
 /// Simple trie for string keys: insert, delete, prefix search.
 class TrieUtils {
   /// Creates an empty trie.
-  TrieUtils() : _root = _Node();
+  TrieUtils() : _root = _TrieNode();
 
-  final _Node _root;
+  final _TrieNode _root;
 
   /// Inserts [key] into the trie; empty key is ignored.
   void insert(String key) {
     if (key.isEmpty) return;
-    _Node node = _root;
+    _TrieNode node = _root;
     for (int i = 0; i < key.length; i++) {
       node = node.getOrCreateChild(key[i]);
     }
@@ -20,7 +20,7 @@ class TrieUtils {
 
   /// True if [key] was inserted as a complete word (not merely a prefix).
   bool search(String key) {
-    final _Node? node = _find(key);
+    final _TrieNode? node = _find(key);
     return node != null && node.isEnd;
   }
 
@@ -34,14 +34,14 @@ class TrieUtils {
     _delete(_root, key, 0);
   }
 
-  bool _delete(_Node node, String key, int depth) {
+  bool _delete(_TrieNode node, String key, int depth) {
     if (depth == key.length) {
       if (!node.isEnd) return false;
       node.isEnd = false; // ignore: saropa_lints/avoid_parameter_mutation
       return node.hasNoChildren;
     }
     final String c = key[depth];
-    final _Node? child = node.getChild(c);
+    final _TrieNode? child = node.getChild(c);
     if (child == null) return false;
     final bool shouldRemove = _delete(child, key, depth + 1);
     if (shouldRemove) {
@@ -51,8 +51,8 @@ class TrieUtils {
     return false;
   }
 
-  _Node? _find(String s) {
-    _Node? node = _root;
+  _TrieNode? _find(String s) {
+    _TrieNode? node = _root;
     for (int i = 0; i < s.length; i++) {
       if (node == null) return null;
       node = node.getChild(s[i]);
@@ -62,15 +62,15 @@ class TrieUtils {
 
   /// All keys with prefix [prefix].
   List<String> keysWithPrefix(String prefix) {
-    final _Node? start = _find(prefix);
+    final _TrieNode? start = _find(prefix);
     if (start == null) return <String>[];
     return _collect(start, prefix);
   }
 
-  List<String> _collect(_Node node, String path) {
+  List<String> _collect(_TrieNode node, String path) {
     final List<String> out = <String>[];
     if (node.isEnd) out.add(path);
-    for (final MapEntry<String, _Node> e in node.childEntries) {
+    for (final MapEntry<String, _TrieNode> e in node.childEntries) {
       // ignore: saropa_lints/prefer_spread_over_addall -- accumulates across loop iterations; spread would be O(n^2)
       out.addAll(_collect(e.value, path + e.key));
     }
@@ -83,8 +83,8 @@ class TrieUtils {
   String toString() => _kToStringPrefix;
 }
 
-class _Node {
-  final Map<String, _Node> _children = <String, _Node>{};
+class _TrieNode {
+  final Map<String, _TrieNode> _children = <String, _TrieNode>{};
   bool _isEnd = false;
 
   bool get isEnd => _isEnd;
@@ -92,16 +92,16 @@ class _Node {
   // ignore: saropa_lints/prefer_correct_setter_parameter_name -- positional setter param; 'value' not required
   set isEnd(bool isEndValue) => _isEnd = isEndValue;
 
-  _Node? getChild(String c) => _children[c];
+  _TrieNode? getChild(String c) => _children[c];
 
-  _Node getOrCreateChild(String c) => _children.putIfAbsent(c, () => _Node());
+  _TrieNode getOrCreateChild(String c) => _children.putIfAbsent(c, () => _TrieNode());
 
   void removeChild(String c) => _children.remove(c);
 
   bool get hasNoChildren => _children.isEmpty;
 
-  Iterable<MapEntry<String, _Node>> get childEntries => _children.entries;
+  Iterable<MapEntry<String, _TrieNode>> get childEntries => _children.entries;
 
   @override
-  String toString() => '_Node(isEnd: $_isEnd, children: ${_children.length})';
+  String toString() => '_TrieNode(isEnd: $_isEnd, children: ${_children.length})';
 }

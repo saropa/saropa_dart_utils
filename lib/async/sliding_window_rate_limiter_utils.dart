@@ -26,6 +26,7 @@ class SlidingWindowRateLimiter {
   SlidingWindowRateLimiter({
     required this.limit,
     required this.window,
+    // ignore: saropa_lints/prefer_correct_callback_field_name -- injected clock source, not an event callback
     DateTime Function()? now,
   }) : assert(limit >= 1, 'limit must be >= 1'),
        assert(window > Duration.zero, 'window must be positive'),
@@ -87,6 +88,7 @@ class SlidingWindowRateLimiter {
       if (oldest == null || oldest.isAfter(threshold)) {
         break;
       }
+      // ignore: saropa_lints/avoid_ignoring_return_values -- the removed element was already read via firstOrNull above; the discard is intentional
       _events.removeFirst();
     }
   }

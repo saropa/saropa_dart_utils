@@ -59,8 +59,10 @@ void main() {
 
   group('sentenceEnd', () {
     test('ignores a dot inside backticks', () {
-      expect(sentenceEnd('After `. ? !` boundaries it continues here.'),
-          'After `. ? !` boundaries it continues here.'.length);
+      expect(
+        sentenceEnd('After `. ? !` boundaries it continues here.'),
+        'After `. ? !` boundaries it continues here.'.length,
+      );
     });
 
     test('treats a dot after ")" as a real boundary', () {

@@ -89,7 +89,10 @@ void main() {
       final IntervalTree<String> big = IntervalTree<String>(entries);
 
       for (int q = -3; q < 110; q++) {
-        final Set<String> fromTree = big.queryPoint(q).map((IntervalEntry<String> e) => e.value).toSet();
+        final Set<String> fromTree = big
+            .queryPoint(q)
+            .map((IntervalEntry<String> e) => e.value)
+            .toSet();
         final Set<String> brute = entries
             .where((IntervalEntry<String> e) => e.contains(q))
             .map((IntervalEntry<String> e) => e.value)

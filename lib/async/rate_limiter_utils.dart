@@ -24,6 +24,7 @@ class TokenBucketRateLimiter {
   TokenBucketRateLimiter({
     required this.tokensPerSecond,
     required this.capacity,
+    // ignore: saropa_lints/prefer_correct_callback_field_name -- injected clock source, not an event callback; an "on" prefix would misname it
     DateTime Function()? now,
   }) : assert(tokensPerSecond > 0, 'tokensPerSecond must be > 0'),
        assert(capacity >= 1, 'capacity must be >= 1'),

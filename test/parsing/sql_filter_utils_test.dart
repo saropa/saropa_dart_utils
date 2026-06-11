@@ -21,7 +21,10 @@ void main() {
     });
 
     test('should combine predicates with OR', () {
-      expect(names(filterRows(users, "city = 'Boston' OR age < 18")), equals(<String>['Bob', 'Carol']));
+      expect(
+        names(filterRows(users, "city = 'Boston' OR age < 18")),
+        equals(<String>['Bob', 'Carol']),
+      );
     });
 
     test('should honor NOT and parentheses', () {

@@ -37,7 +37,10 @@ final List<TokenRule> _rules = <TokenRule>[
 /// evaluateExpression('age >= 18 && country == "US"',
 ///   variables: {'age': 21, 'country': 'US'}); // true
 /// ```
-Object? evaluateExpression(String expression, {Map<String, Object?> variables = const <String, Object?>{}}) {
+Object? evaluateExpression(
+  String expression, {
+  Map<String, Object?> variables = const <String, Object?>{},
+}) {
   final List<Token> tokens = tokenize(expression, _rules);
   return _Evaluator(tokens, variables).run();
 }
@@ -75,6 +78,7 @@ class _Evaluator {
     while (_matchOp('||')) {
       // Compute the right operand into a local FIRST so its tokens are always
       // consumed (a short-circuiting `||` would skip the parse otherwise).
+      // ignore: saropa_lints/prefer_reusing_assigned_local -- _and() consumes tokens (advances the parser cursor); each call returns a different value and must not be reused
       final bool right = _asBool(_and(), '||');
       left = _asBool(left, '||') || right;
     }
@@ -84,6 +88,7 @@ class _Evaluator {
   Object? _and() {
     Object? left = _equality();
     while (_matchOp('&&')) {
+      // ignore: saropa_lints/prefer_reusing_assigned_local -- _equality() consumes tokens; re-invocation is required, not a redundant recompute
       final bool right = _asBool(_equality(), '&&');
       left = _asBool(left, '&&') && right;
     }
@@ -92,12 +97,16 @@ class _Evaluator {
 
   Object? _equality() {
     Object? left = _comparison();
+    // Left-associative chain: fold each `== ` / `!=` into the running result so
+    // `a == b != c` parses as `(a == b) != c`. Equality accepts any operand
+    // types (num/bool/String) — no _asNum/_asBool coercion, unlike comparison.
     while (true) {
       if (_matchOp('==')) {
         left = left == _comparison();
       } else if (_matchOp('!=')) {
         left = left != _comparison();
       } else {
+        // No equality operator next: this subexpression is complete.
         return left;
       }
     }
@@ -105,6 +114,9 @@ class _Evaluator {
 
   Object? _comparison() {
     Object? left = _additive();
+    // Relational operators bind tighter than equality, looser than `+`/`-`, so
+    // both operands come from _additive(). Each branch coerces via _asNum so a
+    // non-numeric operand throws a FormatException rather than comparing wrong.
     while (true) {
       if (_matchOp('<')) {
         left = _asNum(left, '<') < _asNum(_additive(), '<');
@@ -115,6 +127,7 @@ class _Evaluator {
       } else if (_matchOp('>=')) {
         left = _asNum(left, '>=') >= _asNum(_additive(), '>=');
       } else {
+        // No relational operator next: hand the operand up to _equality.
         return left;
       }
     }
@@ -122,12 +135,17 @@ class _Evaluator {
 
   Object? _additive() {
     Object? left = _multiplicative();
+    // `+`/`-` are left-associative and bind looser than `*`/`/`/`%`, so each
+    // operand is a full _multiplicative() subexpression. `+` is numeric only
+    // (no string concatenation) — _asNum enforces that on both sides.
     while (true) {
       if (_matchOp('+')) {
+        // ignore: saropa_lints/avoid_string_concatenation_loop -- _asNum() returns num; this is numeric addition, not string concatenation
         left = _asNum(left, '+') + _asNum(_multiplicative(), '+');
       } else if (_matchOp('-')) {
         left = _asNum(left, '-') - _asNum(_multiplicative(), '-');
       } else {
+        // No additive operator next: this term is complete.
         return left;
       }
     }
@@ -135,6 +153,9 @@ class _Evaluator {
 
   Object? _multiplicative() {
     Object? left = _unary();
+    // Highest-precedence binary level: operands are unary terms so `-a * b`
+    // groups as `(-a) * b`. `/` follows Dart's `num` division (returns double,
+    // throws on integer-divide-by-zero only for `~/`, which is not supported).
     while (true) {
       if (_matchOp('*')) {
         left = _asNum(left, '*') * _asNum(_unary(), '*');
@@ -143,6 +164,7 @@ class _Evaluator {
       } else if (_matchOp('%')) {
         left = _asNum(left, '%') % _asNum(_unary(), '%');
       } else {
+        // No multiplicative operator next: hand the factor up to _additive.
         return left;
       }
     }
@@ -160,33 +182,49 @@ class _Evaluator {
 
   Object? _primary() {
     final Token? token = _peek();
+    // A primary is required here; running out of tokens means a dangling
+    // operator (e.g. `1 +`) — report it rather than returning null silently.
     if (token == null) {
       throw const FormatException('unexpected end of expression');
     }
+    // Consume the token up front: every branch below either uses it as a leaf
+    // value or (for `(`) has already moved past the opening paren.
     _pos++;
     switch (token.type) {
+      // Numeric leaf: tryParse can still fail on overflow-shaped input the lexer
+      // accepted, so fall back to a FormatException instead of a null.
       case 'num':
         return num.tryParse(token.value) ?? (throw FormatException('bad number "${token.value}"'));
+      // String leaf: strip the quotes the lexer kept around the literal.
       case 'str':
         return _unquote(token.value);
+      // Identifier: a variable lookup or the `true`/`false` keyword literals.
       case 'id':
         return _resolveIdentifier(token.value);
+      // Parenthesized group: re-enter the grammar at the top, then require the
+      // matching `)` so unbalanced parens throw rather than parse partially.
       case 'lparen':
         final Object? inner = _or();
         _expect('rparen');
         return inner;
+      // An operator or stray token where a value was expected.
       default:
         throw FormatException('unexpected token "${token.value}" at ${token.start}');
     }
   }
 
   Object? _resolveIdentifier(String name) {
+    // `true`/`false` are reserved literals, not variables — handle them before
+    // the map lookup so a caller can't shadow them with a `true` variable.
     if (name == 'true') {
       return true;
     }
     if (name == 'false') {
       return false;
     }
+    // containsKey (not `_variables[name] == null`) so an explicit null value is
+    // a valid binding, while a missing key is a hard error — catches typos in
+    // untrusted formula input instead of silently evaluating to null.
     if (!_variables.containsKey(name)) {
       throw FormatException('unknown variable "$name"');
     }
