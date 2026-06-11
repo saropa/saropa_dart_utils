@@ -71,6 +71,7 @@ Adds a null-year-tolerant, non-throwing day-count helper for partial or untruste
 ### Changed
 
 - Expanded the dartdoc on **`MapExtensions.countItems<K, V>`** ([map_extensions.dart](lib/map/map_extensions.dart)) to enterprise-grade: documents the post-deduplication `Set` count, lazy-iterable materialization, content-irrelevance (emoji/combining-mark/`null` each count as one element), order-independence, and non-mutation, plus a worked example. No behavior change.
+- Removed the duplicated per-member `/// Hex range:` doc comments from **`UnicodeClassType`** ([unicode_class_type.dart](lib/string/unicode_class_type.dart)), bringing the file under the 200-line limit (346 → 147). The inclusive code-point ranges already live once in `unicodeClassRanges` ([unicode_class_blocks.dart](lib/string/unicode_class_blocks.dart)) — the single source `findUnicodeClassType` actually reads — so the enum docs were a drift risk. The enum header now points auditors to that table. No enum members changed (105, same order); no behavior change.
 
 ### Tests
 
