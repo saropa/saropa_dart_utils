@@ -4,6 +4,10 @@ import 'package:meta/meta.dart';
 const String _kErrColumnWidthPositive = 'columnWidth must be positive';
 const String _kParamColumnWidth = 'columnWidth';
 const String _kSpace = ' ';
+// Non-breaking space (U+00A0) as a Dart escape ON PURPOSE: a raw U+00A0 in
+// source flattens to an ASCII space in transit and silently breaks the
+// preventOrphans contract. Keep the escape.
+const String _kNonBreakingSpace = '\u{00A0}';
 const String _kErrMaxGraphemesNonNegative = 'maxGraphemes must be non-negative';
 const String _kParamMaxGraphemes = 'maxGraphemes';
 
@@ -81,5 +85,50 @@ extension StringWrapExtensions on String {
     final Characters chars = characters;
     if (maxGraphemes >= chars.length) return this;
     return chars.take(maxGraphemes).string;
+  }
+
+  /// Replaces a breaking space with a non-breaking space (`\u{00A0}`) wherever a
+  /// line wrap at that space would strand a token shorter than [minWrapChars] on
+  /// its own line.
+  ///
+  /// Prevents an "orphan" — a lone `…`, `I`, `(5)`, or `the` — at the end or
+  /// middle of a wrapped heading. The rule is symmetric and position-agnostic:
+  /// a space is fused when EITHER adjacent token is shorter than [minWrapChars],
+  /// because an orphan is unwanted whether it is left behind or pulled forward.
+  /// This beats the common "last-space + short-tail" heuristic.
+  ///
+  /// Splitting is on a single ASCII space (`' '`) only — tabs, newlines, and
+  /// existing non-breaking spaces are NOT split. As a result, a run of two or
+  /// more spaces and any leading/trailing space yields an empty edge token
+  /// (length 0, always below the minimum) whose adjoining space therefore fuses.
+  /// [minWrapChars] `<= 0` fuses nothing (no token can be shorter than 0); a
+  /// value larger than the longest token fuses everything.
+  ///
+  /// Token length is measured in UTF-16 code units, not graphemes, so a short
+  /// run of wide emoji or combining marks may still count as "short". Idempotent:
+  /// once fused, a short token is absorbed into a longer non-breaking-joined
+  /// token, so re-applying changes nothing.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'Results (5)'.preventOrphans();     // 'Results\u{00A0}(5)'
+  /// 'Importing Demo'.preventOrphans();  // 'Importing Demo'  (both long)
+  /// ```
+  @useResult
+  String preventOrphans({int minWrapChars = 4}) {
+    if (length < 2) return this;
+    final List<String> parts = split(_kSpace);
+    if (parts.length < 2) return this;
+    final StringBuffer buf = StringBuffer(parts.first);
+    for (int i = 1; i < parts.length; i++) {
+      // Fuse when EITHER adjacent token fails the minimum (symmetric: an orphan
+      // is bad whether it is left behind or pulled forward).
+      final bool fuse =
+          parts[i - 1].length < minWrapChars || parts[i].length < minWrapChars;
+      buf
+        ..write(fuse ? _kNonBreakingSpace : _kSpace)
+        ..write(parts[i]);
+    }
+    return buf.toString();
   }
 }

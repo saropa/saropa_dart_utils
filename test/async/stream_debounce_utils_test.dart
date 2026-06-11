@@ -171,6 +171,46 @@ void main() {
 
         expect(results, <int>[1, 2]);
       });
+
+      // REGRESSION: the production bug that motivated the deferred-listen
+      // controller. A consumer that subscribes AFTER the upstream's first value
+      // is already in flight must still receive it. An eager-listen version
+      // dropped this first emission, leaving a Drift watch stream idle forever
+      // (perpetual spinner). The Future-backed upstream models the late arrival.
+      test('late consumer still receives the first event', () async {
+        final Stream<int> upstream = Stream<int>.fromFuture(
+          Future<int>.microtask(() => 42),
+        );
+        final Stream<int> wrapped = upstream.debounceAfterFirst(
+          const Duration(milliseconds: 50),
+        );
+
+        // Consumer arrives late, after the source future has already resolved.
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        final List<int> received = <int>[];
+        final StreamSubscription<int> sub = wrapped.listen(received.add);
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        expect(received, <int>[42]);
+
+        await sub.cancel();
+      });
+
+      test('cancels the upstream subscription when the consumer cancels', () async {
+        final StreamController<int> source = StreamController<int>();
+        final Stream<int> wrapped = source.stream.debounceAfterFirst(
+          const Duration(milliseconds: 50),
+        );
+        final StreamSubscription<int> sub = wrapped.listen((_) {});
+
+        source.add(1);
+        await Future<void>.delayed(Duration.zero);
+        await sub.cancel();
+        // The wrapper must release its upstream listen on cancel, otherwise the
+        // source keeps a dangling listener and never frees its resources.
+        expect(source.hasListener, isFalse);
+
+        await source.close();
+      });
     });
 
     group('debounceDistinct', () {

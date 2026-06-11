@@ -243,6 +243,7 @@ export 'num/num_safe_division_extensions.dart';
 export 'num/num_stats_utils.dart';
 export 'num/num_utils.dart';
 export 'num/num_more_extensions.dart';
+export 'num/unit_conversion_utils.dart';
 
 // Random utilities
 export 'random/common_random.dart';

@@ -1,6 +1,6 @@
 # SPEC: `String.preventOrphans({int minWrapChars})` — for inclusion
 
-**Status:** Proposed (harvested from Saropa Contacts)
+**Status:** Built (2026-06-11) — `String.preventOrphans` added to `lib/string/string_wrap_extensions.dart`; 19 tests in `test/string/string_wrap_extensions_test.dart`. All bulletproofing gaps below are covered.
 **Proposed location:** `lib/string/string_wrap_extensions.dart` (or a new `string_typography_extensions.dart`)
 **Portability:** Pure Dart, zero dependencies. No Flutter, no external packages.
 

@@ -32,6 +32,23 @@ void main() {
       );
     });
 
+    test('should Oxford-comma join four items (multiple middle commas)', () {
+      // Four items exercises more than one mid-list comma, which the 3-item
+      // case cannot — the only place the "comma between every non-final pair"
+      // path is verified beyond a single comma.
+      expect(
+        <String>['A', 'B', 'C', 'D'].joinDisplayList(),
+        'A, B, C, and D',
+      );
+    });
+
+    test('should Oxford-comma join five items', () {
+      expect(
+        <String>['A', 'B', 'C', 'D', 'E'].joinDisplayList(),
+        'A, B, C, D, and E',
+      );
+    });
+
     test('should de-duplicate by default (isUnique true)', () {
       expect(
         <String>['Alice', 'Bob', 'Alice'].joinDisplayList(),

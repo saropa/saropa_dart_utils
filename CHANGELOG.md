@@ -24,6 +24,16 @@
 cspell:disable
 -->
 
+## [Unreleased]
+
+Exact length (meters ↔ feet) and weight (kilograms ↔ pounds) unit conversions with full-precision factors, plus English string formatters that handle the 12-inch carry boundary, negative values, and non-finite input.
+[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
+### Added
+
+- `LengthConversionUtils` / `WeightConversionUtils` in `lib/num/unit_conversion_utils.dart`: dependency-free `convert*` primitives (NaN/infinity propagate) and `*ToString` formatters. `feetToString` carries rounded inches into feet so it never renders "12 inches", signs negative heights, and falls back safely on NaN/∞.
+- **`String.preventOrphans({int minWrapChars = 4})`** ([string_wrap_extensions.dart](lib/string/string_wrap_extensions.dart)) — typography helper that swaps a breaking space for a non-breaking space (U+00A0) wherever a wrap there would strand a token shorter than `minWrapChars` (a lone `…`, `I`, `(5)`, `the`). Symmetric rule (fuses when EITHER adjacent token is short, anywhere in the line), idempotent, pure-Dart with no dependencies. Splits on a single ASCII space only; code-unit length, not grapheme width.
+
 ## [1.5.0]
 
 Ten advanced algorithm utilities from the roadmap-to-700 batch — quote-aware text folding, language detection, TF-IDF keyphrases, line-based redline diffs, Gale–Shapley stable matching, hierarchical clustering, HyperLogLog distinct counts, Pareto frontiers, time-decayed counters, and an LRU/LFU hybrid cache — each its own tree-shakeable file so apps pull in only what they use.

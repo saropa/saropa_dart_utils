@@ -87,6 +87,27 @@ void main() {
       });
     });
 
+    group('weekOfYear', () {
+      // weekOfYear is the RAW value (can be 0 or 53 at year boundaries);
+      // weekNumber wraps it for ISO compliance. These pin the raw formula.
+      test('Jan 1 of a year starting on Monday is week 1', () {
+        // 2024-01-01 is a Monday, so the first week is already week 1.
+        expect(DateTime(2024).weekOfYear, 1);
+      });
+
+      test('Jan 7 stays in week 1', () {
+        // 2024-01-07 is the Sunday ending ISO week 1.
+        expect(DateTime(2024, 1, 7).weekOfYear, 1);
+      });
+
+      test('returns the documented 0 for an early-January day in the prior ISO week', () {
+        // 2023-01-01 is a Sunday that ISO-belongs to week 52 of 2022; the raw
+        // weekOfYear underflows to 0 here, which weekNumber() corrects to 52.
+        expect(DateTime(2023).weekOfYear, 0);
+        expect(DateTime(2023).weekNumber(), 52);
+      });
+    });
+
     group('numOfWeeks', () {
       test('returns 52 for a normal year', () {
         expect(DateTime(2023).numOfWeeks(2023), 52);

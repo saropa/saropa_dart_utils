@@ -168,6 +168,26 @@ void main() {
       // low-surrogate orphan, so the result is NOT a clean 'a'.
       expect('a😀'.removeLastChars(2), 'a');
     });
+
+    test('precomposed accent counts as a single code unit', () {
+      // Built with an explicit precomposed e-acute (U+00E9) so the assertion
+      // holds regardless of how this source file is normalized on disk: 'H' + é
+      // + 'llo' is 5 code units, so removing the last 2 yields 'H' + é + 'l' with
+      // the accent intact — the accented letter is one unit, not base + mark.
+      final String acute = String.fromCharCode(0x00E9);
+      expect('H${acute}llo'.removeLastChars(2), 'H${acute}l');
+    });
+
+    test('decomposed combining mark is stripped independently of its base', () {
+      // Built explicitly as base 'e' + combining acute (U+0301) so the value is
+      // genuinely decomposed regardless of source-file normalization: 'Cafe' +
+      // U+0301 is 5 code units with the accent as the LAST unit. Removing 1 code
+      // unit drops only the combining mark, leaving 'Cafe' unaccented — proof
+      // this is code-unit, not grapheme-cluster, trimming. Use the characters
+      // package for the latter.
+      final String combiningAcute = String.fromCharCode(0x0301);
+      expect('Cafe$combiningAcute'.removeLastChars(1), 'Cafe');
+    });
   });
 
   group('normalizeApostrophe', () {
