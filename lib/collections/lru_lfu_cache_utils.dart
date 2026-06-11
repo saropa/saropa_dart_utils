@@ -97,12 +97,18 @@ class LruLfuCacheUtils<K, V> {
   void _evict() {
     K? victimKey;
     _CacheEntry<V>? victim;
+    // Single linear scan picks the worst entry; cheaper than maintaining a
+    // sorted structure for the small caches this util targets.
     for (final MapEntry<K, _CacheEntry<V>> e in _entries.entries) {
+      // Take the first entry unconditionally, then replace only when a
+      // strictly-worse candidate appears, so ties keep the earlier-seen victim.
       if (victim == null || _lessThan(e.value, victim)) {
         victimKey = e.key;
         victim = e.value;
       }
     }
+    // Null only when the map was empty; the guard keeps an empty-map call safe
+    // even though put() reaches here only at capacity.
     if (victimKey != null) _entries.remove(victimKey);
   }
 

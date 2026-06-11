@@ -123,8 +123,7 @@ extension StringWrapExtensions on String {
     for (int i = 1; i < parts.length; i++) {
       // Fuse when EITHER adjacent token fails the minimum (symmetric: an orphan
       // is bad whether it is left behind or pulled forward).
-      final bool fuse =
-          parts[i - 1].length < minWrapChars || parts[i].length < minWrapChars;
+      final bool fuse = parts[i - 1].length < minWrapChars || parts[i].length < minWrapChars;
       buf
         ..write(fuse ? _kNonBreakingSpace : _kSpace)
         ..write(parts[i]);

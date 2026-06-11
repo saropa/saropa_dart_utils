@@ -1,8 +1,8 @@
 # Capabilities Index
 
-**Release 1.4.1** · Generated 2026-06-11
+**Release 1.5.1** · Generated 2026-06-11
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1955 public symbols** across **395 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **2067 public symbols** across **406 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -16,7 +16,7 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [Base64](#base64) — 7 symbols
 - [Bool](#bool) — 13 symbols
 - [Caching](#caching) — 31 symbols
-- [Collections](#collections) — 210 symbols
+- [Collections](#collections) — 269 symbols
 - [DateTime](#datetime) — 290 symbols
 - [Double](#double) — 14 symbols
 - [Enum](#enum) — 4 symbols
@@ -30,13 +30,13 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [List](#list) — 65 symbols
 - [Map](#map) — 91 symbols
 - [Niche](#niche) — 22 symbols
-- [Number](#number) — 74 symbols
+- [Number](#number) — 86 symbols
 - [Object & Null](#object--null) — 27 symbols
 - [Parsing](#parsing) — 134 symbols
 - [Random](#random) — 1 symbols
 - [Regex](#regex) — 6 symbols
 - [Stats](#stats) — 69 symbols
-- [String](#string) — 397 symbols
+- [String](#string) — 438 symbols
 - [Testing](#testing) — 8 symbols
 - [URL & Path](#url--path) — 58 symbols
 - [UUID](#uuid) — 5 symbols
@@ -772,6 +772,37 @@ Greedy set cover approximation.
 |--------|------|-------------|
 | `greedySetCover` | function | Returns subset of indices into [sets] that covers [universe]. |
 
+### `collections/hierarchical_cluster_utils.dart`
+
+Agglomerative hierarchical clustering (small N).
+
+`import 'package:saropa_dart_utils/collections/hierarchical_cluster_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `VectorDistance` | typedef | Distance between two numeric vectors. |
+| `euclideanDistance` | function | Euclidean (L2) distance; the default metric for [hierarchicalCluster]. |
+| `ClusterLinkage` | enum | How inter-cluster distance is derived from member pairwise distances. |
+| `single` | enum value |  |
+| `complete` | enum value |  |
+| `average` | enum value |  |
+| `MergeStep` | class | One dendrogram merge: cluster ids [a] and [b] joined at [distance]. |
+| `MergeStep` | constructor | Creates an immutable dendrogram merge record. |
+| `a` | field | First merged cluster id. |
+| `b` | field | Second merged cluster id. |
+| `distance` | field | Linkage distance at the merge (monotonic for single/complete linkage). |
+| `size` | field | Member count of the resulting cluster. |
+| `hierarchicalCluster` | function | Builds the agglomerative dendrogram for [points] under [linkage]. |
+| `cutClustersByCount` | function | Labels each of [n] points into [k] clusters by cutting [steps]. |
+| `cutClustersByDistance` | function | Labels each of [n] points by cutting [steps] below [threshold]. |
+| `_ClusterState.seed` | constructor |  |
+| `activeCount` | getter |  |
+| `mergeClosest` | method |  |
+| `_UnionFind` | constructor |  |
+| `components` | field | Distinct leaf components remaining. |
+| `unionMerge` | method | Joins child ids [a] and [b] and binds parent [mergeId] to that set. |
+| `denseLabels` | method | Per-leaf labels in 0..components-1, numbered in first-appearance order. |
+
 ### `collections/histogram_utils.dart`
 
 Histogram builder with fixed and quantile-based bins.
@@ -782,6 +813,23 @@ Histogram builder with fixed and quantile-based bins.
 |--------|------|-------------|
 | `histogramFixed` | function | Build histogram: [values] binned by [edges] (sorted). |
 | `histogramQuantile` | function | Bin boundaries at quantiles (e.g. 0, 0.25, 0.5, 0.75, 1). |
+
+### `collections/hyperloglog_utils.dart`
+
+HyperLogLog-lite approximate distinct count.
+
+`import 'package:saropa_dart_utils/collections/hyperloglog_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `HyperLogLogUtils` | class | HyperLogLog-lite cardinality sketch: [add] elements, read an approximate distinct count from [cardinality]. |
+| `HyperLogLogUtils` | constructor | Creates an empty sketch with `2^precision` registers. |
+| `precision` | field | Number of register-index bits; register count is `2^precision`. |
+| `registerCount` | getter | Number of registers (`2^precision`). |
+| `add` | method | Folds [element] into the sketch (idempotent for equal elements). |
+| `cardinality` | method | Approximate count of distinct elements added so far (0 for empty). |
+| `merge` | method | Merges [other] into a new sketch (both must share this [precision]). |
+| `toString` | method |  |
 
 ### `collections/interval_scheduling_utils.dart`
 
@@ -897,6 +945,27 @@ Longest increasing subsequence (LIS) with reconstruction ().
 | `lisLength` | function | Returns length of LIS of [list] using comparable order, and optionally the indices of one such subsequence (reconstruction). |
 | `lisIndices` | function | Returns one LIS as a list of indices into [list]. |
 
+### `collections/lru_lfu_cache_utils.dart`
+
+LRU/LFU hybrid eviction cache.
+
+`import 'package:saropa_dart_utils/collections/lru_lfu_cache_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_CacheEntry` | constructor |  |
+| `value` | field |  |
+| `frequency` | field |  |
+| `recency` | field |  |
+| `LruLfuCacheUtils` | class | Bounded cache that evicts the entry with the lowest access frequency, breaking ties by least-recently-used (LFU primary, LRU tiebreaker). |
+| `LruLfuCacheUtils` | constructor | Creates a cache holding at most [capacity] entries. |
+| `capacity` | field | Maximum number of entries retained; excess entries are evicted on [put]. |
+| `length` | getter | Number of entries currently held (0 to [capacity]). |
+| `get` | method | Returns the value for [key], updating its recency and frequency, or null when absent. |
+| `put` | method | Inserts or updates [key] with [value]. |
+| `remove` | method | Removes [key] and returns its value, or null when it was not present. |
+| `toString` | method |  |
+
 ### `collections/multi_criteria_sort_utils.dart`
 
 Multi-criteria sort with weighted comparators.
@@ -984,6 +1053,23 @@ Online mean/variance for numeric streams.
 | `standardDeviation` | getter | Square root of [variance]. |
 | `add` | method | Adds one sample [x]; updates mean and variance in O(1). |
 | `toString` | method |  |
+
+### `collections/pareto_frontier_utils.dart`
+
+Pareto frontier / dominance filtering in 2-3 dimensions.
+
+`import 'package:saropa_dart_utils/collections/pareto_frontier_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ParetoDirection` | enum | Optimization direction for a single Pareto objective. |
+| `minimize` | enum value | Smaller objective values dominate larger ones. |
+| `maximize` | enum value | Larger objective values dominate smaller ones. |
+| `ParetoOptions` | class | Extractors + directions describing how to score items on each objective. |
+| `ParetoOptions` | constructor | Creates options; throws [ArgumentError] when lengths mismatch or are empty. |
+| `criteria` | field | One value extractor per objective, in objective order. |
+| `directions` | field | One direction per objective, aligned with [criteria]. |
+| `paretoFrontier` | function | Returns the non-dominated (Pareto-optimal) subset of [items], order preserved. |
 
 ### `collections/pivot_unpivot_utils.dart`
 
@@ -1121,6 +1207,17 @@ Sliding window aggregations (min/max/sum/avg over moving window).
 | `avg` | enum value | Arithmetic mean of the values in each window. |
 | `slidingWindow` | function | Returns a list where each element is the [agg] of [values] over a window of length [size]. |
 
+### `collections/stable_matching_utils.dart`
+
+Stable matching via Gale-Shapley.
+
+`import 'package:saropa_dart_utils/collections/stable_matching_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `StableMatchingPrefs` | typedef | Preference data for one stable-matching problem: each side maps a member to its strict ranking (index 0 = most preferred) of the other side. |
+| `stableMatching` | function | Computes a stable matching from [prefs], returning `proposer → acceptor` for every matched proposer; unmatched proposers are absent from the map. |
+
 ### `collections/stream_quantile_utils.dart`
 
 Stream quantile estimation (P²-style approximate).
@@ -1159,6 +1256,22 @@ Time-bucketed aggregation.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `bucketByTime` | function | Groups [events] (DateTime) into buckets of [bucketSize]; returns map of bucketStart -> count. |
+
+### `collections/time_decay_counter_utils.dart`
+
+Exponential time-decay counter with configurable half-life.
+
+`import 'package:saropa_dart_utils/collections/time_decay_counter_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `TimeDecayCounter` | class | O(1)-memory counter whose contributions decay exponentially over time. |
+| `TimeDecayCounter` | constructor | Creates a counter that halves accumulated weight every [halfLifeMillis]. |
+| `halfLifeMillis` | field | Time, in milliseconds, for any contribution to lose half its weight. |
+| `value` | method | Accumulated value decayed forward to [asOfTimeMillis]. |
+| `add` | method | Adds [weight] at [atTimeMillis], decaying any prior value to that instant. |
+| `reset` | method | Resets the counter to empty, forgetting all accumulated weight and time. |
+| `toString` | method |  |
 
 ### `collections/top_k_heap_utils.dart`
 
@@ -3145,6 +3258,25 @@ GCD, LCM, and related integer math.
 | `maxOf` | method | Returns the maximum of [a] and [b], handling `null` values. |
 | `generateIntList` | method | Generates a list of integers in ascending order, starting from [start] and ending at [end] (inclusive). |
 
+### `num/unit_conversion_utils.dart`
+
+`import 'package:saropa_dart_utils/num/unit_conversion_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `LengthConversionUtils` | class | Exact length conversions between metric (meters) and imperial (feet), plus human-readable string formatters. |
+| `conversionFactor` | field | Meters → feet multiplier (1 m = 3.280839895 ft). |
+| `convertMetersToFeet` | method | Converts [meters] to feet. |
+| `convertFeetToMeters` | method | Converts [feet] to meters. |
+| `feetToString` | method | Formats [feet] as a human-readable string. |
+| `metersToString` | method | Formats [meters] as `"1.78 meters"` or `"1.78 m"` with [useAbbreviations]. |
+| `WeightConversionUtils` | class | Exact weight conversions between metric (kilograms) and imperial (pounds), plus human-readable string formatters. |
+| `conversionFactor` | field | Kilograms → pounds multiplier (1 kg = 2.2046226218 lb). |
+| `convertKilogramsToPounds` | method | Converts [kilograms] to pounds. |
+| `convertPoundsToKilograms` | method | Converts [pounds] to kilograms. |
+| `poundsToString` | method | Formats [pounds] as `"80 pounds"` or `"80 lbs"` with [useAbbreviations]. |
+| `kilogramsToString` | method | Formats [kilograms] as `"80 kilograms"` or `"80 kg"` with [useAbbreviations]. |
+
 ---
 
 ## Object & Null
@@ -4123,6 +4255,43 @@ ICU-style message formatting lite: pluralization and `select` (gender).
 | `icuPlural` | function | Selects a plural form for [count] and replaces every `#` in the chosen form with the count. |
 | `icuSelect` | function | ICU `select` lite: returns the [cases] entry whose key equals [value], falling back to [other] for any missing or unknown key. |
 
+### `string/keyphrase_utils.dart`
+
+TF-IDF keyphrase extraction over a small corpus.
+
+`import 'package:saropa_dart_utils/string/keyphrase_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `Keyphrase` | typedef | A scored keyphrase: the [phrase] text and its tf*idf [score]. |
+| `KeyphraseOptions` | class | Options controlling keyphrase extraction; grouped to keep the public API under the 3-parameter limit and allow future knobs without breaking callers. |
+| `KeyphraseOptions` | constructor | Creates extraction options. |
+| `topK` | field | Maximum number of keyphrases returned. |
+| `includeBigrams` | field | When true, adjacent term pairs are scored alongside single terms. |
+| `tokenizeKeyphrases` | function | Splits [text] into lowercase alphanumeric tokens, dropping stopwords. |
+| `termFrequencies` | function | Counts how many times each token appears in [tokens] (term frequency). |
+| `computeIdf` | function | Computes inverse document frequency for every term across [corpus]. |
+| `extractKeyphrases` | function | Extracts the top-K tf*idf keyphrases from [doc] against [corpus]. |
+
+### `string/language_detect_utils.dart`
+
+Heuristic n-gram language detector (lite, best-effort).
+
+`import 'package:saropa_dart_utils/string/language_detect_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `LanguageGuess` | class | Result of a language detection: the [language] code and a [score]. |
+| `LanguageGuess` | constructor | Creates an immutable guess from a [language] code and distance [score]. |
+| `language` | field | ISO-639-1 style code of the best-matching profile (e.g. `'en'`). |
+| `score` | field | Normalized out-of-place distance in `[0, 1]`; lower means a closer match. |
+| `confidence` | getter | Convenience inverse of [score]: higher means a more confident guess. |
+| `toString` | method |  |
+| `operator ==` | operator |  |
+| `hashCode` | getter |  |
+| `languageTrigrams` | function | Extracts ranked trigrams from [text], most frequent first. |
+| `detectLanguage` | function | Detects the dominant language of [text]; returns null when too short. |
+
 ### `string/levenshtein_utils.dart`
 
 Levenshtein (edit) distance and similarity ratio for strings.
@@ -4189,6 +4358,30 @@ N-gram generator for strings — character and word n-grams ().
 |--------|------|-------------|
 | `characterNgrams` | function | Returns character n-grams of [s] with length [n]. |
 | `wordNgrams` | function | Returns word n-grams of [s] with [n] words per gram. |
+
+### `string/redline_utils.dart`
+
+Line-based redline / track-changes diff generator.
+
+`import 'package:saropa_dart_utils/string/redline_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RedlineOp` | enum | The kind of change a [RedlineEntry] represents. |
+| `unchanged` | enum value | Line is identical in old and new text. |
+| `added` | enum value | Line exists only in the new text. |
+| `removed` | enum value | Line exists only in the old text. |
+| `changed` | enum value | Line was replaced: old text differs from new text at this position. |
+| `RedlineEntry` | class | A single line entry in a redline diff. |
+| `RedlineEntry` | constructor | Creates an immutable redline entry. |
+| `op` | field | What happened to this line. |
+| `oldLineNo` | field | 1-based line number in the old text, or null if the line was added. |
+| `newLineNo` | field | 1-based line number in the new text, or null if the line was removed. |
+| `text` | field | The line content shown to the reader (new side, or old side if removed). |
+| `operator ==` | operator |  |
+| `hashCode` | getter |  |
+| `toString` | method |  |
+| `redlineDiff` | function | Builds a line-based redline diff aligning unchanged lines via LCS. |
 
 ### `string/safe_html_excerpt_utils.dart`
 
@@ -4758,6 +4951,7 @@ Spelling-tolerant key lookup (canonical → variants).
 | `StringWrapExtensions` on `String` | extension | Word wrap and grapheme-safe truncation. |
 | `wordWrap` | method | Wraps this string at [columnWidth], breaking at word boundaries when possible. |
 | `truncateAtGrapheme` | method | Truncates at grapheme boundary so no emoji or extended grapheme is cut. |
+| `preventOrphans` | method | Replaces a breaking space with a non-breaking space (`\u{00A0}`) wherever a line wrap at that space would strand a token shorter than [minWrapChars] on its o... |
 
 ### `string/template_engine_utils.dart`
 
@@ -4812,6 +5006,21 @@ Text fingerprinting (simhash-style).
 |--------|------|-------------|
 | `textFingerprint` | function | Simple 32-bit fingerprint: hash of word shingles. |
 | `fingerprintDistance` | function | Hamming distance between two 32-bit fingerprints (number of differing bits). |
+
+### `string/text_fold_utils.dart`
+
+Quote-aware text folding/unfolding (email-reply style).
+
+`import 'package:saropa_dart_utils/string/text_fold_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `FoldOptions` | class | Options controlling how [foldText] hard-wraps lines. |
+| `FoldOptions` | constructor | Creates fold options with an optional [width] (defaults to 78). |
+| `width` | field | Maximum column width (inclusive) for each produced line, prefix included. |
+| `splitQuotePrefix` | function | Splits a line into its quote prefix and the remaining body text. |
+| `foldText` | function | Hard-wraps [text] to [options].width, preserving each line's quote prefix. |
+| `unfoldText` | function | Joins soft-wrapped continuation lines back into one logical line per block. |
 
 ### `string/text_normalize_pipeline_utils.dart`
 

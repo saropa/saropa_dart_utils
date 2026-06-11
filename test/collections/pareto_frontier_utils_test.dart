@@ -4,9 +4,9 @@ import 'package:saropa_dart_utils/collections/pareto_frontier_utils.dart';
 void main() {
   // Two-objective minimize options over [x, y] integer points.
   ParetoOptions<List<int>> minMin() => ParetoOptions<List<int>>(
-        criteria: [(p) => p[0], (p) => p[1]],
-        directions: [ParetoDirection.minimize, ParetoDirection.minimize],
-      );
+    criteria: [(p) => p[0], (p) => p[1]],
+    directions: [ParetoDirection.minimize, ParetoDirection.minimize],
+  );
 
   group('ParetoOptions', () {
     test('should throw when criteria is empty', () {

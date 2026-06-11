@@ -49,7 +49,10 @@ void main() {
     });
 
     test('should not loop and should keep the long word with its prefix', () {
-      expect(foldText('> supercalifragilistic', const FoldOptions(width: 5)), '> supercalifragilistic');
+      expect(
+        foldText('> supercalifragilistic', const FoldOptions(width: 5)),
+        '> supercalifragilistic',
+      );
     });
 
     test('should pass blank lines through as paragraph separators', () {

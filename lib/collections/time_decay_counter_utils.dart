@@ -34,8 +34,8 @@ class TimeDecayCounter {
   /// final c = TimeDecayCounter(halfLifeMillis: 500);
   /// ```
   TimeDecayCounter({required this.halfLifeMillis})
-      : assert(halfLifeMillis > 0, 'halfLifeMillis must be > 0'),
-        _lambda = ln2 / halfLifeMillis;
+    : assert(halfLifeMillis > 0, 'halfLifeMillis must be > 0'),
+      _lambda = ln2 / halfLifeMillis;
 
   /// Time, in milliseconds, for any contribution to lose half its weight.
   final double halfLifeMillis;

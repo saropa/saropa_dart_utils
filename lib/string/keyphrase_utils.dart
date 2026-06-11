@@ -7,10 +7,47 @@ import 'dart:math' as math;
 /// function words never surface as keyphrases. Kept deliberately short — a
 /// large list belongs in caller-supplied config, not a tree-shaken util.
 const Set<String> _kStopwords = <String>{
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'but', 'by', 'for', 'from',
-  'has', 'have', 'he', 'her', 'his', 'i', 'in', 'is', 'it', 'its', 'of',
-  'on', 'or', 'she', 'so', 'than', 'that', 'the', 'their', 'them', 'then',
-  'they', 'this', 'to', 'was', 'were', 'will', 'with', 'you', 'your',
+  'a',
+  'an',
+  'and',
+  'are',
+  'as',
+  'at',
+  'be',
+  'but',
+  'by',
+  'for',
+  'from',
+  'has',
+  'have',
+  'he',
+  'her',
+  'his',
+  'i',
+  'in',
+  'is',
+  'it',
+  'its',
+  'of',
+  'on',
+  'or',
+  'she',
+  'so',
+  'than',
+  'that',
+  'the',
+  'their',
+  'them',
+  'then',
+  'they',
+  'this',
+  'to',
+  'was',
+  'were',
+  'will',
+  'with',
+  'you',
+  'your',
 };
 
 /// A scored keyphrase: the [phrase] text and its tf*idf [score].
@@ -83,8 +120,7 @@ Map<String, double> computeIdf(List<List<String>> corpus) {
   }
   final int n = corpus.length;
   return df.map(
-    (String term, int count) =>
-        MapEntry<String, double>(term, math.log(1 + n / count)),
+    (String term, int count) => MapEntry<String, double>(term, math.log(1 + n / count)),
   );
 }
 
@@ -139,8 +175,7 @@ void _addBigramScores(
 ) {
   // Accumulate count and the product of the pair's idf weights together, so we
   // never re-split the phrase string (which the linter can't prove non-empty).
-  final Map<String, ({int count, double weight})> bf =
-      <String, ({int count, double weight})>{};
+  final Map<String, ({int count, double weight})> bf = <String, ({int count, double weight})>{};
   for (int i = 0; i + 1 < tokens.length; i++) {
     final String bigram = '${tokens[i]} ${tokens[i + 1]}';
     final double weight = (idf[tokens[i]] ?? 0) * (idf[tokens[i + 1]] ?? 0);

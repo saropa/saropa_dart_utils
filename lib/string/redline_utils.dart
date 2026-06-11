@@ -103,8 +103,9 @@ List<List<int>> _lcsTable(List<String> a, List<String> b) {
   );
   for (int i = a.length - 1; i >= 0; i--) {
     for (int j = b.length - 1; j >= 0; j--) {
-      table[i][j] =
-          a[i] == b[j] ? table[i + 1][j + 1] + 1 : _maxInt(table[i + 1][j], table[i][j + 1]);
+      table[i][j] = a[i] == b[j]
+          ? table[i + 1][j + 1] + 1
+          : _maxInt(table[i + 1][j], table[i][j + 1]);
     }
   }
   return table;
