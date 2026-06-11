@@ -135,9 +135,7 @@ void main() {
         fakeAsync((FakeAsync async) {
           final StreamController<int> source = StreamController<int>();
           final List<int> results = <int>[];
-          source.stream
-              .debounceAfterFirst(const Duration(milliseconds: 100))
-              .listen(results.add);
+          source.stream.debounceAfterFirst(const Duration(milliseconds: 100)).listen(results.add);
 
           // First value is forwarded instantly, before any quiet gap.
           source.add(1);
@@ -180,9 +178,7 @@ void main() {
         fakeAsync((FakeAsync async) {
           final StreamController<int> source = StreamController<int>();
           final List<int> results = <int>[];
-          source.stream
-              .debounceDistinct(const Duration(milliseconds: 30))
-              .listen(results.add);
+          source.stream.debounceDistinct(const Duration(milliseconds: 30)).listen(results.add);
 
           source.add(5);
           async.elapse(const Duration(milliseconds: 40));

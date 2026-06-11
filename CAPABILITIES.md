@@ -1,8 +1,8 @@
 # Capabilities Index
 
-**Release 1.4.0** · Generated 2026-06-10
+**Release 1.4.1** · Generated 2026-06-11
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1928 public symbols** across **393 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1955 public symbols** across **395 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -12,12 +12,12 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ## Categories
 
-- [Async](#async) — 150 symbols
+- [Async](#async) — 154 symbols
 - [Base64](#base64) — 7 symbols
 - [Bool](#bool) — 13 symbols
 - [Caching](#caching) — 31 symbols
 - [Collections](#collections) — 210 symbols
-- [DateTime](#datetime) — 287 symbols
+- [DateTime](#datetime) — 290 symbols
 - [Double](#double) — 14 symbols
 - [Enum](#enum) — 4 symbols
 - [Gesture](#gesture) — 36 symbols
@@ -27,16 +27,16 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [Integer](#integer) — 12 symbols
 - [Iterable](#iterable) — 99 symbols
 - [JSON](#json) — 27 symbols
-- [List](#list) — 64 symbols
+- [List](#list) — 65 symbols
 - [Map](#map) — 91 symbols
 - [Niche](#niche) — 22 symbols
 - [Number](#number) — 74 symbols
 - [Object & Null](#object--null) — 27 symbols
-- [Parsing](#parsing) — 122 symbols
+- [Parsing](#parsing) — 134 symbols
 - [Random](#random) — 1 symbols
 - [Regex](#regex) — 6 symbols
 - [Stats](#stats) — 69 symbols
-- [String](#string) — 390 symbols
+- [String](#string) — 397 symbols
 - [Testing](#testing) — 8 symbols
 - [URL & Path](#url--path) — 58 symbols
 - [UUID](#uuid) — 5 symbols
@@ -404,6 +404,10 @@ Debounce a stream: emit an item only after a quiet gap.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `debounceStream` | function | Returns a stream that re-emits values from [source], but suppresses any value that is followed by another within [duration]. |
+| `StreamDebounceExtensions` on `Stream<T>` | extension | Chainable debounce variants on any [Stream], so reactive pipelines read as `stream.debounce(d).map(...)` instead of wrapping with the free function. |
+| `debounce` | method | Debounces this stream: see [debounceStream]. |
+| `debounceDistinct` | method | Debounces this stream AND suppresses consecutive equal values. |
+| `debounceAfterFirst` | method | Emits the FIRST value immediately, then debounces the rest by [duration]. |
 
 ### `async/stream_window_utils.dart`
 
@@ -812,7 +816,7 @@ Interval tree for overlap (stabbing) queries.
 | `operator ==` | operator |  |
 | `hashCode` | getter |  |
 | `toString` | method |  |
-| `_Node` | constructor |  |
+| `_IntervalNode` | constructor |  |
 | `entry` | field |  |
 | `left` | field |  |
 | `right` | field |  |
@@ -1613,6 +1617,16 @@ ISO 8601 time-interval parser.
 | `applyTo` | method | Applies this duration to [base] in direction [sign] (+1 forward, -1 back), preserving [base]'s time-of-day fields and UTC-ness. |
 | `parseIsoInterval` | function | Parses an ISO 8601 time interval into a [DateTimeRange]. |
 
+### `datetime/month_weekday_utils.dart`
+
+`import 'package:saropa_dart_utils/datetime/month_weekday_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `MonthWeekdayUtils` | class | Static `(year, month)`-keyed weekday-occurrence helpers, the no-seed counterpart to the `DateTime.getNthWeekdayOfMonthInYear` instance extension. |
+| `nthWeekdayOfMonth` | method | Returns the [n]th [weekday] in [month] of [year], or `null` when that occurrence does not exist (e.g. a 5th Friday in a month with only four). |
+| `lastWeekdayOfMonth` | method | Returns the last [weekday] in [month] of [year] — always a real date, since every weekday occurs at least four times a month. |
+
 ### `datetime/period_split_utils.dart`
 
 Period splitting (by month/week).
@@ -2191,7 +2205,7 @@ Tree utilities (LCA, depth, subtree size).
 | `GeneralIterableExtensions` on `Iterable<T>` | extension | General-purpose aggregation, windowing, and frequency helpers for iterables. |
 | `mostOccurrences` | method | Finds the most common value in the list. |
 | `leastOccurrences` | method | Returns an [Occurrence] of the least common value and its frequency, or `null` if the iterable is empty. |
-| `randomElement` | method | Returns a random element from this iterable. |
+| `randomElement` | method | Returns a random element from this iterable, or `null` if it is empty. |
 | `containsAll` | method | Returns true if this iterable contains all elements from [other]. |
 | `countWhere` | method | Returns the number of elements that satisfy the given [predicate]. |
 | `chunks` | method | Splits this iterable into chunks of size [size]. |
@@ -2583,6 +2597,7 @@ Tree utilities (LCA, depth, subtree size).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `ListStringExtensions` on `List<String>` | extension | Extensions on List<String> for common prefix/suffix. |
+| `joinDisplayList` | method | Joins these strings into a natural-language list with an Oxford comma: one item is itself, two become `'a and b'`, three or more become `'a, b, and c'`. |
 | `commonPrefix` | method | Returns the longest common prefix of all strings in this list. |
 | `commonSuffix` | method | Returns the longest common suffix of all strings in this list. |
 
@@ -3327,6 +3342,18 @@ CSV/TSV dialect detector ().
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
+| `CsvRowError` | class | A single row that failed structural validation during [parseCsv], kept so the import can continue and report every bad row at once instead of aborting on the... |
+| `CsvRowError` | constructor | Records that [line] at 1-based [lineNumber] failed for [message]. |
+| `lineNumber` | field | 1-based line number in the original input (blank lines are counted, so this maps back to what the user sees in their file). |
+| `line` | field | The raw source line that failed. |
+| `message` | field | Human-readable reason the row was rejected. |
+| `toString` | method |  |
+| `CsvParseResult` | class | The outcome of [parseCsv]: the successfully-parsed [rows] plus a per-row [errors] list for the rows that failed validation. |
+| `CsvParseResult` | constructor | Wraps the good [rows] and the rejected-row [errors]. |
+| `rows` | field | Rows that parsed and passed validation, in source order. |
+| `errors` | field | One entry per rejected row, in source order. |
+| `hasErrors` | getter | `true` when at least one row was rejected. |
+| `parseCsv` | function | Parses a multi-line CSV [input], collecting per-row errors instead of throwing on the first bad row — the shape a user-facing import needs so it can surface... |
 | `parseCsvLine` | function | Parse one CSV line (handle quoted fields, commas inside quotes). |
 
 ### `parsing/csv_writer_utils.dart`
@@ -4042,6 +4069,9 @@ Fuzzy search over list of strings with token + edit distance + ranking ().
 | `score` | getter | Relevance score in `[0, 1]`; higher means a closer match to the query. |
 | `toString` | method |  |
 | `fuzzySearch` | function | Searches [candidates] for [query]; returns matches sorted by match score descending. |
+| `partialRatio` | function | fuzzywuzzy-style **partial ratio**: how well the shorter string matches the best-aligning slice of the longer one, in `[0, 1]`. |
+| `tokenSortRatio` | function | fuzzywuzzy-style **token-sort ratio**: ratio after each string's tokens are lowercased, sorted, and rejoined, in `[0, 1]`. |
+| `tokenSetRatio` | function | fuzzywuzzy-style **token-set ratio**: the best ratio over the shared tokens and each side's remainder, in `[0, 1]`. |
 
 ### `string/glob_utils.dart`
 
@@ -4342,6 +4372,15 @@ Spelling-tolerant key lookup (canonical → variants).
 | `secondCharacter` | method | Gets the second grapheme cluster (character). |
 | `graphemeLength` | getter | Gets the grapheme length (number of user-perceived characters). |
 
+### `string/string_compare_extensions.dart`
+
+`import 'package:saropa_dart_utils/string/string_compare_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `StringNullableCompareExtensions` on `String?` | extension | Null-aware comparison helpers for `String?`, the string counterpart to `compareDateTimeNullable` on `DateTime?`. |
+| `compareStringNullable` | method | Compares two nullable strings for sorting, tolerating `null` on either side without throwing. |
+
 ### `string/string_csv_extensions.dart`
 
 `import 'package:saropa_dart_utils/string/string_csv_extensions.dart';`
@@ -4476,6 +4515,7 @@ Spelling-tolerant key lookup (canonical → variants).
 | `removeEnd` | method | Returns a new string with [end] removed from the end, if it exists. |
 | `removeFirstChar` | method | Returns a new string with the first character removed. |
 | `removeLastChar` | method | Returns a new string with the last character removed. |
+| `removeLastChars` | method | Returns a new string with the last [count] characters removed. |
 | `removeFirstLastChar` | method | Returns a new string with both the first and last characters removed. |
 | `normalizeApostrophe` | method | Returns a new string with apostrophe variants replaced by a standard single quote. |
 | `toAlphaOnly` | method | Returns a new string with all non-letter characters removed. |
@@ -4548,6 +4588,7 @@ Spelling-tolerant key lookup (canonical → variants).
 |--------|------|-------------|
 | `StringNumberExtensions` on `String` | extension | An extension on the String class to extract the trailing integer from a string. |
 | `isNumeric` | method | Returns `true` if this string can be parsed as a number. |
+| `isNumber` | getter | Returns `true` if this string parses as an integer via [int.tryParse]. |
 | `toDoubleNullable` | method | Returns this string parsed as a `double`, or `null` if parsing fails. |
 | `toIntNullable` | method | Returns this string parsed as an `int`, or `null` if parsing fails. |
 | `getTrailingInt` | method | Gets the trailing integer from the string. |

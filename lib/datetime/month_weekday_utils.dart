@@ -64,8 +64,7 @@ abstract final class MonthWeekdayUtils {
     // Step back to the most recent matching weekday. The +7 keeps the modulus
     // non-negative when the month ends earlier in the week than [weekday].
     final int daysToSubtract =
-        (lastDayOfMonth.weekday - weekday + DateConstants.daysPerWeek) %
-        DateConstants.daysPerWeek;
+        (lastDayOfMonth.weekday - weekday + DateConstants.daysPerWeek) % DateConstants.daysPerWeek;
 
     return lastDayOfMonth.subtract(Duration(days: daysToSubtract));
   }

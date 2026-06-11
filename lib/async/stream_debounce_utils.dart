@@ -124,8 +124,7 @@ extension StreamDebounceExtensions<T> on Stream<T> {
   Stream<T> debounceDistinct(
     Duration duration, {
     bool Function(T previous, T next)? equals,
-  }) =>
-      debounceStream(this, duration).distinct(equals);
+  }) => debounceStream(this, duration).distinct(equals);
 
   /// Emits the FIRST value immediately, then debounces the rest by [duration].
   ///
