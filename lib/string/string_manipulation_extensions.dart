@@ -119,6 +119,36 @@ extension StringManipulationExtensions on String {
   @useResult
   String removeLastChar() => (length < 1) ? '' : substringSafe(0, length - 1);
 
+  /// Returns a new string with the last [count] characters removed.
+  ///
+  /// Bounds-safe: a [count] of zero or negative is a no-op (returns this
+  /// string unchanged), and a [count] greater than or equal to [length]
+  /// returns an empty string rather than throwing.
+  ///
+  /// Counts UTF-16 code units like [String.length], not grapheme clusters, so
+  /// removing characters from the tail of a string ending in an emoji or a
+  /// combining-mark sequence can split that cluster. Use the `characters`
+  /// package for grapheme-aware trimming.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// 'Hello'.removeLastChars(2); // 'Hel'
+  /// 'Hi'.removeLastChars(5);    // ''
+  /// 'Hi'.removeLastChars(0);    // 'Hi'
+  /// ```
+  @useResult
+  String removeLastChars(int count) {
+    if (count <= 0) {
+      return this;
+    }
+
+    if (length <= count) {
+      return '';
+    }
+
+    return substringSafe(0, length - count);
+  }
+
   /// Returns a new string with both the first and last characters removed.
   @useResult
   String removeFirstLastChar() => (length < 2) ? '' : substringSafe(1, length - 1);

@@ -137,6 +137,39 @@ void main() {
     });
   });
 
+  group('removeLastChars', () {
+    test('should drop the last count characters', () {
+      expect('Hello'.removeLastChars(2), 'Hel');
+    });
+
+    test('should be a no-op for count zero', () {
+      expect('Hello'.removeLastChars(0), 'Hello');
+    });
+
+    test('should be a no-op for negative count', () {
+      expect('Hello'.removeLastChars(-3), 'Hello');
+    });
+
+    test('should return empty when count equals length', () {
+      expect('Hi'.removeLastChars(2), '');
+    });
+
+    test('should return empty when count exceeds length', () {
+      expect('Hi'.removeLastChars(5), '');
+    });
+
+    test('should return empty for an empty string', () {
+      expect(''.removeLastChars(3), '');
+    });
+
+    test('counts UTF-16 code units, not graphemes', () {
+      // 'a😀' is 'a' (1 unit) + emoji (surrogate pair, 2 units) = length 3.
+      // Removing 1 code unit splits the surrogate pair and leaves the
+      // low-surrogate orphan, so the result is NOT a clean 'a'.
+      expect('a😀'.removeLastChars(2), 'a');
+    });
+  });
+
   group('normalizeApostrophe', () {
     test('should replace a curly apostrophe with a straight one', () {
       final String curly = String.fromCharCode(0x2019);
