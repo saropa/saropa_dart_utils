@@ -7,7 +7,14 @@ export 'base64/base64_utils.dart';
 
 // Bool extensions
 export 'bool/bool_iterable_extensions.dart';
+export 'bool/bool_sort_extensions.dart';
 export 'bool/bool_string_extensions.dart';
+
+// Color utilities (Material Design shade ladder)
+export 'color/material_shade.dart';
+
+// copyWith helpers
+export 'copy_with/filter_value.dart';
 
 // DateTime extensions and utilities
 export 'datetime/date_constant_extensions.dart';
@@ -19,22 +26,28 @@ export 'datetime/date_time_calendar_extensions.dart';
 export 'datetime/date_time_clamp_extensions.dart';
 export 'datetime/date_time_comparison_extensions.dart';
 export 'datetime/date_time_extensions.dart';
+export 'datetime/date_time_relative_predicate_extensions.dart';
 export 'datetime/date_time_fiscal_extensions.dart';
 export 'datetime/date_time_list_extensions.dart';
 export 'datetime/date_time_nullable_extensions.dart';
+export 'datetime/date_time_compare_age_extensions.dart';
 export 'datetime/date_time_overlap_utils.dart';
 export 'datetime/date_time_range_utils.dart';
 export 'datetime/month_weekday_utils.dart';
+export 'datetime/month_weekday_named_extensions.dart';
 export 'datetime/date_time_relative_utils.dart';
 export 'datetime/date_time_utils.dart';
 export 'datetime/date_time_week_extensions.dart';
+export 'datetime/date_time_intl_display_extensions.dart';
 export 'datetime/date_time_timezone_extensions.dart';
+export 'datetime/duration_clock_format_extensions.dart';
 export 'datetime/duration_format_utils.dart';
 export 'datetime/duration_parse_utils.dart';
 export 'datetime/time_emoji_utils.dart';
 export 'datetime/date_time_more_extensions.dart';
 export 'datetime/time_rounding_utils.dart';
 export 'datetime/relative_date_bucket_utils.dart';
+export 'datetime/simple_relative_day_utils.dart';
 export 'datetime/period_split_utils.dart';
 export 'datetime/injectable_clock_utils.dart';
 export 'datetime/timebox_exception.dart';
@@ -45,14 +58,23 @@ export 'datetime/business_calendar_utils.dart';
 export 'datetime/iso_interval_parse_utils.dart';
 export 'datetime/sla_calculator_utils.dart';
 export 'datetime/quiet_hours_utils.dart';
+export 'datetime/hebrew_date_converter.dart';
 
 // Double extensions
+export 'double/double_aspect_ratio_extensions.dart';
 export 'double/double_close_to_extensions.dart';
 export 'double/double_extensions.dart';
 export 'double/double_iterable_extensions.dart';
+export 'double/gradient_stop_range.dart';
 
 // Enum extensions
 export 'enum/enum_iterable_extensions.dart';
+
+// Flutter Color extensions (parse/format hex, HSL lighten/darken, WCAG contrast)
+export 'flutter/color_extensions.dart';
+
+// Flutter Material palette helpers (swatch list, int->Color generator, typed shade accessor)
+export 'flutter/material_color_utils.dart';
 
 // Gesture utilities
 export 'gesture/gesture_utils.dart';
@@ -204,6 +226,7 @@ export 'list/list_lower_extensions.dart';
 export 'list/list_default_empty_extensions.dart';
 export 'list/list_shuffle_seeded_extensions.dart';
 export 'list/list_top_k_extensions.dart';
+export 'list/list_nullable_string_sort_extensions.dart';
 
 // Map extensions and utilities
 export 'map/deep_equality_utils.dart';
@@ -222,6 +245,7 @@ export 'map/map_pick_omit_extensions.dart';
 export 'map/map_transform_extensions.dart';
 export 'map/map_nullable_extensions.dart';
 export 'map/map_more_extensions.dart';
+export 'map/map_initials_sort_extensions.dart';
 
 // Num extensions and utilities
 export 'num/math_utils.dart';
@@ -230,6 +254,7 @@ export 'num/num_compact_parse_extensions.dart';
 export 'num/num_extensions.dart';
 export 'num/num_factorial_utils.dart';
 export 'num/num_format_extensions.dart';
+export 'num/num_intl_format_extensions.dart';
 export 'num/num_iterable_extensions.dart';
 export 'num/num_lerp_utils.dart';
 export 'num/num_locale_utils.dart';
@@ -261,6 +286,7 @@ export 'caching/ttl_cache.dart';
 
 // Niche utilities
 export 'niche/color_utils.dart';
+export 'niche/dark_colors.dart';
 export 'niche/name_utils.dart';
 export 'niche/pad_format_utils.dart';
 export 'niche/random_string_utils.dart';
@@ -303,6 +329,8 @@ export 'string/string_words_extensions.dart';
 export 'string/string_key_value_extensions.dart';
 export 'string/string_split_extensions.dart';
 export 'string/string_unicode_extensions.dart';
+export 'string/unicode_class_type.dart';
+export 'string/unicode_class_utils.dart';
 export 'string/string_case_acronym_extensions.dart';
 export 'string/glob_utils.dart';
 export 'string/soundex_utils.dart';
@@ -312,6 +340,7 @@ export 'string/string_character_extensions.dart';
 export 'string/string_diacritics_extensions.dart';
 export 'string/string_extensions.dart';
 export 'string/string_compare_extensions.dart';
+export 'string/string_folded_compare_extensions.dart';
 export 'string/string_manipulation_extensions.dart';
 export 'string/string_nullable_extensions.dart';
 export 'string/string_number_extensions.dart';
@@ -357,6 +386,7 @@ export 'string/text_fold_utils.dart';
 export 'string/language_detect_utils.dart';
 export 'string/keyphrase_utils.dart' hide termFrequencies;
 export 'string/redline_utils.dart';
+export 'string/text_direction_parse_utils.dart';
 
 // Async utilities
 export 'async/debounce_utils.dart';
@@ -384,6 +414,7 @@ export 'async/stream_debounce_utils.dart';
 export 'async/heartbeat_utils.dart';
 export 'async/async_more_utils.dart';
 export 'async/stream_combine_utils.dart';
+export 'async/compute_stream_transformer.dart';
 export 'async/observability_utils.dart';
 export 'async/task_scheduler_utils.dart';
 export 'async/rate_limiter_utils.dart';
@@ -440,6 +471,9 @@ export 'url/url_canonicalize_utils.dart';
 export 'url/uri_pattern_utils.dart';
 export 'url/url_template_utils.dart';
 export 'url/path_more_utils.dart';
+
+// Typed data (Uint8List <-> List<int> bridging)
+export 'typed_data/uint8list_extensions.dart';
 
 // UUID utilities
 export 'uuid/uuid_utils.dart';
