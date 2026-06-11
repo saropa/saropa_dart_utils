@@ -63,14 +63,93 @@ class FileSyms {
   final List<Sym> symbols;
 }
 
+// Abbreviations whose trailing period must NOT be read as a sentence boundary,
+// so an inline example like "(e.g. 0.01 for 1%)" survives intact (BUG-002).
+const Set<String> abbreviations = <String>{
+  'e.g', 'i.e', 'etc', 'vs', 'cf', 'al', 'approx', 'fig',
+  'no', 'dr', 'mr', 'ms', 'mrs', 'st',
+};
+
+bool _isAlpha(String ch) =>
+    (ch.compareTo('a') >= 0 && ch.compareTo('z') <= 0) ||
+    (ch.compareTo('A') >= 0 && ch.compareTo('Z') <= 0);
+
+/// Strips leading/trailing periods only (so "e.g" keeps its internal dot).
+String _stripOuterDots(String s) {
+  var a = 0;
+  var b = s.length;
+  while (a < b && s[a] == '.') {
+    a++;
+  }
+  while (b > a && s[b - 1] == '.') {
+    b--;
+  }
+  return s.substring(a, b);
+}
+
+/// True when the '.' at [i] is an abbreviation/initial dot, not a sentence end.
+/// A single letter (an initial, or a standalone '.' token as in "split on . ! ?")
+/// or a known abbreviation (e.g., i.e., vs.) does not terminate the sentence; a
+/// '.' after a non-letter (')', a digit, '%') is a real boundary (BUG-002).
+bool isAbbrevDot(String text, int i) {
+  var j = i;
+  while (j > 0 && (_isAlpha(text[j - 1]) || text[j - 1] == '.')) {
+    j--;
+  }
+  final String word = text.substring(j, i);
+  if (word.isEmpty) return false;
+  if (word.length == 1 && _isAlpha(word)) return true;
+  return abbreviations.contains(_stripOuterDots(word).toLowerCase());
+}
+
+/// Index just past the first sentence-ending period, or null. A '.' ends the
+/// sentence only when it sits outside backticks and balanced parentheses, is
+/// followed by a space or end-of-string, and is not an abbreviation/initial dot
+/// — so inline examples like "(e.g. 0.01 for 1%)" and "(split on . ! ?)" are
+/// kept whole instead of cut mid-phrase (BUG-002).
+int? sentenceEnd(String text) {
+  var inTick = false;
+  var paren = 0;
+  for (var i = 0; i < text.length; i++) {
+    final String c = text[i];
+    if (c == '`') {
+      inTick = !inTick;
+    } else if (c == '(') {
+      paren++;
+    } else if (c == ')') {
+      if (paren > 0) paren--;
+    } else if (c == '.' && !inTick && paren == 0) {
+      final bool atBreak = (i + 1 == text.length) || text[i + 1] == ' ';
+      if (atBreak && !isAbbrevDot(text, i)) return i + 1;
+    }
+  }
+  return null;
+}
+
+/// Removes internal planning markers (e.g. "— roadmap #676") — backlog metadata
+/// that is not API documentation and must not reach the customer-facing catalog
+/// (BUG-003). Handles the dash-prefixed form and a bare "roadmap #NNN".
+String stripInternalRefs(String text) {
+  var t = text.replaceAll(
+      RegExp(r'\s*[—–-]\s*roadmap\s*#\d+', caseSensitive: false), '');
+  t = t.replaceAll(RegExp(r'\s*\broadmap\s*#\d+', caseSensitive: false), '');
+  return t.trim();
+}
+
 /// Condenses a doc/comment blob to a single ≤160-char sentence for the table.
 String firstSentence(String? doc) {
   if (doc == null) return '';
   var text = doc.replaceAll(RegExp(r'\s+'), ' ').trim();
   // Drop fenced code examples — the summary is prose only.
   text = text.split('```').first.trim();
-  final Match? m = RegExp(r'\.(\s|$)').firstMatch(text);
-  if (m != null) text = text.substring(0, m.start + 1);
+  // Cut to the first real sentence BEFORE stripping backlog markers: a "roadmap"
+  // ref sits either inside the first sentence ("… events — roadmap #676.") or in
+  // a trailing one ("…. Roadmap #162."); cutting first then stripping drops the
+  // marker in the first case and the whole trailing sentence in the second
+  // without leaving a dangling period (BUG-002, BUG-003).
+  final int? cut = sentenceEnd(text);
+  if (cut != null) text = text.substring(0, cut).trim();
+  text = stripInternalRefs(text);
   if (text.length > 160) text = '${text.substring(0, 157).trimRight()}...';
   return text;
 }
@@ -100,6 +179,7 @@ String filePurpose(CompilationUnit unit) {
   final LineInfo lineInfo = unit.lineInfo;
   final List<String> lines = <String>[];
   var prevLine = -1;
+  var blockOffset = -1;
   Token? token = unit.beginToken.precedingComments;
   while (token != null) {
     final int line = lineInfo.getLocation(token.offset).lineNumber;
@@ -107,12 +187,23 @@ String filePurpose(CompilationUnit unit) {
     if (lexeme.startsWith('///')) {
       // A gap (non-consecutive line) ends the leading block.
       if (prevLine != -1 && line > prevLine + 1) break;
+      if (blockOffset == -1) blockOffset = token.offset;
       lines.add(lexeme.substring(3).trim());
       prevLine = line;
     } else if (lines.isNotEmpty) {
       break;
     }
     token = token.next;
+  }
+  if (lines.isEmpty) return '';
+  // Suppress a leading block that is really the first DECLARATION's doc comment
+  // (a member's dartdoc, not a file summary) — the analyzer attaches such a doc
+  // to its declaration, so its offset matches the block we collected. A doc on a
+  // `library;` directive, or a free-floating top-of-file note, is NOT a
+  // declaration's doc, so its offset differs and it is kept (BUG-003).
+  if (unit.declarations.isNotEmpty) {
+    final Comment? firstDoc = unit.declarations.first.documentationComment;
+    if (firstDoc != null && firstDoc.offset == blockOffset) return '';
   }
   return firstSentence(lines.join(' '));
 }

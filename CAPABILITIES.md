@@ -2,7 +2,7 @@
 
 **Release 1.4.0** · Generated 2026-06-10
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1859 public symbols** across **385 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **1928 public symbols** across **393 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -12,11 +12,11 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ## Categories
 
-- [Async](#async) — 118 symbols
+- [Async](#async) — 150 symbols
 - [Base64](#base64) — 7 symbols
 - [Bool](#bool) — 13 symbols
 - [Caching](#caching) — 31 symbols
-- [Collections](#collections) — 197 symbols
+- [Collections](#collections) — 210 symbols
 - [DateTime](#datetime) — 287 symbols
 - [Double](#double) — 14 symbols
 - [Enum](#enum) — 4 symbols
@@ -32,13 +32,13 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [Niche](#niche) — 22 symbols
 - [Number](#number) — 74 symbols
 - [Object & Null](#object--null) — 27 symbols
-- [Parsing](#parsing) — 106 symbols
+- [Parsing](#parsing) — 122 symbols
 - [Random](#random) — 1 symbols
 - [Regex](#regex) — 6 symbols
 - [Stats](#stats) — 69 symbols
 - [String](#string) — 390 symbols
 - [Testing](#testing) — 8 symbols
-- [URL & Path](#url--path) — 50 symbols
+- [URL & Path](#url--path) — 58 symbols
 - [UUID](#uuid) — 5 symbols
 - [Validation](#validation) — 52 symbols
 
@@ -48,7 +48,7 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ### `async/async_barrier_utils.dart`
 
-Async barrier: wait for N events — roadmap #676.
+Async barrier: wait for N events.
 
 `import 'package:saropa_dart_utils/async/async_barrier_utils.dart';`
 
@@ -73,7 +73,7 @@ Async barrier: wait for N events — roadmap #676.
 
 ### `async/async_mutex_utils.dart`
 
-Async mutex with tryLock — roadmap #652.
+Async mutex with tryLock.
 
 `import 'package:saropa_dart_utils/async/async_mutex_utils.dart';`
 
@@ -88,7 +88,7 @@ Async mutex with tryLock — roadmap #652.
 
 ### `async/async_semaphore_utils.dart`
 
-Async semaphore with permits (roadmap #651).
+Async semaphore with permits ().
 
 `import 'package:saropa_dart_utils/async/async_semaphore_utils.dart';`
 
@@ -105,18 +105,16 @@ Async semaphore with permits (roadmap #651).
 
 ### `async/batch_async_utils.dart`
 
-Callback that transforms an item asynchronously.
-
 `import 'package:saropa_dart_utils/async/batch_async_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `AsyncMapper` | typedef | Callback that transforms an item asynchronously. |
-| `mapBatched` | function | Batch async (e.g. |
+| `mapBatched` | function | Batch async (e.g. 5 at a time). |
 
 ### `async/batch_flush_utils.dart`
 
-Batch/flush: collect events and flush on size/time — roadmap #671.
+Batch/flush: collect events and flush on size/time.
 
 `import 'package:saropa_dart_utils/async/batch_flush_utils.dart';`
 
@@ -131,9 +129,30 @@ Batch/flush: collect events and flush on size/time — roadmap #671.
 | `length` | getter | Current number of items in the buffer. |
 | `toString` | method |  |
 
-### `async/cancel_previous_exception.dart`
+### `async/bounded_work_queue_utils.dart`
 
-Returns a wrapper that cancels previous in-flight calls when invoked again; the superseded future throws [CancelPreviousException].
+Bounded async work queue with backpressure.
+
+`import 'package:saropa_dart_utils/async/bounded_work_queue_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `BoundedWorkQueue` | class | A bounded FIFO channel of [T] with blocking [push]/[pull] and backpressure. |
+| `BoundedWorkQueue` | constructor | Creates a queue holding at most [maxSize] buffered items ([maxSize] ≥ 1). |
+| `maxSize` | field | Maximum number of items buffered before [push] starts applying backpressure. |
+| `length` | getter | Buffered (not-yet-pulled) item count. |
+| `isFull` | getter | Whether the buffer is at capacity (the next [push] will block). |
+| `pendingProducers` | getter | Producers currently blocked waiting for a free slot. |
+| `pendingConsumers` | getter | Consumers currently blocked waiting for an item. |
+| `isClosed` | getter | Whether [close] has been called. |
+| `push` | method | Enqueues [item], returning a future that completes once it is buffered (or handed directly to a waiting consumer). |
+| `tryPush` | method | Non-blocking [push]: enqueues [item] and returns true if there was room (or a waiting consumer), or false without blocking if the buffer is full. |
+| `pull` | method | Dequeues the next item, returning a future that completes once one is available. |
+| `tryPull` | method | Non-blocking [pull]: returns the next buffered item, or null if the buffer is empty. |
+| `close` | method | Closes the queue: blocks further pushes, fails every blocked producer and consumer with [StateError], and lets consumers drain any already-buffered items (a... |
+| `toString` | method |  |
+
+### `async/cancel_previous_exception.dart`
 
 `import 'package:saropa_dart_utils/async/cancel_previous_exception.dart';`
 
@@ -144,7 +163,7 @@ Returns a wrapper that cancels previous in-flight calls when invoked again; the 
 
 ### `async/circuit_breaker_utils.dart`
 
-Circuit breaker (open/half-open/closed) — roadmap #657.
+Circuit breaker (open/half-open/closed).
 
 `import 'package:saropa_dart_utils/async/circuit_breaker_utils.dart';`
 
@@ -173,8 +192,6 @@ Circuit breaker (open/half-open/closed) — roadmap #657.
 
 ### `async/delay_utils.dart`
 
-Delay by duration (Future.delayed wrapper).
-
 `import 'package:saropa_dart_utils/async/delay_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -183,7 +200,7 @@ Delay by duration (Future.delayed wrapper).
 
 ### `async/exponential_backoff_utils.dart`
 
-Exponential backoff helper (roadmap #677).
+Exponential backoff helper ().
 
 `import 'package:saropa_dart_utils/async/exponential_backoff_utils.dart';`
 
@@ -194,7 +211,7 @@ Exponential backoff helper (roadmap #677).
 
 ### `async/heartbeat_utils.dart`
 
-Heartbeat/keepalive for long-running tasks — roadmap #675.
+Heartbeat/keepalive for long-running tasks.
 
 `import 'package:saropa_dart_utils/async/heartbeat_utils.dart';`
 
@@ -211,7 +228,7 @@ Heartbeat/keepalive for long-running tasks — roadmap #675.
 
 ### `async/idempotent_async_utils.dart`
 
-Idempotent async wrapper (deduplicate concurrent calls by key) — roadmap #668.
+Idempotent async wrapper (deduplicate concurrent calls by key).
 
 `import 'package:saropa_dart_utils/async/idempotent_async_utils.dart';`
 
@@ -231,7 +248,7 @@ Idempotent async wrapper (deduplicate concurrent calls by key) — roadmap #668.
 
 ### `async/observability_utils.dart`
 
-Observability helpers: wrap operations with timing and outcome hooks — roadmap #680.
+Observability helpers: wrap operations with timing and outcome hooks.
 
 `import 'package:saropa_dart_utils/async/observability_utils.dart';`
 
@@ -242,7 +259,7 @@ Observability helpers: wrap operations with timing and outcome hooks — roadmap
 
 ### `async/race_cancel_utils.dart`
 
-Race with cancellation (first success wins, cancel rest) — roadmap #667.
+Race with cancellation (first success wins, cancel rest).
 
 `import 'package:saropa_dart_utils/async/race_cancel_utils.dart';`
 
@@ -252,7 +269,7 @@ Race with cancellation (first success wins, cancel rest) — roadmap #667.
 
 ### `async/rate_limiter_utils.dart`
 
-Token-bucket rate limiter — roadmap #670.
+Token-bucket rate limiter.
 
 `import 'package:saropa_dart_utils/async/rate_limiter_utils.dart';`
 
@@ -267,9 +284,28 @@ Token-bucket rate limiter — roadmap #670.
 | `availableTokens` | method | The tokens currently available (after accrual), as a fractional count. |
 | `toString` | method |  |
 
+### `async/read_write_lock_utils.dart`
+
+Async read/write lock.
+
+`import 'package:saropa_dart_utils/async/read_write_lock_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ReadWriteLock` | class | A reader/writer lock with `read`/`write` scopes. |
+| `ReadWriteLock` | constructor | Creates a lock. |
+| `writerPreferred` | field | Whether a waiting writer blocks newly-arriving readers (anti-starvation). |
+| `activeReaders` | getter | Number of readers currently holding the lock. |
+| `isWriteLocked` | getter | Whether a writer currently holds the lock exclusively. |
+| `waitingReaders` | getter | Readers currently waiting to acquire. |
+| `waitingWriters` | getter | Writers currently waiting to acquire. |
+| `read` | method | Runs [action] under a shared read lock, releasing it afterward even if [action] throws. |
+| `write` | method | Runs [action] under the exclusive write lock, releasing it afterward even if [action] throws. |
+| `toString` | method |  |
+
 ### `async/resource_pool_utils.dart`
 
-Async resource pool with a fixed maximum size — roadmap #666.
+Async resource pool with a fixed maximum size.
 
 `import 'package:saropa_dart_utils/async/resource_pool_utils.dart';`
 
@@ -291,7 +327,7 @@ Async resource pool with a fixed maximum size — roadmap #666.
 
 ### `async/retry_policy_utils.dart`
 
-Retry policy (fixed, backoff, jitter) — roadmap #656.
+Retry policy (fixed, backoff, jitter).
 
 `import 'package:saropa_dart_utils/async/retry_policy_utils.dart';`
 
@@ -313,17 +349,32 @@ Retry policy (fixed, backoff, jitter) — roadmap #656.
 
 ### `async/sequential_async_utils.dart`
 
-Sequential async map (one after another).
-
 `import 'package:saropa_dart_utils/async/sequential_async_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `mapSequential` | function | Sequential async map (one after another). |
 
+### `async/sliding_window_rate_limiter_utils.dart`
+
+Sliding-window-log rate limiter.
+
+`import 'package:saropa_dart_utils/async/sliding_window_rate_limiter_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `SlidingWindowRateLimiter` | class | Allows at most [limit] events per trailing [window] (a half-open `(now - window, now]` interval). |
+| `SlidingWindowRateLimiter` | constructor | Creates a limiter permitting [limit] (≥ 1) events per [window] (> 0). |
+| `limit` | field | Maximum events permitted within any single trailing [window]. |
+| `window` | field | The trailing window width. |
+| `tryAcquire` | method | Tries to record one event now: returns true and logs it if fewer than [limit] events fall in the current window, false otherwise (not logged). |
+| `currentCount` | method | The number of events currently inside the window (after pruning expired ones). |
+| `timeUntilAvailable` | method | How long until the next event would be admitted, or [Duration.zero] if one is admissible now. |
+| `toString` | method |  |
+
 ### `async/stream_buffer_utils.dart`
 
-Stream buffering (bufferCount, bufferTime-style) — roadmap #664.
+Stream buffering (bufferCount, bufferTime-style).
 
 `import 'package:saropa_dart_utils/async/stream_buffer_utils.dart';`
 
@@ -333,7 +384,7 @@ Stream buffering (bufferCount, bufferTime-style) — roadmap #664.
 
 ### `async/stream_combine_utils.dart`
 
-Stream join/zip/combineLatest operators — roadmap #661.
+Stream join/zip/combineLatest operators.
 
 `import 'package:saropa_dart_utils/async/stream_combine_utils.dart';`
 
@@ -356,7 +407,7 @@ Debounce a stream: emit an item only after a quiet gap.
 
 ### `async/stream_window_utils.dart`
 
-Stream windowing (time- and count-based) — roadmap #660.
+Stream windowing (time- and count-based).
 
 `import 'package:saropa_dart_utils/async/stream_window_utils.dart';`
 
@@ -366,7 +417,7 @@ Stream windowing (time- and count-based) — roadmap #660.
 
 ### `async/task_scheduler_utils.dart`
 
-Priority task scheduler with a concurrency limit — roadmap #655.
+Priority task scheduler with a concurrency limit.
 
 `import 'package:saropa_dart_utils/async/task_scheduler_utils.dart';`
 
@@ -405,7 +456,7 @@ Priority task scheduler with a concurrency limit — roadmap #655.
 
 ### `async/timeout_policy_utils.dart`
 
-Async timeout with fallback — roadmap #669.
+Async timeout with fallback.
 
 `import 'package:saropa_dart_utils/async/timeout_policy_utils.dart';`
 
@@ -439,8 +490,6 @@ IO-based gzip implementation using `dart:io`.
 | `gzipDecode` | function | Gzip-decodes [bytes] using `dart:io`. |
 
 ### `base64/gzip_codec_stub.dart`
-
-Stub gzip implementation for platforms without `dart:io` (e.g., web).
 
 `import 'package:saropa_dart_utils/base64/gzip_codec_stub.dart';`
 
@@ -486,7 +535,7 @@ Stub gzip implementation for platforms without `dart:io` (e.g., web).
 
 ### `caching/cache_interface.dart`
 
-Generic synchronous cache interface + a write-through async adapter — roadmap #523.
+Generic synchronous cache interface + a write-through async adapter.
 
 `import 'package:saropa_dart_utils/caching/cache_interface.dart';`
 
@@ -516,8 +565,6 @@ Generic synchronous cache interface + a write-through async adapter — roadmap 
 | `toString` | method |  |
 
 ### `caching/memoize_sync_utils.dart`
-
-Memoize sync function (by argument equality).
 
 `import 'package:saropa_dart_utils/caching/memoize_sync_utils.dart';`
 
@@ -560,7 +607,7 @@ Memoize sync function (by argument equality).
 
 ### `collections/balanced_partition_utils.dart`
 
-Balanced partitioning (K partitions with similar sums) — roadmap #474.
+Balanced partitioning (K partitions with similar sums).
 
 `import 'package:saropa_dart_utils/collections/balanced_partition_utils.dart';`
 
@@ -570,7 +617,7 @@ Balanced partitioning (K partitions with similar sums) — roadmap #474.
 
 ### `collections/bimap_utils.dart`
 
-Bi-directional map (key↔value both unique) — roadmap #514.
+Bi-directional map (key↔value both unique).
 
 `import 'package:saropa_dart_utils/collections/bimap_utils.dart';`
 
@@ -589,7 +636,7 @@ Bi-directional map (key↔value both unique) — roadmap #514.
 
 ### `collections/bin_packing_utils.dart`
 
-Greedy bin packing (items into bins with capacities) — roadmap #475.
+Greedy bin packing (items into bins with capacities).
 
 `import 'package:saropa_dart_utils/collections/bin_packing_utils.dart';`
 
@@ -599,7 +646,7 @@ Greedy bin packing (items into bins with capacities) — roadmap #475.
 
 ### `collections/bloom_filter_utils.dart`
 
-Bloom filter with tunable false positive rate — roadmap #455.
+Bloom filter with tunable false positive rate.
 
 `import 'package:saropa_dart_utils/collections/bloom_filter_utils.dart';`
 
@@ -608,14 +655,14 @@ Bloom filter with tunable false positive rate — roadmap #455.
 | `BloomFilterUtils` | class | Simple Bloom filter: add elements, test membership (may have false positives). |
 | `BloomFilterUtils` | constructor | Creates a filter sized for [expectedCount] elements at the target [falsePositiveRate] (default 1%). |
 | `expectedCount` | getter | Expected number of elements (used for sizing). |
-| `falsePositiveRate` | getter | Target false positive rate (e.g. |
+| `falsePositiveRate` | getter | Target false positive rate (e.g. 0.01 for 1%). |
 | `add` | method | Adds [element] to the filter (idempotent). |
 | `mightContain` | method | True if [element] might have been added (may have false positives). |
 | `toString` | method |  |
 
 ### `collections/chunk_overlap_utils.dart`
 
-Chunk + overlap windows for streaming — roadmap #465.
+Chunk + overlap windows for streaming.
 
 `import 'package:saropa_dart_utils/collections/chunk_overlap_utils.dart';`
 
@@ -625,7 +672,7 @@ Chunk + overlap windows for streaming — roadmap #465.
 
 ### `collections/columnar_view_utils.dart`
 
-Columnar view of list<Map<String, Object?>> for analytics — roadmap #470.
+Columnar view of list<Map<String, Object?>> for analytics.
 
 `import 'package:saropa_dart_utils/collections/columnar_view_utils.dart';`
 
@@ -636,7 +683,7 @@ Columnar view of list<Map<String, Object?>> for analytics — roadmap #470.
 
 ### `collections/damerau_levenshtein_utils.dart`
 
-Edit distance with transpositions (Damerau–Levenshtein) — roadmap #443.
+Edit distance with transpositions (Damerau–Levenshtein).
 
 `import 'package:saropa_dart_utils/collections/damerau_levenshtein_utils.dart';`
 
@@ -646,7 +693,7 @@ Edit distance with transpositions (Damerau–Levenshtein) — roadmap #443.
 
 ### `collections/dedup_set_expiry_utils.dart`
 
-Deduplicating set with expiry (for idempotency) — roadmap #511.
+Deduplicating set with expiry (for idempotency).
 
 `import 'package:saropa_dart_utils/collections/dedup_set_expiry_utils.dart';`
 
@@ -661,13 +708,13 @@ Deduplicating set with expiry (for idempotency) — roadmap #511.
 
 ### `collections/dependency_resolver_utils.dart`
 
-Dependency resolver with version constraints — roadmap #540.
+Dependency resolver with version constraints.
 
 `import 'package:saropa_dart_utils/collections/dependency_resolver_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `PackageManifest` | class | One available package version and the constraints it places on its own dependencies (`depName → constraint string`, e.g. |
+| `PackageManifest` | class | One available package version and the constraints it places on its own dependencies (`depName → constraint string`, e.g. `'^1.2.0'`). |
 | `PackageManifest` | constructor | Creates a manifest for [name] at [version] depending on [dependencies]. |
 | `name` | field | The package name. |
 | `version` | field | This package's version (dotted/semver string). |
@@ -684,7 +731,7 @@ Dependency resolver with version constraints — roadmap #540.
 
 ### `collections/difference_array_utils.dart`
 
-Difference arrays for efficient range updates — roadmap #484.
+Difference arrays for efficient range updates.
 
 `import 'package:saropa_dart_utils/collections/difference_array_utils.dart';`
 
@@ -698,7 +745,7 @@ Difference arrays for efficient range updates — roadmap #484.
 
 ### `collections/disjoint_set_utils.dart`
 
-Disjoint-set / union-find with path compression (roadmap #496).
+Disjoint-set / union-find with path compression ().
 
 `import 'package:saropa_dart_utils/collections/disjoint_set_utils.dart';`
 
@@ -713,7 +760,7 @@ Disjoint-set / union-find with path compression (roadmap #496).
 
 ### `collections/greedy_set_cover_utils.dart`
 
-Greedy set cover approximation — roadmap #447.
+Greedy set cover approximation.
 
 `import 'package:saropa_dart_utils/collections/greedy_set_cover_utils.dart';`
 
@@ -723,18 +770,18 @@ Greedy set cover approximation — roadmap #447.
 
 ### `collections/histogram_utils.dart`
 
-Histogram builder with fixed and quantile-based bins — roadmap #473.
+Histogram builder with fixed and quantile-based bins.
 
 `import 'package:saropa_dart_utils/collections/histogram_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `histogramFixed` | function | Build histogram: [values] binned by [edges] (sorted). |
-| `histogramQuantile` | function | Bin boundaries at quantiles (e.g. |
+| `histogramQuantile` | function | Bin boundaries at quantiles (e.g. 0, 0.25, 0.5, 0.75, 1). |
 
 ### `collections/interval_scheduling_utils.dart`
 
-Interval scheduling: max non-overlapping intervals (roadmap #445).
+Interval scheduling: max non-overlapping intervals ().
 
 `import 'package:saropa_dart_utils/collections/interval_scheduling_utils.dart';`
 
@@ -749,7 +796,7 @@ Interval scheduling: max non-overlapping intervals (roadmap #445).
 
 ### `collections/interval_tree_utils.dart`
 
-Interval tree for overlap (stabbing) queries — roadmap #494.
+Interval tree for overlap (stabbing) queries.
 
 `import 'package:saropa_dart_utils/collections/interval_tree_utils.dart';`
 
@@ -780,7 +827,7 @@ Interval tree for overlap (stabbing) queries — roadmap #494.
 
 ### `collections/inverted_index_utils.dart`
 
-In-memory inverted index for small datasets — roadmap #456.
+In-memory inverted index for small datasets.
 
 `import 'package:saropa_dart_utils/collections/inverted_index_utils.dart';`
 
@@ -790,7 +837,7 @@ In-memory inverted index for small datasets — roadmap #456.
 
 ### `collections/kmeans_utils.dart`
 
-K-means clustering (small K, small N) — roadmap #449.
+K-means clustering (small K, small N).
 
 `import 'package:saropa_dart_utils/collections/kmeans_utils.dart';`
 
@@ -800,7 +847,7 @@ K-means clustering (small K, small N) — roadmap #449.
 
 ### `collections/knapsack_utils.dart`
 
-0/1 Knapsack solver with reconstruction — roadmap #444.
+0/1 Knapsack solver with reconstruction.
 
 `import 'package:saropa_dart_utils/collections/knapsack_utils.dart';`
 
@@ -826,7 +873,7 @@ Longest common subsequence (LCS) of two lists.
 
 ### `collections/lcs_substring_utils.dart`
 
-Longest common substring (not subsequence) for two lists/strings (roadmap #442).
+Longest common substring (not subsequence) for two lists/strings ().
 
 `import 'package:saropa_dart_utils/collections/lcs_substring_utils.dart';`
 
@@ -837,7 +884,7 @@ Longest common substring (not subsequence) for two lists/strings (roadmap #442).
 
 ### `collections/lis_utils.dart`
 
-Longest increasing subsequence (LIS) with reconstruction (roadmap #441).
+Longest increasing subsequence (LIS) with reconstruction ().
 
 `import 'package:saropa_dart_utils/collections/lis_utils.dart';`
 
@@ -848,7 +895,7 @@ Longest increasing subsequence (LIS) with reconstruction (roadmap #441).
 
 ### `collections/multi_criteria_sort_utils.dart`
 
-Multi-criteria sort with weighted comparators — roadmap #462.
+Multi-criteria sort with weighted comparators.
 
 `import 'package:saropa_dart_utils/collections/multi_criteria_sort_utils.dart';`
 
@@ -857,9 +904,31 @@ Multi-criteria sort with weighted comparators — roadmap #462.
 | `sortByCriteria` | function | Returns a new list with [list]'s elements sorted by [compare]. |
 | `thenBy` | function | Builds a comparator that uses [primary] and then [thenByCompare] for ties. |
 
+### `collections/multi_index_collection_utils.dart`
+
+Multi-index collection.
+
+`import 'package:saropa_dart_utils/collections/multi_index_collection_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `MultiIndexCollection` | class | A collection of [T] indexed by one or more named key extractors. |
+| `MultiIndexCollection` | constructor | Creates a collection whose [indexers] map an index name to a key extractor (e.g. `{'email': (u) => u.email, 'city': (u) => u.city}`). |
+| `length` | getter | Total number of items held. |
+| `isEmpty` | getter | Whether the collection is empty. |
+| `indexNames` | getter | The configured index names. |
+| `all` | getter | All items in insertion order (an unmodifiable view). |
+| `add` | method | Adds [item], updating every index. |
+| `addAll` | method | Adds every item in [items]. |
+| `getBy` | method | Items whose [index] key equals [key], as an unmodifiable list (empty if none). |
+| `getOneBy` | method | The first item whose [index] key equals [key], or null. |
+| `containsKey` | method | Whether any item has [key] under [index]. |
+| `remove` | method | Removes [item] (matched by `==`) from the collection and every index. |
+| `toString` | method |  |
+
 ### `collections/multi_key_group_utils.dart`
 
-Group and aggregate by several keys at once — roadmap #477.
+Group and aggregate by several keys at once.
 
 `import 'package:saropa_dart_utils/collections/multi_key_group_utils.dart';`
 
@@ -867,16 +936,16 @@ Group and aggregate by several keys at once — roadmap #477.
 |--------|------|-------------|
 | `MultiKey` | class | A composite grouping key built from several selector values. |
 | `MultiKey` | constructor | Wraps the ordered selector [values] that make up this composite key. |
-| `values` | field | The selector values in selector order (e.g. |
+| `values` | field | The selector values in selector order (e.g. `[country, year]`). |
 | `operator ==` | operator |  |
 | `hashCode` | getter |  |
 | `toString` | method |  |
 | `groupByKeys` | function | Groups [items] by applying every selector in [keys], bucketing rows whose composite key is equal. |
-| `aggregateByKeys` | function | Groups [items] by [keys] and reduces each bucket with [aggregator], returning a map from composite key to the aggregate (e.g. |
+| `aggregateByKeys` | function | Groups [items] by [keys] and reduces each bucket with [aggregator], returning a map from composite key to the aggregate (e.g. a count, sum, or average per `(... |
 
 ### `collections/multiset_utils.dart`
 
-Multi-set (bag) union/intersection/difference — roadmap #464.
+Multi-set (bag) union/intersection/difference.
 
 `import 'package:saropa_dart_utils/collections/multiset_utils.dart';`
 
@@ -888,7 +957,7 @@ Multi-set (bag) union/intersection/difference — roadmap #464.
 
 ### `collections/nway_merge_utils.dart`
 
-N-way merge of multiple sorted iterables — roadmap #457.
+N-way merge of multiple sorted iterables.
 
 `import 'package:saropa_dart_utils/collections/nway_merge_utils.dart';`
 
@@ -898,7 +967,7 @@ N-way merge of multiple sorted iterables — roadmap #457.
 
 ### `collections/online_mean_variance_utils.dart`
 
-Online mean/variance for numeric streams — roadmap #466.
+Online mean/variance for numeric streams.
 
 `import 'package:saropa_dart_utils/collections/online_mean_variance_utils.dart';`
 
@@ -914,7 +983,7 @@ Online mean/variance for numeric streams — roadmap #466.
 
 ### `collections/pivot_unpivot_utils.dart`
 
-Pivot and unpivot for tabular data (list of maps) — roadmap #469.
+Pivot and unpivot for tabular data (list of maps).
 
 `import 'package:saropa_dart_utils/collections/pivot_unpivot_utils.dart';`
 
@@ -924,7 +993,7 @@ Pivot and unpivot for tabular data (list of maps) — roadmap #469.
 
 ### `collections/prefix_frequency_utils.dart`
 
-Prefix frequency table (for autocomplete) — roadmap #481.
+Prefix frequency table (for autocomplete).
 
 `import 'package:saropa_dart_utils/collections/prefix_frequency_utils.dart';`
 
@@ -934,7 +1003,7 @@ Prefix frequency table (for autocomplete) — roadmap #481.
 
 ### `collections/priority_map_utils.dart`
 
-Priority map (priority -> queues) — roadmap #528.
+Priority map (priority -> queues).
 
 `import 'package:saropa_dart_utils/collections/priority_map_utils.dart';`
 
@@ -959,7 +1028,7 @@ Quickselect: the k-th smallest/largest element without fully sorting.
 
 ### `collections/reservoir_sampling_utils.dart`
 
-Reservoir sampling for streaming data (roadmap #452).
+Reservoir sampling for streaming data ().
 
 `import 'package:saropa_dart_utils/collections/reservoir_sampling_utils.dart';`
 
@@ -969,7 +1038,7 @@ Reservoir sampling for streaming data (roadmap #452).
 
 ### `collections/ring_buffer_utils.dart`
 
-Ring buffer (bounded queue with overwrite) — roadmap #500.
+Ring buffer (bounded queue with overwrite).
 
 `import 'package:saropa_dart_utils/collections/ring_buffer_utils.dart';`
 
@@ -988,7 +1057,7 @@ Ring buffer (bounded queue with overwrite) — roadmap #500.
 
 ### `collections/rolling_hash_utils.dart`
 
-Rolling hash (Rabin–Karp style) for substring search — roadmap #482.
+Rolling hash (Rabin–Karp style) for substring search.
 
 `import 'package:saropa_dart_utils/collections/rolling_hash_utils.dart';`
 
@@ -999,7 +1068,7 @@ Rolling hash (Rabin–Karp style) for substring search — roadmap #482.
 
 ### `collections/row_column_table_utils.dart`
 
-Row-oriented vs column-oriented table conversion — roadmap #525.
+Row-oriented vs column-oriented table conversion.
 
 `import 'package:saropa_dart_utils/collections/row_column_table_utils.dart';`
 
@@ -1009,7 +1078,7 @@ Row-oriented vs column-oriented table conversion — roadmap #525.
 
 ### `collections/run_detection_utils.dart`
 
-Run detection (equal or increasing sequences with metadata) — roadmap #472.
+Run detection (equal or increasing sequences with metadata).
 
 `import 'package:saropa_dart_utils/collections/run_detection_utils.dart';`
 
@@ -1025,7 +1094,7 @@ Run detection (equal or increasing sequences with metadata) — roadmap #472.
 
 ### `collections/seeded_shuffle_utils.dart`
 
-Deterministic shuffler with seed — roadmap #529.
+Deterministic shuffler with seed.
 
 `import 'package:saropa_dart_utils/collections/seeded_shuffle_utils.dart';`
 
@@ -1035,7 +1104,7 @@ Deterministic shuffler with seed — roadmap #529.
 
 ### `collections/sliding_window_aggregate_utils.dart`
 
-Sliding window aggregations (min/max/sum/avg over moving window) — roadmap #451.
+Sliding window aggregations (min/max/sum/avg over moving window).
 
 `import 'package:saropa_dart_utils/collections/sliding_window_aggregate_utils.dart';`
 
@@ -1050,22 +1119,22 @@ Sliding window aggregations (min/max/sum/avg over moving window) — roadmap #45
 
 ### `collections/stream_quantile_utils.dart`
 
-Stream quantile estimation (P²-style approximate) — roadmap #453.
+Stream quantile estimation (P²-style approximate).
 
 `import 'package:saropa_dart_utils/collections/stream_quantile_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `StreamQuantileUtils` | class | Approximate percentile from a stream of values (single pass, fixed memory). |
-| `StreamQuantileUtils` | constructor | Creates an estimator for the quantile at [p], where [p] ranges from 0 to 1 (e.g. |
+| `StreamQuantileUtils` | constructor | Creates an estimator for the quantile at [p], where [p] ranges from 0 to 1 (e.g. 0.5 for the median). |
 | `p` | getter | The target quantile in the range 0 to 1. |
 | `add` | method | Feeds [value] into the estimator for inclusion in the quantile estimate. |
-| `quantile` | getter | Current approximate quantile at [p] (e.g. |
+| `quantile` | getter | Current approximate quantile at [p] (e.g. median when p is 0.5). |
 | `toString` | method |  |
 
 ### `collections/string_pool_utils.dart`
 
-Memory-conscious string pool (deduplicate repeating strings) — roadmap #518.
+Memory-conscious string pool (deduplicate repeating strings).
 
 `import 'package:saropa_dart_utils/collections/string_pool_utils.dart';`
 
@@ -1079,7 +1148,7 @@ Memory-conscious string pool (deduplicate repeating strings) — roadmap #518.
 
 ### `collections/time_bucket_utils.dart`
 
-Time-bucketed aggregation — roadmap #468.
+Time-bucketed aggregation.
 
 `import 'package:saropa_dart_utils/collections/time_bucket_utils.dart';`
 
@@ -1089,7 +1158,7 @@ Time-bucketed aggregation — roadmap #468.
 
 ### `collections/top_k_heap_utils.dart`
 
-Top-K by key via min-heap — roadmap #459.
+Top-K by key via min-heap.
 
 `import 'package:saropa_dart_utils/collections/top_k_heap_utils.dart';`
 
@@ -1099,7 +1168,7 @@ Top-K by key via min-heap — roadmap #459.
 
 ### `collections/trie_utils.dart`
 
-Trie (prefix tree) with insert/delete/prefix search (roadmap #491).
+Trie (prefix tree) with insert/delete/prefix search ().
 
 `import 'package:saropa_dart_utils/collections/trie_utils.dart';`
 
@@ -1124,7 +1193,7 @@ Trie (prefix tree) with insert/delete/prefix search (roadmap #491).
 
 ### `collections/weighted_interval_utils.dart`
 
-Weighted interval scheduling (max weight, DP) — roadmap #446.
+Weighted interval scheduling (max weight, DP).
 
 `import 'package:saropa_dart_utils/collections/weighted_interval_utils.dart';`
 
@@ -1140,7 +1209,7 @@ Weighted interval scheduling (max weight, DP) — roadmap #446.
 
 ### `collections/window_functions_utils.dart`
 
-Window functions (lag, lead, row_number) over ordered data — roadmap #471.
+Window functions (lag, lead, row_number) over ordered data.
 
 `import 'package:saropa_dart_utils/collections/window_functions_utils.dart';`
 
@@ -1157,7 +1226,7 @@ Window functions (lag, lead, row_number) over ordered data — roadmap #471.
 
 ### `datetime/business_calendar_utils.dart`
 
-Holiday-aware business calendar — roadmap #593.
+Holiday-aware business calendar.
 
 `import 'package:saropa_dart_utils/datetime/business_calendar_utils.dart';`
 
@@ -1233,7 +1302,7 @@ Holiday-aware business calendar — roadmap #593.
 
 ### `datetime/date_format_preset_utils.dart`
 
-Dashboard date-format presets (short / medium / long) — roadmap #615.
+Dashboard date-format presets (short / medium / long).
 
 `import 'package:saropa_dart_utils/datetime/date_format_preset_utils.dart';`
 
@@ -1245,9 +1314,9 @@ Dashboard date-format presets (short / medium / long) — roadmap #615.
 | `monthsShort` | field | Abbreviated month names, Jan..Dec (index = month - 1). |
 | `weekdays` | field | Full weekday names, Monday..Sunday (index = weekday - 1). |
 | `english` | field | English default used when no localized names are supplied. |
-| `formatDateShort` | function | Short preset: unambiguous ISO-8601 calendar date `yyyy-MM-dd` (e.g. |
-| `formatDateMedium` | function | Medium preset: abbreviated month, day, year (e.g. |
-| `formatDateLong` | function | Long preset: weekday, full month, day, year (e.g. |
+| `formatDateShort` | function | Short preset: unambiguous ISO-8601 calendar date `yyyy-MM-dd` (e.g. `2026-06-10`). |
+| `formatDateMedium` | function | Medium preset: abbreviated month, day, year (e.g. `Jun 10, 2026`). |
+| `formatDateLong` | function | Long preset: weekday, full month, day, year (e.g. `Wednesday, June 10, 2026`). |
 
 ### `datetime/date_time_arithmetic_extensions.dart`
 
@@ -1401,7 +1470,7 @@ Dashboard date-format presets (short / medium / long) — roadmap #615.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `DateTimeMoreExtensions` on `DateTime` | extension | DateTime More: is same day, is morning/afternoon/evening, duration between, within last N, etc. |
+| `DateTimeMoreExtensions` on `DateTime` | extension | DateTime More: is same day, is morning/afternoon/evening, duration between, within last N, etc.-310. |
 | `isSameDay` | method | True if this date is the same calendar day as [other]. |
 | `isMorning` | getter | True if hour is in 5..11 (morning). |
 | `isAfternoon` | getter | True if hour is in 12..16 (afternoon). |
@@ -1423,8 +1492,6 @@ Dashboard date-format presets (short / medium / long) — roadmap #615.
 | `compareDateTimeNullable` | method | Compares two nullable DateTimes for sorting purposes. |
 
 ### `datetime/date_time_overlap_utils.dart`
-
-Overlap of two date ranges.
 
 `import 'package:saropa_dart_utils/datetime/date_time_overlap_utils.dart';`
 
@@ -1457,8 +1524,8 @@ Overlap of two date ranges.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `DateTimeTimezoneOffsetExtensions` on `DateTime` | extension | Timezone offset string (e.g. |
-| `timeZoneOffsetString` | getter | Offset string for the local timezone (e.g. |
+| `DateTimeTimezoneOffsetExtensions` on `DateTime` | extension | Timezone offset string (e.g. +01:00, -05:30) from [DateTime]. |
+| `timeZoneOffsetString` | getter | Offset string for the local timezone (e.g. +01:00). |
 
 ### `datetime/date_time_utils.dart`
 
@@ -1487,7 +1554,7 @@ Overlap of two date ranges.
 |--------|------|-------------|
 | `DateTimeWeekInMonthExtensions` on `DateTime` | extension | Week number in month; ISO week string format/parse. |
 | `weekNumberInMonth` | getter | Week number within the month (1-based). |
-| `toIsoWeekString` | getter | ISO week string (e.g. |
+| `toIsoWeekString` | getter | ISO week string (e.g. "2026-W09"). |
 | `parseIsoWeekString` | function | Parses ISO week string "2026-W09" to the Monday of that week. |
 
 ### `datetime/duration_format_utils.dart`
@@ -1496,11 +1563,9 @@ Overlap of two date ranges.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `formatDuration` | function | Formats [Duration] as a short string (e.g. |
+| `formatDuration` | function | Formats [Duration] as a short string (e.g. "2h 30m" or "1d 2h"). |
 
 ### `datetime/duration_parse_utils.dart`
-
-Parses duration string like "1.5h", "90m", "2d 3h 30m".
 
 `import 'package:saropa_dart_utils/datetime/duration_parse_utils.dart';`
 
@@ -1510,7 +1575,7 @@ Parses duration string like "1.5h", "90m", "2d 3h 30m".
 
 ### `datetime/injectable_clock_utils.dart`
 
-Injectable clock for tests (consistent "now") — roadmap #614.
+Injectable clock for tests (consistent "now").
 
 `import 'package:saropa_dart_utils/datetime/injectable_clock_utils.dart';`
 
@@ -1526,7 +1591,7 @@ Injectable clock for tests (consistent "now") — roadmap #614.
 | `now` | method |  |
 | `toString` | method |  |
 | `defaultClock` | getter | Current clock used by code that depends on injectable time. |
-| `defaultClock` | setter | Sets the injectable clock (e.g. |
+| `defaultClock` | setter | Sets the injectable clock (e.g. [FixedClock] in tests). |
 | `_ClockHolder` | constructor |  |
 | `clock` | getter |  |
 | `clock` | setter |  |
@@ -1534,7 +1599,7 @@ Injectable clock for tests (consistent "now") — roadmap #614.
 
 ### `datetime/iso_interval_parse_utils.dart`
 
-ISO 8601 time-interval parser — roadmap #646.
+ISO 8601 time-interval parser.
 
 `import 'package:saropa_dart_utils/datetime/iso_interval_parse_utils.dart';`
 
@@ -1550,7 +1615,7 @@ ISO 8601 time-interval parser — roadmap #646.
 
 ### `datetime/period_split_utils.dart`
 
-Period splitting (by month/week) — roadmap #610.
+Period splitting (by month/week).
 
 `import 'package:saropa_dart_utils/datetime/period_split_utils.dart';`
 
@@ -1560,7 +1625,7 @@ Period splitting (by month/week) — roadmap #610.
 
 ### `datetime/quiet_hours_utils.dart`
 
-"Quiet hours" helper — roadmap #613.
+"Quiet hours" helper.
 
 `import 'package:saropa_dart_utils/datetime/quiet_hours_utils.dart';`
 
@@ -1580,7 +1645,7 @@ Period splitting (by month/week) — roadmap #610.
 
 ### `datetime/recurrence_iterator_utils.dart`
 
-Expand a parsed RRULE into concrete occurrences — roadmap #592.
+Expand a parsed RRULE into concrete occurrences.
 
 `import 'package:saropa_dart_utils/datetime/recurrence_iterator_utils.dart';`
 
@@ -1590,7 +1655,7 @@ Expand a parsed RRULE into concrete occurrences — roadmap #592.
 
 ### `datetime/relative_date_bucket_utils.dart`
 
-Relative date bucketing ("today", "yesterday", "last 7 days") — roadmap #616.
+Relative date bucketing ("today", "yesterday", "last 7 days").
 
 `import 'package:saropa_dart_utils/datetime/relative_date_bucket_utils.dart';`
 
@@ -1600,7 +1665,7 @@ Relative date bucketing ("today", "yesterday", "last 7 days") — roadmap #616.
 
 ### `datetime/rrule_parse_utils.dart`
 
-RFC 5545 recurrence-rule (RRULE) parser — a practical subset, roadmap #591.
+RFC 5545 recurrence-rule (RRULE) parser — a practical subset,.
 
 `import 'package:saropa_dart_utils/datetime/rrule_parse_utils.dart';`
 
@@ -1650,7 +1715,7 @@ RFC 5545 recurrence-rule (RRULE) parser — a practical subset, roadmap #591.
 
 ### `datetime/sla_calculator_utils.dart`
 
-SLA / due-date calculator over business hours + holidays — roadmap #595.
+SLA / due-date calculator over business hours + holidays.
 
 `import 'package:saropa_dart_utils/datetime/sla_calculator_utils.dart';`
 
@@ -1686,17 +1751,17 @@ SLA / due-date calculator over business hours + holidays — roadmap #595.
 
 ### `datetime/time_rounding_utils.dart`
 
-Flexible time rounding (nearest 5/10/15 min, ceiling/floor) — roadmap #600.
+Flexible time rounding (nearest 5/10/15 min, ceiling/floor).
 
 `import 'package:saropa_dart_utils/datetime/time_rounding_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `roundMinutes` | function | Rounds [minutes] to nearest [step] (e.g. |
+| `roundMinutes` | function | Rounds [minutes] to nearest [step] (e.g. 5, 10, 15). |
 
 ### `datetime/timebox_exception.dart`
 
-Timebox: run within time budget — roadmap #618.
+Timebox: run within time budget.
 
 `import 'package:saropa_dart_utils/datetime/timebox_exception.dart';`
 
@@ -1822,7 +1887,7 @@ Timebox: run within time budget — roadmap #618.
 
 ### `graph/astar_utils.dart`
 
-A* shortest path with pluggable heuristic — roadmap #534.
+A* shortest path with pluggable heuristic.
 
 `import 'package:saropa_dart_utils/graph/astar_utils.dart';`
 
@@ -1832,7 +1897,7 @@ A* shortest path with pluggable heuristic — roadmap #534.
 
 ### `graph/bfs_dfs_utils.dart`
 
-BFS/DFS traversal with hooks (roadmap #532).
+BFS/DFS traversal with hooks ().
 
 `import 'package:saropa_dart_utils/graph/bfs_dfs_utils.dart';`
 
@@ -1843,7 +1908,7 @@ BFS/DFS traversal with hooks (roadmap #532).
 
 ### `graph/bipartite_utils.dart`
 
-Bipartite graph check and partitioning — roadmap #546.
+Bipartite graph check and partitioning.
 
 `import 'package:saropa_dart_utils/graph/bipartite_utils.dart';`
 
@@ -1853,7 +1918,7 @@ Bipartite graph check and partitioning — roadmap #546.
 
 ### `graph/connected_components_utils.dart`
 
-Connected components (and optionally SCC) — roadmap #537.
+Connected components (and optionally SCC).
 
 `import 'package:saropa_dart_utils/graph/connected_components_utils.dart';`
 
@@ -1863,7 +1928,7 @@ Connected components (and optionally SCC) — roadmap #537.
 
 ### `graph/critical_path_utils.dart`
 
-Critical path (longest path in DAG) — roadmap #550.
+Critical path (longest path in DAG).
 
 `import 'package:saropa_dart_utils/graph/critical_path_utils.dart';`
 
@@ -1873,7 +1938,7 @@ Critical path (longest path in DAG) — roadmap #550.
 
 ### `graph/dag_scheduler_utils.dart`
 
-DAG-based task scheduler (topological + priorities) — roadmap #558.
+DAG-based task scheduler (topological + priorities).
 
 `import 'package:saropa_dart_utils/graph/dag_scheduler_utils.dart';`
 
@@ -1883,7 +1948,7 @@ DAG-based task scheduler (topological + priorities) — roadmap #558.
 
 ### `graph/dijkstra_utils.dart`
 
-Dijkstra shortest path on weighted graphs (roadmap #533).
+Dijkstra shortest path on weighted graphs ().
 
 `import 'package:saropa_dart_utils/graph/dijkstra_utils.dart';`
 
@@ -1894,7 +1959,7 @@ Dijkstra shortest path on weighted graphs (roadmap #533).
 
 ### `graph/floyd_warshall_utils.dart`
 
-All-pairs shortest paths (Floyd–Warshall) — roadmap #536.
+All-pairs shortest paths (Floyd–Warshall).
 
 `import 'package:saropa_dart_utils/graph/floyd_warshall_utils.dart';`
 
@@ -1904,7 +1969,7 @@ All-pairs shortest paths (Floyd–Warshall) — roadmap #536.
 
 ### `graph/graph_diff_utils.dart`
 
-Graph diff (added/removed/changed edges) — roadmap #553.
+Graph diff (added/removed/changed edges).
 
 `import 'package:saropa_dart_utils/graph/graph_diff_utils.dart';`
 
@@ -1914,7 +1979,7 @@ Graph diff (added/removed/changed edges) — roadmap #553.
 
 ### `graph/graph_utils.dart`
 
-Graph representation helpers: adjacency list / weighted edges (roadmap #531).
+Graph representation helpers: adjacency list / weighted edges ().
 
 `import 'package:saropa_dart_utils/graph/graph_utils.dart';`
 
@@ -1933,7 +1998,7 @@ Graph representation helpers: adjacency list / weighted edges (roadmap #531).
 
 ### `graph/hierarchy_utils.dart`
 
-Hierarchy flattener and builder from flat list with parent ids — roadmap #556, #557.
+Hierarchy flattener and builder from flat list with parent ids, #557.
 
 `import 'package:saropa_dart_utils/graph/hierarchy_utils.dart';`
 
@@ -1949,7 +2014,7 @@ Hierarchy flattener and builder from flat list with parent ids — roadmap #556,
 
 ### `graph/line_simplify_utils.dart`
 
-Line simplification (Douglas–Peucker) — roadmap #547.
+Line simplification (Douglas–Peucker).
 
 `import 'package:saropa_dart_utils/graph/line_simplify_utils.dart';`
 
@@ -1964,7 +2029,7 @@ Line simplification (Douglas–Peucker) — roadmap #547.
 
 ### `graph/mst_utils.dart`
 
-Minimum spanning tree (Kruskal) — roadmap #538.
+Minimum spanning tree (Kruskal).
 
 `import 'package:saropa_dart_utils/graph/mst_utils.dart';`
 
@@ -1974,7 +2039,7 @@ Minimum spanning tree (Kruskal) — roadmap #538.
 
 ### `graph/topological_sort_utils.dart`
 
-Topological sort with cycle detection — roadmap #539.
+Topological sort with cycle detection.
 
 `import 'package:saropa_dart_utils/graph/topological_sort_utils.dart';`
 
@@ -1984,7 +2049,7 @@ Topological sort with cycle detection — roadmap #539.
 
 ### `graph/tree_utils.dart`
 
-Tree utilities (LCA, depth, subtree size) — roadmap #555.
+Tree utilities (LCA, depth, subtree size).
 
 `import 'package:saropa_dart_utils/graph/tree_utils.dart';`
 
@@ -1998,8 +2063,6 @@ Tree utilities (LCA, depth, subtree size) — roadmap #555.
 ## HTML
 
 ### `html/html_entity_data.dart`
-
-Length of the longest key in [htmlNamedEntities].
 
 `import 'package:saropa_dart_utils/html/html_entity_data.dart';`
 
@@ -2111,8 +2174,6 @@ Length of the longest key in [htmlNamedEntities].
 
 ### `iterable/iterable_diff_extensions.dart`
 
-Diff two lists: added, removed, unchanged.
-
 `import 'package:saropa_dart_utils/iterable/iterable_diff_extensions.dart';`
 
 | Symbol | Kind | Description |
@@ -2216,8 +2277,6 @@ Diff two lists: added, removed, unchanged.
 
 ### `iterable/iterable_min_max_extensions.dart`
 
-Min/max by key (return element).
-
 `import 'package:saropa_dart_utils/iterable/iterable_min_max_extensions.dart';`
 
 | Symbol | Kind | Description |
@@ -2232,7 +2291,7 @@ Min/max by key (return element).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `IterableTakeDropLast` on `Iterable<T>` | extension | Collections More: take/drop last, replace first/all, cycle, pad, unzip, segment, consecutive pairs, etc. |
+| `IterableTakeDropLast` on `Iterable<T>` | extension | Collections More: take/drop last, replace first/all, cycle, pad, unzip, segment, consecutive pairs, etc.-290. |
 | `takeLast` | method | Last [n] elements; all if n >= length. |
 | `dropLast` | method | All but the last [n] elements. |
 | `IterableReplace` on `List<T>` | extension | Replace first or all occurrences in a list. |
@@ -2352,8 +2411,6 @@ Min/max by key (return element).
 ## JSON
 
 ### `json/json_epoch_scale.dart`
-
-Scale for epoch timestamp parsing.
 
 `import 'package:saropa_dart_utils/json/json_epoch_scale.dart';`
 
@@ -2495,7 +2552,7 @@ Scale for epoch timestamp parsing.
 | `ListOfListExtension` on `List<List<T>>` | extension | Utilities for nested lists (matrices): totals, flattening, copying, and matrix-string rendering. |
 | `totalLength` | getter | sum the total number of items |
 | `totalUniqueLength` | getter | Getting the length of [toFlattenedList] |
-| `toFlattenedList` | method | Extension method that returns a flattened list of unique elements of type T. |
+| `toFlattenedList` | method | Extension method that returns a flattened list of unique elements of type T. Returns `null` if this list is empty or all inner lists are empty. |
 | `getChildListLengths` | method | Returns a list containing the lengths of the child lists in parentList. |
 | `copy` | method | Returns `true` after copying the elements of this list into [destination], or `false` if the dimensions do not match. |
 | `clone` | method | Returns a new list that is an exact duplicate of this list. |
@@ -2595,8 +2652,6 @@ Deep freeze: recursively unmodifiable views of maps, lists, and sets.
 
 ### `map/map_deep_utils.dart`
 
-Deep copy for maps and lists.
-
 `import 'package:saropa_dart_utils/map/map_deep_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -2640,8 +2695,6 @@ Deep copy for maps and lists.
 
 ### `map/map_diff_utils.dart`
 
-Map diff: keys added, removed, changed.
-
 `import 'package:saropa_dart_utils/map/map_diff_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -2681,7 +2734,7 @@ Map diff: keys added, removed, changed.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `MapFlattenExtensions` on `Map<String, dynamic>` | extension | Flatten/unflatten keys (e.g. |
+| `MapFlattenExtensions` on `Map<String, dynamic>` | extension | Flatten/unflatten keys (e.g. a.b.c -> value). |
 | `flattenKeys` | method | Flattens nested keys to dot-separated keys. |
 | `unflattenKeys` | method | Unflattens dot-separated keys into nested maps. |
 
@@ -2719,7 +2772,7 @@ Map diff: keys added, removed, changed.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `MapFromIterableExtension` on `Iterable<T>` | extension | Map More: from iterable, find key by value, rename key, ensure key, etc. |
+| `MapFromIterableExtension` on `Iterable<T>` | extension | Map More: from iterable, find key by value, rename key, ensure key, etc.-300. |
 | `toMapWith` | method | Builds a map from [keyOf] and [valueOf] for each element; later elements overwrite. |
 | `MapKeysValuesList` on `Map<K, V>` | extension | Keys/values as lists. |
 | `keysList` | getter | All keys in iteration order. |
@@ -2781,8 +2834,6 @@ Map diff: keys added, removed, changed.
 
 ### `niche/checksum_utils.dart`
 
-Simple additive checksum for integrity.
-
 `import 'package:saropa_dart_utils/niche/checksum_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -2801,8 +2852,6 @@ Simple additive checksum for integrity.
 | `contrastRatio` | function | Returns the WCAG contrast ratio between two sRGB colors. |
 
 ### `niche/hash_utils.dart`
-
-Simple hash for cache key from objects.
 
 `import 'package:saropa_dart_utils/niche/hash_utils.dart';`
 
@@ -2845,8 +2894,6 @@ Simple hash for cache key from objects.
 
 ### `niche/pad_format_utils.dart`
 
-Pad number with leading zeros.
-
 `import 'package:saropa_dart_utils/niche/pad_format_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -2863,8 +2910,6 @@ Pad number with leading zeros.
 | `randomAlphanumeric` | function | Returns a random alphanumeric string of [length] characters. |
 
 ### `niche/string_diff_utils.dart`
-
-Diff two strings (line-by-line).
 
 `import 'package:saropa_dart_utils/niche/string_diff_utils.dart';`
 
@@ -2898,8 +2943,6 @@ GCD, LCM, and related integer math.
 
 ### `num/num_compact_parse_extensions.dart`
 
-Parse compact number ("1.2K" → 1200).
-
 `import 'package:saropa_dart_utils/num/num_compact_parse_extensions.dart';`
 
 | Symbol | Kind | Description |
@@ -2928,8 +2971,6 @@ Parse compact number ("1.2K" → 1200).
 
 ### `num/num_factorial_utils.dart`
 
-Factorial with overflow guard.
-
 `import 'package:saropa_dart_utils/num/num_factorial_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -2944,11 +2985,9 @@ Factorial with overflow guard.
 |--------|------|-------------|
 | `NumFormatExtensions` on `num` | extension | Format numbers: significant digits, compact (1.2K). |
 | `roundToSignificantDigits` | method | Rounds to [significantDigits] significant digits. |
-| `toCompactString` | method | Formats as compact string (e.g. |
+| `toCompactString` | method | Formats as compact string (e.g. 1200 → "1.2K", 1500000 → "1.5M"). |
 
 ### `num/num_iterable_extensions.dart`
-
-Sum, count, average for iterable of num.
 
 `import 'package:saropa_dart_utils/num/num_iterable_extensions.dart';`
 
@@ -2960,8 +2999,6 @@ Sum, count, average for iterable of num.
 | `average` | getter | Average (mean). |
 
 ### `num/num_lerp_utils.dart`
-
-Lerp, inverse lerp, map value from one range to another.
 
 `import 'package:saropa_dart_utils/num/num_lerp_utils.dart';`
 
@@ -2978,11 +3015,9 @@ Lerp, inverse lerp, map value from one range to another.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `parseNumberLocale` | function | Parse/format number with locale (thousands sep, decimals). |
-| `formatNumberLocale` | function | Formats number with [decimalPlaces] and optional [groupSep] (e.g. |
+| `formatNumberLocale` | function | Formats number with [decimalPlaces] and optional [groupSep] (e.g. ','). |
 
 ### `num/num_min_max_utils.dart`
-
-Min/max of two or N numbers.
 
 `import 'package:saropa_dart_utils/num/num_min_max_utils.dart';`
 
@@ -2999,7 +3034,7 @@ Min/max of two or N numbers.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `modulo` | function | Modulo that handles negative (e.g. |
+| `modulo` | function | Modulo that handles negative (e.g. -1 % 7 → 6). |
 
 ### `num/num_more_extensions.dart`
 
@@ -3007,7 +3042,7 @@ Min/max of two or N numbers.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `NumMoreExtensions` on `num` | extension | Number More: clamp non-negative, isInteger, round half up, truncate decimals, percentage, degrees/radians, etc. |
+| `NumMoreExtensions` on `num` | extension | Number More: clamp non-negative, isInteger, round half up, truncate decimals, percentage, degrees/radians, etc.-325. |
 | `clampNonNegative` | method | Returns this number rounded to the nearest int, with negatives clamped to `0`. |
 | `isInteger` | getter | Returns `true` if this number has no fractional part. |
 | `truncateToDecimals` | method | Truncates this number to [places] decimal places without rounding. |
@@ -3016,15 +3051,13 @@ Min/max of two or N numbers.
 | `degreesToRadians` | function | Converts an angle in degrees ([deg]) to radians. |
 | `radiansToDegrees` | function | Converts an angle in radians ([rad]) to degrees. |
 | `normalizeAngle360` | function | Normalizes [degrees] into the range `[0, 360)`. |
-| `normalizeAngle180` | function | Normalizes [degrees] into the range `(-180, 180]`. |
+| `normalizeAngle180` | function | Normalizes [degrees] into the range `(-180, 180]`. Useful for shortest-rotation calculations where the sign indicates direction. Example: |
 | `digitSum` | function | Returns the sum of the decimal digits of [n]. |
 | `isPowerOfTwo` | function | Returns `true` if [n] is a positive power of two (`1, 2, 4, 8, …`). |
 | `nextPowerOfTwo` | function | Returns the smallest power of two greater than or equal to [n]. |
 | `isqrt` | function | Returns the integer square root of [n] (the floor of its real square root). |
 
 ### `num/num_prime_utils.dart`
-
-Is prime (small numbers), prime factors.
 
 `import 'package:saropa_dart_utils/num/num_prime_utils.dart';`
 
@@ -3111,8 +3144,6 @@ Is prime (small numbers), prime factors.
 
 ### `object/cast_utils.dart`
 
-Cast or null (safe cast).
-
 `import 'package:saropa_dart_utils/object/cast_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -3120,8 +3151,6 @@ Cast or null (safe cast).
 | `castOrNull` | function | Cast or null (safe cast). |
 
 ### `object/coalesce_utils.dart`
-
-Null coalesce chain (first non-null of list).
 
 `import 'package:saropa_dart_utils/object/coalesce_utils.dart';`
 
@@ -3148,8 +3177,6 @@ Null coalesce chain (first non-null of list).
 
 ### `object/identity_utils.dart`
 
-Identity equality (same reference).
-
 `import 'package:saropa_dart_utils/object/identity_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -3157,8 +3184,6 @@ Identity equality (same reference).
 | `identityEquals` | function | Identity equality (same reference). |
 
 ### `object/nullable_more_extensions.dart`
-
-Null-aware helpers for any nullable receiver `T?`: run a side effect, transform, or supply a fallback only when (or unless) the value is null.
 
 `import 'package:saropa_dart_utils/object/nullable_more_extensions.dart';`
 
@@ -3179,8 +3204,6 @@ Null-aware helpers for any nullable receiver `T?`: run a side effect, transform,
 
 ### `object/pipe_compose_utils.dart`
 
-Pipe (chain unary functions).
-
 `import 'package:saropa_dart_utils/object/pipe_compose_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -3190,8 +3213,6 @@ Pipe (chain unary functions).
 | `once` | function | Returns a callable that runs [block] only on its first invocation and is a no-op thereafter. |
 
 ### `object/pipe_utils.dart`
-
-Also/let style (pipe value through function).
 
 `import 'package:saropa_dart_utils/object/pipe_utils.dart';`
 
@@ -3209,8 +3230,6 @@ Also/let style (pipe value through function).
 | `requireNonNull` | function | Require non-null (throw descriptive if null). |
 
 ### `object/shallow_copy_utils.dart`
-
-Shallow copy list/map.
 
 `import 'package:saropa_dart_utils/object/shallow_copy_utils.dart';`
 
@@ -3233,14 +3252,14 @@ Parse an HTTP `Accept-Language` header into ranked language ranges.
 |--------|------|-------------|
 | `LanguageRange` | class | A single weighted language range from an `Accept-Language` header. |
 | `LanguageRange` | constructor | Creates a range pairing a [tag] (already lower-cased by the parser) with its [quality] weight in 0.0..1.0. |
-| `tag` | field | The language tag, lower-cased (e.g. |
+| `tag` | field | The language tag, lower-cased (e.g. `en-us`, `fr`, or `*`). |
 | `quality` | field | The quality weight in 0.0..1.0 (absent `q=` defaults to 1.0). |
 | `toString` | method |  |
 | `parseAcceptLanguage` | function | Parses [header] into language ranges ordered most-preferred first. |
 
 ### `parsing/canonicalize_json_utils.dart`
 
-Canonicalization (sort keys, normalize) for JSON-like data — roadmap #639.
+Canonicalization (sort keys, normalize) for JSON-like data.
 
 `import 'package:saropa_dart_utils/parsing/canonicalize_json_utils.dart';`
 
@@ -3250,7 +3269,7 @@ Canonicalization (sort keys, normalize) for JSON-like data — roadmap #639.
 
 ### `parsing/changelog_section_utils.dart`
 
-Changelog/semantic version section parser — roadmap #431.
+Changelog/semantic version section parser.
 
 `import 'package:saropa_dart_utils/parsing/changelog_section_utils.dart';`
 
@@ -3260,7 +3279,7 @@ Changelog/semantic version section parser — roadmap #431.
 
 ### `parsing/config_precedence_utils.dart`
 
-Config precedence resolver: defaults → overlay (roadmap #644).
+Config precedence resolver: defaults → overlay ().
 
 `import 'package:saropa_dart_utils/parsing/config_precedence_utils.dart';`
 
@@ -3289,7 +3308,7 @@ Parse a standard 5-field cron expression and compute its next run time.
 
 ### `parsing/csv_dialect_utils.dart`
 
-CSV/TSV dialect detector (roadmap #435).
+CSV/TSV dialect detector ().
 
 `import 'package:saropa_dart_utils/parsing/csv_dialect_utils.dart';`
 
@@ -3297,14 +3316,12 @@ CSV/TSV dialect detector (roadmap #435).
 |--------|------|-------------|
 | `CsvDialectUtils` | class | Detected dialect: delimiter, hasHeader. |
 | `CsvDialectUtils` | constructor | Creates a detected dialect with the field [delimiter] and whether the first row is a header ([hasHeader]). |
-| `delimiter` | getter | The detected field delimiter, e.g. |
+| `delimiter` | getter | The detected field delimiter, e.g. `,` for CSV or `\t` for TSV. |
 | `hasHeader` | getter | Whether the first row was treated as a header row. |
 | `toString` | method |  |
 | `detectCsvDialect` | function | Detects the dialect of a CSV/TSV [sample] by inspecting its first line. |
 
 ### `parsing/csv_parse_utils.dart`
-
-Parse one CSV line (handle quoted fields, commas inside quotes).
 
 `import 'package:saropa_dart_utils/parsing/csv_parse_utils.dart';`
 
@@ -3314,7 +3331,7 @@ Parse one CSV line (handle quoted fields, commas inside quotes).
 
 ### `parsing/csv_writer_utils.dart`
 
-CSV writer with configurable dialect and RFC 4180 auto-quoting — roadmap #622.
+CSV writer with configurable dialect and RFC 4180 auto-quoting.
 
 `import 'package:saropa_dart_utils/parsing/csv_writer_utils.dart';`
 
@@ -3325,17 +3342,26 @@ CSV writer with configurable dialect and RFC 4180 auto-quoting — roadmap #622.
 
 ### `parsing/email_validation_utils.dart`
 
-Email validation (reasonable regex, not RFC-perfect).
-
 `import 'package:saropa_dart_utils/parsing/email_validation_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `isValidEmail` | function | Returns `true` if [email] looks like a valid address. |
 
-### `parsing/hex_color_utils.dart`
+### `parsing/expression_evaluator_utils.dart`
 
-Parse hex color string (#RGB, #RRGGBB, #AARRGGBB).
+Safe expression evaluator (arithmetic + boolean).
+
+`import 'package:saropa_dart_utils/parsing/expression_evaluator_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `evaluateExpression` | function | Evaluates [expression] against [variables], returning the result (a `num`, `bool`, or `String`). |
+| `evaluateBool` | function | Evaluates [expression] expecting a boolean result (the common case for a filter/condition); throws [FormatException] if it isn't boolean. |
+| `_Evaluator` | constructor |  |
+| `run` | method |  |
+
+### `parsing/hex_color_utils.dart`
 
 `import 'package:saropa_dart_utils/parsing/hex_color_utils.dart';`
 
@@ -3345,7 +3371,7 @@ Parse hex color string (#RGB, #RRGGBB, #AARRGGBB).
 
 ### `parsing/ini_parser_utils.dart`
 
-INI / `.env` configuration parser — roadmap #626.
+INI / `.env` configuration parser.
 
 `import 'package:saropa_dart_utils/parsing/ini_parser_utils.dart';`
 
@@ -3357,8 +3383,6 @@ INI / `.env` configuration parser — roadmap #626.
 
 ### `parsing/isbn_utils.dart`
 
-ISBN-10/13 validation.
-
 `import 'package:saropa_dart_utils/parsing/isbn_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -3368,7 +3392,7 @@ ISBN-10/13 validation.
 
 ### `parsing/json_diff_patch_utils.dart`
 
-JSON diff/patch (simple key-level) — roadmap #624.
+JSON diff/patch (simple key-level).
 
 `import 'package:saropa_dart_utils/parsing/json_diff_patch_utils.dart';`
 
@@ -3378,7 +3402,7 @@ JSON diff/patch (simple key-level) — roadmap #624.
 
 ### `parsing/json_model_mapper_utils.dart`
 
-Read typed fields from decoded JSON, collecting errors instead of throwing — roadmap #637.
+Read typed fields from decoded JSON, collecting errors instead of throwing.
 
 `import 'package:saropa_dart_utils/parsing/json_model_mapper_utils.dart';`
 
@@ -3407,7 +3431,7 @@ Read a value from decoded JSON by a simple dotted/indexed path.
 
 ### `parsing/json_pretty_print_utils.dart`
 
-Pretty-print decoded JSON with configurable indentation and key sorting — roadmap #436.
+Pretty-print decoded JSON with configurable indentation and key sorting.
 
 `import 'package:saropa_dart_utils/parsing/json_pretty_print_utils.dart';`
 
@@ -3417,7 +3441,7 @@ Pretty-print decoded JSON with configurable indentation and key sorting — road
 
 ### `parsing/json_schema_utils.dart`
 
-Declarative schema validation for JSON-like data — roadmap #636.
+Declarative schema validation for JSON-like data.
 
 `import 'package:saropa_dart_utils/parsing/json_schema_utils.dart';`
 
@@ -3438,9 +3462,23 @@ Declarative schema validation for JSON-like data — roadmap #636.
 | `allowed` | field | When non-null, the value must equal one of these (an enum constraint). |
 | `validateJsonSchema` | function | Validates a decoded JSON [object] against [schema], returning a [ValidationErrors] collecting every problem (it never throws). |
 
-### `parsing/luhn_utils.dart`
+### `parsing/log_line_parser_utils.dart`
 
-Luhn check (credit card / ID validation).
+Template-driven log line parser.
+
+`import 'package:saropa_dart_utils/parsing/log_line_parser_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `LogLineParser` | class | Parses log lines against a compiled format template. |
+| `LogLineParser` | constructor | Compiles [template] (with `{field}` / `{field:pattern}` placeholders). |
+| `LogLineParser.apacheCommon` | constructor | Apache/NCSA common log format: host ident user [time] "request" status size. |
+| `LogLineParser.apacheCombined` | constructor | Apache combined log format (common + "referer" "user-agent"). |
+| `LogLineParser.nginxCombined` | constructor | nginx default `combined` access log (same shape as Apache combined). |
+| `fields` | getter | The field names this parser extracts, in template order. |
+| `parse` | method | Parses [line] into `field → value`, or null if the line doesn't match the template. |
+
+### `parsing/luhn_utils.dart`
 
 `import 'package:saropa_dart_utils/parsing/luhn_utils.dart';`
 
@@ -3450,7 +3488,7 @@ Luhn check (credit card / ID validation).
 
 ### `parsing/nested_query_parser_utils.dart`
 
-Query string parser with nested keys (a[b][c]) — roadmap #628.
+Query string parser with nested keys (a[b][c]).
 
 `import 'package:saropa_dart_utils/parsing/nested_query_parser_utils.dart';`
 
@@ -3459,8 +3497,6 @@ Query string parser with nested keys (a[b][c]) — roadmap #628.
 | `parseNestedQuery` | function | Parses [queryString] into a nested map. |
 
 ### `parsing/parse_bool_utils.dart`
-
-Parse simple boolean ("on"/"off", "1"/"0", "yes"/"no").
 
 `import 'package:saropa_dart_utils/parsing/parse_bool_utils.dart';`
 
@@ -3474,11 +3510,11 @@ Parse simple boolean ("on"/"off", "1"/"0", "yes"/"no").
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `parseListFromString` | function | Parse list from string (e.g. |
+| `parseListFromString` | function | Parse list from string (e.g. "a,b,c" or JSON array string). |
 
 ### `parsing/parser_error_utils.dart`
 
-Rich parser error (line/column, context) — roadmap #647.
+Rich parser error (line/column, context).
 
 `import 'package:saropa_dart_utils/parsing/parser_error_utils.dart';`
 
@@ -3498,7 +3534,7 @@ Rich parser error (line/column, context) — roadmap #647.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `parseIntBase` | function | Parsing More: parse int with base, validate URL/IP, parse port, validate hex, etc. |
+| `parseIntBase` | function | Parsing More: parse int with base, validate URL/IP, parse port, validate hex, etc.-335. |
 | `isValidUrlLoose` | function | Returns `true` if [s] begins with an `http://` or `https://` scheme. |
 | `isValidIpv4` | function | Returns `true` if [s] is a dotted-quad IPv4 address. |
 | `parsePortFromHostPort` | function | Extracts the port number from a `host:port` string in [hostPort]. |
@@ -3507,8 +3543,6 @@ Rich parser error (line/column, context) — roadmap #647.
 | `parseDottedDecimal` | function | Parses the dot-separated integers in [s] into a list. |
 
 ### `parsing/phone_normalize_utils.dart`
-
-Phone number normalize (digits only or E.164-ish).
 
 `import 'package:saropa_dart_utils/parsing/phone_normalize_utils.dart';`
 
@@ -3531,11 +3565,9 @@ Parse an HTTP `Range` request header (`bytes=` unit only).
 | `end` | field | Last byte offset (inclusive), or null for an open-ended range; for a suffix range it is the count of trailing bytes. |
 | `operator ==` | operator |  |
 | `hashCode` | getter |  |
-| `parseRangeHeader` | function | Parses [header] (e.g. |
+| `parseRangeHeader` | function | Parses [header] (e.g. `bytes=0-499,1000-`) into byte ranges, or `null` if the unit is not `bytes` or any range is malformed. |
 
 ### `parsing/semver_utils.dart`
-
-Semver parse and compare.
 
 `import 'package:saropa_dart_utils/parsing/semver_utils.dart';`
 
@@ -3546,15 +3578,13 @@ Semver parse and compare.
 | `major` | getter | The major version number (breaking changes). |
 | `minor` | getter | The minor version number (backward-compatible features). |
 | `patch` | getter | The patch version number (backward-compatible fixes). |
-| `pre` | getter | The pre-release identifier (e.g. |
-| `build` | getter | The build metadata (e.g. |
+| `pre` | getter | The pre-release identifier (e.g. `rc.1`), or an empty string if none. |
+| `build` | getter | The build metadata (e.g. `001`), or an empty string if none. |
 | `parse` | method | Parses [s] into a [SemverUtils], or returns `null` if it is not valid. |
 | `compareTo` | method | Compares this version against [other] following semver precedence rules. |
 | `toString` | method |  |
 
 ### `parsing/size_parse_utils.dart`
-
-Parse size string ("1.5 MB", "512K") to bytes; format bytes to human.
 
 `import 'package:saropa_dart_utils/parsing/size_parse_utils.dart';`
 
@@ -3563,9 +3593,21 @@ Parse size string ("1.5 MB", "512K") to bytes; format bytes to human.
 | `parseSizeToBytes` | function | Parses a human-readable size string in [input] into a byte count. |
 | `formatBytesToHuman` | function | Formats a byte count in [bytes] into a human-readable size string. |
 
-### `parsing/validate_non_empty_utils.dart`
+### `parsing/sql_filter_utils.dart`
 
-Validate non-empty after trim.
+SQL-like filter for in-memory rows.
+
+`import 'package:saropa_dart_utils/parsing/sql_filter_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RowPredicate` | typedef | A compiled filter: returns whether a row satisfies the clause. |
+| `filterRows` | function | Filters [rows] by [whereClause], returning the matching rows in order. |
+| `compileFilter` | function | Compiles [whereClause] into a reusable [RowPredicate] (parse once, apply to many rows). |
+| `_FilterParser` | constructor |  |
+| `parse` | method |  |
+
+### `parsing/validate_non_empty_utils.dart`
 
 `import 'package:saropa_dart_utils/parsing/validate_non_empty_utils.dart';`
 
@@ -3575,7 +3617,7 @@ Validate non-empty after trim.
 
 ### `parsing/varint_utils.dart`
 
-Varint encoding/decoding (Protobuf-style) — roadmap #635.
+Varint encoding/decoding (Protobuf-style).
 
 `import 'package:saropa_dart_utils/parsing/varint_utils.dart';`
 
@@ -3586,8 +3628,6 @@ Varint encoding/decoding (Protobuf-style) — roadmap #635.
 
 ### `parsing/version_compare_utils.dart`
 
-Version compare (semver or dotted).
-
 `import 'package:saropa_dart_utils/parsing/version_compare_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -3595,8 +3635,6 @@ Version compare (semver or dotted).
 | `compareVersions` | function | Version compare (semver or dotted). |
 
 ### `parsing/version_parse_utils.dart`
-
-Parse version string (major.minor.patch).
 
 `import 'package:saropa_dart_utils/parsing/version_parse_utils.dart';`
 
@@ -3622,8 +3660,6 @@ Parse version string (major.minor.patch).
 
 ### `regex/regex_common_utils.dart`
 
-Common regex: email (simple), phone (digits), URL (loose).
-
 `import 'package:saropa_dart_utils/regex/regex_common_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -3633,8 +3669,6 @@ Common regex: email (simple), phone (digits), URL (loose).
 | `regexUrlLoose` | getter | A loose URL pattern matching an `http://` or `https://` scheme (case- insensitive) followed by a run of non-whitespace, non-delimiter characters. |
 
 ### `regex/regex_match_utils.dart`
-
-Match all (return all matches with groups).
 
 `import 'package:saropa_dart_utils/regex/regex_match_utils.dart';`
 
@@ -3650,7 +3684,7 @@ Match all (return all matches with groups).
 
 ### `stats/bucketed_aggregate_utils.dart`
 
-Bucketed aggregation (sum/count/avg/min/max per bucket) — roadmap #570.
+Bucketed aggregation (sum/count/avg/min/max per bucket).
 
 `import 'package:saropa_dart_utils/stats/bucketed_aggregate_utils.dart';`
 
@@ -3662,7 +3696,7 @@ Bucketed aggregation (sum/count/avg/min/max per bucket) — roadmap #570.
 
 ### `stats/cdf_utils.dart`
 
-Empirical CDF and cumulative histogram for numeric samples — roadmap #574.
+Empirical CDF and cumulative histogram for numeric samples.
 
 `import 'package:saropa_dart_utils/stats/cdf_utils.dart';`
 
@@ -3681,7 +3715,7 @@ Empirical CDF and cumulative histogram for numeric samples — roadmap #574.
 
 ### `stats/confidence_interval_utils.dart`
 
-Confidence interval for mean (normal approximation) — roadmap #562.
+Confidence interval for mean (normal approximation).
 
 `import 'package:saropa_dart_utils/stats/confidence_interval_utils.dart';`
 
@@ -3691,7 +3725,7 @@ Confidence interval for mean (normal approximation) — roadmap #562.
 
 ### `stats/correlation_utils.dart`
 
-Correlation coefficients (Pearson) — roadmap #563.
+Correlation coefficients (Pearson).
 
 `import 'package:saropa_dart_utils/stats/correlation_utils.dart';`
 
@@ -3701,7 +3735,7 @@ Correlation coefficients (Pearson) — roadmap #563.
 
 ### `stats/data_normalization_utils.dart`
 
-Data normalization (z-score, min-max scaling) — roadmap #576.
+Data normalization (z-score, min-max scaling).
 
 `import 'package:saropa_dart_utils/stats/data_normalization_utils.dart';`
 
@@ -3712,7 +3746,7 @@ Data normalization (z-score, min-max scaling) — roadmap #576.
 
 ### `stats/feature_encoding_utils.dart`
 
-Feature scaling/encoding (bucketization, one-hot) — roadmap #589.
+Feature scaling/encoding (bucketization, one-hot).
 
 `import 'package:saropa_dart_utils/stats/feature_encoding_utils.dart';`
 
@@ -3723,7 +3757,7 @@ Feature scaling/encoding (bucketization, one-hot) — roadmap #589.
 
 ### `stats/funnel_utils.dart`
 
-Funnel analysis (drop-off between ordered steps) — roadmap #580.
+Funnel analysis (drop-off between ordered steps).
 
 `import 'package:saropa_dart_utils/stats/funnel_utils.dart';`
 
@@ -3738,7 +3772,7 @@ Funnel analysis (drop-off between ordered steps) — roadmap #580.
 
 ### `stats/grouped_stats_utils.dart`
 
-Per-key descriptive statistics over an iterable — roadmap #571.
+Per-key descriptive statistics over an iterable.
 
 `import 'package:saropa_dart_utils/stats/grouped_stats_utils.dart';`
 
@@ -3764,17 +3798,17 @@ Per-key descriptive statistics over an iterable — roadmap #571.
 
 ### `stats/linear_regression_utils.dart`
 
-Simple linear regression — roadmap #564.
+Simple linear regression.
 
 `import 'package:saropa_dart_utils/stats/linear_regression_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `linearRegression` | function | Simple linear regression y ~ x. |
+| `linearRegression` | function | Simple linear regression y ~ x. Returns (slope, intercept). |
 
 ### `stats/log_transform_utils.dart`
 
-Log/exp transforms for analytics — roadmap #575.
+Log/exp transforms for analytics.
 
 `import 'package:saropa_dart_utils/stats/log_transform_utils.dart';`
 
@@ -3786,7 +3820,7 @@ Log/exp transforms for analytics — roadmap #575.
 
 ### `stats/metric_rollup_utils.dart`
 
-Metric roll-up (daily → weekly → monthly) — roadmap #587.
+Metric roll-up (daily → weekly → monthly).
 
 `import 'package:saropa_dart_utils/stats/metric_rollup_utils.dart';`
 
@@ -3798,7 +3832,7 @@ Metric roll-up (daily → weekly → monthly) — roadmap #587.
 
 ### `stats/moving_average_utils.dart`
 
-Moving averages: simple, exponential (roadmap #565).
+Moving averages: simple, exponential ().
 
 `import 'package:saropa_dart_utils/stats/moving_average_utils.dart';`
 
@@ -3809,7 +3843,7 @@ Moving averages: simple, exponential (roadmap #565).
 
 ### `stats/outlier_mad_utils.dart`
 
-Outlier detection by MAD / Z-score — roadmap #467.
+Outlier detection by MAD / Z-score.
 
 `import 'package:saropa_dart_utils/stats/outlier_mad_utils.dart';`
 
@@ -3819,7 +3853,7 @@ Outlier detection by MAD / Z-score — roadmap #467.
 
 ### `stats/percentile_rank_utils.dart`
 
-Percentile rank and inverse percentile — roadmap #583.
+Percentile rank and inverse percentile.
 
 `import 'package:saropa_dart_utils/stats/percentile_rank_utils.dart';`
 
@@ -3830,7 +3864,7 @@ Percentile rank and inverse percentile — roadmap #583.
 
 ### `stats/quantile_summary_utils.dart`
 
-Quantile summary (percentiles, median, quartiles) — roadmap #572.
+Quantile summary (percentiles, median, quartiles).
 
 `import 'package:saropa_dart_utils/stats/quantile_summary_utils.dart';`
 
@@ -3848,7 +3882,7 @@ Quantile summary (percentiles, median, quartiles) — roadmap #572.
 
 ### `stats/retention_utils.dart`
 
-Retention curves (N-day retention) — roadmap #581.
+Retention curves (N-day retention).
 
 `import 'package:saropa_dart_utils/stats/retention_utils.dart';`
 
@@ -3858,7 +3892,7 @@ Retention curves (N-day retention) — roadmap #581.
 
 ### `stats/robust_stats_utils.dart`
 
-Robust statistics: MAD, trimmed mean (roadmap #561).
+Robust statistics: MAD, trimmed mean ().
 
 `import 'package:saropa_dart_utils/stats/robust_stats_utils.dart';`
 
@@ -3870,7 +3904,7 @@ Robust statistics: MAD, trimmed mean (roadmap #561).
 
 ### `stats/sampling_utils.dart`
 
-Sampling helpers (stratified, systematic) — roadmap #584.
+Sampling helpers (stratified, systematic).
 
 `import 'package:saropa_dart_utils/stats/sampling_utils.dart';`
 
@@ -3885,7 +3919,7 @@ Sampling helpers (stratified, systematic) — roadmap #584.
 
 ### `string/acronym_extract_utils.dart`
 
-Acronym/initialism extractor (e.g.
+Acronym/initialism extractor (e.g. "Saropa Dart Utils (SDU)").
 
 `import 'package:saropa_dart_utils/string/acronym_extract_utils.dart';`
 
@@ -3895,7 +3929,7 @@ Acronym/initialism extractor (e.g.
 
 ### `string/apply_patch_utils.dart`
 
-Apply patch (edit script) to string with validation (roadmap #403).
+Apply patch (edit script) to string with validation ().
 
 `import 'package:saropa_dart_utils/string/apply_patch_utils.dart';`
 
@@ -3929,7 +3963,7 @@ Apply patch (edit script) to string with validation (roadmap #403).
 
 ### `string/code_block_extract_utils.dart`
 
-Code block detector/extractor from mixed text (roadmap #422).
+Code block detector/extractor from mixed text ().
 
 `import 'package:saropa_dart_utils/string/code_block_extract_utils.dart';`
 
@@ -3940,7 +3974,7 @@ Code block detector/extractor from mixed text (roadmap #422).
 
 ### `string/did_you_mean_utils.dart`
 
-"Did you mean?" over dictionary (Levenshtein) — roadmap #426.
+"Did you mean?" over dictionary (Levenshtein).
 
 `import 'package:saropa_dart_utils/string/did_you_mean_utils.dart';`
 
@@ -3950,7 +3984,7 @@ Code block detector/extractor from mixed text (roadmap #422).
 
 ### `string/diff_render_utils.dart`
 
-Diff → colored/HTML/ANSI unified diff renderer (roadmap #402).
+Diff → colored/HTML/ANSI unified diff renderer ().
 
 `import 'package:saropa_dart_utils/string/diff_render_utils.dart';`
 
@@ -3964,7 +3998,7 @@ Diff → colored/HTML/ANSI unified diff renderer (roadmap #402).
 
 ### `string/duplicate_doc_utils.dart`
 
-Near-duplicate document detector via fingerprints — roadmap #438.
+Near-duplicate document detector via fingerprints.
 
 `import 'package:saropa_dart_utils/string/duplicate_doc_utils.dart';`
 
@@ -3975,7 +4009,7 @@ Near-duplicate document detector via fingerprints — roadmap #438.
 
 ### `string/email_quote_strip_utils.dart`
 
-Email reply quote stripper (heuristic) — roadmap #424.
+Email reply quote stripper (heuristic).
 
 `import 'package:saropa_dart_utils/string/email_quote_strip_utils.dart';`
 
@@ -3985,7 +4019,7 @@ Email reply quote stripper (heuristic) — roadmap #424.
 
 ### `string/excerpt_utils.dart`
 
-Smart excerpt generator: best snippet around query terms with ellipsis (roadmap #410).
+Smart excerpt generator: best snippet around query terms with ellipsis ().
 
 `import 'package:saropa_dart_utils/string/excerpt_utils.dart';`
 
@@ -3995,7 +4029,7 @@ Smart excerpt generator: best snippet around query terms with ellipsis (roadmap 
 
 ### `string/fuzzy_search_utils.dart`
 
-Fuzzy search over list of strings with token + edit distance + ranking (roadmap #406).
+Fuzzy search over list of strings with token + edit distance + ranking ().
 
 `import 'package:saropa_dart_utils/string/fuzzy_search_utils.dart';`
 
@@ -4022,7 +4056,7 @@ Simple glob matching (**/*.dart style).
 
 ### `string/html_sanitizer_utils.dart`
 
-HTML sanitizer: allowlist tags/attributes, strip scripts/styles (roadmap #439).
+HTML sanitizer: allowlist tags/attributes, strip scripts/styles ().
 
 `import 'package:saropa_dart_utils/string/html_sanitizer_utils.dart';`
 
@@ -4033,7 +4067,7 @@ HTML sanitizer: allowlist tags/attributes, strip scripts/styles (roadmap #439).
 
 ### `string/human_name_parser_utils.dart`
 
-Human name parser (first/middle/last/suffix) — roadmap #409.
+Human name parser (first/middle/last/suffix).
 
 `import 'package:saropa_dart_utils/string/human_name_parser_utils.dart';`
 
@@ -4050,7 +4084,7 @@ Human name parser (first/middle/last/suffix) — roadmap #409.
 
 ### `string/icu_message_utils.dart`
 
-ICU-style message formatting lite: pluralization and `select` (gender) — roadmap #414.
+ICU-style message formatting lite: pluralization and `select` (gender).
 
 `import 'package:saropa_dart_utils/string/icu_message_utils.dart';`
 
@@ -4074,7 +4108,7 @@ Levenshtein (edit) distance and similarity ratio for strings.
 
 ### `string/markdown_plain_utils.dart`
 
-Markdown to plain text (strip markup, keep structure) — roadmap #420.
+Markdown to plain text (strip markup, keep structure).
 
 `import 'package:saropa_dart_utils/string/markdown_plain_utils.dart';`
 
@@ -4084,18 +4118,18 @@ Markdown to plain text (strip markup, keep structure) — roadmap #420.
 
 ### `string/markdown_snippet_utils.dart`
 
-Markdown snippet extractor (heading sections, first code block) — roadmap #419.
+Markdown snippet extractor (heading sections, first code block).
 
 `import 'package:saropa_dart_utils/string/markdown_snippet_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `extractSectionByHeading` | function | Extracts text under first heading matching [headingPattern] (e.g. |
+| `extractSectionByHeading` | function | Extracts text under first heading matching [headingPattern] (e.g. r'^#\s+Install'). |
 | `extractFirstCodeBlock` | function | Returns first fenced code block content or null. |
 
 ### `string/myers_diff_utils.dart`
 
-Myers diff for strings: minimal edit script (roadmap #401).
+Myers diff for strings: minimal edit script ().
 
 `import 'package:saropa_dart_utils/string/myers_diff_utils.dart';`
 
@@ -4117,7 +4151,7 @@ Myers diff for strings: minimal edit script (roadmap #401).
 
 ### `string/ngram_utils.dart`
 
-N-gram generator for strings — character and word n-grams (roadmap #405).
+N-gram generator for strings — character and word n-grams ().
 
 `import 'package:saropa_dart_utils/string/ngram_utils.dart';`
 
@@ -4128,7 +4162,7 @@ N-gram generator for strings — character and word n-grams (roadmap #405).
 
 ### `string/safe_html_excerpt_utils.dart`
 
-Safe HTML excerpt (truncate without breaking tags) — roadmap #440.
+Safe HTML excerpt (truncate without breaking tags).
 
 `import 'package:saropa_dart_utils/string/safe_html_excerpt_utils.dart';`
 
@@ -4138,7 +4172,7 @@ Safe HTML excerpt (truncate without breaking tags) — roadmap #440.
 
 ### `string/search_index_utils.dart`
 
-Simple in-memory search index (term frequency scoring) — roadmap #407.
+Simple in-memory search index (term frequency scoring).
 
 `import 'package:saropa_dart_utils/string/search_index_utils.dart';`
 
@@ -4153,7 +4187,7 @@ Simple in-memory search index (term frequency scoring) — roadmap #407.
 
 ### `string/search_query_parser_utils.dart`
 
-Simplified search query parser (AND/OR, quotes, minus) — roadmap #418.
+Simplified search query parser (AND/OR, quotes, minus).
 
 `import 'package:saropa_dart_utils/string/search_query_parser_utils.dart';`
 
@@ -4169,7 +4203,7 @@ Simplified search query parser (AND/OR, quotes, minus) — roadmap #418.
 
 ### `string/sensitive_scrub_utils.dart`
 
-Sensitive data scrubber with pluggable patterns (roadmap #425).
+Sensitive data scrubber with pluggable patterns ().
 
 `import 'package:saropa_dart_utils/string/sensitive_scrub_utils.dart';`
 
@@ -4178,14 +4212,14 @@ Sensitive data scrubber with pluggable patterns (roadmap #425).
 | `SensitiveScrubUtils` | class | A scrubber rule: [pattern] is replaced by [replacement] when matched. |
 | `SensitiveScrubUtils` | constructor | Creates a rule that replaces every match of [pattern] with [replacement]. |
 | `pattern` | field | Regular expression identifying the sensitive substrings to mask. |
-| `replacement` | field | Text substituted in place of each [pattern] match (e.g. |
+| `replacement` | field | Text substituted in place of each [pattern] match (e.g. "[EMAIL]"). |
 | `toString` | method |  |
 | `defaultScrubRules` | getter | Default rules: mask emails, phone-like digits, card-like numbers, SSN-like. |
 | `scrubSensitive` | function | Returns [text] with all matches of [rules] replaced by their replacement string. |
 
 ### `string/slug_dedup_utils.dart`
 
-Slug deduplicator: append incremental suffixes based on taken slugs (roadmap #411).
+Slug deduplicator: append incremental suffixes based on taken slugs ().
 
 `import 'package:saropa_dart_utils/string/slug_dedup_utils.dart';`
 
@@ -4207,7 +4241,7 @@ Soundex phonetic encoding for English names.
 
 ### `string/spelling_key_lookup_utils.dart`
 
-Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
+Spelling-tolerant key lookup (canonical → variants).
 
 `import 'package:saropa_dart_utils/string/spelling_key_lookup_utils.dart';`
 
@@ -4245,7 +4279,7 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `StringAnsiExtensions` on `String` | extension | Strip ANSI escape codes from terminal output. |
-| `stripAnsi` | method | Removes ANSI escape sequences (e.g. |
+| `stripAnsi` | method | Removes ANSI escape sequences (e.g. color codes) from this string. |
 
 ### `string/string_between_extensions.dart`
 
@@ -4270,9 +4304,9 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `StringCaseAcronymExtensions` on `String` | extension | Case conversion that preserves acronyms (e.g. |
-| `toCamelCaseAcronyms` | method | Converts to camelCase, lowercasing acronyms (e.g. |
-| `toSnakeCaseAcronyms` | method | Converts to snake_case, lowercasing acronyms (e.g. |
+| `StringCaseAcronymExtensions` on `String` | extension | Case conversion that preserves acronyms (e.g. HTTP → http in camelCase). |
+| `toCamelCaseAcronyms` | method | Converts to camelCase, lowercasing acronyms (e.g. HTTPResponse → httpResponse). |
+| `toSnakeCaseAcronyms` | method | Converts to snake_case, lowercasing acronyms (e.g. HTTPResponse → http_response). |
 
 ### `string/string_case_extensions.dart`
 
@@ -4480,11 +4514,11 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `StringMoreExtensions` on `String` | extension | String More: strip leading/trailing substring, join lines, wrap at N, capitalize sentence, swap case, etc. |
+| `StringMoreExtensions` on `String` | extension | String More: strip leading/trailing substring, join lines, wrap at N, capitalize sentence, swap case, etc.-265. |
 | `stripSubstring` | method | Removes leading and trailing occurrences of [substring] until none remain. |
 | `joinLines` | method | Joins lines (split by newline) with [separator]. |
 | `wrapAtChars` | method | Wraps this string at [width] character boundaries (grapheme-safe). |
-| `capitalizeSentences` | method | Capitalizes the first letter after sentence boundaries (start or after `. |
+| `capitalizeSentences` | method | Capitalizes the first letter after sentence boundaries (start or after `. `). |
 | `swapCase` | method | Swaps upper-case and lower-case for each character. |
 | `removeRepeatedChars` | method | Collapses runs of the same character into one, keeping order. |
 | `countOccurrences` | method | Counts non-overlapping occurrences of [substring] in this string. |
@@ -4494,7 +4528,7 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 | `firstNWords` | method | Returns the first [n] words (split on whitespace). |
 | `lastNWords` | method | Returns the last [n] words (split on whitespace), preserving their order. |
 | `padToWidth` | method | Pads this string to [width] with [padChar], on the left if [padLeft] else right. |
-| `stripHtmlComments` | method | Removes HTML comments (<!-- ... |
+| `stripHtmlComments` | method | Removes HTML comments (<!-- ... -->) from this string. |
 
 ### `string/string_nullable_extensions.dart`
 
@@ -4600,7 +4634,7 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `StringTemplateExtensions` on `String` | extension | Extensions for simple template substitution in strings (e.g. |
+| `StringTemplateExtensions` on `String` | extension | Extensions for simple template substitution in strings (e.g. `Hello {{name}}`). |
 | `substituteTemplate` | method | Replaces placeholders of the form `{{key}}` with values from [variables]. |
 
 ### `string/string_text_extensions.dart`
@@ -4672,7 +4706,7 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 |--------|------|-------------|
 | `StringWordsExtensions` on `String` | extension | Word count and break long words. |
 | `wordCount` | method | Counts words using whitespace as delimiters. |
-| `breakLongWords` | method | Inserts [separator] (e.g. |
+| `breakLongWords` | method | Inserts [separator] (e.g. soft hyphen) every [charCount] graphemes within long words. |
 
 ### `string/string_wrap_extensions.dart`
 
@@ -4686,7 +4720,7 @@ Spelling-tolerant key lookup (canonical → variants) — roadmap #416.
 
 ### `string/template_engine_utils.dart`
 
-Simple template engine (conditionals, no eval) — roadmap #413.
+Simple template engine (conditionals, no eval).
 
 `import 'package:saropa_dart_utils/string/template_engine_utils.dart';`
 
@@ -4696,7 +4730,7 @@ Simple template engine (conditionals, no eval) — roadmap #413.
 
 ### `string/text_chunk_utils.dart`
 
-Text segmentation into chunks for indexing (size and sentence boundaries) — roadmap #430.
+Text segmentation into chunks for indexing (size and sentence boundaries).
 
 `import 'package:saropa_dart_utils/string/text_chunk_utils.dart';`
 
@@ -4706,7 +4740,7 @@ Text segmentation into chunks for indexing (size and sentence boundaries) — ro
 
 ### `string/text_diff_structured_utils.dart`
 
-Structured diff of two texts by sentences and by words — roadmap #415.
+Structured diff of two texts by sentences and by words.
 
 `import 'package:saropa_dart_utils/string/text_diff_structured_utils.dart';`
 
@@ -4729,7 +4763,7 @@ Structured diff of two texts by sentences and by words — roadmap #415.
 
 ### `string/text_fingerprint_utils.dart`
 
-Text fingerprinting (simhash-style) — roadmap #417.
+Text fingerprinting (simhash-style).
 
 `import 'package:saropa_dart_utils/string/text_fingerprint_utils.dart';`
 
@@ -4740,7 +4774,7 @@ Text fingerprinting (simhash-style) — roadmap #417.
 
 ### `string/text_normalize_pipeline_utils.dart`
 
-Text normalization pipeline (composable steps) — roadmap #408.
+Text normalization pipeline (composable steps).
 
 `import 'package:saropa_dart_utils/string/text_normalize_pipeline_utils.dart';`
 
@@ -4753,31 +4787,31 @@ Text normalization pipeline (composable steps) — roadmap #408.
 
 ### `string/text_similarity_utils.dart`
 
-Text similarity score (cosine similarity over TF vectors) — roadmap #437.
+Text similarity score (cosine similarity over TF vectors).
 
 `import 'package:saropa_dart_utils/string/text_similarity_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `termFrequencies` | function | Term frequencies for a list of tokens (e.g. |
+| `termFrequencies` | function | Term frequencies for a list of tokens (e.g. words). |
 | `cosineSimilarity` | function | Cosine similarity between two term-frequency maps (0.0 to 1.0). |
 | `textToTf` | function | Tokenizes [s] by splitting on non-letters and lowercasing; returns TF map. |
 | `textSimilarity` | function | Returns cosine similarity of [a] and [b] when treated as bags of words. |
 
 ### `string/tokenize_sentences_utils.dart`
 
-Tokenize text into sentences and words (roadmap #404).
+Tokenize text into sentences and words ().
 
 `import 'package:saropa_dart_utils/string/tokenize_sentences_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `tokenizeSentences` | function | Splits [text] into sentences (split on . |
+| `tokenizeSentences` | function | Splits [text] into sentences (split on . ! ? followed by space or end). |
 | `tokenizeWords` | function | Splits [text] into words (non-empty runs of letters/numbers). |
 
 ### `string/tokenizer_pipeline_utils.dart`
 
-Customizable tokenizer pipeline: ordered regex rules with keep/skip — roadmap #434.
+Customizable tokenizer pipeline: ordered regex rules with keep/skip.
 
 `import 'package:saropa_dart_utils/string/tokenizer_pipeline_utils.dart';`
 
@@ -4785,7 +4819,7 @@ Customizable tokenizer pipeline: ordered regex rules with keep/skip — roadmap 
 |--------|------|-------------|
 | `TokenRule` | class | One tokenizer rule: a [type] label, the [pattern] to match at the cursor, and whether matches are dropped ([skip]) instead of emitted. |
 | `TokenRule` | constructor | Creates a rule labelled [type] matching [pattern]. |
-| `type` | field | The label attached to tokens this rule produces (e.g. |
+| `type` | field | The label attached to tokens this rule produces (e.g. `'number'`). |
 | `pattern` | field | The pattern matched as a prefix at the current cursor position. |
 | `shouldSkip` | field | When true, matches advance the cursor but emit no token. |
 | `Token` | class | A produced token: its rule [type], the matched [value], and the [start] offset into the original input. |
@@ -4803,7 +4837,7 @@ Customizable tokenizer pipeline: ordered regex rules with keep/skip — roadmap 
 
 ### `string/url_extract_utils.dart`
 
-URL/link extractor with context (roadmap #423).
+URL/link extractor with context ().
 
 `import 'package:saropa_dart_utils/string/url_extract_utils.dart';`
 
@@ -4822,8 +4856,6 @@ URL/link extractor with context (roadmap #423).
 ## Testing
 
 ### `testing/debug_utils.dart`
-
-Testing/Debug: pretty-print, dump iterable, assert equals with tolerance, range, repeat, timed.
 
 `import 'package:saropa_dart_utils/testing/debug_utils.dart';`
 
@@ -4844,8 +4876,6 @@ Testing/Debug: pretty-print, dump iterable, assert equals with tolerance, range,
 
 ### `url/path_extension_utils.dart`
 
-File extension / without extension / change extension.
-
 `import 'package:saropa_dart_utils/url/path_extension_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -4856,25 +4886,21 @@ File extension / without extension / change extension.
 
 ### `url/path_join_utils.dart`
 
-Join path segments (cross-platform, no double slash).
-
 `import 'package:saropa_dart_utils/url/path_join_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `pathJoin` | function | Join path segments (cross-platform, no double slash). |
-| `pathNormalize` | function | Normalize path (resolve . |
+| `pathNormalize` | function | Normalize path (resolve . and ..). |
 | `pathRelative` | function | Relative path from base to target. |
 
 ### `url/path_more_utils.dart`
-
-URL/Path More: directory from path, base name, path separator, is absolute, etc.
 
 `import 'package:saropa_dart_utils/url/path_more_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `pathDirectory` | function | URL/Path More: directory from path, base name, path separator, is absolute, etc. |
+| `pathDirectory` | function | URL/Path More: directory from path, base name, path separator, is absolute, etc.-345. |
 | `pathBaseName` | function | Returns the final segment of [path] (the file or last directory name). |
 | `pathSeparator` | getter | The forward-slash separator used by these path helpers. |
 | `isPathAbsolute` | function | Whether [path] is absolute — starts with `/` or has a drive letter (`C:`). |
@@ -4884,7 +4910,7 @@ URL/Path More: directory from path, base name, path separator, is absolute, etc.
 
 ### `url/uri_pattern_utils.dart`
 
-URI path-template matcher with typed params — roadmap #630.
+URI path-template matcher with typed params.
 
 `import 'package:saropa_dart_utils/url/uri_pattern_utils.dart';`
 
@@ -4966,8 +4992,6 @@ URL encode/decode (component vs full).
 
 ### `url/url_query_utils.dart`
 
-Parse query string to map (and back).
-
 `import 'package:saropa_dart_utils/url/url_query_utils.dart';`
 
 | Symbol | Kind | Description |
@@ -4975,6 +4999,23 @@ Parse query string to map (and back).
 | `parseQueryString` | function | Parse query string to map (and back). |
 | `buildQueryString` | function | Builds a percent-encoded `key=value&...` query string from [params]. |
 | `uriWithQueryParams` | function | Add/remove query params (immutable). |
+
+### `url/url_template_utils.dart`
+
+URI template expansion (RFC 6570 subset).
+
+`import 'package:saropa_dart_utils/url/url_template_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_Op` | constructor |  |
+| `symbol` | field | The leading operator character in the template (`''` for the default op). |
+| `first` | field | Prepended before the joined result when it is non-empty (e.g. `?`). |
+| `separator` | field | Joins multiple values / varspecs. |
+| `named` | field | Whether each value is rendered as `name=value` (`; ? &`). |
+| `ifEmpty` | field | What follows the name when a named value is empty (`` for `;`, `=` for `?`/`&`). |
+| `allowReserved` | field | Whether reserved characters pass through unencoded. |
+| `expandUriTemplate` | function | Expands every `{...}` expression in [template] against [variables], leaving literal text untouched. |
 
 ---
 
@@ -5005,7 +5046,7 @@ Parse query string to map (and back).
 
 ### `validation/cross_field_validation_utils.dart`
 
-Cross-field validation (start < end, one-of required) — roadmap #682.
+Cross-field validation (start < end, one-of required).
 
 `import 'package:saropa_dart_utils/validation/cross_field_validation_utils.dart';`
 
@@ -5016,18 +5057,18 @@ Cross-field validation (start < end, one-of required) — roadmap #682.
 
 ### `validation/data_redaction_utils.dart`
 
-Data redaction policies (masking per field path) — roadmap #692.
+Data redaction policies (masking per field path).
 
 `import 'package:saropa_dart_utils/validation/data_redaction_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `RedactMaskFn` | typedef | Maps a field [value] to its masked replacement (e.g. |
+| `RedactMaskFn` | typedef | Maps a field [value] to its masked replacement (e.g. `(value) => '***'`). |
 | `redactFields` | function | Redacts [data] by applying [mask] to values at keys in [fieldPaths]. |
 
 ### `validation/guard_utils.dart`
 
-Defensive coding helpers (guard patterns, invariants) — roadmap #700.
+Defensive coding helpers (guard patterns, invariants).
 
 `import 'package:saropa_dart_utils/validation/guard_utils.dart';`
 
@@ -5038,7 +5079,7 @@ Defensive coding helpers (guard patterns, invariants) — roadmap #700.
 
 ### `validation/input_shaping_utils.dart`
 
-Input shaping: clamp/normalize numbers, trim/limit strings — roadmap #696.
+Input shaping: clamp/normalize numbers, trim/limit strings.
 
 `import 'package:saropa_dart_utils/validation/input_shaping_utils.dart';`
 
@@ -5049,7 +5090,7 @@ Input shaping: clamp/normalize numbers, trim/limit strings — roadmap #696.
 
 ### `validation/ip_cidr_utils.dart`
 
-IP/CIDR utilities (subnet contains, range checks) — roadmap #686.
+IP/CIDR utilities (subnet contains, range checks).
 
 `import 'package:saropa_dart_utils/validation/ip_cidr_utils.dart';`
 
@@ -5060,7 +5101,7 @@ IP/CIDR utilities (subnet contains, range checks) — roadmap #686.
 
 ### `validation/jwt_structure_utils.dart`
 
-JWT structural checks (no crypto) — roadmap #688.
+JWT structural checks (no crypto).
 
 `import 'package:saropa_dart_utils/validation/jwt_structure_utils.dart';`
 
@@ -5071,7 +5112,7 @@ JWT structural checks (no crypto) — roadmap #688.
 
 ### `validation/password_strength_utils.dart`
 
-Password strength estimation (entropy heuristics) — roadmap #687.
+Password strength estimation (entropy heuristics).
 
 `import 'package:saropa_dart_utils/validation/password_strength_utils.dart';`
 
@@ -5081,7 +5122,7 @@ Password strength estimation (entropy heuristics) — roadmap #687.
 
 ### `validation/path_validator_utils.dart`
 
-Robust file path validators (prevent traversal, normalize) — roadmap #693.
+Robust file path validators (prevent traversal, normalize).
 
 `import 'package:saropa_dart_utils/validation/path_validator_utils.dart';`
 
@@ -5091,7 +5132,7 @@ Robust file path validators (prevent traversal, normalize) — roadmap #693.
 
 ### `validation/pii_detector_utils.dart`
 
-PII detector for free-form text — roadmap #691.
+PII detector for free-form text.
 
 `import 'package:saropa_dart_utils/validation/pii_detector_utils.dart';`
 
@@ -5101,7 +5142,7 @@ PII detector for free-form text — roadmap #691.
 
 ### `validation/safe_parse_utils.dart`
 
-Safe parsing wrappers (no-throw, rich error) — roadmap #695.
+Safe parsing wrappers (no-throw, rich error).
 
 `import 'package:saropa_dart_utils/validation/safe_parse_utils.dart';`
 
@@ -5125,7 +5166,7 @@ Safe parsing wrappers (no-throw, rich error) — roadmap #695.
 
 ### `validation/safe_temp_name_utils.dart`
 
-Safe temp-file naming (randomized, collision-resistant) — roadmap #694.
+Safe temp-file naming (randomized, collision-resistant).
 
 `import 'package:saropa_dart_utils/validation/safe_temp_name_utils.dart';`
 
@@ -5135,7 +5176,7 @@ Safe temp-file naming (randomized, collision-resistant) — roadmap #694.
 
 ### `validation/typed_positive_utils.dart`
 
-Typed non-empty/positive wrappers with validation — roadmap #697.
+Typed non-empty/positive wrappers with validation.
 
 `import 'package:saropa_dart_utils/validation/typed_positive_utils.dart';`
 
@@ -5151,7 +5192,7 @@ Typed non-empty/positive wrappers with validation — roadmap #697.
 
 ### `validation/validation_error_utils.dart`
 
-Normalized error model (code, message, details) for validation (roadmap #683).
+Normalized error model (code, message, details) for validation ().
 
 `import 'package:saropa_dart_utils/validation/validation_error_utils.dart';`
 
@@ -5161,9 +5202,9 @@ Normalized error model (code, message, details) for validation (roadmap #683).
 | `ValidationErrorUtils` | constructor | Creates an error with a human-readable [message], optional machine-readable [code], and optional [path] identifying the offending field. |
 | `message` | field | Human-readable description of what failed. |
 | `code` | getter | Optional machine-readable error code. |
-| `path` | getter | Optional path (e.g. |
+| `path` | getter | Optional path (e.g. field name) for the error. |
 | `toString` | method |  |
-| `ValidationErrors` | class | Aggregates multiple validation errors (roadmap #684). |
+| `ValidationErrors` | class | Aggregates multiple validation errors (). |
 | `ValidationErrors` | constructor | Creates a collector, optionally seeded with an existing [list] of errors. |
 | `add` | method | Appends a single error. |
 | `addAll` | method | Appends all errors from [e]. |
