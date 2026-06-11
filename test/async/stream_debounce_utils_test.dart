@@ -87,4 +87,142 @@ void main() {
       await source.close();
     });
   });
+
+  group('StreamDebounceExtensions', () {
+    test('debounce() matches the free function (latest of a burst)', () {
+      fakeAsync((FakeAsync async) {
+        final StreamController<int> source = StreamController<int>();
+        final List<int> results = <int>[];
+        source.stream.debounce(const Duration(milliseconds: 100)).listen(results.add);
+
+        source
+          ..add(1)
+          ..add(2)
+          ..add(3);
+        async.elapse(const Duration(milliseconds: 100));
+        expect(results, <int>[3]);
+
+        source.close();
+        async.flushMicrotasks();
+      });
+    });
+
+    // The documented production bug-fix: a consumer that subscribes AFTER the
+    // source already has a value queued must still receive that first value.
+    // The deferred-listen single-subscription controller guarantees this.
+    test('late subscriber still receives the first emission', () async {
+      final StreamController<int> source = StreamController<int>();
+      final Stream<int> debounced = source.stream.debounce(
+        const Duration(milliseconds: 50),
+      );
+
+      // Value is added to the source before anyone listens to the debounced
+      // stream. Because the upstream listen is deferred to onListen, nothing is
+      // consumed yet, so the value is not lost.
+      source.add(99);
+
+      final List<int> results = <int>[];
+      final Future<void> drained = debounced.forEach(results.add);
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      await source.close();
+      await drained;
+
+      expect(results, <int>[99]);
+    });
+
+    group('debounceAfterFirst', () {
+      test('emits the first value immediately, then coalesces the burst', () {
+        fakeAsync((FakeAsync async) {
+          final StreamController<int> source = StreamController<int>();
+          final List<int> results = <int>[];
+          source.stream
+              .debounceAfterFirst(const Duration(milliseconds: 100))
+              .listen(results.add);
+
+          // First value is forwarded instantly, before any quiet gap.
+          source.add(1);
+          async.flushMicrotasks();
+          expect(results, <int>[1]);
+
+          // A following burst is debounced to its last value.
+          source
+            ..add(2)
+            ..add(3)
+            ..add(4);
+          async.elapse(const Duration(milliseconds: 100));
+          expect(results, <int>[1, 4]);
+
+          source.close();
+          async.flushMicrotasks();
+        });
+      });
+
+      test('flushes a trailing pending value when the source closes early', () async {
+        final StreamController<int> source = StreamController<int>();
+        final List<int> results = <int>[];
+        final Future<void> drained = source.stream
+            .debounceAfterFirst(const Duration(milliseconds: 100))
+            .forEach(results.add);
+
+        source
+          ..add(1) // emitted immediately
+          ..add(2); // pending in the debounce window
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await source.close();
+        await drained;
+
+        expect(results, <int>[1, 2]);
+      });
+    });
+
+    group('debounceDistinct', () {
+      test('suppresses an equal value that survives debouncing', () {
+        fakeAsync((FakeAsync async) {
+          final StreamController<int> source = StreamController<int>();
+          final List<int> results = <int>[];
+          source.stream
+              .debounceDistinct(const Duration(milliseconds: 30))
+              .listen(results.add);
+
+          source.add(5);
+          async.elapse(const Duration(milliseconds: 40));
+          // Same value again after a gap -> debounced through, then dropped by
+          // distinct because it equals the previously emitted 5.
+          source.add(5);
+          async.elapse(const Duration(milliseconds: 40));
+          source.add(6);
+          async.elapse(const Duration(milliseconds: 40));
+          expect(results, <int>[5, 6]);
+
+          source.close();
+          async.flushMicrotasks();
+        });
+      });
+
+      test('honors a custom equals', () {
+        fakeAsync((FakeAsync async) {
+          final StreamController<String> source = StreamController<String>();
+          final List<String> results = <String>[];
+          // Case-insensitive equality: 'A' and 'a' are treated as duplicates.
+          source.stream
+              .debounceDistinct(
+                const Duration(milliseconds: 30),
+                equals: (String a, String b) => a.toLowerCase() == b.toLowerCase(),
+              )
+              .listen(results.add);
+
+          source.add('A');
+          async.elapse(const Duration(milliseconds: 40));
+          source.add('a');
+          async.elapse(const Duration(milliseconds: 40));
+          source.add('B');
+          async.elapse(const Duration(milliseconds: 40));
+          expect(results, <String>['A', 'B']);
+
+          source.close();
+          async.flushMicrotasks();
+        });
+      });
+    });
+  });
 }
