@@ -24,6 +24,13 @@
 cspell:disable
 -->
 
+## [1.4.1]
+
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.4.0/CHANGELOG.md)
+
+- **`List<String>.joinDisplayList(...)`** ([list_string_extensions.dart](lib/list/list_string_extensions.dart)) — join strings into the natural-language form (`'Alice'`, `'Alice and Bob'`, `'Alice, Bob, and Carol'`) instead of `join()`'s bare `a, b, c`. Trims each entry and drops blank/whitespace-only ones, de-duplicates by default (`isUnique`, via the existing `toUnique`), and returns `null` — not `''` — for an effectively-empty input so callers can distinguish "no items". The three joiners (`joiner` / `doubleJoiner` / `lastJoiner`, the last defaulting to the Oxford comma `', and '`) are named params for locale/style control. Reuses `toUnique` + `takeSafe`. ENH-003.
+
+
 ## [1.4.0]
 
 Eleven more utilities from the Roadmap-to-700 set — INI/.env config parsing, RFC 5545 recurrence (parse + expand), a holiday-aware business-day calendar and SLA clock, ISO 8601 interval parsing, an interval-overlap tree, a dependency resolver, a priority task scheduler, a token-bucket rate limiter, and a resource pool — plus the capabilities catalog rebuilt from the Dart AST so every public symbol is listed.
