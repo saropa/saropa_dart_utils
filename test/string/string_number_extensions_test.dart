@@ -15,6 +15,26 @@ void main() {
     test('10. Hexadecimal string', () => expect('0xFF'.isNumeric(), isFalse));
   });
 
+  group('isNumber', () {
+    test('1. Integer string is a number', () => expect('42'.isNumber, isTrue));
+    test('2. Negative integer is a number', () => expect('-7'.isNumber, isTrue));
+    test('3. Leading-plus integer is a number', () => expect('+77'.isNumber, isTrue));
+    // int.tryParse accepts a 0x/0X prefix, unlike double.tryParse (isNumeric).
+    test('4. Hexadecimal string is a number', () => expect('0x1F'.isNumber, isTrue));
+    // int.tryParse trims surrounding whitespace before parsing.
+    test('5. Surrounding whitespace is trimmed', () => expect(' 42 '.isNumber, isTrue));
+    // The key int-vs-numeric distinction: decimals and exponents are NOT ints.
+    test('6. Decimal string is NOT a number', () => expect('4.2'.isNumber, isFalse));
+    test('7. Scientific notation is NOT a number', () => expect('1e3'.isNumber, isFalse));
+    test('8. Empty string is NOT a number', () => expect(''.isNumber, isFalse));
+    test('9. Whitespace-only is NOT a number', () => expect('   '.isNumber, isFalse));
+    test('10. Letters are NOT a number', () => expect('123a'.isNumber, isFalse));
+    // Magnitude beyond the native 64-bit int range overflows to null on the VM.
+    test('11. Out-of-range magnitude is NOT a number (native VM)', () {
+      expect('98765432109876543210'.isNumber, isFalse);
+    });
+  });
+
   group('toDoubleNullable', () {
     test('Result should be a double', () {
       // valid data
