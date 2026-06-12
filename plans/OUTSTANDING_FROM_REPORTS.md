@@ -36,7 +36,7 @@
   - **(a) Grapheme semantics (recommended):** count by `characters.length`, rewrite doc to promise grapheme-cluster trimming, add emoji/combining-mark tests. Matches what `substringSafe` already does and the project's Unicode-correctness bar.
   - **(b) Code-unit semantics:** replace `substringSafe` with a plain `substring(0, length - count)`, keep the doc. Faster, but reintroduces cluster-splitting the doc warns about.
 - **Verify:** add tests with `'Hi👋'.removeLastChars(1)` and a combining-mark string asserting the chosen semantics.
-- **Status:** CONFIRMED inconsistent 2026-06-12.
+- **Status:** ✅ FIXED 2026-06-12 with option (a) grapheme semantics. Both `removeLastChars` and the singular-sibling `removeLastChar()` were corrected (the singular shared the identical code-unit/grapheme hybrid bug — `'a😀'.removeLastChar()` had returned `'a😀'` unchanged). Doc rewritten to promise grapheme trimming; three pre-existing emoji/combining-mark tests re-pinned to coherent results, plus a new `removeLastChar` emoji case. analyze clean.
 
 ### 3. Inline-comment audit pass is incomplete — 31 of 92 sparse-comment findings remain  (doc quality)
 
@@ -124,3 +124,46 @@ Files changed: `lib/url/path_join_utils.dart`, `test/url/path_query_untested_tes
 
 The parent plan stays active: items 2–4 remain open and will be closed in
 subsequent passes before the plan is archived to `plans/history/`.
+
+---
+
+## Finish Report (2026-06-12) — Item 2: `removeLast*` grapheme counting
+
+`String.removeLastChar()` and `String.removeLastChars(int count)` removed a
+variable, hard-to-predict number of visible characters because they bounded by
+UTF-16 code units but sliced by grapheme cluster. Each computed
+`substringSafe(0, length - count)`, where `length` is the code-unit count and
+`substringSafe` interprets its end argument as a grapheme index. Subtracting a
+code-unit count from a code-unit length and then using the result as a grapheme
+index is incoherent: the number of characters actually removed depended on how
+many code units the trailing graphemes occupied. The observable failure was a
+no-op on multi-code-unit tails — `'a😀'.removeLastChar()` returned `'a😀'`
+unchanged (the emoji's two code units pushed `length - 1` past the grapheme
+count, which `substringSafe` clamped back to the full string). The
+`removeLastChars` dartdoc compounded the problem by claiming the opposite of the
+real behavior — "counts UTF-16 code units... can split that cluster" — when the
+grapheme-based slice never splits a cluster.
+
+The fix adopts grapheme semantics: both methods compute `characters.length`
+(grapheme count) and slice `substringSafe(0, graphemeCount - count)`, preserving
+the zero/negative no-op and the `>=`-empties-the-string guards against the
+grapheme count. The `count` argument is now defined as a count of user-perceived
+characters. This matches `substringSafe`, the already-correct sibling
+`removeFirstChar()` (which slices at a constant grapheme start index and was
+never affected), and the package's Unicode-correctness bar. The `removeLastChars`
+dartdoc was rewritten to promise grapheme trimming; the singular `removeLastChar`
+carried the identical defect three lines above and was fixed alongside. A direct
+`import 'package:characters/...'` was added (`characters` is a declared runtime
+dependency used pervasively across `lib/string/`). Pure-ASCII inputs are
+unaffected, and a `lib/` grep confirms no internal consumer depends on the old
+behavior, so the change is contained to the public API and its tests.
+
+Three pre-existing tests that pinned the hybrid behavior — and whose own comments
+admitted the dartdoc was wrong — were rewritten to pin the coherent grapheme
+results (`'a😀'.removeLastChars(1)` = `'a'`, `…(2)` = `''`; decomposed
+`'Café'.removeLastChars(1)` = `'Caf'`, `…(2)` = `'Ca'`), plus a new
+`removeLastChar` emoji case.
+
+Files changed: `lib/string/string_manipulation_extensions.dart`,
+`test/string/string_manipulation_extensions_test.dart`, `CHANGELOG.md`, this plan
+file. Items 3–4 remain open; the plan stays active.

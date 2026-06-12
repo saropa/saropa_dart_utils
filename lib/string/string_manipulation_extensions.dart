@@ -1,3 +1,4 @@
+import 'package:characters/characters.dart';
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
@@ -158,24 +159,34 @@ extension StringManipulationExtensions on String {
   @useResult
   String removeFirstChar() => (length < 1) ? '' : substringSafe(1);
 
-  /// Returns a new string with the last character removed.
+  /// Returns a new string with the last grapheme cluster removed.
+  ///
+  /// Counts by grapheme cluster (via [substringSafe]), so a trailing emoji or
+  /// base+combining-mark sequence is removed whole and never split into an
+  /// orphaned surrogate or a stranded mark. Empty in, empty out.
   @useResult
-  String removeLastChar() => (length < 1) ? '' : substringSafe(0, length - 1);
+  String removeLastChar() {
+    // Grapheme length, not String.length: substringSafe is grapheme-indexed, so
+    // passing a code-unit count would miscount whenever the trailing grapheme
+    // spans multiple code units.
+    final int graphemeCount = characters.length;
+    return graphemeCount < 1 ? '' : substringSafe(0, graphemeCount - 1);
+  }
 
-  /// Returns a new string with the last [count] characters removed.
+  /// Returns a new string with the last [count] grapheme clusters removed.
   ///
   /// Bounds-safe: a [count] of zero or negative is a no-op (returns this
-  /// string unchanged), and a [count] greater than or equal to [length]
-  /// returns an empty string rather than throwing.
+  /// string unchanged), and a [count] greater than or equal to the grapheme
+  /// length returns an empty string rather than throwing.
   ///
-  /// Counts UTF-16 code units like [String.length], not grapheme clusters, so
-  /// removing characters from the tail of a string ending in an emoji or a
-  /// combining-mark sequence can split that cluster. Use the `characters`
-  /// package for grapheme-aware trimming.
+  /// Counts by grapheme cluster (user-perceived characters), not UTF-16 code
+  /// units, so a trailing emoji or base+combining-mark sequence is removed as a
+  /// single unit and never split into an orphaned surrogate or a stranded mark.
   ///
   /// **Example:**
   /// ```dart
   /// 'Hello'.removeLastChars(2); // 'Hel'
+  /// 'a😀'.removeLastChars(1);   // 'a'   (whole emoji removed, not split)
   /// 'Hi'.removeLastChars(5);    // ''
   /// 'Hi'.removeLastChars(0);    // 'Hi'
   /// ```
@@ -185,11 +196,16 @@ extension StringManipulationExtensions on String {
       return this;
     }
 
-    if (length <= count) {
+    // Count user-perceived characters, not UTF-16 code units: the slice below
+    // is grapheme-indexed (substringSafe), so bounding by String.length would
+    // mix code-unit arithmetic with grapheme indexing and miscount whenever a
+    // trailing grapheme spans multiple code units (emoji, combining marks).
+    final int graphemeCount = characters.length;
+    if (graphemeCount <= count) {
       return '';
     }
 
-    return substringSafe(0, length - count);
+    return substringSafe(0, graphemeCount - count);
   }
 
   /// Returns a new string with both the first and last characters removed.

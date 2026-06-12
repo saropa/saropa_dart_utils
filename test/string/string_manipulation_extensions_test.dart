@@ -219,6 +219,13 @@ void main() {
       expect('abc'.removeLastChar(), 'ab');
     });
 
+    test('removeLastChar drops a trailing emoji whole, not a half surrogate', () {
+      // 'a😀' is 'a' plus a surrogate-pair emoji (2 code units, 1 grapheme).
+      // Grapheme-based removal drops the whole emoji and leaves a clean 'a';
+      // a code-unit-based slice would strand the low surrogate.
+      expect('a😀'.removeLastChar(), 'a');
+    });
+
     test('removeFirstLastChar should drop both ends', () {
       expect('abcd'.removeFirstLastChar(), 'bc');
     });
@@ -253,11 +260,13 @@ void main() {
       expect(''.removeLastChars(3), '');
     });
 
-    test('counts UTF-16 code units, not graphemes', () {
-      // 'a😀' is 'a' (1 unit) + emoji (surrogate pair, 2 units) = length 3.
-      // Removing 1 code unit splits the surrogate pair and leaves the
-      // low-surrogate orphan, so the result is NOT a clean 'a'.
-      expect('a😀'.removeLastChars(2), 'a');
+    test('counts grapheme clusters, not code units, for a trailing emoji', () {
+      // 'a😀' is 'a' (1 grapheme) + emoji (surrogate pair, 1 grapheme) = 2
+      // graphemes though 3 UTF-16 code units. Removing 1 grapheme drops the
+      // whole emoji and leaves a clean 'a' (no stranded low surrogate);
+      // removing both graphemes empties the string.
+      expect('a😀'.removeLastChars(1), 'a');
+      expect('a😀'.removeLastChars(2), '');
     });
 
     test('keeps a precomposed accented letter intact', () {
@@ -272,16 +281,14 @@ void main() {
       // Built explicitly as base 'e' + combining acute (U+0301) so the value is
       // genuinely decomposed regardless of source-file normalization: 'Cafe' +
       // U+0301 is 5 UTF-16 code units but only 4 grapheme clusters (the final
-      // 'e' + mark fuse into one). removeLastChars delegates the cut to
-      // substringSafe, which counts grapheme clusters, so it never splits the
-      // accent off its base: removing 2 drops the whole accented cluster ('Caf')
-      // and removing 1 lands on the cluster boundary, leaving the string intact.
-      // (The method's own dartdoc still claims code-unit counting — see the
-      // suggestion surfaced to the maintainer.)
+      // 'e' + mark fuse into one). Counting is grapheme-based throughout, so the
+      // count argument is a count of visible characters: removing 1 drops the
+      // whole accented cluster ('Caf'), and removing 2 drops the 'f' as well
+      // ('Ca'). The accent is never split off its base.
       final String combiningAcute = String.fromCharCode(0x0301);
       final String decomposed = 'Cafe$combiningAcute';
-      expect(decomposed.removeLastChars(2), 'Caf');
-      expect(decomposed.removeLastChars(1), decomposed);
+      expect(decomposed.removeLastChars(1), 'Caf');
+      expect(decomposed.removeLastChars(2), 'Ca');
     });
   });
 
