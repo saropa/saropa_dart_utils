@@ -70,6 +70,7 @@ linter:
     # not load plugins — so without this line the lint stays invisible locally
     # and silently docks the "Pass static analysis" score on publish (40/50).
     curly_braces_in_flow_control_structures: true
+    dangling_library_doc_comments: true
     avoid_classes_with_only_static_members: false
     avoid_positional_boolean_parameters: false
     flutter_style_todos: false
@@ -145,7 +146,7 @@ plugins:
       annotate_inherited_member_redeclaration: true  # [INFO] This member hides an inherited instance member with the same name. Add @override if it is an override, or document why the name is reused intentionally. {v1}
       avoid_api_key_in_code: true  # [ERROR] Hardcoded keys are extractable from app binaries, enabling unauthorized API access and billing abuse. {v3}
       avoid_app_links_sensitive_params: true  # [ERROR] Deep link params are logged by OS and analytics, exposing tokens in crash reports and logs. {v2}
-      avoid_assert_in_production: true  # [WARNING] assert() is compiled out of release builds by the Dart compiler. Any validation, input checking, or security enforcement using assert() will silently stop running in production, allowing invalid data, unauthorized access, or corrupted state to pass through unchecked. {v2}
+      avoid_assert_in_production: false  # Disabled: this library uses assert() for 42 dev-time precondition checks (equal-length series, window >= 2, non-empty inputs) across 23 algorithm files — the documented Dart idiom for caller-contract validation that is intentionally stripped in release. A newer saropa_lints promoted this to WARNING, failing `dart pub publish --dry-run` (exit 65). Original {v2}: assert() is compiled out of release builds.
       avoid_asset_manifest_json: true  # [ERROR] The 'AssetManifest.json' file was removed in Flutter 3.38.0 (PR #172594). Code that loads this path at runtime — such as rootBundle.loadString('AssetManifest.json') — will throw a FlutterError because the file no longer exists in the built app bundle. Migrate to the typed AssetManifest API (AssetManifest.loadFromAssetBundle) or use 'AssetManifest.bin' for the binary format. {v1}
       avoid_async_callback_in_fake_async: true  # [ERROR] Async callback uses real time, making tests hang or timeout instead of using controlled fake time. {v2}
       avoid_async_in_build: true  # [ERROR] Build method should never be async. This will cause rendering issues. {v2}

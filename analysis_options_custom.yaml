@@ -29,6 +29,9 @@ platforms:
 
 avoid_barrel_files: false
 avoid_non_ascii_symbols: false
+# Disabled: 42 dev-time precondition asserts across 23 algorithm files; newer
+# saropa_lints promoted this to WARNING and broke `pub publish --dry-run`.
+avoid_assert_in_production: false
 # Disabled: 49 deliberate bounds-checked substring() calls; newer saropa_lints
 # promoted this to WARNING and broke `pub publish --dry-run`. See analysis_options.yaml.
 avoid_string_substring: false
