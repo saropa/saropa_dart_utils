@@ -19,6 +19,7 @@ typedef ScheduledTask<T> = Future<T> Function();
 class TaskScheduler {
   /// Creates a scheduler that runs at most [concurrency] tasks concurrently.
   /// [concurrency] must be at least 1.
+  /// Audited: 2026-06-12 11:26 EDT
   TaskScheduler({required this.concurrency}) : assert(concurrency >= 1, 'concurrency must be >= 1');
 
   /// Maximum number of tasks allowed to run at the same time.
@@ -35,9 +36,11 @@ class TaskScheduler {
   int _sequence = 0;
 
   /// Number of tasks currently executing.
+  /// Audited: 2026-06-12 11:26 EDT
   int get running => _running;
 
   /// Number of tasks waiting for a slot.
+  /// Audited: 2026-06-12 11:26 EDT
   int get pending => _queue.length;
 
   /// Schedules [task] to run when a slot is free, returning a future that
@@ -49,6 +52,7 @@ class TaskScheduler {
   /// final scheduler = TaskScheduler(concurrency: 2);
   /// final result = scheduler.schedule(() => fetch(url), priority: 10);
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> schedule<T>(ScheduledTask<T> task, {int priority = 0}) {
     final Completer<T> completer = Completer<T>();
     _insert(_PendingTask(priority, _sequence++, () => _execute<T>(task, completer)));
@@ -58,6 +62,7 @@ class TaskScheduler {
 
   /// Dispatches waiting tasks until the concurrency cap is reached or the queue
   /// drains. Safe to call repeatedly; it only ever starts as many as fit.
+  /// Audited: 2026-06-12 11:26 EDT
   void _pump() {
     while (_running < concurrency && _queue.isNotEmpty) {
       _queue.removeAt(0).start();
@@ -67,6 +72,7 @@ class TaskScheduler {
   /// Runs one task: increments the in-flight count synchronously (before the
   /// first await, so [_pump]'s cap check sees it), forwards the result or error
   /// to the caller's completer, then frees the slot and re-pumps.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> _execute<T>(ScheduledTask<T> task, Completer<T> completer) async {
     _running++;
     try {
@@ -82,6 +88,7 @@ class TaskScheduler {
   /// Inserts [task] keeping [_queue] sorted by priority (desc) then sequence
   /// (asc). Because [task] always carries the newest sequence, equal-priority
   /// entries land after their predecessors — preserving FIFO within a priority.
+  /// Audited: 2026-06-12 11:26 EDT
   void _insert(_PendingTask task) {
     int i = 0;
     while (i < _queue.length && _queue[i].outranks(task)) {
@@ -107,6 +114,7 @@ class _PendingTask {
 
   /// Whether this task should stay ahead of [other] in the queue: strictly
   /// higher priority, or equal priority but submitted earlier.
+  /// Audited: 2026-06-12 11:26 EDT
   bool outranks(_PendingTask other) =>
       priority > other.priority || (priority == other.priority && sequence < other.sequence);
 }

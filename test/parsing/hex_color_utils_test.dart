@@ -3,6 +3,13 @@ import 'package:saropa_dart_utils/parsing/hex_color_utils.dart';
 
 void main() {
   group('parseHexColor', () {
+    test('embedded non-hex char is rejected, not silently stripped', () {
+      // The old code stripped 'z' to get a valid-length 'a12c3d' and returned a
+      // color; a malformed input must be null.
+      expect(parseHexColor('#a1z2c3d'), isNull);
+      expect(parseHexColor('#aaZbbcc'), isNull);
+    });
+
     test('#FFF expands to opaque white', () => expect(parseHexColor('#FFF'), 0xFFFFFFFF));
 
     test('#000 expands to opaque black', () => expect(parseHexColor('#000'), 0xFF000000));

@@ -29,6 +29,7 @@ const String iniGlobalSection = '';
 /// parseIni('[db]\nhost = localhost\nport = 5432');
 /// // {db: {host: localhost, port: 5432}}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, Map<String, String>> parseIni(String input, {bool allowExport = false}) {
   final Map<String, Map<String, String>> out = <String, Map<String, String>>{};
   String section = iniGlobalSection;
@@ -61,6 +62,7 @@ Map<String, Map<String, String>> parseIni(String input, {bool allowExport = fals
 /// parseEnv('export TOKEN="ab\\ncd"\nPORT=8080');
 /// // {TOKEN: ab⏎cd, PORT: 8080}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, String> parseEnv(String input) {
   final Map<String, Map<String, String>> sections = parseIni(input, allowExport: true);
   final Map<String, String> flat = <String, String>{};
@@ -74,12 +76,14 @@ Map<String, String> parseEnv(String input) {
 
 /// A full-line comment starts with `#` or `;` (already trimmed). Inline comments
 /// are intentionally NOT recognized — a `#` mid-value is data, not a comment.
+/// Audited: 2026-06-12 11:26 EDT
 bool _isComment(String line) => line.startsWith('#') || line.startsWith(';');
 
 /// Returns the trimmed name of a `[section]` header, or null if [line] is not a
 /// header. Requires both brackets so a value like `[1, 2]` after a key is not
 /// mistaken for a header (it never reaches here — it has an `=` — but the strict
 /// shape keeps the check self-contained).
+/// Audited: 2026-06-12 11:26 EDT
 String? _sectionName(String line) {
   if (!line.startsWith('[') || !line.endsWith(']')) {
     return null;
@@ -90,6 +94,7 @@ String? _sectionName(String line) {
 
 /// Splits one assignment line into a trimmed key/value. [raw] is the original
 /// (untrimmed) line, passed only to give [FormatException] faithful context.
+/// Audited: 2026-06-12 11:26 EDT
 MapEntry<String, String> _entry(String raw, String line, {required bool allowExport}) {
   final int eq = line.indexOf('=');
   if (eq < 0) {
@@ -110,6 +115,7 @@ MapEntry<String, String> _entry(String raw, String line, {required bool allowExp
 /// interpret backslash escapes; single-quoted values are literal (the dotenv /
 /// POSIX convention). An unmatched leading quote is kept verbatim rather than
 /// guessed at, so malformed input is preserved for the caller to notice.
+/// Audited: 2026-06-12 11:26 EDT
 String _unquote(String value) {
   if (value.length < 2) {
     return value;
@@ -129,6 +135,7 @@ String _unquote(String value) {
 /// Expands `\n \t \r \\ \"` inside a double-quoted value. An unknown escape
 /// keeps the following character and drops the backslash (lenient), and a
 /// trailing lone backslash is written as-is.
+/// Audited: 2026-06-12 11:26 EDT
 String _unescapeDouble(String s) {
   final StringBuffer buf = StringBuffer();
   for (int i = 0; i < s.length; i++) {
@@ -144,6 +151,7 @@ String _unescapeDouble(String s) {
 }
 
 /// Maps a single escape letter to its character; unknown letters pass through.
+/// Audited: 2026-06-12 11:26 EDT
 String _escapeChar(String c) {
   // Decodes the character that followed a backslash. Only the standard INI
   // escapes are recognized; an unknown letter passes through verbatim (the

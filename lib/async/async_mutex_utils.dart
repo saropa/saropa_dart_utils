@@ -13,6 +13,7 @@ class AsyncMutexUtils {
   /// Waits until the mutex is available, then acquires it.
   /// Completes when the mutex is acquired.
   /// Throws [Object] if the underlying future completes with an error.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> acquire() async {
     if (!_isLocked) {
       _isLocked = true;
@@ -31,6 +32,7 @@ class AsyncMutexUtils {
 
   /// Acquires the mutex immediately if not locked;
   /// returns false if already held.
+  /// Audited: 2026-06-12 11:26 EDT
   bool tryLock() {
     if (_isLocked) return false;
     _isLocked = true;
@@ -38,6 +40,7 @@ class AsyncMutexUtils {
   }
 
   /// Releases the mutex; unblocks one waiter if any.
+  /// Audited: 2026-06-12 11:26 EDT
   void release() {
     if (_waiters.isEmpty) {
       _isLocked = false;
@@ -50,6 +53,7 @@ class AsyncMutexUtils {
   /// ensures release on exception.
   ///
   /// Returns the result of [fn].
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> run<T>(AsyncAction<T> fn) async {
     await acquire();
     try {

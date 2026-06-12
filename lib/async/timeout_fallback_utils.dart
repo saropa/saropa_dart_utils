@@ -4,6 +4,7 @@ import 'dart:developer' as dev;
 const String _kLogNameTimeoutWithFallback = 'timeoutWithFallback';
 
 /// Timeout with fallback value. Roadmap #179.
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> timeoutWithFallback<T>({
   required Future<T> future,
   required Duration timeout,

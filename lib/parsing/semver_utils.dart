@@ -2,6 +2,7 @@
 class SemverUtils {
   /// Creates a semantic version from its [major], [minor], and [patch] numbers,
   /// with optional [pre]-release and [build] metadata strings.
+  /// Audited: 2026-06-12 11:26 EDT
   SemverUtils(int major, int minor, int patch, [String pre = '', String build = ''])
     : _major = major,
       _minor = minor,
@@ -11,22 +12,27 @@ class SemverUtils {
   final int _major;
 
   /// The major version number (breaking changes).
+  /// Audited: 2026-06-12 11:26 EDT
   int get major => _major;
   final int _minor;
 
   /// The minor version number (backward-compatible features).
+  /// Audited: 2026-06-12 11:26 EDT
   int get minor => _minor;
   final int _patch;
 
   /// The patch version number (backward-compatible fixes).
+  /// Audited: 2026-06-12 11:26 EDT
   int get patch => _patch;
   final String _pre;
 
   /// The pre-release identifier (e.g. `rc.1`), or an empty string if none.
+  /// Audited: 2026-06-12 11:26 EDT
   String get pre => _pre;
   final String _build;
 
   /// The build metadata (e.g. `001`), or an empty string if none.
+  /// Audited: 2026-06-12 11:26 EDT
   String get build => _build;
 
   /// Parses [s] into a [SemverUtils], or returns `null` if it is not valid.
@@ -40,6 +46,7 @@ class SemverUtils {
   /// SemverUtils.parse('v1.2.3-rc.1+build')?.major; // 1
   /// SemverUtils.parse('1.2'); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static SemverUtils? parse(String s) {
     final RegExp re = RegExp(
       r'^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+([0-9A-Za-z.-]+))?$',
@@ -68,16 +75,47 @@ class SemverUtils {
   /// ```dart
   /// SemverUtils(1, 0, 0).compareTo(SemverUtils(1, 0, 0, 'rc.1')); // > 0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   int compareTo(SemverUtils other) {
     if (_major != other._major) return _major.compareTo(other._major);
     if (_minor != other._minor) return _minor.compareTo(other._minor);
     if (_patch != other._patch) return _patch.compareTo(other._patch);
     // Semver §11: a pre-release version has LOWER precedence than the otherwise
     // equal normal version (1.0.0-rc < 1.0.0), so the side lacking a pre-release
-    // ranks higher. Only when both have one do we compare them lexically.
+    // ranks higher. Only when both have one do we compare them identifier-wise.
     if (_pre.isEmpty && other._pre.isNotEmpty) return 1;
     if (_pre.isNotEmpty && other._pre.isEmpty) return -1;
-    return _pre.compareTo(other._pre);
+    return _comparePre(_pre, other._pre);
+  }
+
+  /// Compares two dot-separated pre-release strings per semver §11: each
+  /// identifier in turn, numerically when both are numeric, otherwise by ASCII;
+  /// a numeric identifier always ranks below an alphanumeric one; and when all
+  /// shared identifiers are equal the LONGER pre-release ranks higher. A plain
+  /// string `compareTo` is wrong here (it makes `alpha.2 > alpha.10`).
+  /// Audited: 2026-06-12 11:26 EDT
+  static int _comparePre(String a, String b) {
+    if (a == b) return 0;
+    final List<String> aIds = a.split('.');
+    final List<String> bIds = b.split('.');
+    final int shared = aIds.length < bIds.length ? aIds.length : bIds.length;
+    for (int i = 0; i < shared; i++) {
+      final int c = _compareIdentifier(aIds[i], bIds[i]);
+      if (c != 0) return c;
+    }
+    return aIds.length.compareTo(bIds.length);
+  }
+
+  /// Compares one pre-release identifier: numeric-vs-numeric numerically,
+  /// numeric below alphanumeric, otherwise ASCII order.
+  /// Audited: 2026-06-12 11:26 EDT
+  static int _compareIdentifier(String a, String b) {
+    final int? an = int.tryParse(a);
+    final int? bn = int.tryParse(b);
+    if (an != null && bn != null) return an.compareTo(bn);
+    if (an != null) return -1;
+    if (bn != null) return 1;
+    return a.compareTo(b);
   }
 
   @override

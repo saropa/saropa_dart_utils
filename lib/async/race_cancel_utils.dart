@@ -1,4 +1,5 @@
-/// Race with cancellation (first success wins, cancel rest) — roadmap #667.
+/// Race producers, first success wins — roadmap #667. Losers are NOT cancelled
+/// (they run fire-and-forget to completion; only their results are dropped).
 library;
 
 import 'dart:async' show Completer, Future, unawaited;
@@ -8,7 +9,13 @@ import 'dart:async' show Completer, Future, unawaited;
 const String _kErrAllFailed = 'All failed';
 
 /// Returns result of first future that completes successfully; others are not cancelled (fire-and-forget).
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> raceFirst<T>(List<Future<T> Function()> producers) {
+  // No producers means no result can ever arrive; fail fast instead of
+  // returning a future that never completes (a silent hang for the caller).
+  if (producers.isEmpty) {
+    return Future<T>.error(StateError(_kErrAllFailed));
+  }
   final Completer<T> c = Completer<T>();
   int pending = producers.length;
   for (final Future<T> Function() fn in producers) {

@@ -4,6 +4,7 @@ import 'dart:async';
 typedef VoidCallback = void Function();
 
 /// Throttle (time) — max one call per interval. Roadmap #177.
+/// Audited: 2026-06-12 11:26 EDT
 VoidCallback throttle(VoidCallback fn, Duration interval) {
   DateTime? lastCall;
   Timer? timer;

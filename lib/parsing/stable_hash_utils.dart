@@ -24,6 +24,7 @@ const int _fnvPrime = 0x100000001b3;
 /// ```dart
 /// canonicalString(<String, Object?>{'b': 1, 'a': 2}); // {"a":2,"b":1}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String canonicalString(Object? value) {
   if (value == null) {
     return 'null';
@@ -46,6 +47,7 @@ String canonicalString(Object? value) {
 }
 
 /// Canonicalizes a list, preserving element order so order is significant.
+/// Audited: 2026-06-12 11:26 EDT
 String _canonicalList(List<Object?> list) {
   final List<String> parts = <String>[
     for (final Object? element in list) canonicalString(element),
@@ -55,6 +57,7 @@ String _canonicalList(List<Object?> list) {
 
 /// Canonicalizes a map with keys sorted by `toString()` so insertion order is
 /// irrelevant to the output.
+/// Audited: 2026-06-12 11:26 EDT
 String _canonicalMap(Map<Object?, Object?> map) {
   final List<Object?> keys = map.keys.toList()
     ..sort((Object? a, Object? b) => a.toString().compareTo(b.toString()));
@@ -79,6 +82,7 @@ String _canonicalMap(Map<Object?, Object?> map) {
 /// stableHash(<String, int>{'a': 1, 'b': 2}) ==
 ///     stableHash(<String, int>{'b': 2, 'a': 1}); // true
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String stableHash(Object? value) {
   final String text = canonicalString(value);
   // FNV-1a over UTF-16 code units. Dart VM ints are 64-bit two's-complement and

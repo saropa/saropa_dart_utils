@@ -1,4 +1,5 @@
 /// Parse version string (major.minor.patch). Roadmap #151.
+/// Audited: 2026-06-12 11:26 EDT
 (int, int, int)? parseVersion(String input) {
   final List<String> parts = input.trim().split(RegExp(r'[.\s]'));
   if (parts.length < 3) return null;

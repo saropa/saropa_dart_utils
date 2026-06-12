@@ -21,6 +21,7 @@ class ResourcePool<T> {
   /// Creates a pool that lazily builds up to [maxSize] resources via [create],
   /// optionally disposing idle ones through [onDispose] when [close] drains the
   /// pool. [maxSize] must be at least 1.
+  /// Audited: 2026-06-12 11:26 EDT
   ResourcePool({
     required ResourceFactory<T> create,
     required this.maxSize,
@@ -48,17 +49,21 @@ class ResourcePool<T> {
   bool _isClosed = false;
 
   /// Resources free for immediate reuse.
+  /// Audited: 2026-06-12 11:26 EDT
   int get idleCount => _idle.length;
 
   /// Resources currently borrowed (created but not idle).
+  /// Audited: 2026-06-12 11:26 EDT
   int get inUseCount => _created - _idle.length;
 
   /// Borrowers currently waiting for a resource.
+  /// Audited: 2026-06-12 11:26 EDT
   int get waitingCount => _waiters.length;
 
   /// Borrows a resource for [action], returning it to the pool afterward even if
   /// [action] throws. The usual entry point — it pairs acquire/release so a
   /// resource can never leak. Throws [StateError] if the pool is closed.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<R> use<R>(Future<R> Function(T resource) action) async {
     final T resource = await acquire();
     try {
@@ -71,6 +76,7 @@ class ResourcePool<T> {
   /// Acquires a resource: reuses an idle one, else creates a new one if below
   /// [maxSize], else waits FIFO for a release. Prefer [use] so the matching
   /// [release] can't be forgotten. Throws [StateError] if the pool is closed.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> acquire() async {
     if (_isClosed) {
       throw StateError('ResourcePool is closed');
@@ -89,6 +95,7 @@ class ResourcePool<T> {
   /// Returns [resource] to the pool. A waiting borrower (if any) receives it
   /// directly; otherwise it becomes idle. After [close], the resource is simply
   /// dropped from the count (not disposed here — see [close]).
+  /// Audited: 2026-06-12 11:26 EDT
   void release(T resource) {
     if (_isClosed) {
       // Pool is shut down: drop the resource from the live count. Disposal is
@@ -111,6 +118,7 @@ class ResourcePool<T> {
   /// Resources still checked out are NOT disposed by the pool — return them
   /// before closing (or dispose them yourself); a late [release] just drops the
   /// reference from the count.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> close() async {
     _isClosed = true;
     final List<T> toDispose = List<T>.of(_idle);
@@ -127,6 +135,7 @@ class ResourcePool<T> {
 
   /// Creates one resource under the cap, rolling back the count if creation
   /// fails so a thrown factory doesn't permanently consume a slot.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> _createTracked() async {
     _created++;
     try {
@@ -139,6 +148,7 @@ class ResourcePool<T> {
 
   /// Disposes [resource] via [_onDispose] if provided, and drops it from the
   /// created count so a closed pool's slots are reclaimed.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> _dispose(T resource) async {
     _created--;
     final ResourceDisposer<T>? dispose = _onDispose;

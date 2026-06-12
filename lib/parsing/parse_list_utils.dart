@@ -5,6 +5,7 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 const String _kLogParseListJsonFailed = 'parseListFromString: JSON decode failed';
 
 /// Parse list from string (e.g. "a,b,c" or JSON array string). Roadmap #154.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> parseListFromString(String input, {String delimiter = ','}) {
   final String s = input.trim();
   if (s.isEmpty) return <String>[];

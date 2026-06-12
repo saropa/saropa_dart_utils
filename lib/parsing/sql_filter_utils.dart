@@ -36,6 +36,7 @@ final List<TokenRule> _rules = <TokenRule>[
 /// ```dart
 /// filterRows(users, "age >= 18 AND city LIKE 'New%'");
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<Map<String, Object?>> filterRows(
   Iterable<Map<String, Object?>> rows,
   String whereClause,
@@ -46,6 +47,7 @@ List<Map<String, Object?>> filterRows(
 
 /// Compiles [whereClause] into a reusable [RowPredicate] (parse once, apply to
 /// many rows). Throws [FormatException] on a malformed clause.
+/// Audited: 2026-06-12 11:26 EDT
 RowPredicate compileFilter(String whereClause) {
   final List<Token> tokens = tokenize(whereClause, _rules);
   return _FilterParser(tokens).parse();
@@ -243,6 +245,7 @@ class _FilterParser {
 /// Applies a comparison [op] between a row's [fieldValue] and a [literal].
 /// Equality uses `==`/`!=`; ordering operators compare two nums or two strings
 /// and treat any other (or null) pairing as not-matching (SQL's unknown → false).
+/// Audited: 2026-06-12 11:26 EDT
 bool _applyOperator(String op, Object? fieldValue, Object? literal) {
   switch (op) {
     case '=':
@@ -276,6 +279,7 @@ bool _applyOrder(String op, int order) {
 }
 
 /// Comparable ordering for two nums or two strings, else null (incomparable).
+/// Audited: 2026-06-12 11:26 EDT
 int? _orderCompare(Object? a, Object? b) {
   if (a is num && b is num) {
     return a.compareTo(b);
@@ -288,6 +292,7 @@ int? _orderCompare(Object? a, Object? b) {
 
 /// Converts a SQL LIKE pattern (`%` = any run, `_` = one char) to an anchored,
 /// case-sensitive [RegExp], escaping all other characters.
+/// Audited: 2026-06-12 11:26 EDT
 RegExp _likeToRegExp(String pattern) {
   final StringBuffer buffer = StringBuffer('^');
   for (final String ch in pattern.split('')) {
@@ -305,6 +310,7 @@ RegExp _likeToRegExp(String pattern) {
 
 /// Strips the single quotes from a lexed string literal (length ≥ 2 guaranteed
 /// by the str token regex).
+/// Audited: 2026-06-12 11:26 EDT
 String _unquote(String literal) =>
     // ignore: avoid_string_substring -- the str token regex guarantees surrounding quotes (length >= 2)
     literal.substring(1, literal.length - 1);

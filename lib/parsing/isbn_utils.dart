@@ -1,4 +1,5 @@
 /// ISBN-10/13 validation. Roadmap #149.
+/// Audited: 2026-06-12 11:26 EDT
 bool isValidIsbn10(String isbn) {
   final String s = isbn.replaceAll(RegExp(r'[\s-]'), '').toUpperCase();
   if (s.length != 10) return false;
@@ -33,6 +34,7 @@ bool isValidIsbn10(String isbn) {
 /// isValidIsbn13('978-0-306-40615-7'); // true
 /// isValidIsbn13('978-0-306-40615-0'); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isValidIsbn13(String isbn) {
   final String s = isbn.replaceAll(RegExp(r'[\s-]'), '');
   if (s.length != 13) return false;

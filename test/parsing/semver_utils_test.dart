@@ -100,6 +100,48 @@ void main() {
     });
   });
 
+  group('SemverUtils.compareTo prerelease precedence (semver §11)', () {
+    test('numeric identifiers compare numerically, not lexically', () {
+      // alpha.2 < alpha.10: a plain string compare wrongly makes "2" > "10".
+      expect(
+        SemverUtils(1, 0, 0, 'alpha.2').compareTo(SemverUtils(1, 0, 0, 'alpha.10')),
+        lessThan(0),
+      );
+    });
+
+    test('a numeric identifier ranks below an alphanumeric one', () {
+      expect(
+        SemverUtils(1, 0, 0, 'alpha.1').compareTo(SemverUtils(1, 0, 0, 'alpha.beta')),
+        lessThan(0),
+      );
+    });
+
+    test('fewer identifiers rank below more when the prefix is equal', () {
+      // 1.0.0-alpha < 1.0.0-alpha.1
+      expect(SemverUtils(1, 0, 0, 'alpha').compareTo(SemverUtils(1, 0, 0, 'alpha.1')), lessThan(0));
+    });
+
+    test('full semver §11 example ordering holds', () {
+      // alpha < alpha.1 < alpha.beta < beta < beta.2 < beta.11 < rc.1
+      final List<String> ordered = <String>[
+        'alpha',
+        'alpha.1',
+        'alpha.beta',
+        'beta',
+        'beta.2',
+        'beta.11',
+        'rc.1',
+      ];
+      for (int i = 0; i + 1 < ordered.length; i++) {
+        expect(
+          SemverUtils(1, 0, 0, ordered[i]).compareTo(SemverUtils(1, 0, 0, ordered[i + 1])),
+          lessThan(0),
+          reason: '${ordered[i]} < ${ordered[i + 1]}',
+        );
+      }
+    });
+  });
+
   group('SemverUtils.toString', () {
     test('plain', () => expect(SemverUtils(1, 2, 3).toString(), 'SemverUtils(1.2.3)'));
     test('with prerelease', () {

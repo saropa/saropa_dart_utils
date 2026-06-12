@@ -21,6 +21,7 @@ class TokenBucketRateLimiter {
   /// (≥ 1) tokens. [now] supplies the current time for refill accrual; it
   /// defaults to `DateTime.now` and can be overridden in tests to advance a
   /// virtual clock.
+  /// Audited: 2026-06-12 11:26 EDT
   TokenBucketRateLimiter({
     required this.tokensPerSecond,
     required this.capacity,
@@ -53,6 +54,7 @@ class TokenBucketRateLimiter {
   /// enough have accrued, false otherwise (no partial spend). Throws
   /// [ArgumentError] if [tokens] is below 1 or above [capacity] — a request
   /// larger than the bucket can ever hold is a programming error, not a denial.
+  /// Audited: 2026-06-12 11:26 EDT
   bool tryAcquire([int tokens = 1]) {
     _validate(tokens);
     _refill();
@@ -67,6 +69,7 @@ class TokenBucketRateLimiter {
   /// if they are available now. Pairs with [tryAcquire] so a caller can schedule
   /// a retry instead of busy-polling. Throws [ArgumentError] on an impossible
   /// request (see [tryAcquire]).
+  /// Audited: 2026-06-12 11:26 EDT
   Duration timeUntilAvailable([int tokens = 1]) {
     _validate(tokens);
     _refill();
@@ -81,6 +84,7 @@ class TokenBucketRateLimiter {
   }
 
   /// The tokens currently available (after accrual), as a fractional count.
+  /// Audited: 2026-06-12 11:26 EDT
   double availableTokens() {
     _refill();
     return _tokens;
@@ -95,6 +99,7 @@ class TokenBucketRateLimiter {
   /// Adds the tokens accrued since [_lastRefill], capped at [capacity]. A clock
   /// that did not advance (or stepped backward) accrues nothing and leaves the
   /// baseline untouched, so a later forward step still measures the full gap.
+  /// Audited: 2026-06-12 11:26 EDT
   void _refill() {
     final DateTime current = _now();
     final int elapsedMicros = current.difference(_lastRefill).inMicroseconds;

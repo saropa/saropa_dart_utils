@@ -1,4 +1,5 @@
 /// Luhn check (credit card / ID validation). Roadmap #148.
+/// Audited: 2026-06-12 11:26 EDT
 bool luhnCheck(String digits) {
   const int minLength = 2;
   final String digitsOnly = digits.replaceAll(RegExp(r'\D'), '');

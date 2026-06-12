@@ -59,6 +59,7 @@ class CronSchedule {
   /// CronSchedule.tryParse('*/15 9-17 * * 1-5'); // every 15 min, 9-17h, Mon-Fri
   /// CronSchedule.tryParse('bad'); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static CronSchedule? tryParse(String expression) {
     final List<String> fields = expression.trim().split(RegExp(r'\s+'));
     if (fields.length != 5) {
@@ -100,6 +101,7 @@ class CronSchedule {
   /// DST transition the local minute sequence skips or repeats, so a schedule
   /// landing inside the gap can be shifted by the offset change — pass a UTC
   /// [from] if you need DST-independent results.
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime? nextRunAfter(DateTime from) {
     // Truncate to the minute and step forward one, so the result is strictly
     // after `from` regardless of its seconds/milliseconds.
@@ -145,6 +147,7 @@ DateTime _truncateToMinute(DateTime t) => t.isUtc
 
 /// Expands one cron field into the set of allowed values in [min]..[max], or
 /// `null` if any token is malformed or out of range.
+/// Audited: 2026-06-12 11:26 EDT
 Set<int>? _parseField(String field, int min, int max) {
   final Set<int> values = <int>{};
   for (final String part in field.split(',')) {
@@ -157,6 +160,7 @@ Set<int>? _parseField(String field, int min, int max) {
 
 /// Parses a single comma-part (`*`, `n`, `a-b`, `*/n`, `a-b/n`, `a/n`) into
 /// [out], returning `false` on any malformed or out-of-range token.
+/// Audited: 2026-06-12 11:26 EDT
 bool _parsePart(String part, int min, int max, Set<int> out) {
   if (part.isEmpty) {
     return false;

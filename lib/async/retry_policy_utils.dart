@@ -6,12 +6,15 @@ import 'dart:developer' show log;
 import 'dart:math' show Random;
 
 /// Default delay between retry attempts.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration retryPolicyDefaultDelay = Duration(milliseconds: 100);
 
 /// Default base delay for exponential backoff in [retryWithJitter].
+/// Audited: 2026-06-12 11:26 EDT
 const Duration retryPolicyDefaultBackoffBase = Duration(milliseconds: 100);
 
 /// Default jitter range for [retryWithJitter].
+/// Audited: 2026-06-12 11:26 EDT
 const Duration retryPolicyDefaultBackoffJitter = Duration(milliseconds: 50);
 
 /// Retries [fn] up to [maxAttempts] with [delay] between attempts.
@@ -26,6 +29,7 @@ const Duration retryPolicyDefaultBackoffJitter = Duration(milliseconds: 50);
 /// the error and the 1-based attempt number — useful for logging or metrics. It
 /// does NOT fire on the final attempt (which rethrows) or on a [retryIf]-vetoed
 /// error.
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> retryWithPolicy<T>(
   Future<T> Function() fn, {
   int maxAttempts = 3,
@@ -53,6 +57,7 @@ Future<T> retryWithPolicy<T>(
 }
 
 /// Exponential backoff with jitter: delay = base * 2^attempt + random(0, jitter).
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> retryWithJitter<T>(
   Future<T> Function() fn, {
   int maxAttempts = 3,
@@ -70,7 +75,12 @@ Future<T> retryWithJitter<T>(
       attempt++;
       // ignore: saropa_lints/avoid_ignoring_return_values -- throwWithStackTrace returns Never; there is no value to capture
       if (attempt >= maxAttempts) Error.throwWithStackTrace(e, st);
-      final int ms = base.inMilliseconds * (1 << attempt) + r.nextInt(jitter.inMilliseconds);
+      // Clamp the shift so a large maxAttempts cannot overflow `1 << attempt`,
+      // and guard a zero jitter: nextInt(0) throws RangeError, so a caller
+      // asking for no jitter (Duration.zero) must add nothing instead.
+      final int backoff = base.inMilliseconds * (1 << attempt.clamp(0, 30));
+      final int jitterMs = jitter.inMilliseconds;
+      final int ms = backoff + (jitterMs > 0 ? r.nextInt(jitterMs) : 0);
       await Future<void>.delayed(Duration(milliseconds: ms));
     }
   }

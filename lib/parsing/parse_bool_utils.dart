@@ -1,4 +1,5 @@
 /// Parse simple boolean ("on"/"off", "1"/"0", "yes"/"no"). Roadmap #153.
+/// Audited: 2026-06-12 11:26 EDT
 bool? parseBool(String input) {
   final String s = input.trim().toLowerCase();
   const Set<String> trueValues = <String>{'true', '1', 'yes', 'on'};

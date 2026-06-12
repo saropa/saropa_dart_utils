@@ -3,6 +3,7 @@
 /// on the first one.
 class CsvRowError {
   /// Records that [line] at 1-based [lineNumber] failed for [message].
+  /// Audited: 2026-06-12 11:26 EDT
   const CsvRowError(this.lineNumber, this.line, this.message);
 
   /// 1-based line number in the original input (blank lines are counted, so
@@ -23,6 +24,7 @@ class CsvRowError {
 /// [errors] list for the rows that failed validation.
 class CsvParseResult {
   /// Wraps the good [rows] and the rejected-row [errors].
+  /// Audited: 2026-06-12 11:26 EDT
   const CsvParseResult(this.rows, this.errors);
 
   /// Rows that parsed and passed validation, in source order. A rejected row is
@@ -33,6 +35,7 @@ class CsvParseResult {
   final List<CsvRowError> errors;
 
   /// `true` when at least one row was rejected.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get hasErrors => errors.isNotEmpty;
 }
 
@@ -56,6 +59,7 @@ class CsvParseResult {
 ///
 /// When [hasHeader] is `true` the header row is still returned as the first
 /// entry of [CsvParseResult.rows] (the caller knows it is the header).
+/// Audited: 2026-06-12 11:26 EDT
 CsvParseResult parseCsv(
   String input, {
   String delimiter = ',',
@@ -109,6 +113,7 @@ CsvParseResult parseCsv(
 }
 
 /// Parse one CSV line (handle quoted fields, commas inside quotes). Roadmap #141.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> parseCsvLine(String line, {String delimiter = ','}) {
   final StringBuffer current = StringBuffer();
   bool isInQuotes = false;

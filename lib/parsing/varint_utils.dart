@@ -2,6 +2,7 @@
 library;
 
 /// Decodes one varint from [bytes] at [start]. Returns (value, nextIndex).
+/// Audited: 2026-06-12 11:26 EDT
 (int value, int next) decodeVarint(List<int> bytes, int start) {
   int value = 0;
   int shift = 0;
@@ -15,21 +16,27 @@ library;
     value |= (b & 0x7f) << shift;
     if ((b & 0x80) == 0) return (value, i);
     shift += 7;
-    // Bail out once the shift passes the width a well-formed value should need
-    // (~5 bytes): without this, a stream of continuation bytes would shift
-    // indefinitely and silently corrupt the result.
-    if (shift > 35) break;
+    // Bail out once the shift covers a full 64-bit value (10 groups of 7 bits).
+    // A 64-bit varint is up to 10 bytes; the previous 35-bit (5-byte) cap
+    // truncated any value above 2^35 and broke negative round-trips.
+    if (shift >= 64) break;
   }
   return (value, i);
 }
 
 /// Encodes [value] as varint bytes.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> encodeVarint(int value) {
   final List<int> out = <int>[];
   int v = value;
-  while (v > 0x7f) {
+  // Use the mask test `(v & ~0x7f) != 0` and a LOGICAL right shift (`>>>`), not
+  // `v > 0x7f` with arithmetic `>>`: a negative value is not `> 0x7f`, so the
+  // old loop emitted a single wrong byte and never round-tripped. The unsigned
+  // shift feeds zeros from the top, so a negative (two's-complement 64-bit)
+  // value encodes to its full 10-byte form that decodeVarint reconstructs.
+  while ((v & ~0x7f) != 0) {
     out.add((v & 0x7f) | 0x80);
-    v >>= 7;
+    v >>>= 7;
   }
   out.add(v & 0x7f);
   return out;

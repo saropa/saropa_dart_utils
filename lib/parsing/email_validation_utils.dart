@@ -1,4 +1,5 @@
 /// Email validation (reasonable regex, not RFC-perfect). Roadmap #146.
+/// Audited: 2026-06-12 11:26 EDT
 final RegExp _emailRegex = RegExp(
   r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
 );
@@ -14,6 +15,7 @@ final RegExp _emailRegex = RegExp(
 /// isValidEmail('user@example.com'); // true
 /// isValidEmail('not-an-email'); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isValidEmail(String email) {
   final String s = email.trim();
   if (s.isEmpty || s.length > 254) return false;

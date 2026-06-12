@@ -15,6 +15,7 @@ import 'dart:async' show Completer, Future, scheduleMicrotask, unawaited;
 /// Thrown when work is abandoned because its [CancellationToken] was cancelled.
 class CancellationException implements Exception {
   /// Creates a cancellation exception carrying an optional [reason].
+  /// Audited: 2026-06-12 11:26 EDT
   const CancellationException([this.reason]);
 
   /// Optional caller-supplied explanation for the cancellation.
@@ -45,16 +46,20 @@ class CancellationToken {
   Object? _reason;
 
   /// Whether [cancel] has been called.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isCancelled => _isCancelled;
 
   /// The reason passed to [cancel], or `null` if none was supplied / not yet
   /// cancelled.
+  /// Audited: 2026-06-12 11:26 EDT
   Object? get reason => _reason;
 
   /// Completes once the token is cancelled; never completes with an error.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> get whenCancelled => _completer.future;
 
   /// Cancels the token with an optional [reason]; a second call is a no-op.
+  /// Audited: 2026-06-12 11:26 EDT
   void cancel([Object? reason]) {
     // Idempotent: only the first cancel latches state and fires callbacks.
     if (_isCancelled) {
@@ -72,6 +77,7 @@ class CancellationToken {
   }
 
   /// Throws a [CancellationException] (carrying [reason]) if already cancelled.
+  /// Audited: 2026-06-12 11:26 EDT
   void throwIfCancelled() {
     if (_isCancelled) {
       throw CancellationException(_reason);
@@ -82,6 +88,7 @@ class CancellationToken {
   ///
   /// If the token is already cancelled, [callback] is scheduled on a microtask
   /// so registration is always asynchronous and never re-enters the caller.
+  /// Audited: 2026-06-12 11:26 EDT
   void onCancel(void Function() callback) {
     // Already cancelled: schedule immediately rather than queueing forever.
     if (_isCancelled) {
@@ -104,6 +111,7 @@ class CancellationToken {
 /// final CancellationToken token = CancellationToken();
 /// final int value = await runCancellable(token, () async => 42);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> runCancellable<T>(
   CancellationToken token,
   Future<T> Function() task,

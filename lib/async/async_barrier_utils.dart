@@ -9,6 +9,7 @@ final class AsyncBarrierUtils {
 
   /// Creates a barrier that completes after [count] calls to [signal].
   /// Throws an [ArgumentError] when [count] is less than 1.
+  /// Audited: 2026-06-12 11:26 EDT
   factory AsyncBarrierUtils(int count) {
     if (count < 1) throw ArgumentError(_kErrCountAtLeastOne);
     return AsyncBarrierUtils._(count);
@@ -23,6 +24,7 @@ final class AsyncBarrierUtils {
 
   /// Decrements the remaining count; completes
   /// the barrier when count reaches zero.
+  /// Audited: 2026-06-12 11:26 EDT
   void signal() {
     _remaining--;
     // Guard isCompleted: signalling more than [count] times must be a no-op, not
@@ -32,6 +34,7 @@ final class AsyncBarrierUtils {
   }
 
   /// Future that completes when the barrier has received [count] signals.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> get future {
     final c = _completer ??= Completer<void>();
 

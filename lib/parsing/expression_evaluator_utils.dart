@@ -37,6 +37,7 @@ final List<TokenRule> _rules = <TokenRule>[
 /// evaluateExpression('age >= 18 && country == "US"',
 ///   variables: {'age': 21, 'country': 'US'}); // true
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Object? evaluateExpression(
   String expression, {
   Map<String, Object?> variables = const <String, Object?>{},
@@ -47,6 +48,7 @@ Object? evaluateExpression(
 
 /// Evaluates [expression] expecting a boolean result (the common case for a
 /// filter/condition); throws [FormatException] if it isn't boolean.
+/// Audited: 2026-06-12 11:26 EDT
 bool evaluateBool(String expression, {Map<String, Object?> variables = const <String, Object?>{}}) {
   final Object? value = evaluateExpression(expression, variables: variables);
   if (value is bool) {
@@ -267,6 +269,7 @@ class _Evaluator {
 
 /// Strips the surrounding quotes from a lexed string literal (always length ≥ 2
 /// — the lexer regex requires both quotes).
+/// Audited: 2026-06-12 11:26 EDT
 String _unquote(String literal) =>
     // ignore: avoid_string_substring -- the str token regex guarantees a leading and trailing quote (length >= 2)
     literal.substring(1, literal.length - 1);

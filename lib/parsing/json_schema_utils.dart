@@ -39,6 +39,7 @@ enum JsonType {
 class FieldSchema {
   /// Describes a field of [type]. [isRequired] defaults to true; pass [allowed]
   /// to restrict the value to a fixed set.
+  /// Audited: 2026-06-12 11:26 EDT
   const FieldSchema(this.type, {this.isRequired = true, this.allowed});
 
   /// The required value kind.
@@ -87,6 +88,7 @@ bool _typeMatches(JsonType type, Object value) {
 ///   'role': FieldSchema(JsonType.string, allowed: <Object?>['admin', 'user']),
 /// });
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 ValidationErrors validateJsonSchema(Object? object, Map<String, FieldSchema> schema) {
   final ValidationErrors errors = ValidationErrors();
   if (object is! Map) {

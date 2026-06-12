@@ -23,6 +23,7 @@ class SlidingWindowRateLimiter {
   /// Creates a limiter permitting [limit] (≥ 1) events per [window] (> 0).
   /// [now] supplies the current time (defaults to `DateTime.now`); tests pass a
   /// virtual clock to advance time deterministically.
+  /// Audited: 2026-06-12 11:26 EDT
   SlidingWindowRateLimiter({
     required this.limit,
     required this.window,
@@ -41,10 +42,12 @@ class SlidingWindowRateLimiter {
   final DateTime Function() _now;
 
   /// Timestamps of events still inside the window, oldest first.
+  /// Audited: 2026-06-12 11:26 EDT
   final ListQueue<DateTime> _events = ListQueue<DateTime>();
 
   /// Tries to record one event now: returns true and logs it if fewer than
   /// [limit] events fall in the current window, false otherwise (not logged).
+  /// Audited: 2026-06-12 11:26 EDT
   bool tryAcquire() {
     final DateTime now = _now();
     _prune(now);
@@ -57,6 +60,7 @@ class SlidingWindowRateLimiter {
 
   /// The number of events currently inside the window (after pruning expired
   /// ones).
+  /// Audited: 2026-06-12 11:26 EDT
   int currentCount() {
     _prune(_now());
     return _events.length;
@@ -65,6 +69,7 @@ class SlidingWindowRateLimiter {
   /// How long until the next event would be admitted, or [Duration.zero] if one
   /// is admissible now. When at the limit, that is when the oldest in-window
   /// event ages out (`oldest + window`).
+  /// Audited: 2026-06-12 11:26 EDT
   Duration timeUntilAvailable() {
     final DateTime now = _now();
     _prune(now);
@@ -81,6 +86,7 @@ class SlidingWindowRateLimiter {
   /// Drops events that have aged out of the trailing window. An event exactly
   /// [window] old is expired (the window's lower bound is exclusive), so a
   /// timestamp at or before `now - window` is removed.
+  /// Audited: 2026-06-12 11:26 EDT
   void _prune(DateTime now) {
     final DateTime threshold = now.subtract(window);
     while (true) {

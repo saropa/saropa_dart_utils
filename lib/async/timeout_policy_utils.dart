@@ -5,6 +5,7 @@ import 'dart:async' show Future, TimeoutException;
 import 'dart:developer' as developer;
 
 /// Runs [fn] with [timeout]; on timeout returns [fallback] or rethrows.
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> withTimeout<T>(Future<T> Function() fn, Duration timeout, {T? fallback}) async {
   try {
     return await fn().timeout(timeout);

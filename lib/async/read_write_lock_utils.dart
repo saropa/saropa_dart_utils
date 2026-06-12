@@ -19,9 +19,11 @@ import 'dart:collection' show ListQueue;
 class ReadWriteLock {
   /// Creates a lock. [writerPreferred] (default true) makes waiting writers take
   /// priority over newly-arriving readers.
+  /// Audited: 2026-06-12 11:26 EDT
   ReadWriteLock({this.writerPreferred = true});
 
   /// Whether a waiting writer blocks newly-arriving readers (anti-starvation).
+  /// Audited: 2026-06-12 11:26 EDT
   // ignore: saropa_lints/prefer_boolean_prefixes -- public API name kept deliberately; "isWriterPreferred" obscures the writer-preference policy (see read-write-lock-653 plan)
   final bool writerPreferred;
 
@@ -31,19 +33,24 @@ class ReadWriteLock {
   final ListQueue<Completer<void>> _writeWaiters = ListQueue<Completer<void>>();
 
   /// Number of readers currently holding the lock.
+  /// Audited: 2026-06-12 11:26 EDT
   int get activeReaders => _activeReaders;
 
   /// Whether a writer currently holds the lock exclusively.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isWriteLocked => _writerActive;
 
   /// Readers currently waiting to acquire.
+  /// Audited: 2026-06-12 11:26 EDT
   int get waitingReaders => _readWaiters.length;
 
   /// Writers currently waiting to acquire.
+  /// Audited: 2026-06-12 11:26 EDT
   int get waitingWriters => _writeWaiters.length;
 
   /// Runs [action] under a shared read lock, releasing it afterward even if
   /// [action] throws. Multiple reads run concurrently.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> read<T>(Future<T> Function() action) async {
     await _acquireRead();
     try {
@@ -55,6 +62,7 @@ class ReadWriteLock {
 
   /// Runs [action] under the exclusive write lock, releasing it afterward even
   /// if [action] throws. No reads or other writes overlap it.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> write<T>(Future<T> Function() action) async {
     await _acquireWrite();
     try {
@@ -102,6 +110,7 @@ class ReadWriteLock {
 
   /// Hands the lock to the next waiter(s) per the preference policy. Only runs
   /// when the lock is free (no active writer, no active readers).
+  /// Audited: 2026-06-12 11:26 EDT
   void _wakeNext() {
     if (_writerActive || _activeReaders > 0) {
       return;
@@ -122,6 +131,7 @@ class ReadWriteLock {
   }
 
   /// Grants the lock to the head writer if one waits; returns whether it did.
+  /// Audited: 2026-06-12 11:26 EDT
   bool _grantWriter() {
     if (_writeWaiters.isEmpty) {
       return false;
@@ -132,6 +142,7 @@ class ReadWriteLock {
   }
 
   /// Admits every currently-waiting reader as a concurrent batch.
+  /// Audited: 2026-06-12 11:26 EDT
   void _grantAllReaders() {
     while (_readWaiters.isNotEmpty) {
       _activeReaders++;

@@ -1,4 +1,5 @@
 /// Returns a wrapper that cancels previous in-flight calls when invoked again; the superseded future throws [CancelPreviousException]. Roadmap #183.
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> Function() cancelPrevious<T>(Future<T> Function() fn) {
   int generation = 0;
   return () async {

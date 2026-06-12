@@ -14,6 +14,13 @@
 /// by [apply] rather than mutating in place, so the same solver can be reused.
 library;
 
+// The solver's function-typed fields (choices/apply/isComplete/isValid) are
+// pure strategy callbacks — a candidate generator, a state transform, and two
+// predicates — not UI event handlers, so the onXxx convention enforced by
+// prefer_correct_callback_field_name would misname them. They are also public
+// fields of a published API, so renaming would be a breaking change.
+// ignore_for_file: prefer_correct_callback_field_name
+
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 

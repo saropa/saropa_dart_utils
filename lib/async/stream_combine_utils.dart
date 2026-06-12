@@ -17,6 +17,7 @@ import 'dart:async';
 ///            Stream.fromIterable(['a', 'b']),
 ///            (int n, String s) => '$n$s'); // 1a, 2b
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Stream<R> zipStreams<A, B, R>(Stream<A> a, Stream<B> b, R Function(A, B) combine) async* {
   final StreamIterator<A> ia = StreamIterator<A>(a);
   final StreamIterator<B> ib = StreamIterator<B>(b);
@@ -45,6 +46,7 @@ Stream<R> zipStreams<A, B, R>(Stream<A> a, Stream<B> b, R Function(A, B) combine
 /// // a: 1 .. 2 ..      b: .. x .. y
 /// // emits: 1x, 2x, 2y
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Stream<R> combineLatestStreams<A, B, R>(Stream<A> a, Stream<B> b, R Function(A, B) combine) {
   late final StreamController<R> controller;
   StreamSubscription<A>? subA;

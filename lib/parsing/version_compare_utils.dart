@@ -1,4 +1,11 @@
-/// Version compare (semver or dotted). Roadmap #250.
+/// Version compare (dotted numeric). Roadmap #250.
+///
+/// WARNING: this compares ONLY the dotted numeric components. A non-numeric
+/// segment degrades to `0`, so a pre-release like `1.0.0-rc` compares EQUAL to
+/// `1.0.0` (the `0-rc` segment becomes `0`). For real semver precedence
+/// (pre-release ranks below release, numeric-vs-alphanumeric identifiers), use
+/// `SemverUtils.parse(...)` + `SemverUtils.compareTo`.
+/// Audited: 2026-06-12 11:26 EDT
 int compareVersions(String a, String b) {
   // Compare dotted numeric versions segment by segment. Non-numeric segments
   // degrade to 0 rather than throwing.

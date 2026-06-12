@@ -5,22 +5,26 @@ library;
 class BatchFlushUtils<T extends Object> {
   /// Creates a batcher that flushes via [onFlush] once [batchSize] items
   /// accumulate (or when [flush] is called explicitly).
+  /// Audited: 2026-06-12 11:26 EDT
   BatchFlushUtils(this.batchSize, this.onFlush) : _buffer = <T>[];
 
   /// Size at which the buffer is automatically flushed.
   final int batchSize;
 
   /// Callback invoked with the buffered batch when a flush occurs.
+  /// Audited: 2026-06-12 11:26 EDT
   final void Function(List<T> batch) onFlush;
   final List<T> _buffer;
 
   /// Appends [item]; flushes when buffer length reaches the batch size.
+  /// Audited: 2026-06-12 11:26 EDT
   void add(T item) {
     _buffer.add(item);
     if (_buffer.length >= batchSize) flush();
   }
 
   /// Invokes [onFlush] with current buffer contents and clears the buffer.
+  /// Audited: 2026-06-12 11:26 EDT
   void flush() {
     if (_buffer.isEmpty) return;
     onFlush(List<T>.of(_buffer));
@@ -28,6 +32,7 @@ class BatchFlushUtils<T extends Object> {
   }
 
   /// Current number of items in the buffer.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _buffer.length;
 
   @override

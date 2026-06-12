@@ -16,28 +16,34 @@ class LogLineParser {
   LogLineParser._(this._regex, this._fields);
 
   /// Compiles [template] (with `{field}` / `{field:pattern}` placeholders).
+  /// Audited: 2026-06-12 11:26 EDT
   factory LogLineParser(String template) {
     final (RegExp regex, List<String> fields) = _compile(template);
     return LogLineParser._(regex, fields);
   }
 
   /// Apache/NCSA common log format: host ident user [time] "request" status size.
+  /// Audited: 2026-06-12 11:26 EDT
   factory LogLineParser.apacheCommon() => LogLineParser(_apacheCommon);
 
   /// Apache combined log format (common + "referer" "user-agent").
+  /// Audited: 2026-06-12 11:26 EDT
   factory LogLineParser.apacheCombined() => LogLineParser(_apacheCombined);
 
   /// nginx default `combined` access log (same shape as Apache combined).
+  /// Audited: 2026-06-12 11:26 EDT
   factory LogLineParser.nginxCombined() => LogLineParser(_apacheCombined);
 
   final RegExp _regex;
   final List<String> _fields;
 
   /// The field names this parser extracts, in template order.
+  /// Audited: 2026-06-12 11:26 EDT
   List<String> get fields => List<String>.unmodifiable(_fields);
 
   /// Parses [line] into `field → value`, or null if the line doesn't match the
   /// template. Missing optional captures come back as empty strings.
+  /// Audited: 2026-06-12 11:26 EDT
   Map<String, String>? parse(String line) {
     final RegExpMatch? match = _regex.firstMatch(line);
     if (match == null) {
@@ -58,6 +64,7 @@ final RegExp _placeholder = RegExp(r'\{(\w+)(?::([^}]+))?\}');
 /// Compiles a template into an anchored regex with one named group per field,
 /// plus the ordered field-name list. Literal text between placeholders is
 /// escaped and matched exactly; it is what bounds each (lazy) field.
+/// Audited: 2026-06-12 11:26 EDT
 (RegExp, List<String>) _compile(String template) {
   final List<String> fields = <String>[];
   final StringBuffer buffer = StringBuffer('^');

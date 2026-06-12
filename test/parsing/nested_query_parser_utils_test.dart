@@ -7,6 +7,12 @@ void main() {
       expect(parseNestedQuery('a=1'), <String, Object?>{'a': '1'});
     });
 
+    test('scalar/nested collision does not leak the leaf to the root', () {
+      // `a=1` then `a[b]=2`: cannot nest under the scalar `a`, so the second
+      // pair is skipped rather than writing a stray `b` at the root level.
+      expect(parseNestedQuery('a=1&a[b]=2'), <String, Object?>{'a': '1'});
+    });
+
     test('multiple flat pairs', () {
       expect(parseNestedQuery('a=1&b=2'), <String, Object?>{'a': '1', 'b': '2'});
     });

@@ -1,4 +1,5 @@
 /// Parse size string ("1.5 MB", "512K") to bytes; format bytes to human. Roadmap #144–145.
+/// Audited: 2026-06-12 11:26 EDT
 final RegExp _sizeRegex = RegExp(
   r'^\s*([+-]?\d+(?:\.\d+)?)\s*([KMGTPE]?B?)\s*$',
   caseSensitive: false,
@@ -20,6 +21,7 @@ const String _kUnitB = 'B';
 /// parseSizeToBytes('512K'); // 524288
 /// parseSizeToBytes('big'); // null
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 int? parseSizeToBytes(String input) {
   final RegExpMatch? m = _sizeRegex.firstMatch(input.trim());
   if (m == null) return null;
@@ -61,6 +63,7 @@ const String _kSizeZeroB = '0 B';
 /// formatBytesToHuman(1572864); // '1.5 MB'
 /// formatBytesToHuman(0); // '0 B'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String formatBytesToHuman(int bytes, {int decimals = 1}) {
   if (bytes < 0) return '-${formatBytesToHuman(-bytes, decimals: decimals)}';
   if (bytes == 0) return _kSizeZeroB;

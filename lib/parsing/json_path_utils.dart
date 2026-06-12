@@ -22,6 +22,7 @@ library;
 /// getByJsonPath(data, r'$.users[1].name'); // 'Lin'
 /// getByJsonPath(data, 'users[5].name');    // null (out of range)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Object? getByJsonPath(Object? json, String path) {
   final List<Object> segments = _parseJsonPath(path);
 
@@ -59,6 +60,7 @@ Object? getByJsonPath(Object? json, String path) {
 
 /// Splits [path] into an ordered list of segments: `String` for map keys,
 /// `int` for list indices. Returns an empty list for an empty / `$`-only path.
+/// Audited: 2026-06-12 11:26 EDT
 List<Object> _parseJsonPath(String path) {
   String p = path.trim();
   if (p.startsWith(r'$')) {
@@ -93,6 +95,7 @@ List<Object> _parseJsonPath(String path) {
 }
 
 /// Parses a run of `[n][m]...` brackets, appending each index as an int.
+/// Audited: 2026-06-12 11:26 EDT
 void _appendBracketIndices(String brackets, List<Object> out) {
   int i = 0;
   // Consume consecutive `[...]` groups. Stop at the first character that is not

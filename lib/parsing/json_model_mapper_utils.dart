@@ -26,6 +26,7 @@ class JsonModelReader {
   /// read reports a missing-field error rather than throwing a cast error.
   /// [path] prefixes the [ValidationErrorUtils.path] of each error, letting a
   /// nested reader report `address.city` instead of a bare `city`.
+  /// Audited: 2026-06-12 11:26 EDT
   JsonModelReader(Object? source, {String path = ''})
     : _map = source is Map ? source : const <Object?, Object?>{},
       _path = path;
@@ -34,6 +35,7 @@ class JsonModelReader {
   final String _path;
 
   /// Accumulated errors for every failed read on this object.
+  /// Audited: 2026-06-12 11:26 EDT
   final ValidationErrors errors = ValidationErrors();
 
   String _at(String key) => _path.isEmpty ? key : '$_path.$key';
@@ -58,16 +60,20 @@ class JsonModelReader {
   }
 
   /// Required [String]; records an error and returns null if absent/non-string.
+  /// Audited: 2026-06-12 11:26 EDT
   String? requireString(String key) => _require<String>(key, 'string');
 
   /// Required [int]; records an error and returns null if absent/non-int.
+  /// Audited: 2026-06-12 11:26 EDT
   int? requireInt(String key) => _require<int>(key, 'int');
 
   /// Required [bool]; records an error and returns null if absent/non-bool.
+  /// Audited: 2026-06-12 11:26 EDT
   bool? requireBool(String key) => _require<bool>(key, 'bool');
 
   /// Required number as [double]; an [int] is widened. Records an error and
   /// returns null when the value is absent or not a number.
+  /// Audited: 2026-06-12 11:26 EDT
   double? requireDouble(String key) {
     final Object? v = _map[key];
     if (v is num) return v.toDouble();
@@ -78,6 +84,7 @@ class JsonModelReader {
   /// Optional [String]: returns [fallback] when the key is absent, but still
   /// records an error when the key is present with a non-string value (bad data
   /// is a real problem; a missing optional field is not).
+  /// Audited: 2026-06-12 11:26 EDT
   String? optionalString(String key, {String? fallback}) {
     final Object? v = _map[key];
     if (v == null) return fallback;
@@ -88,6 +95,7 @@ class JsonModelReader {
 
   /// Required homogeneous list. Records an error and returns null when the value
   /// is absent, is not a list, or any element is not an [E].
+  /// Audited: 2026-06-12 11:26 EDT
   List<E>? requireList<E>(String key) {
     final Object? v = _map[key];
     if (v is List && v.every((Object? e) => e is E)) return v.cast<E>();
@@ -99,6 +107,7 @@ class JsonModelReader {
   /// so a nested failure surfaces with a dotted [_at] path on the SAME
   /// [errors] collection. Returns null (and records an error) when absent or
   /// not a map.
+  /// Audited: 2026-06-12 11:26 EDT
   JsonModelReader? child(String key) {
     final Object? v = _map[key];
     if (v is Map) return JsonModelReader(v, path: _at(key));

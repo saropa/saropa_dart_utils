@@ -8,6 +8,7 @@ class IdempotentAsyncUtils {
   final Map<Object, Future<Object?>> _inFlight = <Object, Future<Object?>>{};
 
   /// Runs [fn] for [key]; concurrent calls with the same key share one future.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> run<T>(Object key, Future<T> Function() fn) {
     final v = _inFlight[key];
     if (v is Future<T>) return v;

@@ -18,6 +18,7 @@ library;
 /// parseCacheControl('no-cache, max-age=600');
 /// // {'no-cache': null, 'max-age': '600'}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, String?> parseCacheControl(String header) {
   final Map<String, String?> directives = <String, String?>{};
   // Split on commas; a directive is either a bare flag or a key=value pair.
@@ -44,6 +45,7 @@ Map<String, String?> parseCacheControl(String header) {
 
 /// Returns the `max-age` seconds from a `Cache-Control` [cacheControl] string,
 /// or `null` if the directive is absent or its value is not a non-negative int.
+/// Audited: 2026-06-12 11:26 EDT
 int? parseMaxAge(String cacheControl) {
   final String? value = parseCacheControl(cacheControl)['max-age'];
   if (value == null) {
@@ -67,6 +69,7 @@ int? parseMaxAge(String cacheControl) {
 /// parseETag('W/"abc"'); // (weak: true, value: 'abc')
 /// parseETag('"abc"');   // (weak: false, value: 'abc')
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 ({bool weak, String value})? parseETag(String header) {
   String token = header.trim();
   bool weak = false;
@@ -93,6 +96,7 @@ int? parseMaxAge(String cacheControl) {
 /// The HTTP-date form (e.g. `Wed, 21 Oct 2015 07:28:00 GMT`) is intentionally
 /// unsupported and returns `null`; parsing dates would require a timezone-aware
 /// formatter this dependency-free helper deliberately avoids.
+/// Audited: 2026-06-12 11:26 EDT
 Duration? parseRetryAfterSeconds(String header) {
   final int? seconds = int.tryParse(header.trim());
   // Reject the HTTP-date form and any malformed/negative value as null.
@@ -103,6 +107,7 @@ Duration? parseRetryAfterSeconds(String header) {
 }
 
 /// Strips one layer of surrounding double quotes from [value], if present.
+/// Audited: 2026-06-12 11:26 EDT
 String _unquote(String value) {
   if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
     // Bounds [1, length - 1) are valid given length >= 2 and both quotes checked.

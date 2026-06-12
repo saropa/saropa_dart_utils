@@ -37,5 +37,20 @@ void main() {
         expect(decodeVarint(encoded, 0).$2, encoded.length, reason: 'next index $n');
       }
     });
+
+    test('large (>2^35) and negative values round trip', () {
+      // The old 5-byte decode cap truncated >2^35; the old encode emitted a
+      // single wrong byte for negatives. Both must round-trip now.
+      for (final int n in <int>[1 << 40, 1 << 50, -1, -2, -1000000]) {
+        final List<int> encoded = encodeVarint(n);
+        expect(decodeVarint(encoded, 0).$1, n, reason: 'round trip $n');
+        expect(decodeVarint(encoded, 0).$2, encoded.length, reason: 'next index $n');
+      }
+    });
+
+    test('negative one encodes to the full 10-byte form', () {
+      final List<int> encoded = encodeVarint(-1);
+      expect(encoded.length, 10);
+    });
   });
 }

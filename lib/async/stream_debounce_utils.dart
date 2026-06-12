@@ -28,6 +28,7 @@ import 'dart:async' show Stream, StreamController, StreamSubscription, Timer;
 /// debounceStream(queryStream, const Duration(milliseconds: 300))
 ///     .listen(runSearch);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Stream<T> debounceStream<T>(Stream<T> source, Duration duration) =>
     _debounce(source, duration, emitFirstImmediately: false);
 
@@ -49,6 +50,7 @@ Stream<T> debounceStream<T>(Stream<T> source, Duration duration) =>
 /// the correct shape for a `.watch()` stream that emits current state on
 /// subscribe (Drift; Isar's `fireImmediately: true`), where the initial render
 /// must be instant but bulk writes should coalesce.
+/// Audited: 2026-06-12 11:26 EDT
 Stream<T> _debounce<T>(
   Stream<T> source,
   Duration duration, {
@@ -113,6 +115,7 @@ extension StreamDebounceExtensions<T> on Stream<T> {
   ///
   /// Single-subscription; listen once. A late subscriber still receives the
   /// first value (the upstream listen is deferred until subscription).
+  /// Audited: 2026-06-12 11:26 EDT
   Stream<T> debounce(Duration duration) => debounceStream(this, duration);
 
   /// Debounces this stream AND suppresses consecutive equal values.
@@ -121,6 +124,7 @@ extension StreamDebounceExtensions<T> on Stream<T> {
   /// then `distinct` drops it if it equals the previously emitted value. Pass
   /// [equals] for a custom equality; otherwise `==` is used. Useful for a watch
   /// stream that re-emits identical snapshots after unrelated writes.
+  /// Audited: 2026-06-12 11:26 EDT
   Stream<T> debounceDistinct(
     Duration duration, {
     bool Function(T previous, T next)? equals,
@@ -132,6 +136,7 @@ extension StreamDebounceExtensions<T> on Stream<T> {
   /// on subscribe: the initial render is instant, while a following burst of
   /// writes is coalesced to its last value. Single-subscription; the late
   /// subscriber still gets that first value.
+  /// Audited: 2026-06-12 11:26 EDT
   Stream<T> debounceAfterFirst(Duration duration) =>
       _debounce(this, duration, emitFirstImmediately: true);
 }

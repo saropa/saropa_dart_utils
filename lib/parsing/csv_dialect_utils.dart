@@ -5,16 +5,19 @@ library;
 class CsvDialectUtils {
   /// Creates a detected dialect with the field [delimiter] and whether the
   /// first row is a header ([hasHeader]).
+  /// Audited: 2026-06-12 11:26 EDT
   const CsvDialectUtils({required String delimiter, required bool hasHeader})
     : _delimiter = delimiter,
       _hasHeader = hasHeader;
   final String _delimiter;
 
   /// The detected field delimiter, e.g. `,` for CSV or `\t` for TSV.
+  /// Audited: 2026-06-12 11:26 EDT
   String get delimiter => _delimiter;
   final bool _hasHeader;
 
   /// Whether the first row was treated as a header row.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get hasHeader => _hasHeader;
 
   @override
@@ -33,6 +36,7 @@ class CsvDialectUtils {
 /// detectCsvDialect('a\tb\tc').delimiter; // '\t'
 /// detectCsvDialect('a,b,c').delimiter; // ','
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 CsvDialectUtils detectCsvDialect(String sample) {
   final String first = sample.split('\n').first;
   final int commas = ','.allMatches(first).length;

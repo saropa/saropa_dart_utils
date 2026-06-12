@@ -20,6 +20,7 @@ library;
 /// });
 /// // {'user.name': 'Ann', 'tags.0': 'a', 'tags.1': 'b'}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, Object?> flattenMap(
   Map<String, Object?> input, {
   String separator = '.',
@@ -32,6 +33,7 @@ Map<String, Object?> flattenMap(
 }
 
 /// Writes [value] under [prefix] into [out], recursing into maps and lists.
+/// Audited: 2026-06-12 11:26 EDT
 void _flattenInto(
   Map<String, Object?> out,
   String prefix,
@@ -66,6 +68,7 @@ void _flattenInto(
 /// explode(<String, Object?>{'id': 1, 'tags': <Object?>['a', 'b']}, 'tags');
 /// // [{'id': 1, 'tags': 'a'}, {'id': 1, 'tags': 'b'}]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<Map<String, Object?>> explode(Map<String, Object?> row, String arrayKey) {
   final Object? value = row[arrayKey];
   // Missing key or non-list value: nothing to fan out, return the row as-is.

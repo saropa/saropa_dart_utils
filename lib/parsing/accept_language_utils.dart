@@ -12,6 +12,7 @@ library;
 class LanguageRange {
   /// Creates a range pairing a [tag] (already lower-cased by the parser) with
   /// its [quality] weight in 0.0..1.0.
+  /// Audited: 2026-06-12 11:26 EDT
   const LanguageRange(this.tag, this.quality);
 
   /// The language tag, lower-cased (e.g. `en-us`, `fr`, or `*`).
@@ -36,6 +37,7 @@ class LanguageRange {
 /// parseAcceptLanguage('en-US,en;q=0.9,fr;q=0.8')
 ///   .map((r) => r.tag); // ('en-us', 'en', 'fr')
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<LanguageRange> parseAcceptLanguage(String header) {
   final List<LanguageRange> ranges = <LanguageRange>[];
   if (header.trim().isEmpty) {
@@ -61,6 +63,7 @@ List<LanguageRange> parseAcceptLanguage(String header) {
 }
 
 /// Parses one `tag` or `tag;q=0.5` entry, or `null` if malformed.
+/// Audited: 2026-06-12 11:26 EDT
 LanguageRange? _parseEntry(String raw) {
   final List<String> parts = raw.split(';');
   final String tag = parts[0].trim().toLowerCase();

@@ -1,6 +1,7 @@
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Parsing More: parse int with base, validate URL/IP, parse port, validate hex, etc. Roadmap #326-335.
+/// Audited: 2026-06-12 11:26 EDT
 int? parseIntBase(String s, int radix) {
   if (radix < 2 || radix > 36) return null;
   return int.tryParse(s, radix: radix);
@@ -16,6 +17,7 @@ int? parseIntBase(String s, int radix) {
 /// isValidUrlLoose('https://example.com'); // true
 /// isValidUrlLoose('ftp://example.com'); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isValidUrlLoose(String s) => s.startsWith(RegExp(r'https?://', caseSensitive: false));
 
 /// Returns `true` if [s] is a dotted-quad IPv4 address.
@@ -28,6 +30,7 @@ bool isValidUrlLoose(String s) => s.startsWith(RegExp(r'https?://', caseSensitiv
 /// isValidIpv4('192.168.0.1'); // true
 /// isValidIpv4('256.0.0.1'); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isValidIpv4(String s) {
   final List<String> parts = s.split('.');
   if (parts.length != 4) return false;
@@ -49,6 +52,7 @@ bool isValidIpv4(String s) {
 /// parsePortFromHostPort('example.com:8080'); // 8080
 /// parsePortFromHostPort('example.com'); // null
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 int? parsePortFromHostPort(String hostPort) {
   final int colon = hostPort.lastIndexOf(':');
   if (colon == -1) return null;
@@ -66,6 +70,7 @@ int? parsePortFromHostPort(String hostPort) {
 /// ```dart
 /// parseKeyValueLines('a = 1\n# note\nb=2'); // {'a': '1', 'b': '2'}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, String> parseKeyValueLines(String input, {String separator = '='}) {
   final Map<String, String> out = <String, String>{};
   for (final String line in input.split('\n')) {
@@ -88,6 +93,7 @@ Map<String, String> parseKeyValueLines(String input, {String separator = '='}) {
 /// isValidHexString('1aF'); // true
 /// isValidHexString('1aF', length: 2); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isValidHexString(String s, {int? length}) {
   if (!RegExp(r'^[0-9A-Fa-f]+$').hasMatch(s)) return false;
   if (length != null && s.length != length) return false;
@@ -104,5 +110,6 @@ bool isValidHexString(String s, {int? length}) {
 /// parseDottedDecimal('1.20.3'); // [1, 20, 3]
 /// parseDottedDecimal('1.x.3'); // [1, 3]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> parseDottedDecimal(String s) =>
     s.split('.').map((String x) => int.tryParse(x)).whereType<int>().toList();

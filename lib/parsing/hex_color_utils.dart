@@ -5,7 +5,12 @@ int? parseHexColor(String input) {
   final String trimmed = input.trim();
   if (!trimmed.startsWith('#')) return null;
   if (trimmed.length < 2) return null;
-  final String hex = trimmed.replaceFirst('#', '').replaceAll(RegExp(r'[^0-9A-Fa-f]'), '');
+  // Drop the leading '#' and REJECT (return null) any remaining non-hex
+  // character rather than deleting it: stripping invalid chars first let a
+  // malformed input like '#a1z2c3d' collapse to a valid-length '#a12c3d' and
+  // parse as a real color instead of failing.
+  final String hex = trimmed.substring(1);
+  if (!RegExp(r'^[0-9A-Fa-f]+$').hasMatch(hex)) return null;
   const int hexRadix = 16;
   const int shortHexLength = 3;
   if (hex.length == shortHexLength) {

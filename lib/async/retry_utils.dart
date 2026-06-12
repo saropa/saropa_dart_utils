@@ -4,9 +4,11 @@ import 'dart:developer' as dev;
 import 'package:saropa_dart_utils/async/async_semaphore_utils.dart' show AsyncAction;
 
 /// Default initial backoff delay.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration _defaultInitialDelay = Duration(milliseconds: 100);
 
 /// Retry with backoff (exponential or linear). Roadmap #178.
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> retryWithBackoff<T>(
   AsyncAction<T> fn, {
   int maxAttempts = 3,

@@ -15,6 +15,7 @@ library;
 class ByteRange {
   /// Creates a byte range from [start] and [end]; see the class doc for how a
   /// null in either position encodes an open-ended or suffix range.
+  /// Audited: 2026-06-12 11:26 EDT
   const ByteRange(this.start, this.end);
 
   /// First byte offset (inclusive), or null for a suffix-length range.
@@ -45,6 +46,7 @@ class ByteRange {
 /// parseRangeHeader('bytes=500-');   // [ByteRange(500, null)] (offset 500 to end)
 /// parseRangeHeader('items=0-1');    // null (unsupported unit)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<ByteRange>? parseRangeHeader(String header) {
   final int eq = header.indexOf('=');
   if (eq < 0) {
@@ -77,6 +79,7 @@ List<ByteRange>? parseRangeHeader(String header) {
 }
 
 /// Parses one `a-b`, `a-`, or `-b` token into a [ByteRange], or `null`.
+/// Audited: 2026-06-12 11:26 EDT
 ByteRange? _parseRange(String token) {
   final int dash = token.indexOf('-');
   if (dash < 0) {

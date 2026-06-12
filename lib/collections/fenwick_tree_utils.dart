@@ -56,7 +56,11 @@ class FenwickTree {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   void update(int index, num delta) {
-    assert(index >= 0 && index < _size, 'index ($index) out of range [0, $_size)');
+    // Must throw in release, not assert: a negative index makes `i & -i == 0`,
+    // so `i += 0` below would loop forever — a production hang, not a no-op.
+    if (index < 0 || index >= _size) {
+      throw RangeError('index ($index) out of range [0, $_size)');
+    }
     // Walk to each responsible node by adding the lowest set bit (i & -i).
     for (int i = index + 1; i <= _size; i += i & -i) {
       _tree[i] += delta;
@@ -67,7 +71,11 @@ class FenwickTree {
   /// Requires `0 <= index < length`.
   /// Audited: 2026-06-12 11:26 EDT
   num prefixSum(int index) {
-    assert(index >= 0 && index < _size, 'index ($index) out of range [0, $_size)');
+    // Throw in release: an out-of-range index otherwise reads a stale partial
+    // sum (high) or a wrong walk (negative), returning a silently bad total.
+    if (index < 0 || index >= _size) {
+      throw RangeError('index ($index) out of range [0, $_size)');
+    }
     num sum = 0;
     // Walk toward the root by stripping the lowest set bit each step.
     for (int i = index + 1; i > 0; i -= i & -i) {
@@ -86,8 +94,14 @@ class FenwickTree {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   num rangeSum(int low, int high) {
-    assert(low >= 0 && low <= high, 'low ($low) must be in 0..high ($high)');
-    assert(high < _size, 'high ($high) out of range [0, $_size)');
+    // Throw in release: invalid bounds must not silently flow into the
+    // prefixSum subtraction below and yield a meaningless range total.
+    if (low < 0 || low > high) {
+      throw RangeError('low ($low) must be in 0..high ($high)');
+    }
+    if (high >= _size) {
+      throw RangeError('high ($high) out of range [0, $_size)');
+    }
     // Subtract the prefix below `low`; when low is 0 there is nothing to remove.
     if (low == 0) {
       return prefixSum(high);
@@ -99,7 +113,7 @@ class FenwickTree {
   /// Requires `0 <= index < length`.
   /// Audited: 2026-06-12 11:26 EDT
   num valueAt(int index) {
-    assert(index >= 0 && index < _size, 'index ($index) out of range [0, $_size)');
+    // Bounds are enforced by rangeSum below, so no separate check is needed.
     // ignore: no_equal_arguments -- a single-element sum is the degenerate range [index, index]
     return rangeSum(index, index);
   }

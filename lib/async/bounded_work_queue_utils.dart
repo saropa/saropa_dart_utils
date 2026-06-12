@@ -17,6 +17,7 @@ import 'dart:collection' show ListQueue;
 /// A bounded FIFO channel of [T] with blocking [push]/[pull] and backpressure.
 class BoundedWorkQueue<T> {
   /// Creates a queue holding at most [maxSize] buffered items ([maxSize] ≥ 1).
+  /// Audited: 2026-06-12 11:26 EDT
   BoundedWorkQueue({required this.maxSize}) : assert(maxSize >= 1, 'maxSize must be >= 1');
 
   /// Maximum number of items buffered before [push] starts applying backpressure.
@@ -26,23 +27,29 @@ class BoundedWorkQueue<T> {
 
   /// Producers blocked on a full buffer: their item plus the completer that
   /// resolves once the item is admitted.
+  /// Audited: 2026-06-12 11:26 EDT
   final ListQueue<(T, Completer<void>)> _pushWaiters = ListQueue<(T, Completer<void>)>();
 
   /// Consumers blocked on an empty buffer, in arrival order.
+  /// Audited: 2026-06-12 11:26 EDT
   final ListQueue<Completer<T>> _pullWaiters = ListQueue<Completer<T>>();
 
   bool _isClosed = false;
 
   /// Buffered (not-yet-pulled) item count.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _buffer.length;
 
   /// Whether the buffer is at capacity (the next [push] will block).
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isFull => _buffer.length >= maxSize;
 
   /// Producers currently blocked waiting for a free slot.
+  /// Audited: 2026-06-12 11:26 EDT
   int get pendingProducers => _pushWaiters.length;
 
   /// Consumers currently blocked waiting for an item.
+  /// Audited: 2026-06-12 11:26 EDT
   int get pendingConsumers => _pullWaiters.length;
 
   /// Whether [close] has been called.
@@ -53,6 +60,7 @@ class BoundedWorkQueue<T> {
   /// handed directly to a waiting consumer). When the buffer is full the future
   /// stays pending until a [pull] frees a slot — the backpressure signal. The
   /// future completes with [StateError] if the queue is (or becomes) closed.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> push(T item) {
     if (_isClosed) {
       return Future<void>.error(StateError('cannot push to a closed BoundedWorkQueue'));
@@ -68,6 +76,7 @@ class BoundedWorkQueue<T> {
   /// Non-blocking [push]: enqueues [item] and returns true if there was room (or
   /// a waiting consumer), or false without blocking if the buffer is full.
   /// Throws [StateError] if the queue is closed.
+  /// Audited: 2026-06-12 11:26 EDT
   bool tryPush(T item) {
     if (_isClosed) {
       throw StateError('cannot push to a closed BoundedWorkQueue');
@@ -87,6 +96,7 @@ class BoundedWorkQueue<T> {
   /// Dequeues the next item, returning a future that completes once one is
   /// available. When the buffer is empty the future stays pending until a [push]
   /// arrives. If the queue is closed AND empty, completes with [StateError].
+  /// Audited: 2026-06-12 11:26 EDT
   Future<T> pull() {
     if (_buffer.isNotEmpty) {
       final T item = _buffer.removeFirst();
@@ -104,6 +114,7 @@ class BoundedWorkQueue<T> {
   /// Non-blocking [pull]: returns the next buffered item, or null if the buffer
   /// is empty. NOTE: with a nullable [T] a buffered null is indistinguishable
   /// from "empty" here — use [pull] when [T] is nullable.
+  /// Audited: 2026-06-12 11:26 EDT
   T? tryPull() {
     if (_buffer.isEmpty) {
       return null;
@@ -117,6 +128,7 @@ class BoundedWorkQueue<T> {
   /// consumer with [StateError], and lets consumers drain any already-buffered
   /// items (a [pull] on the empty closed queue then errors). Buffered items are
   /// NOT discarded — drain them before closing if they matter.
+  /// Audited: 2026-06-12 11:26 EDT
   void close() {
     _isClosed = true;
     for (final (_, Completer<void> completer) in _pushWaiters) {
@@ -131,6 +143,7 @@ class BoundedWorkQueue<T> {
 
   /// After a slot frees, admits one blocked producer: its item moves to the back
   /// of the buffer (preserving arrival order) and its [push] future completes.
+  /// Audited: 2026-06-12 11:26 EDT
   void _admitWaitingProducer() {
     if (_pushWaiters.isEmpty) {
       return;

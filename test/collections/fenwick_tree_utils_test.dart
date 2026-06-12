@@ -83,16 +83,16 @@ void main() {
     });
 
     group('bounds', () {
-      test('should assert on an out-of-range update index', () {
+      test('should throw on an out-of-range update index', () {
         final FenwickTree t = FenwickTree(2);
 
-        expect(() => t.update(2, 1), throwsA(isA<AssertionError>()));
+        expect(() => t.update(2, 1), throwsA(isA<RangeError>()));
       });
 
-      test('should assert on an inverted range', () {
+      test('should throw on an inverted range', () {
         final FenwickTree t = FenwickTree(5);
 
-        expect(() => t.rangeSum(3, 1), throwsA(isA<AssertionError>()));
+        expect(() => t.rangeSum(3, 1), throwsA(isA<RangeError>()));
       });
     });
 

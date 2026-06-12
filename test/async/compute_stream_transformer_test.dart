@@ -32,8 +32,7 @@ int _sumList(List<int> values) => values.fold<int>(0, (int a, int b) => a + b);
 
 // onError recovery that itself throws, used to prove a throwing recovery
 // callback surfaces its error on the stream rather than being swallowed.
-int _recoverThenThrow(Object error, StackTrace stack) =>
-    throw StateError('recovery failed');
+int _recoverThenThrow(Object error, StackTrace stack) => throw StateError('recovery failed');
 
 void main() {
   group('ComputeStreamTransformer', () {

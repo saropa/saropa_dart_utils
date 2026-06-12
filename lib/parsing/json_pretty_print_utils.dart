@@ -23,6 +23,7 @@ import 'package:saropa_dart_utils/parsing/canonicalize_json_utils.dart';
 /// //   "b": 1
 /// // }
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String prettyPrintJson(Object? value, {int indent = 2, bool sortKeys = false}) {
   final Object? prepared = sortKeys ? canonicalizeJson(value) : value;
   // indent <= 0 selects the compact encoder (no newlines); otherwise indent

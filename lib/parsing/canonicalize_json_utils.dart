@@ -5,6 +5,7 @@ library;
 ///
 /// Recurses to the value's nesting depth; not intended for untrusted,
 /// arbitrarily-deep input (deep nesting can exhaust the stack).
+/// Audited: 2026-06-12 11:26 EDT
 Object? canonicalizeJson(Object? value) {
   if (value == null) return null;
   if (value is Map) {

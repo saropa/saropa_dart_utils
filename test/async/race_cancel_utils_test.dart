@@ -3,6 +3,11 @@ import 'package:saropa_dart_utils/async/race_cancel_utils.dart';
 
 void main() {
   group('raceFirst', () {
+    test('empty producer list fails fast instead of hanging', () async {
+      // No producers means no result can ever arrive; must error, not hang.
+      await expectLater(raceFirst<int>(<Future<int> Function()>[]), throwsStateError);
+    });
+
     test('returns the result of the first producer to succeed', () async {
       final int r = await raceFirst<int>(<Future<int> Function()>[
         () => Future<int>.delayed(const Duration(milliseconds: 50), () => 1),

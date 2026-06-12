@@ -15,6 +15,7 @@ library;
 /// ```dart
 /// writeCsvLine(['a,b', 'c']); // '"a,b",c'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String writeCsvLine(List<String> fields, {String delimiter = ',', bool forceQuote = false}) =>
     fields.map((String f) => _encodeField(f, delimiter, forceQuote)).join(delimiter);
 
@@ -38,6 +39,7 @@ String _encodeField(String field, String delimiter, bool forceQuote) {
 /// ```dart
 /// writeCsv([['h1', 'h2'], ['1', '2']]); // 'h1,h2\r\n1,2'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String writeCsv(
   List<List<String>> rows, {
   String delimiter = ',',

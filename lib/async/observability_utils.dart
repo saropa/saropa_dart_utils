@@ -25,6 +25,7 @@ library;
 ///   onError: (d, e, _) => log('load failed in ${d.inMilliseconds}ms: $e'),
 /// );
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> observeAsync<T>(
   Future<T> Function() operation, {
   void Function(Duration elapsed, T result)? onSuccess,
@@ -48,6 +49,7 @@ Future<T> observeAsync<T>(
 /// Synchronous counterpart of [observeAsync]: times [operation], reports the
 /// outcome through the optional hooks, and returns the result (or rethrows
 /// after [onError]).
+/// Audited: 2026-06-12 11:26 EDT
 T observeSync<T>(
   T Function() operation, {
   void Function(Duration elapsed, T result)? onSuccess,

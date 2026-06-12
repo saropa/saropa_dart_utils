@@ -4,6 +4,7 @@ import 'dart:async'; // ignore: require_ios_deployment_target_consistency
 typedef VoidCallback = void Function();
 
 /// Debounce (time) — invokes [fn] after [delay] of no further calls. Roadmap #176.
+/// Audited: 2026-06-12 11:26 EDT
 VoidCallback debounce(VoidCallback fn, Duration delay) {
   Timer? timer;
   return () {

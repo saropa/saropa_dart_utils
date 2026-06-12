@@ -8,9 +8,11 @@ const int _maxBackoffAttemptShift = 31;
 const int _maxDurationMilliseconds = 0x7fffffff;
 
 /// Default base delay for exponential backoff.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration exponentialBackoffDefaultBase = Duration(milliseconds: 100);
 
 /// Returns delay for attempt [attempt] (0-based): base * 2^attempt, capped at [maxDelay].
+/// Audited: 2026-06-12 11:26 EDT
 Duration exponentialBackoff(
   int attempt, {
   Duration base = exponentialBackoffDefaultBase,
