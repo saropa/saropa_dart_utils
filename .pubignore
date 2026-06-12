@@ -16,3 +16,8 @@
 /reports/
 /scripts/
 /coverage/
+# Build output. .pubignore overrides .gitignore at the root, so .gitignore's
+# `build/` rule no longer applies here — without this line the CI runner's
+# `flutter test` artifacts (a 64 MB test_cache dill, native/unit-test assets)
+# leak into the published tarball. This was the cause of the bloated v1.6.0 archive.
+/build/
