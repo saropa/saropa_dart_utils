@@ -683,8 +683,7 @@ void main() {
         'b': <int>[3],
       };
       final Map<String, List<int>> snapshot = <String, List<int>>{
-        for (final MapEntry<String, List<int>> e in map.entries)
-          e.key: List<int>.of(e.value),
+        for (final MapEntry<String, List<int>> e in map.entries) e.key: List<int>.of(e.value),
       };
 
       // The return value is irrelevant here; this test only asserts that the
@@ -1017,8 +1016,7 @@ class _PointKey {
   final int y;
 
   @override
-  bool operator ==(Object other) =>
-      other is _PointKey && other.x == x && other.y == y;
+  bool operator ==(Object other) => other is _PointKey && other.x == x && other.y == y;
 
   @override
   int get hashCode => Object.hash(x, y);

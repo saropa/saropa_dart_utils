@@ -25,5 +25,29 @@ void main() {
       expect(removed, <String, int>{});
       expect(changed, <String, int>{'a': 2});
     });
+
+    test('a genuinely null value is reported as added/changed/removed', () {
+      // A nullable V whose value is null must not be confused with absence.
+      final (Map<String, int?>, Map<String, int?>, Map<String, int?>) addDiff =
+          mapDiff<String, int?>(
+            <String, int?>{},
+            <String, int?>{'a': null},
+          );
+      expect(addDiff.$1, <String, int?>{'a': null}); // added contains the null entry
+
+      final (Map<String, int?>, Map<String, int?>, Map<String, int?>) chgDiff =
+          mapDiff<String, int?>(
+            <String, int?>{'a': 1},
+            <String, int?>{'a': null},
+          );
+      expect(chgDiff.$3, <String, int?>{'a': null}); // changed 1 -> null
+
+      final (Map<String, int?>, Map<String, int?>, Map<String, int?>) remDiff =
+          mapDiff<String, int?>(
+            <String, int?>{'a': null},
+            <String, int?>{},
+          );
+      expect(remDiff.$2, <String, int?>{'a': null}); // removed the null entry
+    });
   });
 }

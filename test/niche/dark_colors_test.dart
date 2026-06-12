@@ -85,8 +85,7 @@ void main() {
     // is asserted as its own named failure, not only inside the sample test.
     test('alpha is 0xFF for all 20 swatches', () {
       expect(DarkColorsUtils.darkColorMap, hasLength(20));
-      for (final MapEntry<DarkColors, Color> entry
-          in DarkColorsUtils.darkColorMap.entries) {
+      for (final MapEntry<DarkColors, Color> entry in DarkColorsUtils.darkColorMap.entries) {
         expect(
           (entry.value.toARGB32() >> 24) & 0xFF,
           0xFF,
@@ -113,8 +112,7 @@ void main() {
     // toward near-white — not a WCAG legibility guarantee. 1.5 clears all 20 with
     // margin while still catching a value pushed close to 0xFFFFFFFF.
     test('contrast against white is at least 1.5 for every swatch', () {
-      for (final MapEntry<DarkColors, Color> entry
-          in DarkColorsUtils.darkColorMap.entries) {
+      for (final MapEntry<DarkColors, Color> entry in DarkColorsUtils.darkColorMap.entries) {
         // hexToRgb reads the low 24 bits, so passing the full ARGB int is safe.
         final List<int> rgb = hexToRgb(entry.value.toARGB32());
         final double ratio = contrastRatio(

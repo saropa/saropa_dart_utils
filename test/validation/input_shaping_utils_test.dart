@@ -48,9 +48,12 @@ void main() {
     test('custom ellipsis', () {
       expect(shapeString('hello world', maxLength: 7, ellipsis: '…'), 'hello …');
     });
-    test('maxLength shorter than ellipsis clamps trim start to zero', () {
-      // maxLength 2 - ellipsis 3 -> clamp(0) -> whole string replaced by ellipsis.
-      expect(shapeString('hello', maxLength: 2), '...');
+    test('maxLength shorter than ellipsis hard-truncates within the limit', () {
+      // No room for the ellipsis; the result must still fit maxLength rather than
+      // return a 3-char '...' that exceeds the requested 2 (the old behavior).
+      final String r = shapeString('hello', maxLength: 2);
+      expect(r, 'he');
+      expect(r.length, lessThanOrEqualTo(2));
     });
     test('exactly maxLength not truncated', () {
       expect(shapeString('abcde', maxLength: 5), 'abcde');

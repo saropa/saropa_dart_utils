@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saropa_dart_utils/validation/jwt_structure_utils.dart';
 
@@ -49,5 +51,19 @@ void main() {
       expect(jwtPayload('$header.zzzz.$sig'), isNull);
     });
     test('empty string returns null', () => expect(jwtPayload(''), isNull));
+
+    test('decodes a payload whose base64url length is a multiple of 4', () {
+      // {"a":123} is 9 bytes -> 12 base64url chars (12 % 4 == 0). The old padding
+      // calc appended a spurious '====' block, making base64Url.decode reject an
+      // otherwise-valid token.
+      final String p = base64Url.encode(utf8.encode('{"a":123}')).replaceAll('=', '');
+      expect(jwtPayload('h.$p.s'), <String, Object?>{'a': 123});
+    });
+
+    test('decodes multi-byte UTF-8 claim values', () {
+      // String.fromCharCodes would mojibake the accented name; utf8.decode is correct.
+      final String p = base64Url.encode(utf8.encode('{"name":"José"}')).replaceAll('=', '');
+      expect(jwtPayload('h.$p.s')?['name'], 'José');
+    });
   });
 }

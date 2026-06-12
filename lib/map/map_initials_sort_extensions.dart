@@ -47,8 +47,7 @@ extension InitialsSortingUtils<V> on Map<String, V> {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  SplayTreeMap<String, V> sortMap() =>
-      SplayTreeMap<String, V>.from(this, _compareInitials);
+  SplayTreeMap<String, V> sortMap() => SplayTreeMap<String, V>.from(this, _compareInitials);
 }
 
 /// Comparator implementing the "letters before numbers" rule for [sortMap].

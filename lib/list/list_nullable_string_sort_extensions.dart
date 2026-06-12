@@ -39,5 +39,4 @@ bool sortNullableStringListInPlace(List<String?> list) {
 // Delegates to compareStringNullable (the library's single source of truth for
 // null-aware string ordering) rather than re-implementing the lowercase/null
 // coalescing here, so both stay consistent if the rules ever change.
-int _compareNullableStringsForSort(String? a, String? b) =>
-    a.compareStringNullable(b);
+int _compareNullableStringsForSort(String? a, String? b) => a.compareStringNullable(b);

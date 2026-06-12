@@ -12,5 +12,12 @@ void main() {
     test('basic', () {
       expect(runLengthDecode<int>([(1, 2), (2, 3)]), [1, 1, 2, 2, 2]);
     });
+
+    test('encodes and round-trips a run of nulls (nullable T)', () {
+      // The old `prev == null` sentinel dropped/miscounted a leading null run.
+      final List<(int?, int)> encoded = <int?>[null, null, 1, 1].runLengthEncode();
+      expect(encoded, <(int?, int)>[(null, 2), (1, 2)]);
+      expect(runLengthDecode<int?>(encoded), <int?>[null, null, 1, 1]);
+    });
   });
 }

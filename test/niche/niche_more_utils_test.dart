@@ -134,5 +134,14 @@ void main() {
       // é needs 2 bytes; maxBytes 1 cannot hold it.
       expect(truncateToByteLength('ément', 1), '');
     });
+
+    test('counts a non-BMP emoji as 4 UTF-8 bytes and never splits it', () {
+      // 😀 (U+1F600) is 4 UTF-8 bytes. With maxBytes 4 it fits whole; with 3 it
+      // is dropped whole, never cut into an invalid surrogate half. The old
+      // code-unit logic counted it as 6 bytes and could split the pair.
+      expect(truncateToByteLength('😀', 4), '😀');
+      expect(truncateToByteLength('😀', 3), '');
+      expect(truncateToByteLength('a😀', 5), 'a😀');
+    });
   });
 }

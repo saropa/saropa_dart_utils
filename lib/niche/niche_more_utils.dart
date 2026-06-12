@@ -97,8 +97,9 @@ bool isAsciiOnly(String s) => s.codeUnits.every((int c) => c < 128);
 
 /// Truncates [s] so its UTF-8 encoding does not exceed [maxBytes] bytes.
 ///
-/// Cuts only at code-unit boundaries, so a multi-byte character that would
-/// overflow [maxBytes] is dropped whole rather than split.
+/// Cuts only at code-POINT (rune) boundaries, so a multi-byte character — including
+/// a non-BMP emoji (a surrogate pair) — that would overflow [maxBytes] is dropped
+/// whole rather than split into an invalid string.
 ///
 /// Example:
 /// ```dart
