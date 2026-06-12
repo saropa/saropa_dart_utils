@@ -42,7 +42,7 @@
 
 - **Source report:** `plans/history/2026.06/2026.06.10/audit-accuracy-and-comment-pass.md` — "Inline-comment pass is PARTIAL: 61 of 92 done; 31 sparse-comment findings remain."
 - **Work:** resume the per-batch comment pass over the remaining 31 findings (the report says re-run `audit.audit_code_comments(...)` to re-list them; if that harness is unavailable, the 31 are the sparsely-commented sites in the migrated utils). Apply the WHY-not-WHAT comment standard.
-- **Status:** partial; not re-counted this audit (subjective doc work).
+- **Status:** ✅ VERIFIED COMPLETE 2026-06-12 — already remediated by later work. Re-running the report's own named source of truth, `scripts/modules/audit.py:audit_code_comments(project, lib)`, over the current `lib/` (441 files, 1798 methods scanned) returns **0 findings**: "All non-trivial methods have adequate inline comments." The 31 sparse-comment sites outstanding at 2026-06-10 were closed in sessions between then and now; no remaining work. No code change required for this item.
 
 ### 4. `avoid_misused_test_matchers` residual — raw literal matchers in tests  (test hygiene)
 
@@ -167,3 +167,29 @@ results (`'a😀'.removeLastChars(1)` = `'a'`, `…(2)` = `''`; decomposed
 Files changed: `lib/string/string_manipulation_extensions.dart`,
 `test/string/string_manipulation_extensions_test.dart`, `CHANGELOG.md`, this plan
 file. Items 3–4 remain open; the plan stays active.
+
+---
+
+## Finish Report (2026-06-12) — Item 3: inline-comment audit pass (verification)
+
+The 2026-06-10 publish-audit comment pass closed 61 of 92 sparse-inline-comment
+findings and recorded 31 as outstanding, with the instruction to resume by
+re-running `audit.audit_code_comments(...)` to re-list them. That audit function
+(`scripts/modules/audit.py`) flags any non-trivial method whose ratio of
+explanatory inline comments to comment-worthy constructs (branches, loops,
+algorithm steps) falls below the configured density floor, crediting the dartdoc
+header toward the budget.
+
+Re-running that exact function against the current `lib/` tree reports zero
+findings. The scan walked 441 Dart files and 1798 method bodies and returned
+"All non-trivial methods have adequate inline comments." The 31 sites that were
+outstanding at 2026-06-10 were therefore remediated by intervening work, so this
+item requires no further code change — it is closed by verification against the
+report's own named source of truth rather than by new edits.
+
+No `lib/`, `test/`, or `CHANGELOG.md` change accompanies this item (nothing was
+under-commented to fix). The audit was run via a throwaway harness under
+`d:\tmp` that imported the existing module unchanged; the harness was deleted
+after use. Only this plan file records the outcome.
+
+Item 4 remains open; the plan stays active.
