@@ -28,6 +28,7 @@ import '../string/string_compare_extensions.dart';
 /// sortNullableStringListInPlace(names); // true
 /// names; // [null, 'a', 'B', 'C']
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 @useResult
 bool sortNullableStringListInPlace(List<String?> list) {
   list.sort(_compareNullableStringsForSort);

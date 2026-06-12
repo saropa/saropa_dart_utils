@@ -24,6 +24,7 @@ extension UriExtensions on Uri {
   /// Returns a new URI with query parameters removed.
   ///
   /// When [removeFragment] is `true` (default), the fragment is also removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Uri removeQuery({bool removeFragment = true}) =>
       removeFragment ? replace(query: '', fragment: '') : replace(query: '');
@@ -31,6 +32,7 @@ extension UriExtensions on Uri {
   /// Returns true if this URI points to an image file.
   ///
   /// Checks if the file extension matches common image formats.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isImageUri {
     final String filePath = path.split('/').lastOrNull ?? '';
@@ -49,6 +51,7 @@ extension UriExtensions on Uri {
   }
 
   /// Returns the file name from this URI path, or `null` if the path is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? get fileName {
     if (path.isEmpty) {
@@ -61,6 +64,7 @@ extension UriExtensions on Uri {
   }
 
   /// Returns the file extension from this URI path, or `null` if none exists.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? get fileExtension {
     final String? name = fileName;
@@ -83,6 +87,7 @@ extension UriExtensions on Uri {
   /// Uri.parse('https://example.com').isSecure; // true
   /// Uri.parse('http://example.com').isSecure; // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isSecure => scheme.toLowerCase() == _schemeHttps;
 
@@ -97,6 +102,7 @@ extension UriExtensions on Uri {
   /// Uri.parse('https://example.com?a=1').addQueryParameter('b', '2');
   /// // Returns: https://example.com?a=1&b=2
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Uri addQueryParameter(String key, String? value) {
     if (key.isEmpty) {
@@ -120,6 +126,7 @@ extension UriExtensions on Uri {
   /// Uri.parse('https://example.com?page=1').hasQueryParameter('page'); // true
   /// Uri.parse('https://example.com?page=1').hasQueryParameter('limit'); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool hasQueryParameter(String key) => queryParameters.containsKey(key);
 
@@ -130,6 +137,7 @@ extension UriExtensions on Uri {
   /// Uri.parse('https://example.com?page=1').getQueryParameter('page'); // '1'
   /// Uri.parse('https://example.com').getQueryParameter('page'); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? getQueryParameter(String key) => queryParameters[key];
 
@@ -141,6 +149,7 @@ extension UriExtensions on Uri {
   /// Uri.parse('https://example.com/path').replaceHost('newdomain.com');
   /// // Returns: https://newdomain.com/path
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Uri replaceHost(String newHost) {
     if (newHost.isEmpty) {
@@ -154,10 +163,12 @@ extension UriExtensions on Uri {
 /// Extension methods for nullable URI.
 extension UriNullableExtensions on Uri? {
   /// Returns true if this URI is null or has an empty path.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isUriNullOrEmpty => this?.path.isEmpty ?? true;
 
   /// Returns true if this URI is not null and has a non-empty path.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNotUriNullOrEmpty => this?.path.isNotEmpty ?? false;
 }
@@ -165,6 +176,7 @@ extension UriNullableExtensions on Uri? {
 /// Utility class for URL operations.
 abstract final class UrlExtensions {
   /// Returns [url] parsed as a URI, or `null` if parsing fails.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static Uri? tryParse(String? url) {
     if (url == null || url.isEmpty) {
@@ -175,6 +187,7 @@ abstract final class UrlExtensions {
   }
 
   /// Returns `true` if [url] is a valid URL with a scheme and host.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool isValidUrl(String? url) {
     if (url == null || url.isEmpty) {
@@ -187,6 +200,7 @@ abstract final class UrlExtensions {
   }
 
   /// Returns `true` if [url] is a valid HTTP or HTTPS URL.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool isValidHttpUrl(String? url) {
     if (url == null || url.isEmpty) {
@@ -202,6 +216,7 @@ abstract final class UrlExtensions {
   }
 
   /// Returns the domain (host) extracted from [url], or `null` if invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? extractDomain(String? url) {
     if (url == null || url.isEmpty) {

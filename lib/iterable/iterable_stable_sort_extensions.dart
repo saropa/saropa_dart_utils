@@ -16,6 +16,7 @@ extension IterableStableSortExtensions<T> on Iterable<T> {
   /// [(1,'a'), (2,'x'), (1,'b')].stableSortBy((r) => r.$1);
   /// // [(1,'a'), (1,'b'), (2,'x')]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> stableSortBy<K extends Comparable<K>>(K Function(T) keyOf) =>
       stableSort((T a, T b) => keyOf(a).compareTo(keyOf(b)));
@@ -26,6 +27,7 @@ extension IterableStableSortExtensions<T> on Iterable<T> {
   /// Implemented by decorating each element with its original index and using
   /// that index as the tie-breaker — the standard way to make any comparator
   /// stable regardless of the underlying sort algorithm.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> stableSort(Comparator<T> compare) {
     final List<T> source = toList();

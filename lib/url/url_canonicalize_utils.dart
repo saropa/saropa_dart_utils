@@ -25,6 +25,7 @@ library;
 /// canonicalizeUrl(Uri.parse('HTTP://Example.com:80/a?b=2&a=1'));
 /// // http://example.com/a?a=1&b=2
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Uri canonicalizeUrl(Uri uri, {bool removeFragment = false}) {
   // queryParametersAll groups every value per key (so ?tag=a&tag=b is not
   // collapsed); sort the keys and each key's values for a stable ordering.

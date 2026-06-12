@@ -12,16 +12,19 @@ const String _kLogSafeParseFailed = 'safeParse failed';
 /// Result of a safe parse.
 sealed class SafeParseUtils<T extends Object> {
   /// The parsed value if successful, or null if failed.
+  /// Audited: 2026-06-12 11:26 EDT
   T? get valueOrNull;
 }
 
 /// Successful parse result holding the parsed [value].
 final class ParseOk<T extends Object> extends SafeParseUtils<T> {
   /// Wraps a successfully parsed [value].
+  /// Audited: 2026-06-12 11:26 EDT
   ParseOk(T value) : _value = value;
   final T _value;
 
   /// The parsed value.
+  /// Audited: 2026-06-12 11:26 EDT
   T get value => _value;
 
   @override
@@ -34,14 +37,17 @@ final class ParseOk<T extends Object> extends SafeParseUtils<T> {
 /// Failed parse result with [message] and optional [details].
 final class ParseErr<T extends Object> extends SafeParseUtils<T> {
   /// Creates a failure with an error [message] and optional [details] trace.
+  /// Audited: 2026-06-12 11:26 EDT
   ParseErr(String message, [StackTrace? details]) : _message = message, _details = details;
   final String _message;
 
   /// Human-readable error message.
+  /// Audited: 2026-06-12 11:26 EDT
   String get message => _message;
   final StackTrace? _details;
 
   /// Optional stack trace from the parse exception.
+  /// Audited: 2026-06-12 11:26 EDT
   StackTrace? get details => _details;
 
   @override
@@ -52,6 +58,7 @@ final class ParseErr<T extends Object> extends SafeParseUtils<T> {
 }
 
 /// Parses [source] with [parse]; returns ParseOk or ParseErr.
+/// Audited: 2026-06-12 11:26 EDT
 SafeParseUtils<T> safeParse<T extends Object>(ParseFn<T> parse, String source) {
   try {
     return ParseOk<T>(parse(source));

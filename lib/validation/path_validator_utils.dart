@@ -2,6 +2,7 @@
 library;
 
 /// Returns true if [path] does not contain '..' segments that escape [root].
+/// Audited: 2026-06-12 11:26 EDT
 bool isPathSafe(String path, String root) {
   final String pathNorm = path.replaceAll(RegExp(r'[/\\]+'), '/').replaceFirst(RegExp(r'^/'), '');
   final String rootNorm = root.replaceAll(RegExp(r'[/\\]+'), '/').replaceFirst(RegExp(r'^/'), '');

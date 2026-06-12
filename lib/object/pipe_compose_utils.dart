@@ -9,6 +9,7 @@
 /// final f = pipe<int, int>([(x) => x + 1, (x) => x * 2]);
 /// f(3); // 8
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 R Function(T) pipe<T, R>(List<R Function(dynamic)> fns) => (T x) {
   dynamic v = x;
   for (final R Function(dynamic) f in fns) {
@@ -25,6 +26,7 @@ R Function(T) pipe<T, R>(List<R Function(dynamic)> fns) => (T x) {
 /// final f = compose<int, int, String>((m) => 'v$m', (t) => t + 1);
 /// f(2); // 'v3'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 R Function(T) compose<T, M, R>(R Function(M) f, M Function(T) g) =>
     (T x) => f(g(x));
 
@@ -37,6 +39,7 @@ R Function(T) compose<T, M, R>(R Function(M) f, M Function(T) g) =>
 /// init(); // prints 'setup'
 /// init(); // does nothing
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 void Function() once(void Function() block) {
   bool isDone = false;
   return () {

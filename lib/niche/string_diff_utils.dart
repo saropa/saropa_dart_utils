@@ -1,4 +1,5 @@
 /// Diff two strings (line-by-line). Roadmap #224.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> stringDiffLines(String a, String b) {
   final List<String> linesA = a.split('\n');
   final List<String> linesB = b.split('\n');

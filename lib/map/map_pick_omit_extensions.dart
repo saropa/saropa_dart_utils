@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Pick and omit keys from maps.
 extension MapPickOmitExtensions<K, V> on Map<K, V> {
   /// Returns a new map containing only entries whose keys are in [keys].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V> pick(Iterable<K> keys) {
     final Set<K> keySet = keys.toSet();
@@ -10,6 +11,7 @@ extension MapPickOmitExtensions<K, V> on Map<K, V> {
   }
 
   /// Returns a new map containing all entries whose keys are not in [keys].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V> omit(Iterable<K> keys) {
     final Set<K> keySet = keys.toSet();

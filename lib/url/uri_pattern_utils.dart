@@ -18,6 +18,7 @@ library;
 class UriPattern {
   /// Compiles [template] into matchable segments. Leading/trailing slashes and
   /// empty segments are ignored, so `/a/b/` and `a/b` compile identically.
+  /// Audited: 2026-06-12 11:26 EDT
   UriPattern(String template) : _segments = _compile(template);
 
   final List<_Segment> _segments;
@@ -32,6 +33,7 @@ class UriPattern {
   /// name, or null when the path does not match — a different segment count, a
   /// literal segment mismatch, or a typed param whose value fails its
   /// constraint. A template with no params returns an empty map on a match.
+  /// Audited: 2026-06-12 11:26 EDT
   Map<String, String>? match(String path) {
     final List<String> parts = _splitPath(path);
     if (parts.length != _segments.length) return null;

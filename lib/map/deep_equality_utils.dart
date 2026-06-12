@@ -7,6 +7,7 @@ library;
 ///
 /// Recurses to the inputs' nesting depth, so very deeply nested data can
 /// exhaust the call stack — avoid on untrusted input of unbounded depth.
+/// Audited: 2026-06-12 11:26 EDT
 bool deepEquals(Object? a, Object? b) {
   if (identical(a, b)) return true;
   if (a == null || b == null) return false;

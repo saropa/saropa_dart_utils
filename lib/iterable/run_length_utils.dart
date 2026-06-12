@@ -8,21 +8,28 @@ extension RunLengthEncodeExtensions<T> on Iterable<T> {
   /// ```dart
   /// [1, 1, 2, 2, 2].runLengthEncode(); // [(1, 2), (2, 3)]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<(T, int)> runLengthEncode() {
     final List<(T, int)> result = <(T, int)>[];
-    T? prev;
+    // Use a `hasPrev` flag, NOT `prev == null`, as the "no previous run"
+    // sentinel: when T is nullable, a real `null` element would otherwise be
+    // mistaken for "no run yet", dropping/miscounting a run of nulls and
+    // breaking the round-trip with runLengthDecode.
+    bool hasPrev = false;
+    late T prev;
     int count = 0;
     for (final T element in this) {
-      if (prev == null || element != prev) {
-        if (prev != null) result.add((prev, count));
+      if (!hasPrev || element != prev) {
+        if (hasPrev) result.add((prev, count));
         prev = element;
         count = 1;
+        hasPrev = true;
       } else {
         count++;
       }
     }
-    if (prev != null) result.add((prev, count));
+    if (hasPrev) result.add((prev, count));
     return result;
   }
 }
@@ -33,6 +40,7 @@ extension RunLengthEncodeExtensions<T> on Iterable<T> {
 /// ```dart
 /// runLengthDecode([(1, 2), (2, 3)]); // [1, 1, 2, 2, 2]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<T> runLengthDecode<T>(Iterable<(T, int)> pairs) {
   final List<T> result = <T>[];
   for (final (T value, int count) in pairs) {

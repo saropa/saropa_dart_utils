@@ -7,6 +7,7 @@ const int _scoreLengthLong = 12;
 const int _scoreMax = 4;
 
 /// Simple strength score 0..4 from length and character variety.
+/// Audited: 2026-06-12 11:26 EDT
 int passwordStrengthScore(String password) {
   if (password.isEmpty) return _scoreMin;
   // Additive scoring: one point each for two length tiers and three character

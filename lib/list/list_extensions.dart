@@ -28,6 +28,7 @@ extension ListExtensions<T> on List<T> {
   /// [1, 2, 3].equalsIgnoringOrder([1, 2]); // false (different lengths)
   /// [1, 2, 3].equalsIgnoringOrder(null); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool equalsIgnoringOrder(List<T>? other) {
     // Handle nulls (two nulls are equal, a null and a non-null are not).
@@ -88,6 +89,7 @@ extension ListExtensions<T> on List<T> {
   /// List<String> emptyList = [];
   /// String? topEmpty = emptyList.topOccurrence(); // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? topOccurrence() {
     // Check if the list is empty. If it is, return null.
@@ -127,6 +129,7 @@ extension ListExtensions<T> on List<T> {
   /// items.addNotNull(null);    // Nothing is added
   /// print(items); // Output: ['apple']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void addNotNull(T? value) {
     if (value != null) {
       add(value);
@@ -155,6 +158,7 @@ extension ListExtensions<T> on List<T> {
   ///
   /// List<int> numbersLimitZero = numbers.limit(0); // Returns [1, 2, 3, 4, 5] (original list)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> limit(int count) {
     if (isEmpty || count <= 0 || length <= count) {
@@ -180,6 +184,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyList = [];
   /// int? lastEmptyItem = emptyList.lastOrNull; // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? get lastOrNull {
     if (isEmpty) {
@@ -211,6 +216,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyList = [];
   /// int? itemAtEmptyList = emptyList.itemAt(0); // Returns null (empty list)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? itemAt(int? index) {
     // Check if index is null
@@ -245,6 +251,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyList = [];
   /// List<int>? nullList = emptyList.nullIfEmpty(); // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T>? nullIfEmpty() => isEmpty ? null : this;
 
@@ -269,6 +276,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> safeTakenZeroEmpty = numbers.takeSafe(0, ignoreZeroOrLess: false); // Returns []
   /// List<int> safeTakenNullCount = numbers.takeSafe(null); // Returns [1, 2, 3, 4, 5]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> takeSafe(int? count, {bool ignoreZeroOrLess = true}) {
     // Return the unaltered list if the iterable is empty, count is null,
@@ -310,6 +318,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> numbersExcludeEmpty = numbers.exclude([]); // Returns [1, 2, 3, 4, 5] (no exclusion)
   /// List<int> emptyListExclude = [].exclude([1, 2]); // Returns [] (empty list remains empty)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> exclude(List<T> items) {
     // nothing in list to process
@@ -353,6 +362,7 @@ extension ListExtensions<T> on List<T> {
   /// List<int> emptyListContainsAny = [].containsAny([1, 2]); // Returns false (empty list)
   /// bool containsAnyNullList = numbers.containsAny(null); // Returns false (null inThis list)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool containsAny(List<T>? inThis) {
     if (isEmpty) {

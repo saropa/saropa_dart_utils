@@ -3,6 +3,7 @@
 /// Recurses into nested lists and maps to their nesting depth, so it is not
 /// intended for untrusted, arbitrarily-deep input (deep nesting can exhaust
 /// the stack).
+/// Audited: 2026-06-12 11:26 EDT
 int simpleHash(Object? value) {
   if (value == null) return 0;
   if (value is List) {

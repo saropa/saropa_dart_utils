@@ -4,6 +4,7 @@ import 'package:saropa_dart_utils/iterable/iterable_extensions.dart';
 /// Split at index or at first element matching predicate.
 extension IterableSplitExtensions<T extends Object> on Iterable<T> {
   /// Splits into two lists at [index]. First list has elements [0..index), second [index..length].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   (List<T>, List<T>) splitAt(int index) {
     final List<T> list = toList();
@@ -13,6 +14,7 @@ extension IterableSplitExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Splits at the first element where [predicate] is true. That element goes in the second list.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   (List<T>, List<T>) splitAtFirstWhere(ElementPredicate<T> predicate) {
     final List<T> list = toList();

@@ -10,6 +10,7 @@ extension UniqueIterableExtensions<T> on Iterable<T> {
   ///
   /// Uses a [LinkedHashSet] to retain ordering. If [ignoreNulls] is `true`
   /// (default), null elements are also removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> toUnique({bool ignoreNulls = true}) =>
       LinkedHashSet<T>.of(where((T? e) => !ignoreNulls || e != null)).toList();
@@ -24,6 +25,7 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
   /// kept. The relative order of the kept elements is preserved.
   /// If [ignoreNullKeys] is `true` (default), items where the key is `null`
   /// will be removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> toUniqueBy<E>(KeyExtractor<T, E> keyExtractor, {bool ignoreNullKeys = true}) {
     if (isEmpty || length == 1) {
@@ -62,6 +64,7 @@ extension UniqueListExtensionsUniqueBy<T> on List<T> {
   /// When duplicates are found, the LAST element from the original list is
   /// kept. If [ignoreNullKeys] is `true` (default), items where the key is
   /// `null` will be removed.
+  /// Audited: 2026-06-12 11:26 EDT
   void toUniqueByInPlace<E>(KeyExtractor<T, E> keyExtractor, {bool ignoreNullKeys = true}) {
     if (isEmpty || length == 1) {
       return;

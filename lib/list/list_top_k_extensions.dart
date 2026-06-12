@@ -4,10 +4,12 @@ const String _kErrKPositive = 'k must be positive';
 const String _kParamK = 'k';
 const String _kErrTMustImplementComparable = 'T must implement Comparable';
 
-/// Top K elements (partial sort).
+/// Top K elements. NOTE: this fully sorts then slices (O(n log n)); it is not a
+/// partial/heap selection. For a true partial selection use a quickselect/heap.
 extension ListTopKExtensions<T> on List<T> {
   /// Returns the [k] smallest elements by [compare]. Default [compare] is [Comparable.compare].
   /// [k] must be positive; returns full list if k >= length.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> topK(int k, [int Function(T a, T b)? compare]) {
     if (k < 1) throw ArgumentError(_kErrKPositive, _kParamK);

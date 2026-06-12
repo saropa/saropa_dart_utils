@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// List ops: swap, reverse copy, insert/replace at index, safe get, default if empty. Roadmap #235-241, 396-399.
 extension ListLowerExtensions<T> on List<T> {
   /// New list with elements at [i] and [j] swapped; in range only.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> swapAt(int i, int j) {
     final List<T> out = List<T>.of(this);
@@ -15,10 +16,12 @@ extension ListLowerExtensions<T> on List<T> {
   }
 
   /// New list with elements in reverse order.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> reversedCopy() => List<T>.of(this).reversed.toList();
 
   /// New list with [value] inserted at [index] (clamped to 0..length).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> insertAt(int index, T value) {
     final List<T> out = List<T>.of(this);
@@ -27,6 +30,7 @@ extension ListLowerExtensions<T> on List<T> {
   }
 
   /// New list with element at [index] replaced by [value]; no-op if index out of range.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> replaceAt(int index, T value) {
     final List<T> out = List<T>.of(this);
@@ -35,30 +39,36 @@ extension ListLowerExtensions<T> on List<T> {
   }
 
   /// Element at [index], or null if out of range.
+  /// Audited: 2026-06-12 11:26 EDT
   T? getOrNull(int index) => index >= 0 && index < length ? this[index] : null;
 
   /// This list, or [defaultValue] if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> orDefault(List<T> defaultValue) => isEmpty ? defaultValue : this;
 
   /// First element, or result of [compute] if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T firstOrCompute(T Function() compute) => isEmpty ? compute() : first;
 }
 
 /// Single element or null.
 extension ListSingleExtension<T> on List<T> {
   /// The only element if length == 1, otherwise null.
+  /// Audited: 2026-06-12 11:26 EDT
   T? get singleOrNull => length == 1 ? single : null;
 }
 
 /// Convert iterable to set.
 extension IterableToSetExtension<T> on Iterable<T> {
   /// Set of distinct elements.
+  /// Audited: 2026-06-12 11:26 EDT
   Set<T> toSetFrom() => toSet();
 }
 
 /// Convert iterable to list.
 extension IterableToListExtension<T> on Iterable<T> {
   /// New list containing all elements.
+  /// Audited: 2026-06-12 11:26 EDT
   List<T> toListFrom() => toList();
 }

@@ -7,6 +7,7 @@ extension MapFlattenExtensions on Map<String, dynamic> {
   ///
   /// Recurses to the map's nesting depth; not intended for untrusted,
   /// arbitrarily-deep input (deep nesting can exhaust the stack).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<String, dynamic> flattenKeys({String prefix = ''}) {
     final Map<String, dynamic> out = <String, dynamic>{};
@@ -24,6 +25,7 @@ extension MapFlattenExtensions on Map<String, dynamic> {
   }
 
   /// Unflattens dot-separated keys into nested maps.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<String, dynamic> unflattenKeys() {
     final Map<String, dynamic> out = <String, dynamic>{};
@@ -31,16 +33,22 @@ extension MapFlattenExtensions on Map<String, dynamic> {
       final List<String> parts = e.key.split('.');
       Map<String, dynamic> parentMap = out;
       // Walk every part except the last, creating intermediate maps on demand.
+      bool descended = true;
       for (int i = 0; i < parts.length - 1; i++) {
         final String part = parts[i];
         final childMap = parentMap.putIfAbsent(part, () => <String, dynamic>{});
-        // On a key collision (a leaf already sits where a branch is needed,
-        // e.g. both "a" and "a.b" present) keep the existing value rather than
-        // clobbering it; descent stops since parentMap is not advanced.
-        if (childMap is Map<String, dynamic>) parentMap = childMap;
+        if (childMap is Map<String, dynamic>) {
+          parentMap = childMap;
+        } else {
+          // A leaf already sits where a branch is needed (e.g. both "a" and
+          // "a.b" present). Keep the existing value and SKIP this entry — the
+          // old code fell through and wrote the leaf into the wrong (outer) map.
+          descended = false;
+          break;
+        }
       }
       final lastPart = parts.lastOrNull;
-      if (lastPart != null) parentMap[lastPart] = e.value;
+      if (descended && lastPart != null) parentMap[lastPart] = e.value;
     }
     return out;
   }

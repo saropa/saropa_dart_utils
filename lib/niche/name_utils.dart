@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Abbreviate name, initials from name. Roadmap #216–217.
+/// Audited: 2026-06-12 11:26 EDT
 String abbreviateName(String name) {
   // Trim first so leading/trailing whitespace does not produce empty parts, then
   // split on any run of whitespace to tolerate double spaces / tabs between names.
@@ -29,6 +30,7 @@ String abbreviateName(String name) {
 /// initialsFromName('Ada Lovelace'); // 'AL'
 /// initialsFromName('Plato'); // 'P'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String initialsFromName(String name) {
   final List<String> parts = name
       .trim()

@@ -16,6 +16,7 @@ extension IterableMapNotNullExtensions<T> on Iterable<T> {
   /// ```dart
   /// ['1', 'x', '3'].mapNotNull(int.tryParse); // (1, 3)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<U> mapNotNull<U>(U? Function(T element) selector) sync* {
     for (final T element in this) {
@@ -40,6 +41,7 @@ extension IterableWhereNotNullExtensions<T extends Object> on Iterable<T?> {
   /// ```dart
   /// [1, null, 3].whereNotNull(); // (1, 3)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<T> whereNotNull() sync* {
     for (final T? element in this) {

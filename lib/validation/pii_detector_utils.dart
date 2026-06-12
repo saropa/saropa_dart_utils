@@ -5,6 +5,7 @@ const String _kPiiPatternEmail = 'email';
 const String _kPiiPatternPhone = 'phone';
 
 /// Detects likely PII patterns; returns list of (patternName, startIndex, endIndex).
+/// Audited: 2026-06-12 11:26 EDT
 List<(String, int, int)> detectPii(String text) {
   final RegExp email = RegExp(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}');
   final RegExp phone = RegExp(r'\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b');

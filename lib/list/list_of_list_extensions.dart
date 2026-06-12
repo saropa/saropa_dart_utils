@@ -6,6 +6,7 @@ import 'package:saropa_dart_utils/list/unique_list_extensions.dart';
 extension ListOfListExtension<T> on List<List<T>> {
   /// sum the total number of items
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get totalLength {
     if (isEmpty) {
@@ -20,6 +21,7 @@ extension ListOfListExtension<T> on List<List<T>> {
 
   /// Getting the length of [toFlattenedList]
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get totalUniqueLength {
     if (isEmpty) {
@@ -32,6 +34,7 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// Extension method that returns a flattened list of unique elements of type T.
   ///
   /// Returns `null` if this list is empty or all inner lists are empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T>? toFlattenedList({bool ignoreNulls = true}) {
     if (isEmpty) {
@@ -59,6 +62,7 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// print(childListLengths); // [2, 3, 1]
   /// ```
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<int> getChildListLengths() => map((List<T> childList) => childList.length).toList();
 
@@ -66,6 +70,7 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// [destination], or `false` if the dimensions do not match.
   ///
   /// The dimensions of [destination] must be the same as this list.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool copy(List<List<T>> destination) {
     // Check row count first
@@ -94,6 +99,7 @@ extension ListOfListExtension<T> on List<List<T>> {
 
   /// Returns a new list that is an exact duplicate of this list.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<List<T>> clone() => List<List<T>>.generate(
     length,
@@ -106,6 +112,7 @@ extension ListOfListExtension<T> on List<List<T>> {
   /// Returns a string representation of the matrix with comma-separated
   /// values and line breaks between rows.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toMatrixString({String lineBreak = '\n'}) {
     // Create a StringBuffer to store the result

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 /// Color hex to RGB. RGB to hex. Contrast ratio (WCAG). Roadmap #211–213.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> hexToRgb(int hexColor) {
   final int r = (hexColor >> 16) & 0xFF;
   final int g = (hexColor >> 8) & 0xFF;
@@ -17,6 +18,7 @@ List<int> hexToRgb(int hexColor) {
 /// ```dart
 /// rgbToHex(255, 0, 0); // 0xFFFF0000
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 int rgbToHex(int r, int g, int b) {
   final int rClamped = r.clamp(0, 255);
   final int gClamped = g.clamp(0, 255);
@@ -28,6 +30,7 @@ int rgbToHex(int r, int g, int b) {
 ///
 /// [r], [g], and [b] are channel values in `0`–`255`. The result is in
 /// `0.0` (black) to `1.0` (white) and feeds [contrastRatio].
+/// Audited: 2026-06-12 11:26 EDT
 double luminance(int r, int g, int b) {
   final double rLinear = _srgb(r / 255);
   final double gLinear = _srgb(g / 255);
@@ -48,6 +51,7 @@ double _srgb(double c) => c <= 0.03928 ? c / 12.92 : math.pow((c + 0.055) / 1.05
 /// ```dart
 /// contrastRatio(0, 0, 0, 255, 255, 255); // 21.0
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double contrastRatio(int r1, int g1, int b1, int r2, int g2, int b2) {
   final double luminance1 = luminance(r1, g1, b1) + 0.05;
   final double luminance2 = luminance(r2, g2, b2) + 0.05;

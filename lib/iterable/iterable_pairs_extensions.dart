@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// All pairs (i, j) with i < j.
 extension IterablePairsExtensions<T> on Iterable<T> {
   /// All unordered pairs [(a, b)] where a appears before b in this iterable.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<(T, T)> allPairs() {
     final List<T> list = toList();

@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 extension IterableGroupByTransformExtensions<T> on Iterable<T> {
   /// Groups by [keyOf] and transforms values with [valueTransform].
   /// Returns Map<K, List<U>>.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, List<U>> groupByTransform<K, U>(K Function(T) keyOf, U Function(T) valueTransform) {
     final Map<K, List<U>> result = <K, List<U>>{};

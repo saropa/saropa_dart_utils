@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 
 /// Sort strings naturally (human: a2 before a10). Roadmap #230.
+/// Audited: 2026-06-12 11:26 EDT
 int naturalCompare(String a, String b) {
   final List<Object> tokensA = _tokenize(a);
   final List<Object> tokensB = _tokenize(b);
@@ -45,6 +46,7 @@ extension NaturalSortExtension on List<String> {
   /// ```dart
   /// ['a10', 'a2', 'a1'].sortedNatural(); // ['a1', 'a2', 'a10']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String> sortedNatural() => List<String>.of(this)..sort(naturalCompare);
 }

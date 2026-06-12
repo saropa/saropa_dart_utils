@@ -10,12 +10,14 @@ final class TypedPositiveUtils {
   final String _value;
 
   /// Creates a [TypedPositiveUtils] if [value] is non-empty after trim; otherwise throws.
+  /// Audited: 2026-06-12 11:26 EDT
   factory TypedPositiveUtils(String value) {
     if (value.trim().isEmpty) throw ArgumentError(_kErrNonEmptyStringRequired);
     return TypedPositiveUtils._(value);
   }
 
   /// The non-empty string value.
+  /// Audited: 2026-06-12 11:26 EDT
   String get value => _value;
 }
 
@@ -25,6 +27,7 @@ final class PositiveNumber {
   final double _value;
 
   /// Creates a [PositiveNumber] if [value] is greater than zero; otherwise throws.
+  /// Audited: 2026-06-12 11:26 EDT
   factory PositiveNumber(num value) {
     final valueAsDouble = value.toDouble();
     if (valueAsDouble <= 0) throw ArgumentError(_kErrPositiveNumberRequired);
@@ -32,6 +35,7 @@ final class PositiveNumber {
   }
 
   /// The positive number value.
+  /// Audited: 2026-06-12 11:26 EDT
   double get value => _value;
 
   @override

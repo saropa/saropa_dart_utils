@@ -6,6 +6,7 @@ extension ComparableIterableExtensions<T extends Comparable<T>> on Iterable<T> {
   ///
   /// Returns the smallest element in the list based on the Comparable
   /// implementation.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? smallestOccurrence() {
     // check if the list is empty before calling reduce
@@ -20,6 +21,7 @@ extension ComparableIterableExtensions<T extends Comparable<T>> on Iterable<T> {
   ///
   /// Returns the biggest element in the list based on the Comparable
   /// implementation.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? biggestOccurrence() {
     // check if the list is empty before calling reduce

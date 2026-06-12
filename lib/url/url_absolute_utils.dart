@@ -4,6 +4,7 @@ const String _kSchemeFile = 'file';
 const String _kSchemeFtp = 'ftp';
 
 /// Is absolute URL / is relative path. Roadmap #174.
+/// Audited: 2026-06-12 11:26 EDT
 bool isAbsoluteUrl(String url) {
   final String trimmed = url.trim();
   if (trimmed.isEmpty) return false;
@@ -26,6 +27,7 @@ bool isAbsoluteUrl(String url) {
 /// isRelativePath('/etc/hosts'); // false
 /// isRelativePath(r'C:\Windows'); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isRelativePath(String path) {
   final String trimmed = path.trim();
   if (trimmed.isEmpty) return true;

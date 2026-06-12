@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Symmetric difference (elements in A or B but not both).
 extension IterableSymmetricDifferenceExtensions<T> on Iterable<T> {
   /// Symmetric difference: elements in this or [other] but not in both.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> symmetricDifference(Iterable<T> other) {
     final Set<T> a = toSet();

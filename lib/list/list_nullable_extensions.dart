@@ -21,6 +21,7 @@ extension ListExtensionsNullable<T> on List<T>? {
   /// List<double>? nonEmptyList = [1.0, 2.0];
   /// bool isNullOrEmpty3 = nonEmptyList.isListNullOrEmpty; // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isListNullOrEmpty => this?.isEmpty ?? true;
 
@@ -43,6 +44,7 @@ extension ListExtensionsNullable<T> on List<T>? {
   /// List<double>? nonEmptyList = [1.0, 2.0];
   /// bool isNotEmpty3 = nonEmptyList.isNotListNullOrEmpty; // Returns true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNotListNullOrEmpty => this?.isNotEmpty ?? false;
 }

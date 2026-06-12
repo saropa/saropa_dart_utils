@@ -5,6 +5,7 @@ const String _kSchemeHttps = 'https';
 
 /// Build URL from base + path + query. Strip fragment. Roadmap #170, #173.
 /// Only http and https bases are allowed (SSRF safety).
+/// Audited: 2026-06-12 11:26 EDT
 Uri buildUri(String base, {String path = '', Map<String, String>? query}) {
   final Uri? baseUri = Uri.tryParse(base);
   if (baseUri == null || !baseUri.hasScheme) {
@@ -26,4 +27,5 @@ Uri buildUri(String base, {String path = '', Map<String, String>? query}) {
 /// ```dart
 /// stripFragment(Uri.parse('https://x.com/a#top')); // https://x.com/a
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Uri stripFragment(Uri uri) => uri.replace(fragment: '');

@@ -5,6 +5,7 @@ library;
 typedef RedactMaskFn = String Function(Object? value);
 
 /// Redacts [data] by applying [mask] to values at keys in [fieldPaths]. [mask] e.g. (value) => '***'.
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, Object?> redactFields({
   required Map<String, Object?> data,
   required List<String> fieldPaths,

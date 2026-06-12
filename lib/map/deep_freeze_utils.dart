@@ -26,6 +26,7 @@ library;
 /// (frozen as Map)['a']; // unmodifiable List [1, 2]
 /// (frozen['a'] as List).add(9); // throws UnsupportedError
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Object? deepFreeze(Object? value) {
   if (value is Map) {
     return Map<Object?, Object?>.unmodifiable(

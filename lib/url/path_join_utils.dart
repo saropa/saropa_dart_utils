@@ -1,4 +1,5 @@
 /// Join path segments (cross-platform, no double slash). Roadmap #161.
+/// Audited: 2026-06-12 11:26 EDT
 String pathJoin(Iterable<String> segments) {
   final List<String> parts = <String>[];
   for (final String s in segments) {
@@ -19,6 +20,7 @@ String pathJoin(Iterable<String> segments) {
 }
 
 /// Normalize path (resolve . and ..). Roadmap #162.
+/// Audited: 2026-06-12 11:26 EDT
 String pathNormalize(String path) {
   // Normalize separators (backslash -> '/', collapse runs), then resolve the
   // segments: '.' and empty drop out, '..' pops the previous real segment.
@@ -39,6 +41,7 @@ String pathNormalize(String path) {
 }
 
 /// Relative path from base to target. Roadmap #163.
+/// Audited: 2026-06-12 11:26 EDT
 String pathRelative(String base, String target) {
   // Normalize then drop empty segments so leading/trailing/double slashes do not
   // create phantom segments that would throw off the common-prefix match below.

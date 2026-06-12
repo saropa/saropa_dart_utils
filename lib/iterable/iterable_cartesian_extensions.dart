@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Cartesian product of two iterables.
 extension IterableCartesianExtensions<T> on Iterable<T> {
   /// Cartesian product: all pairs (a, b) for a in this, b in [other].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<(T, U)> cartesian<U>(Iterable<U> other) sync* {
     final List<T> thisList = toList();

@@ -1,6 +1,7 @@
 /// Diff two lists: added, removed, unchanged.
 extension IterableDiffExtensions<T> on Iterable<T> {
   /// Returns (added, removed, unchanged) relative to [other]. Uses [Object.==].
+  /// Audited: 2026-06-12 11:26 EDT
   (List<T> added, List<T> removed, List<T> unchanged) diff(Iterable<T> other) {
     // Convert both sides to sets so membership tests are constant-time and the
     // three categories below are a single linear scan each, not a quadratic

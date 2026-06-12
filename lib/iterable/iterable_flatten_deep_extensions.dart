@@ -9,6 +9,7 @@ extension IterableFlattenDeepExtensions<E> on Iterable<dynamic> {
   ///
   /// With a null [depth] the recursion follows the input's nesting depth; pass
   /// an explicit [depth] for untrusted, arbitrarily-deep iterables.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<dynamic> flattenDeep([int? depth]) {
     final int? limit = depth;

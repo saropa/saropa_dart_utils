@@ -30,6 +30,7 @@ extension ListStringExtensions on List<String> {
   /// ['Alice'].joinDisplayList();                 // 'Alice'
   /// <String>[].joinDisplayList();                // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? joinDisplayList({
     String joiner = ', ',
@@ -72,6 +73,7 @@ extension ListStringExtensions on List<String> {
   /// ['flower', 'flow', 'flight'].commonPrefix();  // 'fl'
   /// ['a', 'b'].commonPrefix();  // ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String commonPrefix() {
     if (isEmpty) return '';
@@ -97,6 +99,7 @@ extension ListStringExtensions on List<String> {
   /// ```dart
   /// ['ending', 'ding'].commonSuffix();  // 'ing'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String commonSuffix() {
     if (isEmpty) return '';
@@ -128,6 +131,7 @@ extension ListStringExtensions on List<String> {
   /// ['a', 'b'].firstNotEqualTo(null);     // 'a'
   /// ['a', 'a'].firstNotEqualTo('a');      // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? firstNotEqualTo(String? value) =>
       // The package:collection accessors return null instead of throwing when no
@@ -153,6 +157,7 @@ extension ListStringExtensions on List<String> {
   /// ['Alice', 'Bob', 'Carol'].joinWithFinal(); // 'Alice, Bob and Carol'
   /// <String>[].joinWithFinal();                // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? joinWithFinal({String separator = ', ', String finalSeparator = 'and'}) {
     if (isEmpty) {
@@ -181,6 +186,7 @@ extension ListStringExtensions on List<String> {
   /// ['HelloWorld'].anyContains('world', caseSensitive: true);  // false
   /// <String>[].anyContains('x');                               // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool anyContains(String? check, {bool caseSensitive = true}) {
     if (isEmpty) {
@@ -216,6 +222,7 @@ extension ListStringExtensions on List<String> {
   /// [' a ', '   '].removeTrimmedEmpty(trim: false); // [' a ']
   /// ['', '  '].removeTrimmedEmpty();                // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? removeTrimmedEmpty({bool trim = true}) =>
       // The per-element nullable trimmer enforces the trim-vs-keep contract,
@@ -234,6 +241,7 @@ extension ListStringExtensions on List<String> {
   /// ```dart
   /// ['Ab', 'CD'].toLowerCase(); // ['ab', 'cd']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? toLowerCase() => map((String e) => e.toLowerCase()).toList();
 
@@ -249,6 +257,7 @@ extension ListStringExtensions on List<String> {
   /// ```dart
   /// ['Ab', 'cd'].toUpperCase(); // ['AB', 'CD']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? toUpperCase() => map((String e) => e.toUpperCase()).toList();
 }
@@ -265,6 +274,7 @@ extension NullableListStringExtensions on List<String?> {
   /// ```dart
   /// <String?>['Ab', null, 'CD'].toLowerCase(); // ['ab', 'cd']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? toLowerCase() => nonNulls.toList().toLowerCase();
 
@@ -277,6 +287,7 @@ extension NullableListStringExtensions on List<String?> {
   /// ```dart
   /// <String?>['Ab', null, 'cd'].toUpperCase(); // ['AB', 'CD']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? toUpperCase() => nonNulls.toList().toUpperCase();
 
@@ -290,6 +301,7 @@ extension NullableListStringExtensions on List<String?> {
   /// <String?>[null, '', 'abc'].removeNullsAndTrimmedEmpty(); // ['abc']
   /// <String?>[null, ' ', null].removeNullsAndTrimmedEmpty(); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? removeNullsAndTrimmedEmpty({bool trim = true}) =>
       nonNulls.toList().removeTrimmedEmpty(trim: trim);

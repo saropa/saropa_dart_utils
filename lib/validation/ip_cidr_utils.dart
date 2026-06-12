@@ -10,6 +10,7 @@ const int _ipv4PrefixMax = 32;
 const int _ipv4MaskFull = 0xFFFFFFFF;
 
 /// Parses IPv4 "a.b.c.d" into int (big-endian). Returns null if invalid.
+/// Audited: 2026-06-12 11:26 EDT
 int? parseIpv4(String s) {
   // A valid dotted-quad has exactly four octets; anything else is malformed.
   final List<String> parts = s.split('.');
@@ -27,6 +28,7 @@ int? parseIpv4(String s) {
 }
 
 /// Checks if [ip] (as int) is in CIDR [network]/[prefixLen]. [network] is base address as int.
+/// Audited: 2026-06-12 11:26 EDT
 bool ipInCidr({required int ip, required int network, required int prefixLen}) {
   if (prefixLen < _ipv4PrefixMin || prefixLen > _ipv4PrefixMax) return false;
   final int shift = _ipv4PrefixMax - prefixLen;

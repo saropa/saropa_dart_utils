@@ -13,6 +13,7 @@ const int _jwtPayloadPartIndex = 1;
 const String _kLogJwtPayloadFailed = 'jwtPayload failed';
 
 /// Returns true if [token] looks like a JWT (three base64url parts separated by .).
+/// Audited: 2026-06-12 11:26 EDT
 bool isJwtStructure(String token) {
   final List<String> parts = token.split('.');
   return parts.length == _jwtPartCount &&
@@ -20,6 +21,7 @@ bool isJwtStructure(String token) {
 }
 
 /// Decodes payload (middle part) as JSON map; returns null if invalid.
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, Object?>? jwtPayload(String token) {
   // Validate structure first so the index access below is safe: isJwtStructure
   // guarantees exactly three non-empty parts, making the [1] read on the split
@@ -31,11 +33,19 @@ Map<String, Object?>? jwtPayload(String token) {
   try {
     final String payload = token.split('.')[_jwtPayloadPartIndex];
     // base64url omits '=' padding, but base64Url.decode requires the length to be
-    // a multiple of four — restore the stripped padding before decoding.
-    final int padLen = _base64PaddingBlockSize - payload.length % _base64PaddingBlockSize;
+    // a multiple of four — restore the stripped padding before decoding. The
+    // outer `% block` keeps this at 0 when the length is already aligned;
+    // `block - 0` would otherwise append a spurious full '====' block and make
+    // base64Url.decode reject an otherwise-valid token.
+    final int padLen =
+        (_base64PaddingBlockSize - payload.length % _base64PaddingBlockSize) %
+        _base64PaddingBlockSize;
     final String padded = payload + '=' * padLen;
     final Uint8List bytes = Uint8List.fromList(base64Url.decode(padded));
-    final String json = String.fromCharCodes(bytes);
+    // Decode the bytes as UTF-8, not raw code units: a claim value with any
+    // multi-byte character would otherwise become mojibake. Malformed UTF-8
+    // throws and is caught below as an invalid payload.
+    final String json = utf8.decode(bytes);
     final decoded = jsonDecode(json);
     // A well-formed JWT payload is a JSON object; anything else (array, scalar)
     // is not a claims set.

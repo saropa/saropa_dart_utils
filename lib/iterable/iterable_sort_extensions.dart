@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Sort by multiple keys (thenBy).
 extension IterableSortByExtensions<T> on Iterable<T> {
   /// Sorts by [keyOf] then by [thenBy] if present. Returns new list.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> sortByThenBy<K extends Comparable<K>>(
     K Function(T) keyOf, [

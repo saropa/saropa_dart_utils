@@ -17,6 +17,7 @@ extension IterableNoneExtensions<T> on Iterable<T> {
   /// [1, 2, 3].none((n) => n.isEven); // false
   /// <int>[].none((n) => n.isEven);   // true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   bool none(ElementPredicate<T> predicate) {
     for (final T element in this) {
       if (predicate(element)) {

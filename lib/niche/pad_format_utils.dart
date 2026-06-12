@@ -12,6 +12,7 @@ const List<String> _kFileSizeUnits = <String>['B', 'KB', 'MB', 'GB', 'TB'];
 /// ```dart
 /// padWithZeros(7, 3); // '007'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String padWithZeros(int value, int length) => value.toString().padLeft(length, _kPadCharZero);
 
 /// Formats [bytes] as a human-readable size using binary (1024) units up to TB.
@@ -25,6 +26,7 @@ String padWithZeros(int value, int length) => value.toString().padLeft(length, _
 /// formatFileSize(1536); // '1.5 KB'
 /// formatFileSize(0); // '0 B'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String formatFileSize(int bytes, {int decimals = 1}) {
   if (bytes < 0) return '-${formatFileSize(-bytes, decimals: decimals)}';
   if (bytes == 0) return _kSizeZeroB;

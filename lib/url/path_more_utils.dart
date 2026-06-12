@@ -1,4 +1,5 @@
 /// URL/Path More: directory from path, base name, path separator, is absolute, etc. Roadmap #336-345.
+/// Audited: 2026-06-12 11:26 EDT
 String pathDirectory(String path) {
   final String p = path.replaceAll(r'\', '/');
   final int i = p.lastIndexOf('/');
@@ -15,6 +16,7 @@ String pathDirectory(String path) {
 /// pathBaseName('/usr/local/bin/dart'); // 'dart'
 /// pathBaseName(r'C:\temp\file.txt'); // 'file.txt'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String pathBaseName(String path) {
   final String p = path.replaceAll(r'\', '/');
   final int i = p.lastIndexOf('/');
@@ -22,6 +24,7 @@ String pathBaseName(String path) {
 }
 
 /// The forward-slash separator used by these path helpers.
+/// Audited: 2026-06-12 11:26 EDT
 String get pathSeparator => '/';
 
 /// Whether [path] is absolute — starts with `/` or has a drive letter (`C:`).
@@ -34,6 +37,7 @@ String get pathSeparator => '/';
 /// isPathAbsolute(r'C:\Windows'); // true
 /// isPathAbsolute('docs/readme.md'); // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isPathAbsolute(String path) {
   final String p = path.replaceAll(r'\', '/');
   return p.startsWith('/') || (p.length >= 2 && p[1] == ':');
@@ -45,6 +49,7 @@ bool isPathAbsolute(String path) {
 /// ```dart
 /// pathCollapseSeparators('a//b\\\\c'); // 'a/b/c'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String pathCollapseSeparators(String path) => path.replaceAll(RegExp(r'[/\\]+'), '/');
 
 /// Joins [segment] onto [path] with a single forward slash.
@@ -57,6 +62,7 @@ String pathCollapseSeparators(String path) => path.replaceAll(RegExp(r'[/\\]+'),
 /// pathAppend('docs', 'guide.md'); // 'docs/guide.md'
 /// pathAppend('docs/', '/guide.md'); // 'docs//guide.md'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String pathAppend(String path, String segment) {
   final String p = path.replaceAll(r'\', '/');
   final String s = segment.replaceAll(r'\', '/');
@@ -78,6 +84,7 @@ const String _kBearerPrefix = 'bearer ';
 /// parseBearerToken('Bearer abc123'); // 'abc123'
 /// parseBearerToken('Basic abc123'); // null
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String? parseBearerToken(String authorizationHeader) {
   final String s = authorizationHeader.trim();
   if (s.toLowerCase().startsWith(_kBearerPrefix)) {

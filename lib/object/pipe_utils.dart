@@ -8,6 +8,7 @@
 /// ```dart
 /// final list = also(<int>[], (l) => l.add(1)); // [1]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 T also<T>(T value, void Function(T) fn) {
   fn(value);
   return value;
@@ -21,4 +22,5 @@ T also<T>(T value, void Function(T) fn) {
 /// ```dart
 /// let(5, (n) => n * 2); // 10
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 R let<T, R>(T value, R Function(T) fn) => fn(value);

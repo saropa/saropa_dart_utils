@@ -20,6 +20,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// Returns an [Occurrence] containing the most common value and its
   ///  frequency.
   /// If the list is empty, returns null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<T>? mostOccurrences() {
     if (isEmpty) {
@@ -55,6 +56,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
 
   /// Returns an [Occurrence] of the least common value and its frequency,
   /// or `null` if the iterable is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<T>? leastOccurrences() {
     if (isEmpty) {
@@ -95,6 +97,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   ///
   /// Picks by index via [elementAt], so the iterable is not materialized to a
   /// list — only the chosen element is realized.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? randomElement({int? seed}) {
     if (isEmpty) {
@@ -105,6 +108,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Returns true if this iterable contains all elements from [other].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool containsAll(Iterable<T> other) {
     for (final T element in other) {
@@ -117,6 +121,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Returns the number of elements that satisfy the given [predicate].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int countWhere(ElementPredicate<T> predicate) {
     int count = 0;
@@ -141,6 +146,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// ```dart
   /// [1, 2, 3, 4, 5].chunks(2); // [[1, 2], [3, 4], [5]]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<List<T>> chunks(int size) {
     if (size < 1) {
@@ -163,6 +169,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// ```dart
   /// [1, 2, 3, 4].partition((x) => x.isEven); // ([2, 4], [1, 3])
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   (List<T>, List<T>) partition(ElementPredicate<T> predicate) {
     final List<T> matched = <T>[];
@@ -185,6 +192,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// ```dart
   /// ['a', 'ab', 'b'].groupBy((s) => s.length); // {1: ['a', 'b'], 2: ['ab']}
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, List<T>> groupBy<K>(K Function(T) keyOf) {
     final Map<K, List<T>> result = <K, List<T>>{};
@@ -198,6 +206,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   /// Sliding windows of size [windowSize]. Each window is a list of [windowSize] elements.
   ///
   /// [windowSize] must be positive. Fewer than [windowSize] elements at the end are skipped.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<List<T>> slidingWindow(int windowSize) {
     if (windowSize < 1) throw ArgumentError(_kErrWindowSizePositive, _kParamWindowSize);
@@ -210,6 +219,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Distinct elements by key; keeps first occurrence of each key.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> distinctBy<K>(K Function(T) keyOf) {
     final Set<K> seen = <K>{};
@@ -222,6 +232,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Sorts by [keyOf] and returns a new list. [keyOf] must return [Comparable].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> sortBy<K extends Comparable<K>>(K Function(T) keyOf) {
     final List<T> list = toList();
@@ -230,6 +241,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Zip with index: [(0, e0), (1, e1), ...].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<(int, T)> zipWithIndex() sync* {
     int i = 0;
@@ -239,6 +251,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Takes every [n]-th element (1-based: first, then 1+n, 1+2n, ...). [n] must be positive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<T> takeEveryNth(int n) {
     // n < 1 would make the modulo selection meaningless (n == 0 divides by zero,
@@ -251,6 +264,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Skips every [n]-th element. [n] must be positive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<T> skipEveryNth(int n) {
     // Same positivity guard as takeEveryNth: a non-positive n has no valid
@@ -262,6 +276,7 @@ extension GeneralIterableExtensions<T extends Object> on Iterable<T> {
   }
 
   /// Removes consecutive duplicate elements (keeps first of each run).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Iterable<T> dedupeConsecutive() sync* {
     T? prev;

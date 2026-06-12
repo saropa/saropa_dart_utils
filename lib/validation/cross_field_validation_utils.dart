@@ -6,6 +6,7 @@ const String _kDefaultEndName = 'end';
 const String _kDefaultFieldNames = 'fields';
 
 /// Returns null if valid, else error message.
+/// Audited: 2026-06-12 11:26 EDT
 String? validateStartBeforeEnd(
   num start,
   num end, {
@@ -17,6 +18,7 @@ String? validateStartBeforeEnd(
 }
 
 /// Returns null if at least one of [values] is non-null and non-empty (for strings).
+/// Audited: 2026-06-12 11:26 EDT
 String? validateOneOfRequired(List<Object?> values, {String fieldNames = _kDefaultFieldNames}) {
   // "Provided" means non-null, but strings get a stricter test: a whitespace-only
   // string is treated as empty (not provided) so "   " does not satisfy a

@@ -15,6 +15,7 @@ import 'package:meta/meta.dart';
 // ignore: require_extend_equatable -- manual == is simpler than an equatable dependency for one class
 class Occurrence<T extends Object> {
   /// Creates an [Occurrence] with the given [value] and [count].
+  /// Audited: 2026-06-12 11:26 EDT
   const Occurrence(this.value, this.count);
 
   /// The value that was found in the collection.

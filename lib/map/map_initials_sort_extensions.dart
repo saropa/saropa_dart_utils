@@ -41,9 +41,11 @@ extension InitialsSortingUtils<V> on Map<String, V> {
   ///
   /// Example:
   /// ```dart
-  /// <String, int>{'2def': 3, 'abc': 2, '10': 1}.sortMap().keys.toList();
-  /// // ['abc', '2def', '10']  (letters first; numerics in numeric order)
+  /// <String, int>{'banana': 1, 'apple': 2, '10': 3, '2': 4}.sortMap().keys.toList();
+  /// // ['apple', 'banana', '2', '10']  (letters first alphabetically; then
+  /// // pure-integer keys in NUMERIC order, so '2' precedes '10')
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   SplayTreeMap<String, V> sortMap() =>
       SplayTreeMap<String, V>.from(this, _compareInitials);
@@ -54,6 +56,7 @@ extension InitialsSortingUtils<V> on Map<String, V> {
 /// Pulled out as a top-level function (rather than a nested closure) to keep
 /// `sortMap` a single expression and to stay within the project's per-function
 /// line limit.
+/// Audited: 2026-06-12 11:26 EDT
 int _compareInitials(String a, String b) {
   final bool aLetter = a.startsWith(_startsWithLetterRegExp);
   final bool bLetter = b.startsWith(_startsWithLetterRegExp);

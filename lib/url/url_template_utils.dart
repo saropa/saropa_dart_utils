@@ -24,6 +24,7 @@ const String _unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 const String _reserved = ":/?#[]@!\$&'()*+,;=";
 
 /// Splits a varspec into name, optional `:maxLength` prefix, optional `*` explode.
+/// Audited: 2026-06-12 11:26 EDT
 final RegExp _specPattern = RegExp(r'^([^:*]+)(?::(\d+))?(\*)?$');
 
 /// One RFC 6570 operator's expansion rules.
@@ -47,6 +48,7 @@ class _Op {
   final String separator;
 
   /// Whether each value is rendered as `name=value` (`; ? &`).
+  /// Audited: 2026-06-12 11:26 EDT
   // ignore: saropa_lints/prefer_boolean_prefixes -- "named" is RFC 6570 operator terminology (named expansion); a prefix would obscure the spec mapping
   final bool named;
 
@@ -77,6 +79,7 @@ const Map<String, _Op> _operators = <String, _Op>{
 /// expandUriTemplate('/users/{id}{?tags*}', {'id': 7, 'tags': ['a', 'b']});
 /// // /users/7?tags=a&tags=b
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String expandUriTemplate(String template, Map<String, Object?> variables) =>
     template.replaceAllMapped(
       RegExp(r'\{([^{}]*)\}'),
@@ -84,6 +87,7 @@ String expandUriTemplate(String template, Map<String, Object?> variables) =>
     );
 
 /// Expands one expression body (the text between the braces).
+/// Audited: 2026-06-12 11:26 EDT
 String _expandExpression(String expression, Map<String, Object?> variables) {
   // The first character may be an RFC 6570 operator (`+`, `#`, `.`, `/`, ...)
   // that changes the prefix/separator/encoding; if it isn't one of those, fall
@@ -113,6 +117,7 @@ String _expandExpression(String expression, Map<String, Object?> variables) {
 
 /// Expands a single varspec (`name`, `name:3`, or `name*`) or null if the
 /// variable is undefined.
+/// Audited: 2026-06-12 11:26 EDT
 String? _expandSpec(String spec, _Op op, Map<String, Object?> variables) {
   final RegExpMatch? m = _specPattern.firstMatch(spec);
   if (m == null) {
@@ -131,6 +136,7 @@ String? _expandSpec(String spec, _Op op, Map<String, Object?> variables) {
 
 /// Expands a scalar value, applying an optional `:maxLength` prefix and the
 /// operator's encoding + named formatting.
+/// Audited: 2026-06-12 11:26 EDT
 String _expandString(String name, String raw, _Op op, String? maxLength) {
   String value = raw;
   final int? limit = maxLength == null ? null : int.tryParse(maxLength);
@@ -144,6 +150,7 @@ String _expandString(String name, String raw, _Op op, String? maxLength) {
 
 /// Expands a list value, exploded (each item separated by the operator's
 /// separator) or joined by commas. An empty list contributes nothing.
+/// Audited: 2026-06-12 11:26 EDT
 String? _expandList(String name, List<Object?> values, _Op op, {required bool explode}) {
   if (values.isEmpty) {
     return null;
@@ -162,11 +169,13 @@ String? _expandList(String name, List<Object?> values, _Op op, {required bool ex
 }
 
 /// Renders a named pair: `name=value`, or `name` + [_Op.ifEmpty] when empty.
+/// Audited: 2026-06-12 11:26 EDT
 String _named(String name, String value, _Op op) =>
     value.isEmpty ? '$name${op.ifEmpty}' : '$name=$value';
 
 /// Percent-encodes [value] (UTF-8), keeping unreserved characters and — when
 /// [allowReserved] — reserved characters too.
+/// Audited: 2026-06-12 11:26 EDT
 String _pctEncode(String value, {required bool allowReserved}) {
   final StringBuffer out = StringBuffer();
   for (final int byte in utf8.encode(value)) {

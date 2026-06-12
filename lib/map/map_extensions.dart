@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 const String _listClosingBracket = '],\n';
 
 /// Writes a formatted representation of [value] to [buffer].
+/// Audited: 2026-06-12 11:26 EDT
 void _writeFormattedValue({
   required StringBuffer buffer,
   required Object? value,
@@ -41,6 +42,7 @@ void _writeFormattedValue({
 /// Extension methods for generic maps.
 extension MapExt<K, V> on Map<K, V> {
   /// Returns this map, or `null` if it is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V>? nullIfEmpty() => isEmpty ? null : this;
 
@@ -48,6 +50,7 @@ extension MapExt<K, V> on Map<K, V> {
   /// present in [ignoreList].
   ///
   /// Returns `null` if no eligible entries remain after exclusion.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<MapEntry<K, V>>? getRandomListExcept({
     required int count,
@@ -63,7 +66,9 @@ extension MapExt<K, V> on Map<K, V> {
 
     available.shuffle(Random());
 
-    return available.take(count).toList();
+    // Clamp count: `take` throws a RangeError on a negative argument, and a
+    // count above the available size simply takes them all.
+    return available.take(count < 0 ? 0 : count).toList();
   }
 }
 
@@ -71,6 +76,7 @@ extension MapExt<K, V> on Map<K, V> {
 extension StringMapExtensions on Map<String, dynamic> {
   /// Returns a human-readable string representation of this map with
   /// indentation.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String formatMap() {
     if (isEmpty) {
@@ -97,6 +103,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 
   /// Returns the value for [childKey] as a `String`, or `null` if the key is
   /// missing or the value is not a `String`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? getChildString(String childKey) {
     final dynamic value = this[childKey];
@@ -106,6 +113,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 
   /// Returns the nested value at [childKey] → [grandChildKey], or `null` if
   /// either key is missing or the child is not a map.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   dynamic getGrandchild(String childKey, String grandChildKey) {
     final dynamic child = this[childKey];
@@ -118,6 +126,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 
   /// Returns the nested value at [childKey] → [grandChildKey] as a `String`,
   /// or `null` if either key is missing or the value is not a `String`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? getGrandchildString(String childKey, String grandChildKey) {
     final dynamic value = getGrandchild(childKey, grandChildKey);
@@ -127,6 +136,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 
   /// Returns the nested value at [childKey] → [grandChildKey] →
   /// [greatGrandChildKey], or `null` if any key is missing.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   dynamic getGreatGrandchild({
     required String childKey,
@@ -144,6 +154,7 @@ extension StringMapExtensions on Map<String, dynamic> {
   /// Returns the nested value at [childKey] → [grandChildKey] →
   /// [greatGrandChildKey] as a `String`, or `null` if any key is missing or
   /// the value is not a `String`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? getGreatGrandchildString({
     required String childKey,
@@ -161,6 +172,7 @@ extension StringMapExtensions on Map<String, dynamic> {
 
   /// Returns the value for [key] as a `Map<String, dynamic>`, or `null` if the
   /// key is missing or the value cannot be converted.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<String, dynamic>? getValue(String? key) {
     if (isEmpty || key == null) {
@@ -177,6 +189,7 @@ extension StringMapExtensions on Map<String, dynamic> {
   /// When [recurseChildValues] is `true` (default), keys are also removed from
   /// nested `Map<String, dynamic>` values. Recursion follows the map's nesting
   /// depth, so disable [recurseChildValues] for untrusted, arbitrarily-deep input.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool removeKeys(List<String>? removeKeysList, {bool recurseChildValues = true}) {
     if (removeKeysList == null || removeKeysList.isEmpty) {
@@ -200,6 +213,7 @@ extension StringMapExtensions on Map<String, dynamic> {
   }
 
   /// Returns a new `Map<String, dynamic>` with keys sorted alphabetically.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<String, dynamic> toKeySorted() => Map<String, dynamic>.fromEntries(
     entries.toList()..sort(
@@ -242,6 +256,7 @@ abstract final class MapExtensions {
   ///   'c': <int>[],
   /// }); // 3
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int countItems<K, V>(Map<K, Iterable<V>> inputMap) =>
       inputMap.values.fold<int>(0, (int sum, Iterable<V> iter) => sum + iter.length);
@@ -250,6 +265,7 @@ abstract final class MapExtensions {
   ///
   /// If [add] is `null`, toggles based on current presence.
   /// If [add] is `true`, adds the value. If `false`, removes it.
+  /// Audited: 2026-06-12 11:26 EDT
   static void mapToggleValue<K, V>({
     required Map<K, List<V>> map,
     required K key,
@@ -277,6 +293,7 @@ abstract final class MapExtensions {
   /// MapExtensions.mapAddValue(map: map, key: 'scores', value: 100); // {'scores': [100]}
   /// MapExtensions.mapAddValue(map: map, key: 'scores', value: 200); // {'scores': [100, 200]}
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static void mapAddValue<K, V>({required Map<K, List<V>> map, required K key, required V value}) {
     if (value == null) return;
     // ignore: saropa_lints/avoid_parameter_mutation -- function is designed to mutate the map parameter
@@ -293,6 +310,7 @@ abstract final class MapExtensions {
   /// final map = <String, List<int>>{'scores': [100, 200, 100]};
   /// MapExtensions.mapRemoveValue(map: map, key: 'scores', value: 100); // {'scores': [200]}
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static void mapRemoveValue<K, V>({
     required Map<K, List<V>> map,
     required K key,
@@ -308,6 +326,7 @@ abstract final class MapExtensions {
   }
 
   /// Returns `true` if the list at [key] within [map] contains [value].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool mapContainsValue<K, V>({
     required Map<K, List<V>> map,
@@ -335,6 +354,7 @@ abstract final class MapExtensions {
   ///   Dart's `Map.map` overwrite behavior).
   ///
   /// [throwOnDuplicate] takes precedence over [ensureUniqueKey].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static Map<String, dynamic>? toMapStringDynamic(
     dynamic json, {

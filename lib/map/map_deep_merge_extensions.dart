@@ -7,6 +7,7 @@ extension MapDeepMergeExtensions on Map<String, dynamic> {
   ///
   /// Recurses to the maps' nesting depth; not intended for untrusted,
   /// arbitrarily-deep input (deep nesting can exhaust the stack).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<String, dynamic> deepMerge(Map<String, dynamic> other) {
     final Map<String, dynamic> result = Map<String, dynamic>.from(this);

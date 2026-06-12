@@ -12,6 +12,7 @@ const String _kLogSafeDecodeUriFailed = 'safeDecodeUri failed';
 /// ```dart
 /// urlEncodeComponent('a b&c'); // 'a%20b%26c'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String urlEncodeComponent(String value) => Uri.encodeComponent(value);
 
 /// Decodes a percent-encoded URI component [value] back to plain text.
@@ -23,6 +24,7 @@ String urlEncodeComponent(String value) => Uri.encodeComponent(value);
 /// ```dart
 /// urlDecodeComponent('a%20b%26c'); // 'a b&c'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String urlDecodeComponent(String value) => Uri.decodeComponent(value);
 
 /// Decodes a percent-encoded URI component [value], returning null on failure.
@@ -35,6 +37,7 @@ String urlDecodeComponent(String value) => Uri.decodeComponent(value);
 /// safeDecodeUri('a%20b'); // 'a b'
 /// safeDecodeUri('%'); // null
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String? safeDecodeUri(String value) {
   try {
     return Uri.decodeComponent(value);

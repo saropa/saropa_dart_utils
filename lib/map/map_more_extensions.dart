@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Map More: from iterable, find key by value, rename key, ensure key, etc. Roadmap #291-300.
 extension MapFromIterableExtension<T, K, V> on Iterable<T> {
   /// Builds a map from [keyOf] and [valueOf] for each element; later elements overwrite.
+  /// Audited: 2026-06-12 11:26 EDT
   Map<K, V> toMapWith(K Function(T) keyOf, V Function(T) valueOf) {
     final Map<K, V> out = <K, V>{};
     for (final T e in this) {
@@ -15,15 +16,18 @@ extension MapFromIterableExtension<T, K, V> on Iterable<T> {
 /// Keys/values as lists.
 extension MapKeysValuesList<K, V> on Map<K, V> {
   /// All keys in iteration order.
+  /// Audited: 2026-06-12 11:26 EDT
   List<K> get keysList => keys.toList();
 
   /// All values in iteration order.
+  /// Audited: 2026-06-12 11:26 EDT
   List<V> get valuesList => values.toList();
 }
 
 /// Find key for a value.
 extension MapFindKey<K, V> on Map<K, V> {
   /// First key that maps to [value], or null.
+  /// Audited: 2026-06-12 11:26 EDT
   K? findKeyByValue(V value) {
     for (final MapEntry<K, V> e in entries) {
       if (e.value == value) return e.key;
@@ -35,6 +39,7 @@ extension MapFindKey<K, V> on Map<K, V> {
 /// Rename keys in a copy.
 extension MapRenameKey<K, V> on Map<K, V> {
   /// New map with [oldKey] renamed to [newKey]; unchanged if oldKey absent.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V> renameKey(K oldKey, K newKey) {
     final Map<K, V> out = Map<K, V>.from(this);
@@ -46,6 +51,7 @@ extension MapRenameKey<K, V> on Map<K, V> {
   }
 
   /// New map with keys renamed according to [oldToNew].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V> renameKeys(Map<K, K> oldToNew) {
     // Rename on a copy so the receiver is left unmodified (the @useResult
@@ -68,6 +74,7 @@ extension MapRenameKey<K, V> on Map<K, V> {
 /// Ensure a key exists.
 extension MapEnsureKey<K, V> on Map<K, V> {
   /// If [key] is absent, sets this[key] = ifAbsent().
+  /// Audited: 2026-06-12 11:26 EDT
   void ensureKey(K key, V Function() ifAbsent) {
     if (!containsKey(key)) this[key] = ifAbsent();
   }
@@ -76,6 +83,7 @@ extension MapEnsureKey<K, V> on Map<K, V> {
 /// Insert or update by key.
 extension MapUpsert<K, V> on Map<K, V> {
   /// If [key] absent: this[key] = insert(); else this[key] = update(this[key]).
+  /// Audited: 2026-06-12 11:26 EDT
   void upsert(K key, V Function() insert, V Function(V existing) update) {
     // Branch on presence, not on the looked-up value: a key can be present with
     // a null value, and treating that as "absent" would wrongly call insert().

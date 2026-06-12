@@ -15,6 +15,7 @@ extension IterableSumByExtensions<T> on Iterable<T> {
   /// orders.sumBy((o) => o.total); // total across all orders
   /// <Order>[].sumBy((o) => o.total); // 0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   num sumBy(num Function(T element) selector) {
     num total = 0;
@@ -36,6 +37,7 @@ extension IterableSumByExtensions<T> on Iterable<T> {
   /// [1, 2, 4].averageBy((n) => n); // 2.3333...
   /// <int>[].averageBy((n) => n);   // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double? averageBy(num Function(T element) selector) {
     num total = 0;

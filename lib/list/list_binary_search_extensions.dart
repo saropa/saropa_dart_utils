@@ -6,6 +6,7 @@ extension ListBinarySearchExtensions<T> on List<T> {
   ///
   /// [compare] must be consistent with the list's sort order. Defaults to [Comparable.compare].
   /// List must be sorted in ascending order.
+  /// Audited: 2026-06-12 11:26 EDT
   int binarySearchIndex(T value, [int Function(T a, T b)? compare]) {
     final int Function(T a, T b) cmp =
         compare ??
@@ -31,6 +32,7 @@ extension ListBinarySearchExtensions<T> on List<T> {
   /// Returns the insertion point for [value] (index where it would be inserted to preserve order).
   ///
   /// [compare] must be consistent with the list's sort order.
+  /// Audited: 2026-06-12 11:26 EDT
   int binarySearchInsertPoint(T value, [int Function(T a, T b)? compare]) {
     final int Function(T a, T b) cmp =
         compare ??
@@ -52,6 +54,7 @@ extension ListBinarySearchExtensions<T> on List<T> {
 }
 
 /// Merge two sorted lists into one sorted list.
+/// Audited: 2026-06-12 11:26 EDT
 List<T> mergeSorted<T>(List<T> a, List<T> b, [int Function(T a, T b)? compare]) {
   final int Function(T a, T b) cmp =
       compare ??

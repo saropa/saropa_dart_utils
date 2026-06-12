@@ -1,4 +1,5 @@
 /// File extension / without extension / change extension. Roadmap #164–165.
+/// Audited: 2026-06-12 11:26 EDT
 String pathExtension(String path) {
   final int dotIndex = path.lastIndexOf('.');
   if (dotIndex == -1 || dotIndex == path.length - 1) return '';
@@ -16,6 +17,7 @@ String pathExtension(String path) {
 /// pathWithoutExtension('archive.tar.gz'); // 'archive.tar'
 /// pathWithoutExtension('.gitignore'); // '.gitignore'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String pathWithoutExtension(String path) {
   final int dotIndex = path.lastIndexOf('.');
   if (dotIndex <= 0) return path;
@@ -34,6 +36,7 @@ String pathWithoutExtension(String path) {
 /// pathChangeExtension('photo.png', '.webp'); // 'photo.webp'
 /// pathChangeExtension('photo.png', ''); // 'photo'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String pathChangeExtension(String path, String newExt) {
   final String without = pathWithoutExtension(path);
   if (newExt.isEmpty) return without;

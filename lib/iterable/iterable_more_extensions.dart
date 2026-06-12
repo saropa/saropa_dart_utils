@@ -4,14 +4,19 @@ import 'package:meta/meta.dart';
 /// Take/drop from the end of an iterable.
 extension IterableTakeDropLast<T> on Iterable<T> {
   /// Last [n] elements; all if n >= length.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> takeLast(int n) {
+    // A non-positive count takes nothing; without this guard `sublist(length-n)`
+    // for negative n reads past the end and throws a RangeError.
+    if (n <= 0) return <T>[];
     final List<T> list = toList();
     if (n >= list.length) return list;
     return list.sublist(list.length - n);
   }
 
   /// All but the last [n] elements.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> dropLast(int n) {
     final List<T> list = toList();
@@ -24,6 +29,7 @@ extension IterableTakeDropLast<T> on Iterable<T> {
 /// Replace first or all occurrences in a list.
 extension IterableReplace<T> on List<T> {
   /// New list with first occurrence of [value] replaced by [replacement].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> replaceFirst(T value, T replacement) {
     final List<T> out = List<T>.of(this);
@@ -33,6 +39,7 @@ extension IterableReplace<T> on List<T> {
   }
 
   /// New list with every [value] replaced by [replacement].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> replaceAllValues(T value, T replacement) =>
       map((T e) => e == value ? replacement : e).toList();
@@ -41,6 +48,7 @@ extension IterableReplace<T> on List<T> {
 /// Infinite cycle over list elements.
 extension IterableCycle<T> on List<T> {
   /// Lazy infinite iterable repeating this list.
+  /// Audited: 2026-06-12 11:26 EDT
   Iterable<T> cycle() sync* {
     if (isEmpty) return;
     int i = 0;
@@ -54,6 +62,7 @@ extension IterableCycle<T> on List<T> {
 /// Pad list to a minimum length.
 extension IterablePad<T> on List<T> {
   /// New list padded with [fill] to at least [length] elements.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> padTo(int length, T fill) {
     if (this.length >= length) return List<T>.of(this);
@@ -62,6 +71,7 @@ extension IterablePad<T> on List<T> {
 }
 
 /// Splits [pairs] into two lists: first elements and second elements.
+/// Audited: 2026-06-12 11:26 EDT
 (List<A>, List<B>) unzip2<A, B>(List<(A, B)> pairs) {
   final List<A> a = <A>[];
   final List<B> b = <B>[];
@@ -75,6 +85,7 @@ extension IterablePad<T> on List<T> {
 /// Segment iterable into lists where consecutive pairs satisfy [predicate].
 extension IterableSegment<T> on Iterable<T> {
   /// When [predicate](prev, next) is false, starts a new segment.
+  /// Audited: 2026-06-12 11:26 EDT
   List<List<T>> segmentBy(bool Function(T, T) predicate) {
     final List<T> list = toList();
     if (list.isEmpty) return <List<T>>[];
@@ -99,6 +110,7 @@ extension IterableSegment<T> on Iterable<T> {
 /// Consecutive pairs from a list.
 extension IterableConsecutive<T> on List<T> {
   /// Adjacent pairs of elements; empty if length < 2.
+  /// Audited: 2026-06-12 11:26 EDT
   List<(T, T)> consecutivePairs() {
     if (length < 2) return <(T, T)>[];
     return List<(T, T)>.generate(length - 1, (int i) => (this[i], this[i + 1]));
@@ -108,6 +120,7 @@ extension IterableConsecutive<T> on List<T> {
 /// Index of min/max by a comparable key.
 extension IterableArgMinMax<T> on Iterable<T> {
   /// Index of the element with minimum [keyOf]; null if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   int? argMinBy<C extends Comparable<C>>(C Function(T) keyOf) {
     int? idx;
     C? minKey;
@@ -124,6 +137,7 @@ extension IterableArgMinMax<T> on Iterable<T> {
   }
 
   /// Index of the element with maximum [keyOf]; null if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   int? argMaxBy<C extends Comparable<C>>(C Function(T) keyOf) {
     int? idx;
     C? maxKey;
@@ -143,6 +157,7 @@ extension IterableArgMinMax<T> on Iterable<T> {
 /// Check if all elements are equal.
 extension IterableAllEqual<T> on Iterable<T> {
   /// True if empty or all elements are equal.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get allEqual {
     // Empty is vacuously "all equal" — there is no pair that differs.
     final Iterator<T> it = iterator;
@@ -161,6 +176,7 @@ extension IterableAllEqual<T> on Iterable<T> {
 /// Count occurrences of each element.
 extension IterableCountBy<T> on Iterable<T> {
   /// Map of element to occurrence count.
+  /// Audited: 2026-06-12 11:26 EDT
   Map<T, int> countBy() {
     final Map<T, int> out = <T, int>{};
     for (final T e in this) {
@@ -173,6 +189,7 @@ extension IterableCountBy<T> on Iterable<T> {
 /// Prefix scan (running reduce).
 extension IterableScan<T> on Iterable<T> {
   /// List of [initial] and each step of [combine](acc, element).
+  /// Audited: 2026-06-12 11:26 EDT
   List<R> scan<R>(R initial, R Function(R, T) combine) {
     final List<R> out = <R>[initial];
     R acc = initial;

@@ -1,6 +1,7 @@
 /// Min/max by key (return element).
 extension IterableMinMaxByExtensions<T> on Iterable<T> {
   /// Element with minimum [keyOf] value; null if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T? minBy<K extends Comparable<K>>(K Function(T) keyOf) {
     T? minElem;
     K? minKey;
@@ -15,6 +16,7 @@ extension IterableMinMaxByExtensions<T> on Iterable<T> {
   }
 
   /// Element with maximum [keyOf] value; null if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T? maxBy<K extends Comparable<K>>(K Function(T) keyOf) {
     T? maxElem;
     K? maxKey;

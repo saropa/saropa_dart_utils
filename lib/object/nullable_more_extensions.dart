@@ -13,6 +13,7 @@ extension NullableWhen<T> on T? {
   /// ```dart
   /// user?.toListOrEmpty().whenNonNull(print); // prints only when non-null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   T? whenNonNull(void Function(T) fn) {
     // Pattern matches only when `this` is non-null; `T` is the non-nullable
     // underlying type, so `fn` never receives null.
@@ -32,6 +33,7 @@ extension NullableWhen<T> on T? {
   /// n.mapNonNull((v) => v * 2); // 6
   /// null.mapNonNull((v) => v);  // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   R? mapNonNull<R>(R Function(T) fn) {
     final T? self = this;
     return self == null ? null : fn(self);
@@ -48,6 +50,7 @@ extension NullableWhen<T> on T? {
   /// const String? name = null;
   /// name.orElse(() => 'Anonymous'); // 'Anonymous'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   T orElse(T Function() compute) => this ?? compute();
 }
 
@@ -65,6 +68,7 @@ extension TryCast<T> on T? {
   /// value.tryCast<String>(); // 'hi'
   /// value.tryCast<int>();    // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   U? tryCast<U>() {
     final o = this;
     if (o is U) return o;
@@ -82,6 +86,7 @@ extension TryCast<T> on T? {
 /// isType<String>('x'); // true
 /// isType<int>('x');    // false
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isType<T>(Object? value) => value is T;
 
 /// Returns [value] as a [T] when it is one, otherwise [fallback].
@@ -94,6 +99,7 @@ bool isType<T>(Object? value) => value is T;
 /// asTypeOr<int>('not a number', -1); // -1
 /// asTypeOr<int>(42, -1);             // 42
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 T asTypeOr<T>(Object? value, T fallback) => value is T ? value : fallback;
 
 /// Searches a heterogeneous list for the first element of a given type.
@@ -109,6 +115,7 @@ extension FirstOfTypeExtension on List<Object?> {
   /// mixed.firstOfType<String>(); // 'two'
   /// mixed.firstOfType<bool>();   // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   T? firstOfType<T>() {
     for (final Object? e in this) {
       if (e is T) return e;
@@ -132,6 +139,7 @@ extension ToListOrEmpty<T> on T? {
   /// 5.toListOrEmpty();      // [5]
   /// null.toListOrEmpty();   // []
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   List<T> toListOrEmpty() {
     final T? self = this;
     if (self == null) return <T>[];

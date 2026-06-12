@@ -12,6 +12,7 @@ const String _kHexDumpPlaceholder = '   ';
 /// ```dart
 /// hexDump([72, 105]); // '00000000 48 69 ... Hi'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String hexDump(List<int> bytes, {int bytesPerLine = 16}) {
   final StringBuffer sb = StringBuffer();
   for (int i = 0; i < bytes.length; i += bytesPerLine) {
@@ -42,6 +43,7 @@ String hexDump(List<int> bytes, {int bytesPerLine = 16}) {
 /// ```dart
 /// parseHexToBytes('48 69'); // [72, 105]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> parseHexToBytes(String hex) {
   final String h = hex.replaceAll(RegExp(r'\s'), '');
   if (h.length % 2 != 0) return <int>[];
@@ -61,6 +63,7 @@ List<int> parseHexToBytes(String hex) {
 /// ```dart
 /// bytesToHex([72, 105]); // '4869'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String bytesToHex(List<int> bytes) =>
     bytes.map((int b) => b.toRadixString(16).padLeft(2, '0')).join();
 
@@ -73,6 +76,7 @@ String bytesToHex(List<int> bytes) =>
 /// ```dart
 /// maskCreditCard('4111 1111 1111 1234'); // '************1234'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String maskCreditCard(String digits, {int visibleLast = 4, String maskChar = '*'}) {
   final String s = digits.replaceAll(RegExp(r'\D'), '');
   if (s.length <= visibleLast) return s;
@@ -82,11 +86,13 @@ String maskCreditCard(String digits, {int visibleLast = 4, String maskChar = '*'
 /// Removes ASCII control characters (`0x00`–`0x1F` and `0x7F`) from [s].
 ///
 /// Printable characters and Unicode above the control range are preserved.
+/// Audited: 2026-06-12 11:26 EDT
 String stripControlChars(String s) => s.replaceAll(RegExp(r'[\x00-\x1F\x7F]'), '');
 
 /// Returns `true` if every code unit in [s] is within the ASCII range (`< 128`).
 ///
 /// An empty string returns `true`.
+/// Audited: 2026-06-12 11:26 EDT
 bool isAsciiOnly(String s) => s.codeUnits.every((int c) => c < 128);
 
 /// Truncates [s] so its UTF-8 encoding does not exceed [maxBytes] bytes.
@@ -98,22 +104,29 @@ bool isAsciiOnly(String s) => s.codeUnits.every((int c) => c < 128);
 /// ```dart
 /// truncateToByteLength('héllo', 3); // 'hé' (é is 2 bytes)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String truncateToByteLength(String s, int maxBytes) {
-  final List<int> units = s.codeUnits;
+  // Iterate RUNES (code points), not codeUnits: a non-BMP character (emoji) is
+  // two UTF-16 surrogates, each of which the old code counted as 3 bytes (6
+  // total) instead of its true 4, and `sublist` could split between the two
+  // surrogates, yielding an invalid string. Runes give the real code point and
+  // a safe cut boundary.
+  final StringBuffer out = StringBuffer();
   int len = 0;
-  for (int i = 0; i < units.length; i++) {
-    final int u = units[i];
-    int byteCount = 1;
-    if (u > 127) {
-      if (u > 2047) {
-        byteCount = 3;
-      } else {
-        byteCount = 2;
-      }
-      if (u > 65535) byteCount = 4;
-    }
-    if (len + byteCount > maxBytes) return String.fromCharCodes(units.sublist(0, i));
+  for (final int rune in s.runes) {
+    final int byteCount = _utf8ByteLength(rune);
+    if (len + byteCount > maxBytes) break;
+    out.writeCharCode(rune);
     len += byteCount;
   }
-  return s;
+  return out.toString();
+}
+
+/// UTF-8 byte length of a single Unicode code point.
+/// Audited: 2026-06-12 11:26 EDT
+int _utf8ByteLength(int rune) {
+  if (rune <= 0x7F) return 1;
+  if (rune <= 0x7FF) return 2;
+  if (rune <= 0xFFFF) return 3;
+  return 4;
 }
