@@ -56,5 +56,12 @@ String pathRelative(String base, String target) {
   // into target's remaining segments — that concatenation is the relative path.
   final List<String> ups = List<String>.filled(b.length - i, '..');
   final List<String> rest = t.sublist(i);
-  return pathJoin(<String>[...ups, ...rest]);
+  // Join directly rather than via pathJoin: pathJoin treats a leading '..' as a
+  // pop with nothing above it and discards it, which would erase the very
+  // climb-out segments computed above (the bug where 'a/b/c' -> 'a/b/d' yielded
+  // 'd' instead of '../d'). The segments are already clean — target was
+  // normalized, base segments were consumed, and ups are literal '..' — so no
+  // pathJoin re-normalization is needed. Identical paths leave both lists empty,
+  // which joins to '' (the documented same-location result).
+  return <String>[...ups, ...rest].join('/');
 }

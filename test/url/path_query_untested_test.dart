@@ -28,10 +28,20 @@ void main() {
       expect(pathRelative('a/b/c', 'a/b/c'), '');
     });
 
-    // NOTE: the up-traversal case (e.g. 'a/b/c' -> 'a/b/d', which should be
-    // '../d') is intentionally NOT asserted here because pathRelative currently
-    // returns 'd' — pathJoin strips the leading '..'. That is a real bug,
-    // surfaced separately rather than pinned as expected behavior.
+    // Up-traversal: climbing out of base must emit leading '..' segments. This
+    // pins the fix for the bug where pathRelative routed segments through
+    // pathJoin, which silently stripped the leading '..' and returned 'd'.
+    test('climbs out of a sibling directory with ..', () {
+      expect(pathRelative('a/b/c', 'a/b/d'), '../d');
+    });
+
+    test('climbs out multiple levels then descends', () {
+      expect(pathRelative('a/b/c/d', 'a/x'), '../../../x');
+    });
+
+    test('pure ascent yields only .. segments', () {
+      expect(pathRelative('a/b/c', 'a'), '../..');
+    });
   });
 
   group('isRelativePath', () {
