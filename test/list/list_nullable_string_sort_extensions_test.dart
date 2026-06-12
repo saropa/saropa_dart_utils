@@ -53,8 +53,7 @@ void main() {
       });
 
       test('when list has large number of distinct elements', () {
-        final List<String?> list =
-            List<String?>.generate(10_000, (int i) => 'test$i');
+        final List<String?> list = List<String?>.generate(10_000, (int i) => 'test$i');
         final List<String?> sortedList = List<String?>.of(list)..sort();
         expect(sortNullableStringListInPlace(list), isTrue);
         expect(list, equals(sortedList));

@@ -77,12 +77,13 @@ void main() {
   group('WriteBackStore', () {
     test('should buffer writes and only persist on flush', () async {
       final Map<String, int> backing = <String, int>{};
-      final WriteBackStore<String, int> c = WriteBackStore<String, int>(
-        load: (String k) async => backing[k],
-        store: (String k, int v) async => backing[k] = v,
-      )
-        ..put('a', 1)
-        ..put('b', 2);
+      final WriteBackStore<String, int> c =
+          WriteBackStore<String, int>(
+              load: (String k) async => backing[k],
+              store: (String k, int v) async => backing[k] = v,
+            )
+            ..put('a', 1)
+            ..put('b', 2);
 
       expect(backing, isEmpty);
       expect(c.dirtyKeys, equals(<String>{'a', 'b'}));
@@ -95,13 +96,14 @@ void main() {
 
     test('should coalesce repeated writes to one store call on flush', () async {
       int stores = 0;
-      final WriteBackStore<String, int> c = WriteBackStore<String, int>(
-        load: (String k) async => null,
-        store: (String k, int v) async => stores++,
-      )
-        ..put('a', 1)
-        ..put('a', 2)
-        ..put('a', 3);
+      final WriteBackStore<String, int> c =
+          WriteBackStore<String, int>(
+              load: (String k) async => null,
+              store: (String k, int v) async => stores++,
+            )
+            ..put('a', 1)
+            ..put('a', 2)
+            ..put('a', 3);
 
       await c.flush();
 

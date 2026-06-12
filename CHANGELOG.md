@@ -24,9 +24,6 @@
 cspell:disable
 -->
 
-## [Unreleased]
-
-[log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
 
 ## [1.6.0] - 2026-06-12
 

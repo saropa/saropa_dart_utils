@@ -105,8 +105,7 @@ void main() {
 
       test('positive and negative infinity resolve to the exact value', () {
         const FilterValue<double> setInf = FilterValue<double>(double.infinity);
-        const FilterValue<double> setNegInf =
-            FilterValue<double>(double.negativeInfinity);
+        const FilterValue<double> setNegInf = FilterValue<double>(double.negativeInfinity);
 
         expect(setInf.resolve(0.0), double.infinity);
         expect(setNegInf.resolve(0.0), double.negativeInfinity);
@@ -142,20 +141,16 @@ void main() {
     group('collection / reference identity', () {
       // The wrapper must hold references, not copies — resolving returns the
       // exact instance supplied, so consumers can rely on identity.
-      test('List value resolves to the identical instance (held by reference)',
-          () {
+      test('List value resolves to the identical instance (held by reference)', () {
         final List<int> supplied = <int>[1, 2, 3];
-        final FilterValue<List<int>> setList =
-            FilterValue<List<int>>(supplied);
+        final FilterValue<List<int>> setList = FilterValue<List<int>>(supplied);
 
         expect(identical(setList.resolve(<int>[9]), supplied), isTrue);
       });
 
-      test('Map value resolves to the identical instance (held by reference)',
-          () {
+      test('Map value resolves to the identical instance (held by reference)', () {
         final Map<String, int> supplied = <String, int>{'a': 1};
-        final FilterValue<Map<String, int>> setMap =
-            FilterValue<Map<String, int>>(supplied);
+        final FilterValue<Map<String, int>> setMap = FilterValue<Map<String, int>>(supplied);
 
         expect(
           identical(setMap.resolve(<String, int>{'b': 2}), supplied),
@@ -164,8 +159,7 @@ void main() {
       });
 
       test('empty list is set (not unset) and distinct from unset()', () {
-        final FilterValue<List<int>> setEmpty =
-            FilterValue<List<int>>(<int>[]);
+        final FilterValue<List<int>> setEmpty = FilterValue<List<int>>(<int>[]);
         const FilterValue<List<int>> unset = FilterValue<List<int>>.unset();
 
         // An empty collection is a real override, not "no value given".
@@ -206,8 +200,7 @@ void main() {
         expect(setFamily.resolve('x')!.length, family.length);
       });
 
-      test('non-breaking-space-only string is set, not treated as empty/unset',
-          () {
+      test('non-breaking-space-only string is set, not treated as empty/unset', () {
         // U+00A0 — must not be coerced to empty or unset by the wrapper.
         const FilterValue<String> setNbsp = FilterValue<String>(' ');
 
@@ -263,8 +256,7 @@ void main() {
         expect(identical(a, b), isTrue);
       });
 
-      test('FilterValue defines no value equality — distinct instances differ',
-          () {
+      test('FilterValue defines no value equality — distinct instances differ', () {
         // The class intentionally omits operator==/hashCode. Two non-const
         // wrappers with equal contents are NOT equal; this documents that and
         // pins the set-to-null vs unset distinction at the reference level.
@@ -274,8 +266,7 @@ void main() {
 
       test('wrapper does not deep-copy a held reference', () {
         final List<int> supplied = <int>[1];
-        final FilterValue<List<int>> setList =
-            FilterValue<List<int>>(supplied);
+        final FilterValue<List<int>> setList = FilterValue<List<int>>(supplied);
 
         // Mutating the original is visible through value — confirms no copy.
         supplied.add(2);
@@ -284,13 +275,10 @@ void main() {
     });
 
     group('nested generic composition', () {
-      test('FilterValue<FilterValue<int>> composes and resolves inner wrapper',
-          () {
+      test('FilterValue<FilterValue<int>> composes and resolves inner wrapper', () {
         const FilterValue<int> inner = FilterValue<int>(5);
-        const FilterValue<FilterValue<int>> outer =
-            FilterValue<FilterValue<int>>(inner);
-        const FilterValue<FilterValue<int>> outerUnset =
-            FilterValue<FilterValue<int>>.unset();
+        const FilterValue<FilterValue<int>> outer = FilterValue<FilterValue<int>>(inner);
+        const FilterValue<FilterValue<int>> outerUnset = FilterValue<FilterValue<int>>.unset();
 
         // Outer resolves to the inner wrapper, which itself resolves to 5.
         expect(identical(outer.resolve(null), inner), isTrue);

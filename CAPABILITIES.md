@@ -1,8 +1,8 @@
 # Capabilities Index
 
-**Release 1.5.1** · Generated 2026-06-11
+**Release 1.6.0** · Generated 2026-06-12
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **2067 public symbols** across **406 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **2593 public symbols** across **473 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -12,32 +12,36 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ## Categories
 
-- [Async](#async) — 154 symbols
+- [Async](#async) — 171 symbols
 - [Base64](#base64) — 7 symbols
-- [Bool](#bool) — 13 symbols
-- [Caching](#caching) — 31 symbols
-- [Collections](#collections) — 269 symbols
-- [DateTime](#datetime) — 290 symbols
-- [Double](#double) — 14 symbols
+- [Bool](#bool) — 15 symbols
+- [Caching](#caching) — 54 symbols
+- [Collections](#collections) — 378 symbols
+- [Color](#color) — 21 symbols
+- [Copy_with](#copy_with) — 6 symbols
+- [DateTime](#datetime) — 424 symbols
+- [Double](#double) — 22 symbols
 - [Enum](#enum) — 4 symbols
+- [Flutter](#flutter) — 13 symbols
 - [Gesture](#gesture) — 36 symbols
-- [Graph](#graph) — 38 symbols
+- [Graph](#graph) — 49 symbols
 - [HTML](#html) — 7 symbols
 - [Hex](#hex) — 4 symbols
 - [Integer](#integer) — 12 symbols
 - [Iterable](#iterable) — 99 symbols
 - [JSON](#json) — 27 symbols
-- [List](#list) — 65 symbols
-- [Map](#map) — 91 symbols
-- [Niche](#niche) — 22 symbols
-- [Number](#number) — 86 symbols
+- [List](#list) — 76 symbols
+- [Map](#map) — 93 symbols
+- [Niche](#niche) — 45 symbols
+- [Number](#number) — 88 symbols
 - [Object & Null](#object--null) — 27 symbols
-- [Parsing](#parsing) — 134 symbols
+- [Parsing](#parsing) — 142 symbols
 - [Random](#random) — 1 symbols
 - [Regex](#regex) — 6 symbols
-- [Stats](#stats) — 69 symbols
-- [String](#string) — 438 symbols
+- [Stats](#stats) — 76 symbols
+- [String](#string) — 563 symbols
 - [Testing](#testing) — 8 symbols
+- [Typed_data](#typed_data) — 4 symbols
 - [URL & Path](#url--path) — 58 symbols
 - [UUID](#uuid) — 5 symbols
 - [Validation](#validation) — 52 symbols
@@ -99,8 +103,8 @@ Async semaphore with permits ().
 | `AsyncSemaphoreUtils` | constructor | Creates a semaphore allowing at most [permits] concurrent acquisitions. |
 | `permits` | field | Maximum number of concurrent acquisitions allowed. |
 | `run` | method | Acquires a permit, runs [fn], then releases; ensures release on exception. |
-| `acquire` | method | Waits for a permit, then acquires it (decrements available count). |
-| `release` | method | Releases one permit (increments available count); unblocks one waiter if any. |
+| `acquire` | method | Waits for a permit, then acquires it. |
+| `release` | method | Releases one permit; hands it directly to the next waiter if any, otherwise returns it to the available pool. |
 | `toString` | method |  |
 
 ### `async/batch_async_utils.dart`
@@ -161,25 +165,60 @@ Bounded async work queue with backpressure.
 | `cancelPrevious` | function | Returns a wrapper that cancels previous in-flight calls when invoked again; the superseded future throws [CancelPreviousException]. |
 | `CancelPreviousException` | class | Thrown when a call was superseded by a newer [cancelPrevious] invocation. |
 
+### `async/cancellation_token_utils.dart`
+
+Cooperative cancellation tokens.
+
+`import 'package:saropa_dart_utils/async/cancellation_token_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `CancellationException` | class | Thrown when work is abandoned because its [CancellationToken] was cancelled. |
+| `CancellationException` | constructor | Creates a cancellation exception carrying an optional [reason]. |
+| `reason` | field | Optional caller-supplied explanation for the cancellation. |
+| `toString` | method |  |
+| `CancellationToken` | class | A one-shot cooperative cancellation signal. |
+| `isCancelled` | getter | Whether [cancel] has been called. |
+| `reason` | getter | The reason passed to [cancel], or `null` if none was supplied / not yet cancelled. |
+| `whenCancelled` | getter | Completes once the token is cancelled; never completes with an error. |
+| `cancel` | method | Cancels the token with an optional [reason]; a second call is a no-op. |
+| `throwIfCancelled` | method | Throws a [CancellationException] (carrying [reason]) if already cancelled. |
+| `onCancel` | method | Registers [callback] to fire exactly once when the token is cancelled. |
+| `runCancellable` | function | Awaits [task] but stops waiting if [token] cancels first. |
+
 ### `async/circuit_breaker_utils.dart`
 
-Circuit breaker (open/half-open/closed).
+Circuit breaker (closed / open-with-timeout).
 
 `import 'package:saropa_dart_utils/async/circuit_breaker_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `circuitBreakerDefaultResetTimeout` | field | Default duration the circuit stays open before allowing a retry (half-open). |
+| `circuitBreakerDefaultResetTimeout` | field | Default duration the circuit stays open before retries are allowed again. |
 | `CircuitBreakerUtils` | class | Simple circuit breaker: after [failureThreshold] failures, open for [resetTimeout]. |
 | `CircuitBreakerUtils` | constructor | Creates a breaker that opens after [failureThreshold] consecutive failures and stays open for [resetTimeout] before allowing a retry. |
 | `failureThreshold` | getter | Number of failures before the circuit opens. |
-| `resetTimeout` | getter | Duration the circuit stays open before allowing a retry (half-open). |
+| `resetTimeout` | getter | Duration the circuit stays open before retries are allowed again. |
 | `isClosed` | getter | True when the circuit is closed (requests are allowed). |
 | `isOpen` | getter | True when the circuit is open (requests are blocked). |
 | `recordSuccess` | method | Resets failure count and closes the circuit. |
 | `recordFailure` | method | Records a failure; opens the circuit when the failure threshold is reached. |
 | `canAttempt` | getter | True if a call is allowed (closed or reset timeout elapsed). |
 | `toString` | method |  |
+
+### `async/compute_stream_transformer.dart`
+
+Stream transformer that runs each event through Flutter's `compute()` (a one-shot background isolate), keeping CPU-bound per-event work off the UI thread.
+
+`import 'package:saropa_dart_utils/async/compute_stream_transformer.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ComputeStreamTransformer` | class | A generic [StreamTransformerBase] that runs each stream event through Flutter's [compute] (a one-shot background isolate), keeping CPU-bound per-event work o... |
+| `ComputeStreamTransformer` | constructor | Creates a transformer that runs [computeFunction] on a background isolate for each event, optionally recovering compute failures via [onError]. |
+| `computeFunction` | field | The top-level/static function applied to each event on a background isolate. |
+| `onError` | field | Optional recovery for a failure thrown while computing a single event. |
+| `bind` | method |  |
 
 ### `async/debounce_utils.dart`
 
@@ -259,7 +298,7 @@ Observability helpers: wrap operations with timing and outcome hooks.
 
 ### `async/race_cancel_utils.dart`
 
-Race with cancellation (first success wins, cancel rest).
+Race producers, first success wins.
 
 `import 'package:saropa_dart_utils/async/race_cancel_utils.dart';`
 
@@ -521,6 +560,15 @@ IO-based gzip implementation using `dart:io`.
 | `countFalse` | getter | Counts the number of `false` values in the iterable. |
 | `reverse` | getter | Reverses the boolean values in the list. |
 
+### `bool/bool_sort_extensions.dart`
+
+`import 'package:saropa_dart_utils/bool/bool_sort_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `BoolSortingHelper` on `bool` | extension | Saropa sorting extension for a single [bool]. |
+| `compareTo` | method | Compares this boolean to [other], following the [Comparable.compareTo] contract so booleans can be used as a sort key. |
+
 ### `bool/bool_string_extensions.dart`
 
 `import 'package:saropa_dart_utils/bool/bool_string_extensions.dart';`
@@ -577,6 +625,23 @@ Generic synchronous cache interface + a write-through async adapter.
 | `memoize1` | function | Memoize sync function (by argument equality). |
 | `singleValueCache` | function | Returns a function that computes once and returns cached value. |
 
+### `caching/mru_cache.dart`
+
+MRU (most-recently-used) cache with access-frequency tracking.
+
+`import 'package:saropa_dart_utils/caching/mru_cache.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `MruCache` | class | A fixed-capacity cache using most-recently-used eviction. |
+| `MruCache` | constructor | Creates a cache holding at most [capacity] entries. |
+| `length` | getter | Number of entries currently cached. |
+| `get` | method | Returns the value for [key] (or null), counting the access and marking the key most-recently-used. |
+| `put` | method | Inserts or updates [key] with [value]. |
+| `frequencyOf` | method | Number of times [key] has been accessed (via [get] or [put]) while resident; `0` if never seen or since evicted. |
+| `remove` | method | Removes [key] and its frequency, if present. |
+| `toString` | method |  |
+
 ### `caching/size_limit_cache.dart`
 
 `import 'package:saropa_dart_utils/caching/size_limit_cache.dart';`
@@ -605,9 +670,50 @@ Generic synchronous cache interface + a write-through async adapter.
 | `clear` | method | Removes all entries. |
 | `toString` | method |  |
 
+### `caching/write_through_cache.dart`
+
+Write-through and write-back caches over async loaders.
+
+`import 'package:saropa_dart_utils/caching/write_through_cache.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `CacheLoader` | typedef | Loads the value for a key from the backing store (null = absent). |
+| `CacheStorer` | typedef | Persists a key/value pair to the backing store. |
+| `WriteThroughStore` | class | A cache that persists every write to the backing store immediately. |
+| `WriteThroughStore` | constructor | Creates a cache backed by [load] (read-through on a miss) and [store] (called on every [put] before the in-memory entry is updated). |
+| `get` | method | Returns the cached value, loading and caching it on a miss. |
+| `put` | method | Persists [value] to the store, then updates the in-memory entry. |
+| `invalidate` | method | Drops the in-memory entry for [key] without touching the backing store. |
+| `length` | getter | Number of entries currently held in memory. |
+| `WriteBackStore` | class | A cache that buffers writes in memory until [flush] persists them. |
+| `WriteBackStore` | constructor | Creates a cache backed by [load] (read-through on a miss) and [store] (called once per dirty key during [flush]). |
+| `get` | method | Returns the cached value, loading and caching it on a miss. |
+| `put` | method | Updates the in-memory entry and marks it dirty; the store is untouched until [flush]. |
+| `dirtyKeys` | getter | Keys with buffered writes not yet persisted (an unmodifiable snapshot). |
+| `flush` | method | Persists every dirty entry to the backing store and clears the dirty set. |
+| `length` | getter | Number of entries currently held in memory. |
+
 ---
 
 ## Collections
+
+### `collections/backtracking_utils.dart`
+
+Generic depth-first backtracking solver with pruning and result limits ().
+
+`import 'package:saropa_dart_utils/collections/backtracking_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `BacktrackingSolver` | class | A reusable backtracking search over states of type [State] reached by applying choices of type [Choice]. |
+| `BacktrackingSolver` | constructor | Creates a solver from the four pure callbacks that define the search: - [choices]: candidate moves available from a state (empty = dead end). |
+| `choices` | field | Candidate choices available from a given state. |
+| `apply` | field | The state reached by applying a choice to a state (no mutation). |
+| `isComplete` | field | Whether a state is a complete, accepted solution. |
+| `isValid` | field | Whether a partial state is still valid (worth descending into). |
+| `solveFirst` | method | Returns the first complete solution reachable from [initial], or null if the search exhausts every valid branch without finding one. |
+| `solveAll` | method | Returns up to [limit] complete solutions reachable from [initial], in discovery (depth-first) order. |
 
 ### `collections/balanced_partition_utils.dart`
 
@@ -648,6 +754,25 @@ Greedy bin packing (items into bins with capacities).
 |--------|------|-------------|
 | `firstFitBinPacking` | function | Assigns each [itemWeights] to a bin; [capacity] per bin. |
 
+### `collections/bk_tree_utils.dart`
+
+BK-tree for approximate string matching.
+
+`import 'package:saropa_dart_utils/collections/bk_tree_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `StringDistance` | typedef | Distance between two strings; must be a metric for correct pruning. |
+| `_BkNode` | constructor |  |
+| `word` | field |  |
+| `children` | field | Children keyed by their edit distance from this node's word. |
+| `BkTree` | class | An approximate-match index over a set of strings. |
+| `BkTree` | constructor | Creates an index using [distance] (defaults to Damerau–Levenshtein). |
+| `length` | getter | Number of distinct words stored (duplicates are ignored). |
+| `add` | method | Inserts [word]. |
+| `search` | method | Returns every stored word within edit distance [maxDistance] of [query], in no particular order. |
+| `toString` | method |  |
+
 ### `collections/bloom_filter_utils.dart`
 
 Bloom filter with tunable false positive rate.
@@ -683,7 +808,20 @@ Columnar view of list<Map<String, Object?>> for analytics.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `columnValues` | function | Returns a single column [key] from [rows] as List<Object?>. |
-| `toColumnar` | function | Returns map of key -> list of values for all keys in [rows]. |
+| `toColumnar` | function | Returns map of key -> list of values, using the keys of the FIRST row as the column schema. |
+
+### `collections/constrained_subset_utils.dart`
+
+Weighted random subset selection without replacement.
+
+`import 'package:saropa_dart_utils/collections/constrained_subset_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_KeyedItem` | constructor |  |
+| `item` | field |  |
+| `key` | field | `random^(1/weight)`; the `count` largest keys form the chosen subset. |
+| `weightedSubset` | function | Selects up to [count] distinct items from [items], weighted by [weight], without replacement. |
 
 ### `collections/damerau_levenshtein_utils.dart`
 
@@ -760,6 +898,24 @@ Disjoint-set / union-find with path compression ().
 | `find` | method | Representative (root) of the set containing [x]. |
 | `union` | method | Merges the sets containing [x] and [y], using union-by-rank to keep the trees shallow. |
 | `connected` | method | True if [x] and [y] are in the same set. |
+| `toString` | method |  |
+
+### `collections/fenwick_tree_utils.dart`
+
+Fenwick tree (Binary Indexed Tree) for prefix sums.
+
+`import 'package:saropa_dart_utils/collections/fenwick_tree_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `FenwickTree` | class | A Binary Indexed Tree over `num` supporting point updates and range sums. |
+| `FenwickTree` | constructor | Creates a tree of [size] elements, all initialized to zero. |
+| `FenwickTree.fromList` | constructor | Creates a tree seeded with [values], in `O(n)`. |
+| `length` | getter | Number of elements in the tree. |
+| `update` | method | Adds [delta] to the element at [index] (0-based), in `O(log n)`. |
+| `prefixSum` | method | Sum of elements `[0..index]` inclusive (0-based), in `O(log n)`. |
+| `rangeSum` | method | Sum of elements `[low..high]` inclusive (0-based), in `O(log n)`. |
+| `valueAt` | method | The current value at [index] (0-based), in `O(log n)`. |
 | `toString` | method |  |
 
 ### `collections/greedy_set_cover_utils.dart`
@@ -887,6 +1043,20 @@ In-memory inverted index for small datasets.
 |--------|------|-------------|
 | `buildInvertedIndex` | function | Builds term -> list of document indices containing that term. |
 
+### `collections/item_similarity_utils.dart`
+
+Co-occurrence item-to-item similarity recommender ().
+
+`import 'package:saropa_dart_utils/collections/item_similarity_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ItemSimilarityModel` | class | An immutable item-to-item similarity model over items of type [T], built from co-occurrence baskets. |
+| `ItemSimilarityModel.fromBaskets` | constructor | Builds a model from [baskets], where each basket is the set of items seen together once. |
+| `items` | getter | Every distinct item the model knows about. |
+| `similarity` | method | Jaccard similarity between items [a] and [b]: the number of baskets containing both, divided by the number containing either. |
+| `recommend` | method | The items most similar to [item], highest score first, capped at [topN]. |
+
 ### `collections/kmeans_utils.dart`
 
 K-means clustering (small K, small N).
@@ -911,6 +1081,19 @@ K-means clustering (small K, small N).
 | `value` | getter | Item value (profit). |
 | `toString` | method |  |
 | `knapsack01` | function | Solves the 0/1 knapsack: (max value, indices of chosen items). |
+
+### `collections/lazy_combinatorics_utils.dart`
+
+Lazy combinatorial generators — permutations, combinations, cartesian product, power set ().
+
+`import 'package:saropa_dart_utils/collections/lazy_combinatorics_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `permutations` | function | Lazily yields every ordering of [items], or every ordered arrangement of [length] items drawn from [items] when [length] is given. |
+| `combinations` | function | Lazily yields every [k]-element combination of [items] (order within a combination follows source order; combinations themselves are in lexicographic index o... |
+| `cartesianProduct` | function | Lazily yields every cartesian product of the input [lists]: one element chosen from each list, in order. |
+| `powerSet` | function | Lazily yields every subset of [items] (the power set), from the empty set up to the full set, ordered by increasing subset size then lexicographically. |
 
 ### `collections/lcs_sequence_utils.dart`
 
@@ -964,6 +1147,27 @@ LRU/LFU hybrid eviction cache.
 | `get` | method | Returns the value for [key], updating its recency and frequency, or null when absent. |
 | `put` | method | Inserts or updates [key] with [value]. |
 | `remove` | method | Removes [key] and returns its value, or null when it was not present. |
+| `toString` | method |  |
+
+### `collections/min_max_heap_utils.dart`
+
+Min-max heap: a double-ended priority queue.
+
+`import 'package:saropa_dart_utils/collections/min_max_heap_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `MinMaxHeap` | class | A double-ended priority queue backed by a min-max heap. |
+| `MinMaxHeap` | constructor | Creates an empty heap ordered by [compare]. |
+| `length` | getter | Number of elements in the heap. |
+| `isEmpty` | getter | Whether the heap holds no elements. |
+| `min` | getter | The smallest element without removing it. |
+| `max` | getter | The largest element without removing it. |
+| `minOrNull` | getter | The smallest element, or null when empty. |
+| `maxOrNull` | getter | The largest element, or null when empty. |
+| `add` | method | Inserts [value], in `O(log n)`. |
+| `removeMin` | method | Removes and returns the smallest element, in `O(log n)`. |
+| `removeMax` | method | Removes and returns the largest element, in `O(log n)`. |
 | `toString` | method |  |
 
 ### `collections/multi_criteria_sort_utils.dart`
@@ -1073,7 +1277,7 @@ Pareto frontier / dominance filtering in 2-3 dimensions.
 
 ### `collections/pivot_unpivot_utils.dart`
 
-Pivot and unpivot for tabular data (list of maps).
+Pivot for tabular data (list of maps).
 
 `import 'package:saropa_dart_utils/collections/pivot_unpivot_utils.dart';`
 
@@ -1099,9 +1303,9 @@ Priority map (priority -> queues).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `PriorityMapUtils` | class | Map of priority (lower = higher priority) to queue of items. |
-| `add` | method | Enqueues [value] under [priority], creating the queue if needed. |
-| `removeFirst` | method | Removes and returns the next item in priority order (front of the first queue), or null when the map is empty. |
+| `PriorityMapUtils` | class | Buckets values by a priority key, draining buckets in the order each priority was FIRST added (insertion order), and FIFO within a bucket. |
+| `add` | method | Enqueues [value] under [priority], creating the bucket if needed. |
+| `removeFirst` | method | Removes and returns the next item: FIFO from the first-added priority bucket (NOT the lowest priority value — see the class doc), or null when the map is empty. |
 | `isEmpty` | getter | True when no items remain. |
 | `toString` | method |  |
 
@@ -1192,6 +1396,74 @@ Deterministic shuffler with seed.
 |--------|------|-------------|
 | `shuffleWithSeed` | function | Returns a new list with elements shuffled using [seed]. |
 
+### `collections/segment_tree_utils.dart`
+
+Segment tree for associative range queries (sum / min / max).
+
+`import 'package:saropa_dart_utils/collections/segment_tree_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `SegmentCombine` | typedef | Combines two values into one (must be associative and commutative). |
+| `SegmentTree` | class | A segment tree over `num` supporting point updates and range queries. |
+| `SegmentTree.sum` | constructor | Builds a sum tree: range queries return the sum over the range. |
+| `SegmentTree.min` | constructor | Builds a min tree: range queries return the minimum over the range. |
+| `SegmentTree.max` | constructor | Builds a max tree: range queries return the maximum over the range. |
+| `length` | getter | Number of elements in the tree. |
+| `update` | method | Sets the element at [index] (0-based) to [value], in `O(log n)`. |
+| `query` | method | Combined value over the inclusive range `[low..high]`, in `O(log n)`. |
+| `valueAt` | method | The current value at [index] (0-based). |
+| `toString` | method |  |
+
+### `collections/session_clustering_utils.dart`
+
+Gap-based sessionization of timestamped items ().
+
+`import 'package:saropa_dart_utils/collections/session_clustering_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `clusterIntoSessions` | function | Splits [items] into chronological sessions, starting a new session whenever the gap between an item and its predecessor exceeds [maxGap]. |
+| `sessionsWithBounds` | function | Same sessionization as [clusterIntoSessions], but each session is returned as a record carrying its [start] and [end] timestamps alongside its items. |
+
+### `collections/similarity_dedup_utils.dart`
+
+Single-link similarity clustering and dedup.
+
+`import 'package:saropa_dart_utils/collections/similarity_dedup_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_IndexUnionFind` | constructor |  |
+| `find` | method | Root of [x], compressing the path so later lookups are near-constant time. |
+| `union` | method | Merges the sets of [a] and [b], attaching the smaller tree under the larger. |
+| `clusterBySimilarity` | function | Groups [items] into clusters by single-link (transitive) similarity using [areSimilar]. |
+| `dedupBySimilarity` | function | Reduces [items] to one representative per similarity cluster: the FIRST item (in input order) of each cluster, with clusters ordered by first appearance. |
+
+### `collections/skip_list_utils.dart`
+
+Skip list: a probabilistic ordered set.
+
+`import 'package:saropa_dart_utils/collections/skip_list_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_SkipNode` | constructor | Builds a data node carrying [value], linkable up to [level]. |
+| `_SkipNode.head` | constructor | Builds the head sentinel: it owns forward links at every level but never a value, so [value] is deliberately left unassigned and must never be read. |
+| `value` | field | The stored value. |
+| `forward` | field | `forward[i]` is the next node at level `i`, or null at the tail. |
+| `SkipList` | class | A probabilistic ordered set keyed by a [Comparator]. |
+| `SkipList` | constructor | Creates an empty set ordered by [compare]. |
+| `length` | getter | Number of elements in the set. |
+| `isEmpty` | getter | Whether the set holds no elements. |
+| `add` | method | Adds [value]; returns false (and changes nothing) if it is already present. |
+| `contains` | method | Whether [value] is present. |
+| `remove` | method | Removes [value]; returns false (and changes nothing) if it was absent. |
+| `values` | getter | All values in ascending order. |
+| `floor` | method | The largest value `<= value`, or null if every value is greater. |
+| `ceiling` | method | The smallest value `>= value`, or null if every value is smaller. |
+| `toString` | method |  |
+
 ### `collections/sliding_window_aggregate_utils.dart`
 
 Sliding window aggregations (min/max/sum/avg over moving window).
@@ -1207,6 +1479,25 @@ Sliding window aggregations (min/max/sum/avg over moving window).
 | `avg` | enum value | Arithmetic mean of the values in each window. |
 | `slidingWindow` | function | Returns a list where each element is the [agg] of [values] over a window of length [size]. |
 
+### `collections/spatial_grid_utils.dart`
+
+Uniform spatial grid index for 2D points.
+
+`import 'package:saropa_dart_utils/collections/spatial_grid_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_Entry` | constructor |  |
+| `item` | field |  |
+| `x` | field |  |
+| `y` | field |  |
+| `SpatialGrid` | class | A grid index mapping 2D points to payloads of type [T]. |
+| `SpatialGrid` | constructor | Creates a grid whose square cells are [cellSize] units on a side. |
+| `length` | getter | Total number of points stored. |
+| `insert` | method | Inserts [item] at position ([x], [y]). |
+| `queryRadius` | method | Items whose stored position lies within Euclidean distance [radius] of ([x], [y]). |
+| `toString` | method |  |
+
 ### `collections/stable_matching_utils.dart`
 
 Stable matching via Gale-Shapley.
@@ -1220,17 +1511,17 @@ Stable matching via Gale-Shapley.
 
 ### `collections/stream_quantile_utils.dart`
 
-Stream quantile estimation (P²-style approximate).
+Exact streaming quantile over a retained sample.
 
 `import 'package:saropa_dart_utils/collections/stream_quantile_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `StreamQuantileUtils` | class | Approximate percentile from a stream of values (single pass, fixed memory). |
+| `StreamQuantileUtils` | class | Computes an EXACT percentile over every value fed in. |
 | `StreamQuantileUtils` | constructor | Creates an estimator for the quantile at [p], where [p] ranges from 0 to 1 (e.g. 0.5 for the median). |
 | `p` | getter | The target quantile in the range 0 to 1. |
-| `add` | method | Feeds [value] into the estimator for inclusion in the quantile estimate. |
-| `quantile` | getter | Current approximate quantile at [p] (e.g. median when p is 0.5). |
+| `add` | method | Feeds [value] into the estimator. |
+| `quantile` | getter | Current exact quantile at [p] (e.g. median when p is 0.5), or NaN when no values have been added. |
 | `toString` | method |  |
 
 ### `collections/string_pool_utils.dart`
@@ -1273,6 +1564,30 @@ Exponential time-decay counter with configurable half-life.
 | `reset` | method | Resets the counter to empty, forgetting all accumulated weight and time. |
 | `toString` | method |  |
 
+### `collections/timeseries_buffer_utils.dart`
+
+Time-series buffer that keeps recent raw points and down-samples old ones.
+
+`import 'package:saropa_dart_utils/collections/timeseries_buffer_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `TimeBucket` | class | A down-sampled aggregate over one fixed-width time bucket. |
+| `startMs` | field | Inclusive lower bound of the bucket's time span, in epoch milliseconds. |
+| `count` | getter | Number of points folded into this bucket. |
+| `sum` | getter | Sum of folded values. |
+| `min` | getter | Smallest folded value. |
+| `max` | getter | Largest folded value. |
+| `mean` | getter | Arithmetic mean of folded values, or `0` when the bucket is empty. |
+| `toString` | method |  |
+| `RawPoint` | typedef | A single raw observation: a [t]imestamp (epoch ms) and a [v]alue. |
+| `TimeSeriesBuffer` | class | A bounded time-series buffer mixing raw recent points and older aggregates. |
+| `TimeSeriesBuffer` | constructor | Keeps at most [rawCapacity] raw points; evicted points fold into buckets [bucketSizeMs] milliseconds wide. |
+| `add` | method | Adds a point at [timestampMs] with [value]; evicts and folds the oldest raw point if the raw window is now over capacity. |
+| `raw` | getter | The raw points still held, oldest first (an unmodifiable snapshot). |
+| `aggregates` | getter | The down-sampled buckets for evicted history, ordered by start time. |
+| `toString` | method |  |
+
 ### `collections/top_k_heap_utils.dart`
 
 Top-K by key via min-heap.
@@ -1281,7 +1596,7 @@ Top-K by key via min-heap.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `topKIndices` | function | Returns indices of top [k] elements in [values] by [keyOf] (largest first). |
+| `topKIndices` | function | Returns the indices of the top [k] elements in [values] by [keyOf]. |
 
 ### `collections/trie_utils.dart`
 
@@ -1339,7 +1654,69 @@ Window functions (lag, lead, row_number) over ordered data.
 
 ---
 
+## Color
+
+### `color/material_shade.dart`
+
+`import 'package:saropa_dart_utils/color/material_shade.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `MaterialShade` | enum | An enumeration of the available `MaterialColor` shade intensities. |
+| `shade50` | enum value | The lightest shade (Material integer `50`). |
+| `shade100` | enum value | Material integer `100`. |
+| `shade200` | enum value | Material integer `200`. |
+| `shade300` | enum value | Material integer `300`. |
+| `shade400` | enum value | Material integer `400` — the last rung of the light band. |
+| `shade500` | enum value | Material integer `500` — the swatch's primary tone, first of the dark band. |
+| `shade600` | enum value | Material integer `600`. |
+| `shade700` | enum value | Material integer `700`. |
+| `shade800` | enum value | Material integer `800`. |
+| `shade900` | enum value | The darkest shade (Material integer `900`). |
+| `MaterialShadeLevels` | class | Canonical Material shade-intensity integer lists plus a seeded picker. |
+| `randomShade` | method | Returns a random Material shade integer, optionally constrained by band. |
+| `shades` | field | The full shade ladder in intensity order: [lightShades] then [darkShades]. |
+| `lightShades` | field | The light band: the five shades (`50`–`400`) that read as light tones and therefore pair with a black foreground (see [MaterialShadeName.onShade]). |
+| `darkShades` | field | The dark band: the five shades (`500`–`900`) that read as dark tones and therefore pair with a white foreground (see [MaterialShadeName.onShade]). |
+| `MaterialShadeName` on `MaterialShade` | extension | Derived facts for a [MaterialShade]: its Material integer, contrast-correct foreground color, and UI labels. |
+| `value` | getter | The raw Material integer used to index a [MaterialColor]. |
+| `onShade` | getter | The readable foreground color to draw on top of this shade. |
+| `displayName` | getter | The plain UI label for this shade, e.g. `'Shade 500'`. |
+| `displayNameAnnotated` | getter | The UI label annotated at the three band endpoints. |
+
+---
+
+## Copy_with
+
+### `copy_with/filter_value.dart`
+
+`import 'package:saropa_dart_utils/copy_with/filter_value.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `FilterValue` | class | Optional-write wrapper for `copyWith` parameters that need to distinguish "keep the current value" from "explicitly clear to null". |
+| `FilterValue` | constructor | Wraps an explicit override — `isSet` is `true`, so [resolve] returns [value] regardless of the current value. |
+| `FilterValue.unset` | constructor | The "no override given" wrapper — `isSet` is `false`, so [resolve] returns the caller's current value unchanged (the keep-existing path). |
+| `value` | field | The override value carried when [isSet] is `true`. |
+| `isSet` | field | Whether this wrapper carries an explicit override. |
+| `resolve` | method | Resolves to [value] if this wrapper was explicitly set (including set to null); otherwise returns [current] — the keep-existing path. |
+
+---
+
 ## DateTime
+
+### `datetime/billing_cycle_utils.dart`
+
+Monthly billing-anniversary math with end-of-month clamping.
+
+`import 'package:saropa_dart_utils/datetime/billing_cycle_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `billingDateInMonth` | function | The billing date for [anchorDay] within [month] of [year], with the anchor CLAMPED to the month's length so it is always a real date. |
+| `nextBillingDate` | function | The next billing date strictly on or after the date part of [from] for [anchorDay]. |
+| `billingSchedule` | function | [count] consecutive monthly billing dates beginning with the next billing date on/after [start], each clamped to its month's length. |
+| `currentCycle` | function | The half-open `[start, end)` billing cycle that contains [on] for [anchorDay]. |
 
 ### `datetime/business_calendar_utils.dart`
 
@@ -1360,6 +1737,38 @@ Holiday-aware business calendar.
 | `addBusinessDays` | method | Adds [n] business days to [date], skipping weekends and holidays. |
 | `businessDaysBetween` | method | Counts business days in `[start, end)` — inclusive of [start], exclusive of [end]. |
 | `businessDaysIn` | method | Lists the business days in `[start, end)` in ascending order — inclusive of [start], exclusive of [end]. |
+
+### `datetime/calendar_diff_utils.dart`
+
+Calendar diff: added / removed / changed events between two snapshots.
+
+`import 'package:saropa_dart_utils/datetime/calendar_diff_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `CalendarEvent` | class | A minimal calendar event: a stable [id] plus its [start], [end], and [title]. |
+| `CalendarEvent` | constructor | Creates an event. |
+| `id` | field | Stable identity used to pair events across the two snapshots. |
+| `start` | field | Event start instant. |
+| `end` | field | Event end instant. |
+| `title` | field | Human-readable title. |
+| `sameContentAs` | method | True when [other] has the same start, end, and title (id is identity, not content, so it is excluded from the content comparison). |
+| `toString` | method |  |
+| `CalendarChange` | typedef | One event that changed: its [before] and [after] states (same id). |
+| `CalendarDiff` | typedef | The classified difference between two calendar snapshots. |
+| `diffCalendars` | function | Diffs [before] against [after], pairing events by [CalendarEvent.id]. |
+
+### `datetime/calendar_heatmap_utils.dart`
+
+GitHub-style contribution-heatmap data builders.
+
+`import 'package:saropa_dart_utils/datetime/calendar_heatmap_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `dailyCounts` | function | Counts how many [events] fall on each calendar date, keyed by date-only local midnight (the time of day is ignored). |
+| `heatmapGrid` | function | A list of weeks (each a length-7 list of counts) covering [start]..[end] inclusive, with each inner row beginning on [weekStartsOn]. |
+| `heatmapStats` | function | Summary stats for a date-keyed count map: the busiest day's [maxCount], the [total] across all days, and the number of [activeDays] with a non-zero count. |
 
 ### `datetime/date_constant_extensions.dart`
 
@@ -1387,6 +1796,8 @@ Holiday-aware business calendar.
 | `minDaysInAnyMonth` | field | Minimum number of days that exist in any month (February in non-leap years). |
 | `daysToAddToGetNextMonth` | field | Days to add to safely reach next month (28 + 4 = 32 days > any month). |
 | `daysInFebLeapYear` | field | Number of days in February during a leap year. |
+| `daysInThirtyOneDayMonth` | field | Number of days in a 31-day month (Jan, Mar, May, Jul, Aug, Oct, Dec). |
+| `daysInThirtyDayMonth` | field | Number of days in a 30-day month (Apr, Jun, Sep, Nov), also the non-throwing default for an out-of-range month. |
 | `defaultLeapYearCheckYear` | field | Default year to use for leap year calculations when year is not specified (chosen as a leap year). |
 | `leapYearModulo4` | field | Modulo divisor for basic leap year check (divisible by 4). |
 | `leapYearModulo100` | field | Modulo divisor for century leap year exception (divisible by 100). |
@@ -1475,6 +1886,8 @@ Dashboard date-format presets (short / medium / long).
 | `isWeekend` | getter | True if Saturday or Sunday. |
 | `nextWeekday` | method | Next date that is a weekday (skips Saturday/Sunday). |
 | `sameTimeOn` | method | Same calendar date as the receiver with time components from [other]. |
+| `toAnnualDate` | getter | The month/day of this date pinned to the sentinel year 0 — the canonical "recurring annual date" form (birthday, anniversary, holiday-without-year). |
+| `toDayRange` | method | The full local calendar day of this date as a [DateTimeRange]: [startOfDay] (00:00:00.000000) to [endOfDay] (23:59:59.999999). |
 
 ### `datetime/date_time_business_days_utils.dart`
 
@@ -1514,6 +1927,14 @@ Dashboard date-format presets (short / medium / long).
 |--------|------|-------------|
 | `DateTimeClampExtensions` on `DateTime` | extension | Clamp [DateTime] to a range. |
 | `clampTo` | method | Returns this [DateTime] clamped to [min] and [max]. |
+
+### `datetime/date_time_compare_age_extensions.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_compare_age_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `compareAges` | function | A nulls-LAST nullable [DateTime] comparator with a direction flag. |
 
 ### `datetime/date_time_comparison_extensions.dart`
 
@@ -1568,6 +1989,68 @@ Dashboard date-format presets (short / medium / long).
 | `fiscalYear` | method | Fiscal year when year starts in [startMonth] (1–12). |
 | `startOfFiscalYear` | method | Start of fiscal year (first day of [startMonth] at 00:00:00). |
 | `endOfFiscalYear` | method | End of fiscal year (last day of (startMonth-1) at 23:59:59.999999). |
+
+### `datetime/date_time_intl_date_display_extensions.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_intl_date_display_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DateTimeIntlDateDisplayExtensions` on `DateTime` | extension | Locale-correct calendar-date renderings (no clock). |
+| `dateDisplay` | method | Display date like `Jan 15, 1945` (or `Jan 15th, 1945` with [showDayOrdinal]). |
+| `makeDisplayDate` | method | Display date with weekday like `Thu, Jul 21, 2020` (locale-ordered). |
+| `fullDateDisplay` | method | Locale-ordered full month name, day, year: `January 15, 1945` (en_US), `15 janvier 1945` (fr_FR), `1945年1月15日` (ja_JP). |
+| `formatByLocale` | method | Locale short date: en_US `08/16/2023`, en_GB/fr_FR `16/08/2023`. |
+
+### `datetime/date_time_intl_display_extensions.dart`
+
+Locale-correct `DateTime` display via `intl` skeletons — the one opt-in module in `lib/datetime/` that pulls the `intl` dependency.
+
+`import 'package:saropa_dart_utils/datetime/date_time_intl_display_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DateTimeIntlDisplayExtensions` on `DateTime` | extension | Locale-correct `DateTime` display: UTC offset and explicit-pattern formatting. |
+| `getUtcOffset` | method | UTC offset for this `DateTime` as `UTC+H:MM` / `UTC-H` / `UTC±0`. |
+| `toDateFormat` | method | Formats this `DateTime` with an explicit intl [format] pattern. |
+
+### `datetime/date_time_intl_display_helpers.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_intl_display_helpers.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `_ClockSpec` | constructor |  |
+| `is24Hour` | field | Whether to render a 24-hour clock (no AM/PM marker). |
+| `hasAMPM` | field | Whether to append an AM/PM marker (only meaningful on a 12h clock). |
+| `shouldOmitZeroMinutes` | field | Whether a whole-hour time drops its `:00` minutes. |
+| `hasSeconds` | field | Whether a seconds suffix is appended. |
+| `clockPattern` | method | intl pattern for the clock portion, given whether the time has minutes. |
+
+### `datetime/date_time_intl_display_offset.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_intl_display_offset.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `UtcTimeDisplayEnum` | enum | Clock-display presets for [DateTimeIntlDisplayExtensions.utcTimeDisplay]. |
+| `twelveHourWithSecondsAMPM` | enum value | Displays hours, minutes, seconds, and AM/PM (e.g. 10:30:45 PM). |
+| `twelveHourAMPM` | enum value | Displays hours, minutes, and AM/PM (e.g. 10:30 PM). |
+| `twentyFourHourWithSeconds` | enum value | Displays hours, minutes, and seconds (e.g. 22:30:45). |
+| `twentyFourHour` | enum value | Displays hours and minutes (e.g. 22:30). |
+| `twelveHour` | enum value | Displays hours and minutes without AM/PM (e.g. 10:30). |
+| `amPmOnly` | enum value | Displays only AM/PM (e.g. PM). |
+| `formatUtcOffset` | function | Formats a UTC offset [Duration] as `UTC+H:MM` / `UTC-H` / `UTC±0`. |
+
+### `datetime/date_time_intl_time_display_extensions.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_intl_time_display_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DateTimeIntlTimeDisplayExtensions` on `DateTime` | extension | Locale-correct clock renderings. |
+| `makeDisplayTime` | method | Display time like `3:30 PM` / `15:30` (locale clock), or hour-only when minutes are zero. |
+| `utcTimeDisplay` | method | Fixed-form clock display selected by [type] (see [UtcTimeDisplayEnum]). |
 
 ### `datetime/date_time_list_extensions.dart`
 
@@ -1627,6 +2110,37 @@ Dashboard date-format presets (short / medium / long).
 | `inRange` | method | Returns `true` if the given [date] is within this range. |
 | `isNowInRange` | method | Returns `true` if [now] is within this range. |
 
+### `datetime/date_time_relative_predicate_extensions.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_relative_predicate_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `relativeNowTime` | field | Terse token returned for an exact instant match (`this == now`) and as the terse rendering of the sub-45-second "a moment" band. |
+| `relativeTimeSuffixPast` | field | Suffix appended when this date is before [DateTime.now] / the supplied now. |
+| `relativeTimeSuffixFuture` | field | Suffix appended when this date is after [DateTime.now] / the supplied now. |
+
+### `datetime/date_time_relative_predicate_format.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_relative_predicate_format.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RelativeTimeFormatUtils` on `DateTime` | extension | Descriptive relative-time formatting on [DateTime]. |
+| `relativeTime` | method | Returns an English relative-time phrase between this [DateTime] and [now] (defaults to [DateTime.now]). |
+
+### `datetime/date_time_relative_predicate_predicates.dart`
+
+`import 'package:saropa_dart_utils/datetime/date_time_relative_predicate_predicates.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RelativeTimeUtils` on `DateTime` | extension | Calendar-day predicates and a descriptive relative-time formatter on [DateTime]. |
+| `isTomorrow` | method | Returns `true` if this [DateTime] is the calendar day after [now]. |
+| `isYesterday` | method | Returns `true` if this [DateTime] is the calendar day before [now]. |
+| `isOlderThanToday` | method | Returns `true` if this [DateTime] is strictly before the start of today (midnight at the beginning of [now]'s calendar day). |
+| `isOlderThanYesterday` | method | Returns `true` if this [DateTime] is strictly before the start of yesterday (midnight at the beginning of the day before [now]). |
+
 ### `datetime/date_time_relative_utils.dart`
 
 `import 'package:saropa_dart_utils/datetime/date_time_relative_utils.dart';`
@@ -1661,6 +2175,7 @@ Dashboard date-format presets (short / medium / long).
 | `minDate` | method | Returns the earlier of two dates. |
 | `isLeapYear` | method | Checks if the given year is a leap year. |
 | `monthDayCount` | method | Returns the number of days in the given [month] and [year]. |
+| `monthDayCountSafe` | method | Returns the number of days in [month], tolerating a `null` [year] and an out-of-range [month] without throwing. |
 | `isValidDateParts` | method | Returns `true` if all provided date/time components are within valid ranges. |
 
 ### `datetime/date_time_week_extensions.dart`
@@ -1673,6 +2188,17 @@ Dashboard date-format presets (short / medium / long).
 | `weekNumberInMonth` | getter | Week number within the month (1-based). |
 | `toIsoWeekString` | getter | ISO week string (e.g. "2026-W09"). |
 | `parseIsoWeekString` | function | Parses ISO week string "2026-W09" to the Monday of that week. |
+
+### `datetime/duration_clock_format_extensions.dart`
+
+`import 'package:saropa_dart_utils/datetime/duration_clock_format_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DurationClockFormatExtensions` on `Duration` | extension | Clock- and word-style formatters for [Duration]. |
+| `displayTime` | method | Formats this duration as a zero-padded stopwatch clock string. |
+| `formatDuration` | method | Formats this duration as a comma-joined human-readable list of units. |
+| `reverse` | method | Returns the sign-negated duration (positive <-> negative). |
 
 ### `datetime/duration_format_utils.dart`
 
@@ -1689,6 +2215,49 @@ Dashboard date-format presets (short / medium / long).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `parseDuration` | function | Parses duration string like "1.5h", "90m", "2d 3h 30m". |
+
+### `datetime/hebrew_date_converter.dart`
+
+`import 'package:saropa_dart_utils/datetime/hebrew_date_converter.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `HebrewDateConverter` | class | Converts Gregorian dates to Hebrew (Jewish) calendar dates and formats them. |
+| `monthNames` | field | Hebrew month names in English transliteration, in canonical leap-year order. |
+| `monthNamesHebrew` | field | Hebrew month names in Hebrew script (with niqqud), parallel to [monthNames]. |
+| `isHebrewLeapYear` | method | Returns `true` if [hebrewYear] is a leap year (13 months instead of 12). |
+| `monthsInHebrewYear` | method | Returns the number of months in [hebrewYear]: 13 in a leap year, else 12. |
+| `daysInHebrewYear` | method | Returns the length of [hebrewYear] in days. |
+| `daysInHebrewMonth` | method | Returns the number of days (29 or 30) in [month] of [hebrewYear]. |
+| `fromGregorian` | method | Converts a Gregorian [date] to a Hebrew date record. |
+| `getMonthName` | method | Returns the name of [month] (1-based) in [hebrewYear], honoring leap years. |
+| `formatDayHebrew` | method | Formats a day-of-month [day] using Hebrew numerals (gematria). |
+| `formatYearHebrew` | method | Formats a Hebrew [year] using Hebrew numerals, omitting the thousands digit. |
+| `format` | method | Formats the Hebrew date for Gregorian [date] as "day month year". |
+| `formatDayMonth` | method | Formats the Hebrew date for Gregorian [date] as "day month", omitting the year. |
+
+### `datetime/humanize_recurrence_utils.dart`
+
+Human-readable text for a simple recurrence rule.
+
+`import 'package:saropa_dart_utils/datetime/humanize_recurrence_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RecurrenceFrequency` | enum | How often a recurrence repeats; the unit the [RecurrenceSpec.interval] multiplies. |
+| `daily` | enum value | Repeats every N days. |
+| `weekly` | enum value | Repeats every N weeks, optionally on a named weekday. |
+| `monthly` | enum value | Repeats every N months, on a month-day or an nth weekday-of-month. |
+| `yearly` | enum value | Repeats every N years, optionally on a fixed month + day. |
+| `RecurrenceSpec` | class | An immutable description of a simple recurrence. |
+| `RecurrenceSpec` | constructor | Creates a spec. |
+| `frequency` | field | The repeat unit (daily/weekly/monthly/yearly). |
+| `interval` | field | The "every N" multiplier; 1 means every single unit. |
+| `weekday` | field | Weekday for weekly / nth-weekday recurrences (1 = Monday .. 7 = Sunday), or `null` when the recurrence has no weekday component. |
+| `weekOfMonth` | field | Which occurrence of [weekday] within the month (1..5 for "2nd Tuesday"), or `null` for a plain weekly recurrence. |
+| `monthDay` | field | Day of month (1..31) for monthly-by-date or yearly recurrences, or `null`. |
+| `month` | field | Month (1..12) for yearly recurrences, or `null`. |
+| `humanizeRecurrence` | function | A short English phrase describing [spec], e.g. "every 2 weeks on Tuesday". |
 
 ### `datetime/injectable_clock_utils.dart`
 
@@ -1730,6 +2299,34 @@ ISO 8601 time-interval parser.
 | `applyTo` | method | Applies this duration to [base] in direction [sign] (+1 forward, -1 back), preserving [base]'s time-of-day fields and UTC-ness. |
 | `parseIsoInterval` | function | Parses an ISO 8601 time interval into a [DateTimeRange]. |
 
+### `datetime/month_weekday_named_extensions.dart`
+
+`import 'package:saropa_dart_utils/datetime/month_weekday_named_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DayInMonthCalculations` | class | Named `(year, month)`-keyed calendar helpers for the exact phrasings that daylight-saving and public-holiday rule tables are written in — "2nd Sunday of Marc... |
+| `daysInFebruary` | method | Number of days in February for [year] (28 or 29), leap-year aware. |
+| `firstDayOfMonth` | method | First calendar day of [month] in [year] at local midnight. |
+| `lastDay` | method | Last calendar day of [month] in [year] at local midnight. |
+| `firstMonday` | method | 1st Monday of [month] in [year]. |
+| `firstThursday` | method | 1st Thursday of [month] in [year]. |
+| `firstFriday` | method | 1st Friday of [month] in [year]. |
+| `firstSaturday` | method | 1st Saturday of [month] in [year]. |
+| `firstSunday` | method | 1st Sunday of [month] in [year]. |
+| `secondMonday` | method | 2nd Monday of [month] in [year]. |
+| `secondFriday` | method | 2nd Friday of [month] in [year]. |
+| `secondSaturday` | method | 2nd Saturday of [month] in [year]. |
+| `secondSunday` | method | 2nd Sunday of [month] in [year]. |
+| `thirdMonday` | method | 3rd Monday of [month] in [year]. |
+| `thirdSaturday` | method | 3rd Saturday of [month] in [year]. |
+| `thirdSunday` | method | 3rd Sunday of [month] in [year]. |
+| `lastMonday` | method | Last Monday of [month] in [year]. |
+| `lastThursday` | method | Last Thursday of [month] in [year]. |
+| `lastFriday` | method | Last Friday of [month] in [year]. |
+| `lastSaturday` | method | Last Saturday of [month] in [year]. |
+| `lastSunday` | method | Last Sunday of [month] in [year]. |
+
 ### `datetime/month_weekday_utils.dart`
 
 `import 'package:saropa_dart_utils/datetime/month_weekday_utils.dart';`
@@ -1769,6 +2366,18 @@ Period splitting (by month/week).
 | `windows` | field | The configured quiet windows. |
 | `isQuiet` | method | Whether [at] falls inside any quiet window (minute resolution). |
 | `quietUntil` | method | If [at] is within quiet hours, the instant quiet ends (so a deferred notification can be scheduled for then); otherwise null. |
+
+### `datetime/rate_limit_schedule_utils.dart`
+
+Rate-limiting schedule shaper: max N per rolling period plus a cooldown.
+
+`import 'package:saropa_dart_utils/datetime/rate_limit_schedule_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RateLimitSchedule` | class | Computes rate-limited fire times from requested times. |
+| `RateLimitSchedule` | constructor | At most [maxPerPeriod] fires per rolling [period], each at least [cooldown] after the previous. |
+| `shape` | method | Returns the admitted fire times for [requested], in order. |
 
 ### `datetime/recurrence_iterator_utils.dart`
 
@@ -1840,6 +2449,39 @@ RFC 5545 recurrence-rule (RRULE) parser — a practical subset,.
 | `apply` | method | Dispatches one parsed `NAME=VALUE` part to the matching field. |
 | `parseRrule` | function | Parses an RRULE string (with or without a leading `RRULE:`) into a [RecurrenceRule]. |
 
+### `datetime/simple_relative_day_types.dart`
+
+`import 'package:saropa_dart_utils/datetime/simple_relative_day_types.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `SimpleRelativeDay` | enum | Human-relative calendar-day buckets produced by [getSimpleRelativeDay]. |
+| `today` | enum value | The date is the same calendar day as `now`. |
+| `yesterday` | enum value | The date is exactly one calendar day before `now`. |
+| `tomorrow` | enum value | The date is exactly one calendar day after `now`. |
+| `beforeYesterday` | enum value | The date is exactly two calendar days before `now` (the day before yesterday). |
+| `afterTomorrow` | enum value | The date is exactly two calendar days after `now` (the day after tomorrow). |
+| `lastWeekday` | enum value | The date is a named weekday in the past, 3–13 calendar days before `now` (e.g. "Last Tuesday"). |
+| `nextWeekday` | enum value | The date is a named weekday in the future, 3–13 calendar days after `now` (e.g. "Next Tuesday"). |
+| `lastMonth` | enum value | The date falls in the previous calendar month relative to `now`. |
+| `nextMonth` | enum value | The date falls in the next calendar month relative to `now`. |
+| `RelativeDayResult` | class | Outcome of a relative-day classification: the [type] bucket plus an optional [weekdayName] for the [SimpleRelativeDay.lastWeekday] / [SimpleRelativeDay.nextW... |
+| `RelativeDayResult` | constructor | Creates a result for the given [type], with an optional [weekdayName] that callers attach only for the weekday buckets. |
+| `type` | field | The classified calendar-day bucket. |
+| `weekdayName` | field | Locale-formatted weekday string for weekday buckets, else `null`. |
+
+### `datetime/simple_relative_day_utils.dart`
+
+Calendar-day relative classification (`Today` / `Yesterday` / `Next Tuesday` / `Last Month`) — pure-Dart, locale-free, with a `null` escape hatch for dates o...
+
+`import 'package:saropa_dart_utils/datetime/simple_relative_day_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DateTimeSimpleRelativeDayExtension` on `DateTime` | extension | Classifies a [DateTime] into a [SimpleRelativeDay] bucket relative to `now`. |
+| `getSimpleRelativeDay` | method | Returns the [SimpleRelativeDay] bucket for this date relative to [now]. |
+| `getRelativeDayResult` | method | Returns the full [RelativeDayResult] (bucket plus optional weekday name) for this date relative to [now]. |
+
 ### `datetime/sla_calculator_utils.dart`
 
 SLA / due-date calculator over business hours + holidays.
@@ -1900,9 +2542,30 @@ Timebox: run within time budget.
 | `message` | getter | Description of the timeout. |
 | `toString` | method |  |
 
+### `datetime/timeseries_gap_utils.dart`
+
+Gap detection and grid filling for roughly-regular time series.
+
+`import 'package:saropa_dart_utils/datetime/timeseries_gap_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `findGaps` | function | Gaps `[start, end]` (the inclusive bounding sample pair) where consecutive [timestamps] are spaced more than `expectedInterval * (1 + tolerance)` apart. |
+| `fillMissing` | function | The complete regular grid of timestamps from the earliest to the latest of [timestamps], stepping by [interval]; callers compare it against the input to see... |
+| `forwardFill` | function | A copy of [values] with each null replaced by the most recent non-null value before it (last-observation-carried-forward). |
+
 ---
 
 ## Double
+
+### `double/double_aspect_ratio_extensions.dart`
+
+`import 'package:saropa_dart_utils/double/double_aspect_ratio_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DoubleAspectRatioExtensions` on `double` | extension | Extension method for converting a decimal ratio into a simplified integer aspect-ratio pair. |
+| `toAspectRatio` | method | Converts this decimal ratio into a GCD-simplified integer pair, or `null` when no pair can be derived. |
 
 ### `double/double_close_to_extensions.dart`
 
@@ -1939,6 +2602,19 @@ Timebox: run within time budget.
 | `mostOccurrences` | method | Finds the most common value in the list. |
 | `leastOccurrences` | method | Finds the least common value in the list. |
 
+### `double/gradient_stop_range.dart`
+
+`import 'package:saropa_dart_utils/double/gradient_stop_range.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `StopRange` | enum | Named easing categories mapped to normalized gradient stop pairs (0..1). |
+| `easeIn` | enum value | Front-loaded transition: stops at `[0, 0.5]`. |
+| `easeOut` | enum value | Back-loaded transition: stops at `[0.5, 1]`. |
+| `easeInOut` | enum value | Centered transition: stops at `[0.25, 0.75]`. |
+| `linear` | enum value | Full-range, even transition: stops at `[0, 1]`. |
+| `stops` | getter | The two normalized gradient stops (0..1) for this easing category. |
+
 ---
 
 ## Enum
@@ -1953,6 +2629,37 @@ Timebox: run within time budget.
 | `mostOccurrences` | method | Returns a [MapEntry] with the most common value and its frequency, or `null` if the iterable is empty. |
 | `byNameTry` | method | Finds and returns the first enum value in this list whose [name] property matches the given [name], or `null` if no such value is found. |
 | `sortedEnumValues` | method | Returns a list of enum values sorted alphabetically by name. |
+
+---
+
+## Flutter
+
+### `flutter/color_extensions.dart`
+
+`import 'package:saropa_dart_utils/flutter/color_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ColorStringExtensions` on `String` | extension | Parses a hex color string into a Flutter [Color]. |
+| `toColor` | method | Parses this hex string into a [Color], or returns `null` when it is not a valid 6- or 8-digit hex color. |
+| `ColorHexExtension` on `Color` | extension | Formats a Flutter [Color] as an uppercase hex string. |
+| `toHex` | method | Converts this [Color] to a hex string of the form `#AARRGGBB`, or `#RRGGBB` when [includeAlpha] is `false`. |
+| `ColorLightExtensions` on `Color` | extension | HSL-lightness adjustment helpers that keep hue, saturation, and alpha. |
+| `darken` | method | Returns a darker copy of this color by subtracting [amount] (`0`–`1`) from its HSL lightness, preserving hue, saturation, and alpha. |
+| `lighten` | method | Returns a lighter copy of this color by adding [amount] (`0`–`1`) to its HSL lightness, preserving hue, saturation, and alpha. |
+| `ColorContrastExtensions` on `Color` | extension | WCAG-contrast convergence helper for legible foreground colors. |
+| `readableOn` | method | Returns a copy of this color adjusted so it reaches at least [minRatio] WCAG contrast against [background], keeping it legible as text or icons on a tinted s... |
+
+### `flutter/material_color_utils.dart`
+
+`import 'package:saropa_dart_utils/flutter/material_color_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ColorUtils` | class | General-purpose Material Design palette helpers with no app-domain knowledge. |
+| `materialColors` | field | The 19 primary Flutter `MaterialColor` swatches in their canonical order. |
+| `getWhiteContrastColor` | method | Maps any [number] deterministically to one of 100 fully-opaque colors that are biased to contrast against white. |
+| `getColor` | method | Returns the swatch tone for [shade] from the `MaterialColor` [color]. |
 
 ---
 
@@ -2071,7 +2778,7 @@ DAG-based task scheduler (topological + priorities).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `dagSchedule` | function | Returns schedule (list of node indices) respecting topology; [priority] lower = earlier. |
+| `dagSchedule` | function | Returns a schedule (list of node indices) respecting topology; among nodes that are simultaneously ready (all dependencies done), [priority] lower = earlier. |
 
 ### `graph/dijkstra_utils.dart`
 
@@ -2103,6 +2810,28 @@ Graph diff (added/removed/changed edges).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `graphEdgeDiff` | function | Compares two adjacency lists; returns (added edges, removed edges). |
+
+### `graph/graph_serialize_utils.dart`
+
+Compact text serialization for adjacency-list graphs.
+
+`import 'package:saropa_dart_utils/graph/graph_serialize_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `serializeAdjacency` | function | Serializes [graph] to the compact `index>n,n;index>n` text form. |
+| `parseAdjacency` | function | Parses the compact text form produced by [serializeAdjacency] back into an [Adjacency] list sized to `maxNodeIndex + 1`. |
+
+### `graph/graph_simplify_utils.dart`
+
+Graph simplification: collapse degree-2 chains.
+
+`import 'package:saropa_dart_utils/graph/graph_simplify_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `SimplifiedGraph` | typedef | Result of simplification: the surviving [edges] (undirected, each stored as an ordered `(low, high)` pair) and the set of [removed] degree-2 node ids. |
+| `simplifyDegree2Chains` | function | Contracts maximal chains of degree-2 nodes in undirected [graph]. |
 
 ### `graph/graph_utils.dart`
 
@@ -2163,6 +2892,49 @@ Minimum spanning tree (Kruskal).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `kruskalMST` | function | MST from [edges] (GraphUtils); returns (mst edges, total cost). |
+
+### `graph/multi_source_bfs_utils.dart`
+
+Multi-source breadth-first search on unweighted graphs ().
+
+`import 'package:saropa_dart_utils/graph/multi_source_bfs_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `multiSourceBfsDistances` | function | Hop distance from each node to the nearest of [sources]. |
+| `multiSourceBfsNearest` | function | Distances plus, for each node, which seed in [sources] is closest. |
+
+### `graph/pagerank_utils.dart`
+
+PageRank via power iteration on a directed graph ().
+
+`import 'package:saropa_dart_utils/graph/pagerank_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `pageRank` | function | PageRank scores for every node, summing to approximately `1.0`. |
+
+### `graph/path_enumeration_utils.dart`
+
+Enumerate all simple paths between two nodes ().
+
+`import 'package:saropa_dart_utils/graph/path_enumeration_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `enumeratePaths` | function | Every simple path from [start] to [target], each path a node-index list. |
+
+### `graph/reachability_utils.dart`
+
+Transitive closure / reachability of a directed graph ().
+
+`import 'package:saropa_dart_utils/graph/reachability_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `reachabilitySets` | function | For each node, the set of nodes reachable from it via one or more edges. |
+| `reachabilityMatrix` | function | Boolean reachability matrix consistent with [reachabilitySets]. |
+| `canReach` | function | Whether node [to] is reachable from node [from] via one or more edges. |
 
 ### `graph/topological_sort_utils.dart`
 
@@ -2569,7 +3341,7 @@ Tree utilities (LCA, depth, subtree size).
 | `toStringListJson` | method | Returns a list of strings parsed from [json], splitting on [separator] if the value is a string, or `null` if conversion is not possible. |
 | `toIntListJson` | method | Returns a list of integers parsed from [json], or `null` if conversion is not possible. |
 | `toIntJson` | method | Returns an integer parsed from [json], or `null` if conversion is not possible. |
-| `toBoolJson` | method | Returns a boolean parsed from [json], using [isCaseSensitive] to control string comparison, or `null` if conversion is not possible. |
+| `toBoolJson` | method | Returns a boolean parsed from [json], using [isCaseSensitive] to control string comparison. |
 | `toDoubleJson` | method | Returns a double parsed from [json], or `null` if conversion is not possible. |
 | `toDoubleListJson` | method | Returns a list of doubles parsed from [json], or `null` if conversion is not possible. |
 | `toStringJson` | method | Returns a string from [json] with optional transformations controlled by [shouldTrim], [shouldUppercase], [shouldLowercase], and [shouldCapitalize], or `null... |
@@ -2670,6 +3442,14 @@ Tree utilities (LCA, depth, subtree size).
 | `isListNullOrEmpty` | getter | Checks if the nullable list is either `null` or empty. |
 | `isNotListNullOrEmpty` | getter | Checks if the nullable list is neither `null` nor empty. |
 
+### `list/list_nullable_string_sort_extensions.dart`
+
+`import 'package:saropa_dart_utils/list/list_nullable_string_sort_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `sortNullableStringListInPlace` | function | Sorts a [List] of nullable strings in place, case-insensitively, with `null`s grouped together at the front. |
+
 ### `list/list_of_list_extensions.dart`
 
 `import 'package:saropa_dart_utils/list/list_of_list_extensions.dart';`
@@ -2677,8 +3457,8 @@ Tree utilities (LCA, depth, subtree size).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `ListOfListExtension` on `List<List<T>>` | extension | Utilities for nested lists (matrices): totals, flattening, copying, and matrix-string rendering. |
-| `totalLength` | getter | sum the total number of items |
-| `totalUniqueLength` | getter | Getting the length of [toFlattenedList] |
+| `totalLength` | getter | sum the total number of items Audited: 2026-06-12 11:26 EDT |
+| `totalUniqueLength` | getter | Getting the length of [toFlattenedList] Audited: 2026-06-12 11:26 EDT |
 | `toFlattenedList` | method | Extension method that returns a flattened list of unique elements of type T. Returns `null` if this list is empty or all inner lists are empty. |
 | `getChildListLengths` | method | Returns a list containing the lengths of the child lists in parentList. |
 | `copy` | method | Returns `true` after copying the elements of this list into [destination], or `false` if the dimensions do not match. |
@@ -2713,6 +3493,16 @@ Tree utilities (LCA, depth, subtree size).
 | `joinDisplayList` | method | Joins these strings into a natural-language list with an Oxford comma: one item is itself, two become `'a and b'`, three or more become `'a, b, and c'`. |
 | `commonPrefix` | method | Returns the longest common prefix of all strings in this list. |
 | `commonSuffix` | method | Returns the longest common suffix of all strings in this list. |
+| `firstNotEqualTo` | method | Returns the first element that is not equal to [value]. |
+| `joinWithFinal` | method | Joins these strings into a sentence with a distinct final connector, e.g. `['a', 'b', 'c'].joinWithFinal()` -> `'a, b and c'`. |
+| `anyContains` | method | Returns `true` if any element contains [check] as a substring. |
+| `removeTrimmedEmpty` | method | Drops entries that are empty after trimming, returning a new list. |
+| `toLowerCase` | method | Returns a new list with every element lowercased (invariant culture). |
+| `toUpperCase` | method | Returns a new list with every element uppercased (invariant culture). |
+| `NullableListStringExtensions` on `List<String?>` | extension | Extensions on `List<String?>` mirroring [ListStringExtensions], with nulls dropped first via core-Dart `nonNulls`. |
+| `toLowerCase` | method | Drops nulls, then lowercases each survivor (invariant culture). |
+| `toUpperCase` | method | Drops nulls, then uppercases each survivor (invariant culture). |
+| `removeNullsAndTrimmedEmpty` | method | Drops nulls, then applies [ListStringExtensions.removeTrimmedEmpty]. |
 
 ### `list/list_top_k_extensions.dart`
 
@@ -2720,7 +3510,7 @@ Tree utilities (LCA, depth, subtree size).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `ListTopKExtensions` on `List<T>` | extension | Top K elements (partial sort). |
+| `ListTopKExtensions` on `List<T>` | extension | Top K elements. |
 | `topK` | method | Returns the [k] smallest elements by [compare]. |
 
 ### `list/make_list_extensions.dart`
@@ -2849,7 +3639,7 @@ Deep freeze: recursively unmodifiable views of maps, lists, and sets.
 | `removeKeys` | method | Returns `true` after removing all keys in [removeKeysList] from this map. |
 | `toKeySorted` | method | Returns a new `Map<String, dynamic>` with keys sorted alphabetically. |
 | `MapExtensions` | class | Utility class for map operations. |
-| `countItems` | method | Returns the total number of items across all iterable values in [inputMap]. |
+| `countItems` | method | Total number of elements across every iterable value in [inputMap]. |
 | `mapToggleValue` | method | Toggles [value] in the list at [key] within [map]. |
 | `mapAddValue` | method | Adds [value] to the list at [key] within [map], creating the list if absent. |
 | `mapRemoveValue` | method | Removes all occurrences of [value] from the list at [key] within [map]. |
@@ -2875,6 +3665,15 @@ Deep freeze: recursively unmodifiable views of maps, lists, and sets.
 | `MapFromEntriesExtensions` on `Map<K, V>` | extension | Map from list of entries / entries to list. |
 | `toEntriesList` | method | Returns entries as list of pairs. |
 | `mapFromEntries` | function | Build map from iterable of (key, value) pairs. |
+
+### `map/map_initials_sort_extensions.dart`
+
+`import 'package:saropa_dart_utils/map/map_initials_sort_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `InitialsSortingUtils` on `Map<String, V>` | extension | Ordering helpers for string-keyed maps shown to a user — index sections, grouped lists, glossaries. |
+| `sortMap` | method | Returns a [SplayTreeMap] ordered "letters before numbers". |
 
 ### `map/map_invert_extensions.dart`
 
@@ -2978,6 +3777,36 @@ Deep freeze: recursively unmodifiable views of maps, lists, and sets.
 | `rgbToHex` | function | Packs [r], [g], and [b] channels into a fully opaque `0xAARRGGBB` color int. |
 | `luminance` | function | Returns the relative luminance of an sRGB color per the WCAG 2.x formula. |
 | `contrastRatio` | function | Returns the WCAG contrast ratio between two sRGB colors. |
+
+### `niche/dark_colors.dart`
+
+`import 'package:saropa_dart_utils/niche/dark_colors.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `DarkColors` | enum | A named palette of the Material "700-ish" dark color swatches. |
+| `Red` | enum value | Material Red 700 — `0xFFD32F2F`. |
+| `Pink` | enum value | Material Pink 700 — `0xFFC2185B`. |
+| `Purple` | enum value | Material Purple 700 — `0xFF7B1FA2`. |
+| `DeepPurple` | enum value | Material Deep Purple 700 — `0xFF512DA8`. |
+| `Indigo` | enum value | Material Indigo 700 — `0xFF303F9F`. |
+| `Blue` | enum value | Material Blue 700 — `0xFF1976D2`. |
+| `LightBlue` | enum value | Material Light Blue 700 — `0xFF0288D1`. |
+| `Cyan` | enum value | Material Cyan 700 — `0xFF0097A7`. |
+| `Teal` | enum value | Material Teal 700 — `0xFF00796B`. |
+| `Green` | enum value | Material Green 700 — `0xFF388E3C`. |
+| `LightGreen` | enum value | Material Light Green 700 — `0xFF689F38`. |
+| `Lime` | enum value | Material Lime 700 — `0xFFAFB42B`. |
+| `Yellow` | enum value | Material Yellow 700 — `0xFFFBC02D`. |
+| `Amber` | enum value | Material Amber 700 — `0xFFFFA000`. |
+| `Orange` | enum value | Material Orange 700 — `0xFFF57C00`. |
+| `DeepOrange` | enum value | Material Deep Orange 700 — `0xFFE64A19`. |
+| `Brown` | enum value | Material Brown 700 — `0xFF5D4037`. |
+| `Grey` | enum value | Material Grey 700 — `0xFF616161`. |
+| `BlueGrey` | enum value | Material Blue Grey 700 — `0xFF455A64`. |
+| `Black` | enum value | Material "Black" anchor — `0xFF212121`. |
+| `DarkColorsUtils` | class | Static lookup from [DarkColors] to its fixed Material 700 swatch `Color`. |
+| `darkColorMap` | field | Maps every [DarkColors] value to its fully opaque Material 700 `Color`. |
 
 ### `niche/hash_utils.dart`
 
@@ -3114,6 +3943,17 @@ GCD, LCM, and related integer math.
 | `NumFormatExtensions` on `num` | extension | Format numbers: significant digits, compact (1.2K). |
 | `roundToSignificantDigits` | method | Rounds to [significantDigits] significant digits. |
 | `toCompactString` | method | Formats as compact string (e.g. 1200 → "1.2K", 1500000 → "1.5M"). |
+
+### `num/num_intl_format_extensions.dart`
+
+Locale-aware number formatting via `intl`'s CLDR data — an opt-in module that pulls the `intl` dependency, mirroring `date_time_intl_display_extensions.dart`.
+
+`import 'package:saropa_dart_utils/num/num_intl_format_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `NumIntlFormatExtensions` on `num` | extension | Locale-aware number formatting backed by `intl`'s CLDR number-symbol data. |
+| `formatNumber` | method | Renders this number with locale-aware grouping/decimal separators. |
 
 ### `num/num_iterable_extensions.dart`
 
@@ -3520,6 +4360,17 @@ Safe expression evaluator (arithmetic + boolean).
 | `_Evaluator` | constructor |  |
 | `run` | method |  |
 
+### `parsing/flatten_explode_utils.dart`
+
+Flatten nested data and explode arrays for tabular/BI export.
+
+`import 'package:saropa_dart_utils/parsing/flatten_explode_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `flattenMap` | function | Recursively flattens nested maps in [input] into dotted keys. |
+| `explode` | function | Explodes [row] into one row per element of the list at [arrayKey]. |
+
 ### `parsing/hex_color_utils.dart`
 
 `import 'package:saropa_dart_utils/parsing/hex_color_utils.dart';`
@@ -3527,6 +4378,19 @@ Safe expression evaluator (arithmetic + boolean).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `parseHexColor` | function | Parse hex color string (#RGB, #RRGGBB, #AARRGGBB). |
+
+### `parsing/http_header_parse_utils.dart`
+
+Parse common HTTP caching headers without any HTTP dependency.
+
+`import 'package:saropa_dart_utils/parsing/http_header_parse_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `parseCacheControl` | function | Parses a `Cache-Control` [header] into a directive map. |
+| `parseMaxAge` | function | Returns the `max-age` seconds from a `Cache-Control` [cacheControl] string, or `null` if the directive is absent or its value is not a non-negative int. |
+| `parseETag` | function | Parses an `ETag` [header] into its weakness flag and unquoted tag value. |
+| `parseRetryAfterSeconds` | function | Parses the numeric (delta-seconds) form of a `Retry-After` [header] into a [Duration], or `null` when it is not a non-negative integer. |
 
 ### `parsing/ini_parser_utils.dart`
 
@@ -3766,6 +4630,17 @@ SQL-like filter for in-memory rows.
 | `_FilterParser` | constructor |  |
 | `parse` | method |  |
 
+### `parsing/stable_hash_utils.dart`
+
+Order-stable structural checksum with no crypto dependency.
+
+`import 'package:saropa_dart_utils/parsing/stable_hash_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `canonicalString` | function | Builds a deterministic canonical string for [value]. |
+| `stableHash` | function | Returns the FNV-1a 64-bit hash of [canonicalString] of [value] as a lowercase hex string. |
+
 ### `parsing/validate_non_empty_utils.dart`
 
 `import 'package:saropa_dart_utils/parsing/validate_non_empty_utils.dart';`
@@ -3791,7 +4666,7 @@ Varint encoding/decoding (Protobuf-style).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `compareVersions` | function | Version compare (semver or dotted). |
+| `compareVersions` | function | Version compare (dotted numeric). |
 
 ### `parsing/version_parse_utils.dart`
 
@@ -3872,6 +4747,16 @@ Empirical CDF and cumulative histogram for numeric samples.
 | `cdfAt` | function | The empirical CDF of [values] evaluated at [x]: the fraction of samples that are ≤ [x], in `[0, 1]`. |
 | `cumulativeHistogram` | function | Cumulative histogram: the running total of `histogramFixed(values, edges)`, so bin `i` holds the count of samples in bins `0..i` — the CDF in bin form. |
 
+### `stats/change_point_cusum_utils.dart`
+
+Two-sided CUSUM change-point detection ().
+
+`import 'package:saropa_dart_utils/stats/change_point_cusum_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `cusumChangePoints` | function | Detect indices where the series mean shifts, via a two-sided CUSUM scan. |
+
 ### `stats/confidence_interval_utils.dart`
 
 Confidence interval for mean (normal approximation).
@@ -3891,6 +4776,19 @@ Correlation coefficients (Pearson).
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `pearsonCorrelation` | function | Pearson correlation between [x] and [y]. |
+
+### `stats/data_binning_utils.dart`
+
+Data binning helpers: width, quantile, boundary, counts ().
+
+`import 'package:saropa_dart_utils/stats/data_binning_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `binByWidth` | function | Assign each value in [values] to an equal-width bin over `[min, max]`. |
+| `quantileBoundaries` | function | The [bins]-1 internal cut points splitting sorted [values] into [bins] roughly equal-count groups (quantile boundaries). |
+| `binByBoundaries` | function | Assign each value in [values] to a bin using ascending [boundaries]. |
+| `binCounts` | function | Frequency of each bin index in [binIndices], over [bins] buckets. |
 
 ### `stats/data_normalization_utils.dart`
 
@@ -3928,6 +4826,16 @@ Funnel analysis (drop-off between ordered steps).
 | `count` | getter | Number of users who reached this step. |
 | `toString` | method |  |
 | `funnelConversionRates` | function | Returns conversion rate from step i to i+1 (and overall to last step). |
+
+### `stats/gini_utils.dart`
+
+Gini coefficient — inequality measure in [0, 1] ().
+
+`import 'package:saropa_dart_utils/stats/gini_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `giniCoefficient` | function | Gini coefficient of [values], a number in [0, 1]. |
 
 ### `stats/grouped_stats_utils.dart`
 
@@ -3998,7 +4906,7 @@ Moving averages: simple, exponential ().
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `simpleMovingAverage` | function | Simple moving average of [values] over window [size]. |
-| `exponentialMovingAverage` | function | Exponential moving average: [alpha] in (0,1]; first value = first input. |
+| `exponentialMovingAverage` | function | Exponential moving average: [alpha] in (0,1]; first value = first input. Audited: 2026-06-12 11:26 EDT |
 
 ### `stats/outlier_mad_utils.dart`
 
@@ -4008,7 +4916,7 @@ Outlier detection by MAD / Z-score.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `outlierIndicesByMAD` | function | Flags indices where \|x - median\| / MAD > [threshold]. |
+| `outlierIndicesByMAD` | function | Flags indices where the raw deviation in MAD units, `\|x - median\| / MAD`, exceeds [threshold]. |
 
 ### `stats/percentile_rank_utils.dart`
 
@@ -4060,6 +4968,16 @@ Robust statistics: MAD, trimmed mean ().
 | `median` | function | Median of [values] (assumes non-empty; sorts a copy). |
 | `medianAbsoluteDeviation` | function | Median absolute deviation: median of \|x_i - median(x)\|. |
 | `trimmedMean` | function | Trimmed mean: drop [trim] fraction from each tail (0..0.5), then average. |
+
+### `stats/rolling_correlation_utils.dart`
+
+Rolling (sliding-window) Pearson correlation ().
+
+`import 'package:saropa_dart_utils/stats/rolling_correlation_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `rollingCorrelation` | function | Pearson correlation of [x] and [y] over each sliding window of [window]. |
 
 ### `stats/sampling_utils.dart`
 
@@ -4629,11 +5547,23 @@ Spelling-tolerant key lookup (canonical → variants).
 | `insertNewLineBeforeBrackets` | method | Returns a new string with a newline character inserted before each opening parenthesis. |
 | `truncateWithEllipsis` | method | Returns the string truncated to [cutoff] graphemes with an ellipsis appended. |
 | `truncateWithEllipsisPreserveWords` | method | Returns the string truncated to [cutoff] graphemes with an ellipsis, preserving whole words. |
-| `reversed` | getter | Returns a new string with all characters reversed. |
+| `reversed` | getter | Returns a new string with all characters reversed, by Unicode code point (rune). |
 | `nullIfEmpty` | method | Returns `null` if the string is empty or contains only whitespace. |
 | `substringSafe` | method | Safely gets a substring, preventing [RangeError] (returns empty string for out-of-bounds indices). |
 | `lastChars` | method | Get the last [n] graphemes (user-perceived characters) of a string. |
 | `last` | method | Returns the last [len] grapheme clusters of this string. |
+
+### `string/string_folded_compare_extensions.dart`
+
+`import 'package:saropa_dart_utils/string/string_folded_compare_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `StringFoldedCompareExtensions` on `String?` | extension | Null-aware, diacritic-folding comparison helpers for `String?` — the "fold first" comparator that `compareStringNullable`'s docstring tells callers to build... |
+| `compareStringFolded` | method | Compares two nullable strings as a human reads a contact/name list: diacritics folded (`á→a`, `ß→ss`, `æ→ae`), case-insensitive by default, optional natural... |
+| `foldedCompare` | function | Comparator-shaped free function for `List.sort`, `SplayTreeMap`, and other sort-key APIs, since tearing an extension method off into a `Comparator<String?>`... |
+| `FoldedSortExtension` on `List<String>` | extension | Adds diacritic-folding sorting to a `List<String>`. |
+| `sortedFolded` | method | Returns a NEW list sorted with [foldedCompare] (case-insensitive, diacritics folded). |
 
 ### `string/string_highlight_extensions.dart`
 
@@ -4706,9 +5636,10 @@ Spelling-tolerant key lookup (canonical → variants).
 | `removeWrappingChar` | method | Returns a new string with [char] removed from the beginning and/or end. |
 | `removeStart` | method | Returns a new string with [start] removed from the beginning, or `null` if the result is empty. |
 | `removeEnd` | method | Returns a new string with [end] removed from the end, if it exists. |
+| `removeEndNullable` | method | Removes [find] from the end of this string, tolerating a null/empty [find], and signals "no source to strip from" with `null`. |
 | `removeFirstChar` | method | Returns a new string with the first character removed. |
-| `removeLastChar` | method | Returns a new string with the last character removed. |
-| `removeLastChars` | method | Returns a new string with the last [count] characters removed. |
+| `removeLastChar` | method | Returns a new string with the last grapheme cluster removed. |
+| `removeLastChars` | method | Returns a new string with the last [count] grapheme clusters removed. |
 | `removeFirstLastChar` | method | Returns a new string with both the first and last characters removed. |
 | `normalizeApostrophe` | method | Returns a new string with apostrophe variants replaced by a standard single quote. |
 | `toAlphaOnly` | method | Returns a new string with all non-letter characters removed. |
@@ -4771,7 +5702,7 @@ Spelling-tolerant key lookup (canonical → variants).
 |--------|------|-------------|
 | `StringNullableExtensions` on `String?` | extension | A set of utility methods for working with strings. |
 | `isNullOrEmpty` | getter | Extension method to check if a [String] is null or empty. |
-| `isNotNullOrEmpty` | getter | IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool Return true if the string is not null and not empty |
+| `isNotNullOrEmpty` | getter | IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool Return true if the string is not null and not empty Audited: 2026-06-12 11:26 EDT |
 
 ### `string/string_number_extensions.dart`
 
@@ -4955,7 +5886,7 @@ Spelling-tolerant key lookup (canonical → variants).
 
 ### `string/template_engine_utils.dart`
 
-Simple template engine (conditionals, no eval).
+Simple template engine: `{{key}}` substitution only, no eval.
 
 `import 'package:saropa_dart_utils/string/template_engine_utils.dart';`
 
@@ -4996,9 +5927,23 @@ Structured diff of two texts by sentences and by words.
 | `diffWords` | function | Word-level structured diff of [oldText] vs [newText], reusing `tokenizeWords` to split into words (punctuation stripped). |
 | `diffSentences` | function | Sentence-level structured diff of [oldText] vs [newText], reusing `tokenizeSentences` to split on sentence boundaries. |
 
+### `string/text_direction_parse_utils.dart`
+
+Pure-Dart parser for the CSS/HTML/Unicode `ltr` / `rtl` direction tokens.
+
+`import 'package:saropa_dart_utils/string/text_direction_parse_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `TextWritingDirection` | enum | Writing direction parsed from a short token, with no Flutter dependency. |
+| `ltr` | enum value | Left-to-right writing direction (e.g. Latin, CJK), token `'ltr'`. |
+| `rtl` | enum value | Right-to-left writing direction (e.g. Arabic, Hebrew), token `'rtl'`. |
+| `TextDirectionParseUtils` | class | Parses a short text-direction token into a typed [TextWritingDirection]. |
+| `tryParse` | method | Parses `'ltr'` / `'rtl'` (case-insensitive, whitespace-trimmed) into a [TextWritingDirection]; returns null for anything else — never throws. |
+
 ### `string/text_fingerprint_utils.dart`
 
-Text fingerprinting (simhash-style).
+Text fingerprinting (order-sensitive word-hash).
 
 `import 'package:saropa_dart_utils/string/text_fingerprint_utils.dart';`
 
@@ -5085,6 +6030,141 @@ Customizable tokenizer pipeline: ordered regex rules with keep/skip.
 | `rule` | field |  |
 | `text` | field |  |
 
+### `string/unicode_class_blocks.dart`
+
+`import 'package:saropa_dart_utils/string/unicode_class_blocks.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `UnicodeClass` | class | A single Unicode named block paired with its inclusive code-point range. |
+| `UnicodeClass` | constructor | Creates a block descriptor for [type] spanning [start]..[end] inclusive. |
+| `type` | field | The named block this range describes. |
+| `start` | field | First code point of the block (inclusive). |
+| `end` | field | Last code point of the block (inclusive). |
+| `unicodeClassRanges` | field | The Unicode block range table backing `findUnicodeClassType`. |
+
+### `string/unicode_class_type.dart`
+
+`import 'package:saropa_dart_utils/string/unicode_class_type.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `UnicodeClassType` | enum | Unicode named blocks of the Basic Multilingual Plane (U+0000 - U+FFFF). |
+| `BasicLatin` | enum value |  |
+| `Latin1Supplement` | enum value |  |
+| `LatinExtendedA` | enum value |  |
+| `LatinExtendedB` | enum value |  |
+| `IPAExtensions` | enum value |  |
+| `SpacingModifierLetters` | enum value |  |
+| `CombiningDiacriticalMarks` | enum value |  |
+| `GreekOrGreekCoptic` | enum value |  |
+| `Cyrillic` | enum value |  |
+| `CyrillicSupplement` | enum value |  |
+| `Armenian` | enum value |  |
+| `Hebrew` | enum value |  |
+| `Arabic` | enum value |  |
+| `Syriac` | enum value |  |
+| `Thaana` | enum value |  |
+| `Devanagari` | enum value |  |
+| `Bengali` | enum value |  |
+| `Gurmukhi` | enum value |  |
+| `Gujarati` | enum value |  |
+| `Oriya` | enum value |  |
+| `Tamil` | enum value |  |
+| `Telugu` | enum value |  |
+| `Kannada` | enum value |  |
+| `Malayalam` | enum value |  |
+| `Sinhala` | enum value |  |
+| `Thai` | enum value |  |
+| `Lao` | enum value |  |
+| `Tibetan` | enum value |  |
+| `Myanmar` | enum value |  |
+| `Georgian` | enum value |  |
+| `HangulJamo` | enum value |  |
+| `Ethiopic` | enum value |  |
+| `Cherokee` | enum value |  |
+| `UnifiedCanadianAboriginalSyllabics` | enum value |  |
+| `Ogham` | enum value |  |
+| `Runic` | enum value |  |
+| `Tagalog` | enum value |  |
+| `Hanunoo` | enum value |  |
+| `Buhid` | enum value |  |
+| `Tagbanwa` | enum value |  |
+| `Khmer` | enum value |  |
+| `Mongolian` | enum value |  |
+| `Limbu` | enum value |  |
+| `TaiLe` | enum value |  |
+| `KhmerSymbols` | enum value |  |
+| `PhoneticExtensions` | enum value |  |
+| `LatinExtendedAdditional` | enum value |  |
+| `GreekExtended` | enum value |  |
+| `GeneralPunctuation` | enum value |  |
+| `SuperscriptsAndSubscripts` | enum value |  |
+| `CurrencySymbols` | enum value |  |
+| `CombiningDiacriticalMarksForSymbols` | enum value |  |
+| `LetterLikeSymbols` | enum value |  |
+| `NumberForms` | enum value |  |
+| `Arrows` | enum value |  |
+| `MathematicalOperators` | enum value |  |
+| `MiscellaneousTechnical` | enum value |  |
+| `ControlPictures` | enum value |  |
+| `OpticalCharacterRecognition` | enum value |  |
+| `EnclosedAlphanumerics` | enum value |  |
+| `BoxDrawing` | enum value |  |
+| `BlockElements` | enum value |  |
+| `GeometricShapes` | enum value |  |
+| `MiscellaneousSymbols` | enum value |  |
+| `Dingbats` | enum value |  |
+| `MiscellaneousMathematicalSymbolsA` | enum value |  |
+| `SupplementalArrowsA` | enum value |  |
+| `BraillePatterns` | enum value |  |
+| `SupplementalArrowsB` | enum value |  |
+| `MiscellaneousMathematicalSymbolsB` | enum value |  |
+| `SupplementalMathematicalOperators` | enum value |  |
+| `MiscellaneousSymbolsAndArrows` | enum value |  |
+| `CJKRadicalsSupplement` | enum value |  |
+| `KangxiRadicals` | enum value |  |
+| `IdeographicDescriptionCharacters` | enum value |  |
+| `CJKSymbolsAndPunctuation` | enum value |  |
+| `Hiragana` | enum value |  |
+| `Katakana` | enum value |  |
+| `Bopomofo` | enum value |  |
+| `HangulCompatibilityJamo` | enum value |  |
+| `Kanbun` | enum value |  |
+| `BopomofoExtended` | enum value |  |
+| `KatakanaPhoneticExtensions` | enum value |  |
+| `EnclosedCJKLettersAndMonths` | enum value |  |
+| `CJKCompatibility` | enum value |  |
+| `CJKUnifiedIdeographsExtensionA` | enum value |  |
+| `YijingHexagramSymbols` | enum value |  |
+| `CJKUnifiedIdeographs` | enum value |  |
+| `YiSyllables` | enum value |  |
+| `YiRadicals` | enum value |  |
+| `HangulSyllables` | enum value |  |
+| `HighSurrogates` | enum value |  |
+| `HighPrivateUseSurrogates` | enum value |  |
+| `LowSurrogates` | enum value |  |
+| `PrivateUseOrPrivateUseArea` | enum value |  |
+| `CJKCompatibilityIdeographs` | enum value |  |
+| `AlphabeticPresentationForms` | enum value |  |
+| `ArabicPresentationFormsA` | enum value |  |
+| `VariationSelectors` | enum value |  |
+| `CombiningHalfMarks` | enum value |  |
+| `CJKCompatibilityForms` | enum value | China-Japan unified compatibility forms (the one block whose name is not self-evident from its identifier). |
+| `SmallFormVariants` | enum value |  |
+| `ArabicPresentationFormsB` | enum value |  |
+| `HalfWidthAndFullWidthForms` | enum value |  |
+| `Specials` | enum value |  |
+
+### `string/unicode_class_utils.dart`
+
+`import 'package:saropa_dart_utils/string/unicode_class_utils.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `findUnicodeClassType` | function | Returns the Unicode named block ([UnicodeClassType]) that the string's first qualifying rune belongs to, or `null` when the trimmed string is empty or no blo... |
+| `isUnicodeWhitespace` | function | Set of code points treated as whitespace by [findUnicodeClassType]. |
+
 ### `string/url_extract_utils.dart`
 
 URL/link extractor with context ().
@@ -5119,6 +6199,21 @@ URL/link extractor with context ().
 | `repeatValue` | function | Returns a list containing [value] repeated [n] times. |
 | `timed` | function | Runs [fn] synchronously and returns the wall-clock [Duration] it took. |
 | `retryUntil` | function | Calls [predicate] up to [maxAttempts] times, returning `true` as soon as it succeeds, or `false` if every attempt fails. |
+
+---
+
+## Typed_data
+
+### `typed_data/uint8list_extensions.dart`
+
+`import 'package:saropa_dart_utils/typed_data/uint8list_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `Uint8ListExtension` on `Uint8List` | extension | Extension on [Uint8List] to convert it to a `List<int>`. |
+| `toIntList` | method | Converts this [Uint8List] to a growable `List<int>` with the same elements. |
+| `IntListExtension` on `List<int>` | extension | Extension on `List<int>` to convert it to a [Uint8List]. |
+| `toUint8List` | method | Converts this `List<int>` to a fresh, independent [Uint8List]. |
 
 ---
 
@@ -5336,7 +6431,7 @@ Input shaping: clamp/normalize numbers, trim/limit strings.
 | Symbol | Kind | Description |
 |--------|------|-------------|
 | `clampNumber` | function | Clamps [value] to [min, max], then returns as int if [isInt] else double. |
-| `shapeString` | function | Trims [s] and truncates to [maxLength] with optional [ellipsis]. |
+| `shapeString` | function | Trims [s] and truncates to at most [maxLength] characters with optional [ellipsis]. |
 
 ### `validation/ip_cidr_utils.dart`
 

@@ -134,8 +134,7 @@ void main() {
       });
 
       test('should leave an all-true list unchanged', () {
-        final List<bool> list = <bool>[true, true, true]
-          ..sort((bool a, bool b) => a.compareTo(b));
+        final List<bool> list = <bool>[true, true, true]..sort((bool a, bool b) => a.compareTo(b));
 
         expect(list, equals(<bool>[true, true, true]));
       });

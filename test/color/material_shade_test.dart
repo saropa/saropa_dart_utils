@@ -59,8 +59,7 @@ void main() {
     });
 
     test('the full mapped set equals the canonical ladder', () {
-      final List<int> mapped =
-          MaterialShade.values.map((MaterialShade s) => s.value).toList();
+      final List<int> mapped = MaterialShade.values.map((MaterialShade s) => s.value).toList();
       expect(mapped, <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900]);
     });
   });
@@ -134,8 +133,7 @@ void main() {
 
     test('partition is total — every member is black or white only', () {
       for (final MaterialShade shade in MaterialShade.values) {
-        final bool isBlackOrWhite =
-            shade.onShade == Colors.black || shade.onShade == Colors.white;
+        final bool isBlackOrWhite = shade.onShade == Colors.black || shade.onShade == Colors.white;
         expect(isBlackOrWhite, isTrue, reason: shade.name);
       }
     });
@@ -179,8 +177,7 @@ void main() {
 
     test('every integer in shades is the value of exactly one member', () {
       // Round-trip: the band lists and the enum can never diverge.
-      final List<int> enumValues =
-          MaterialShade.values.map((MaterialShade s) => s.value).toList();
+      final List<int> enumValues = MaterialShade.values.map((MaterialShade s) => s.value).toList();
       expect(MaterialShadeLevels.shades.toSet(), enumValues.toSet());
       for (final int level in MaterialShadeLevels.shades) {
         final int matches = enumValues.where((int v) => v == level).length;
@@ -200,16 +197,18 @@ void main() {
   group('onShade and band lists agree', () {
     test('every lightShades value maps to a black-onShade member', () {
       for (final int level in MaterialShadeLevels.lightShades) {
-        final MaterialShade shade =
-            MaterialShade.values.firstWhere((MaterialShade s) => s.value == level);
+        final MaterialShade shade = MaterialShade.values.firstWhere(
+          (MaterialShade s) => s.value == level,
+        );
         expect(shade.onShade, Colors.black, reason: 'level $level');
       }
     });
 
     test('every darkShades value maps to a white-onShade member', () {
       for (final int level in MaterialShadeLevels.darkShades) {
-        final MaterialShade shade =
-            MaterialShade.values.firstWhere((MaterialShade s) => s.value == level);
+        final MaterialShade shade = MaterialShade.values.firstWhere(
+          (MaterialShade s) => s.value == level,
+        );
         expect(shade.onShade, Colors.white, reason: 'level $level');
       }
     });
@@ -268,8 +267,7 @@ void main() {
     test('distribution — every dark-band shade appears across the seed sweep', () {
       final Set<int> seen = <int>{};
       for (int seed = 0; seed < 1000; seed++) {
-        final int? result =
-            MaterialShadeLevels.randomShade(isLightBackground: true, seed: seed);
+        final int? result = MaterialShadeLevels.randomShade(isLightBackground: true, seed: seed);
         if (result != null) {
           seen.add(result);
         }
@@ -280,8 +278,7 @@ void main() {
     test('distribution — every light-band shade appears across the seed sweep', () {
       final Set<int> seen = <int>{};
       for (int seed = 0; seed < 1000; seed++) {
-        final int? result =
-            MaterialShadeLevels.randomShade(isLightBackground: false, seed: seed);
+        final int? result = MaterialShadeLevels.randomShade(isLightBackground: false, seed: seed);
         if (result != null) {
           seen.add(result);
         }
