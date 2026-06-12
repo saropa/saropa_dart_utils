@@ -175,6 +175,10 @@ class SkipList<T> {
     _SkipNode<T>? node = _head.forward[0];
     while (node != null) {
       yield node.value;
+      // forward[0] is the level-0 successor link. node is reassigned every
+      // iteration, so this is a genuine list walk, not the wasteful fixed-element
+      // re-read the constant-index lint assumes.
+      // ignore: avoid_accessing_collections_by_constant_index -- node changes each iteration; level-0 link walk, not a fixed re-read
       node = node.forward[0];
     }
   }
