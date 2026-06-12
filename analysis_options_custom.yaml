@@ -29,6 +29,9 @@ platforms:
 
 avoid_barrel_files: false
 avoid_non_ascii_symbols: false
+# Disabled: 49 deliberate bounds-checked substring() calls; newer saropa_lints
+# promoted this to WARNING and broke `pub publish --dry-run`. See analysis_options.yaml.
+avoid_string_substring: false
 avoid_parameter_reassignment: true
 avoid_static_state: false
 avoid_unmarked_public_class: false
