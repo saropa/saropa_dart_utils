@@ -49,14 +49,14 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 |---------|-----------|
 | Advanced String & Text (401–440) | 1 |
 | Advanced Collections & Algorithms (441–490) | 5 |
-| Data Structures & Indexes (491–530) | 25 |
-| Graphs & Pathfinding (531–560) | 9 |
+| Data Structures & Indexes (491–530) | 19 |
+| Graphs & Pathfinding (531–560) | 7 |
 | Statistics & Analytics (561–590) | 8 |
-| Calendars, Recurrence & Scheduling (591–620) | 15 |
+| Calendars, Recurrence & Scheduling (591–620) | 13 |
 | Parsing & Formats, Structured Data (621–650) | 8 |
 | Async, Concurrency & Streams (651–680) | 8 |
 | Validation, Security & Robustness (681–700) | 6 |
-| **Total remaining** | **85** |
+| **Total remaining** | **75** |
 
 ---
 
@@ -91,17 +91,11 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | # | Idea | Usefulness | Importance | Complexity | Size |
 |---|------|------------|------------|------------|------|
 | 492 | Compressed radix tree for string keys | Medium | Medium | High | ✅ |
-| 493 | BK‑tree for approximate string matching | Medium | Medium | High | ✅ |
-| 495 | Segment tree wrapper for range sum/min/max | Low | Medium | High | ✅ |
 | 497 | B‑tree/B+‑tree‑style structure for sorted in‑memory data (small scale) | Low | Medium | High | ✅ |
 | 501 | Persistent immutable list/map wrappers with structural sharing (lightweight) | Medium | Medium | High | ✅ |
 | 503 | Time‑ordered event store abstraction (append‑only, index by time and id) | Medium | Medium | High | ✅ |
 | 504 | Partitioned map (sharded by hash/range for concurrency) | Medium | Medium | Medium | ✅ |
-| 506 | Spatial index (grid/quadtree‑lite) for 2D points | Low | Medium | High | ✅ |
 | 507 | LRU‑segmented cache (multi‑tier cache behavior) | Medium | Medium | High | ✅ |
-| 508 | Write‑through/write‑back cache wrappers around async loaders | High | High | High | ✅ |
-| 509 | MRU cache and frequency tracking helpers | Medium | Medium | Medium | ✅ |
-| 510 | Time‑series buffer with down‑sampling (keep raw + aggregates) | Medium | Medium | High | ✅ |
 | 512 | Keyed priority scheduler (e.g. job queue with priorities and tags) | Medium | Medium | High | ✅ |
 | 513 | In‑memory “materialized view” index for list<Map<String, Object?>> | Medium | Medium | High | ✅ |
 | 515 | Versioned map/list (keep small history of changes) | Low | Medium | High | ✅ |
@@ -126,11 +120,9 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 |---|------|------------|------------|------------|------|
 | 542 | Community detection (modularity‑based, small graphs) | Low | Low | High | ✅ |
 | 544 | K‑shortest paths (Yen’s algorithm simplified) | Low | Low | High | ✅ |
-| 545 | Graph simplification utilities (remove degree‑2 nodes, merge chains) | Low | Low | High | ✅ |
 | 548 | Geo‑adjacent clustering (group nodes by proximity in coordinate graph) | Low | Low | High | ✅ |
 | 549 | Cycle basis enumeration for small graphs | Low | Low | High | ✅ |
 | 552 | Simple route planner over weighted graph with constraints (avoid nodes/tags) | Low | Medium | High | ✅ |
-| 554 | Graph serialization/deserialization helpers (compact text/JSON forms) | Medium | Medium | Medium | ✅ |
 | 559 | Heap‑based event simulation helpers (discrete‑event simulation core) | Low | Low | High | ✅ |
 | 560 | Planarity and simple layout heuristics for small graphs (very basic) | Low | Low | High | ✅ |
 
@@ -168,9 +160,7 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 604 | Workload balancer (spread tasks across days given capacities) | Low | Medium | High | ✅ |
 | 605 | Date rules engine (e.g. pay day rules, last business day, etc.) | Medium | Medium | High | ✅ |
 | 607 | Vacation/leave period overlap resolution utilities | Medium | Medium | Medium | ✅ |
-| 608 | Calendar diff (added/removed/changed events) | Medium | Medium | Medium | ✅ |
 | 611 | Rolling window schedule generation (e.g. next 90 days of occurrences) | Medium | Medium | Medium | ✅ |
-| 612 | Rate limiting schedule (max N events per period with cooldowns) | Medium | High | High | ✅ |
 | 617 | SLO/SLI time window helpers (rolling windows, burn‑rate style) | Low | Low | High | ✅ |
 | 619 | Multi‑calendar interop utilities (Gregorian / ISO weeks; hooks for others) | Low | Low | High | ✅ |
 | 620 | Human‑friendly recurrence editor helpers (turn UI choices into RRULE objects) | Medium | Medium | High | ✅ |

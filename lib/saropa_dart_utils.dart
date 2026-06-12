@@ -63,6 +63,8 @@ export 'datetime/billing_cycle_utils.dart';
 export 'datetime/humanize_recurrence_utils.dart';
 export 'datetime/calendar_heatmap_utils.dart';
 export 'datetime/timeseries_gap_utils.dart';
+export 'datetime/calendar_diff_utils.dart';
+export 'datetime/rate_limit_schedule_utils.dart';
 
 // Double extensions
 export 'double/double_aspect_ratio_extensions.dart';
@@ -182,6 +184,10 @@ export 'collections/session_clustering_utils.dart';
 export 'collections/backtracking_utils.dart';
 export 'collections/lazy_combinatorics_utils.dart';
 export 'collections/item_similarity_utils.dart';
+export 'collections/segment_tree_utils.dart';
+export 'collections/bk_tree_utils.dart';
+export 'collections/spatial_grid_utils.dart';
+export 'collections/timeseries_buffer_utils.dart';
 
 // Graph (roadmap 531+)
 export 'graph/graph_utils.dart';
@@ -203,6 +209,8 @@ export 'graph/multi_source_bfs_utils.dart';
 export 'graph/pagerank_utils.dart';
 export 'graph/path_enumeration_utils.dart';
 export 'graph/reachability_utils.dart';
+export 'graph/graph_simplify_utils.dart';
+export 'graph/graph_serialize_utils.dart';
 
 // Stats (roadmap 561+)
 export 'stats/robust_stats_utils.dart' hide median;
@@ -304,6 +312,8 @@ export 'caching/lru_cache.dart';
 export 'caching/memoize_sync_utils.dart';
 export 'caching/size_limit_cache.dart';
 export 'caching/ttl_cache.dart';
+export 'caching/write_through_cache.dart';
+export 'caching/mru_cache.dart';
 
 // Niche utilities
 export 'niche/color_utils.dart';

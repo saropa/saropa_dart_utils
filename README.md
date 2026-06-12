@@ -100,6 +100,16 @@ import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 import 'package:saropa_dart_utils/async/debounce_utils.dart';  // or throttle_utils, retry_utils, etc.
 ```
 
+### Tree-shaking checklist
+
+Your release binary only carries the utilities you actually call — the barrel import is **not** a hidden "pull in everything" cost. Confirm:
+
+- ✅ **Barrel or leaf import — same shipped size.** Importing `saropa_dart_utils.dart` brings names into scope, not code into the binary. AOT (`flutter build`, `dart compile`) and `dart compile js` keep only what's reachable from your `main()`. Leaf imports help namespace hygiene and debug-build load time, not release size.
+- ✅ **Extensions shake per method.** Call one method on an extension and only that method (plus its transitive calls) survives — not the whole file.
+- ✅ **No startup cost from unused code.** The package adds no `vm:entry-point` pragmas, no `dart:mirrors`, and no eager top-level side effects; its internal regex/const helpers are lazy `final`s that never run unless a used method touches them.
+- ⚠️ **Tree-shaking is a release-build behavior.** Debug/JIT runs (`flutter run`, `dart run`) load everything by design — judge size from a release build, never a debug one.
+- ⚠️ **Download size is separate.** `pub get` still fetches the full source into `.pub-cache`; that's disk, not app binary, and is unaffected by tree-shaking.
+
 ## Quick Start Examples
 
 Drop-in solutions for common Flutter development tasks:
