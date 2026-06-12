@@ -5,6 +5,7 @@ import 'string_extensions.dart';
 
 /// Returns an excerpt of [text] around the first occurrence of [query], with
 /// [contextChars] characters on each side and [ellipsis] at truncation points.
+/// Audited: 2026-06-12 11:26 EDT
 String excerptAround(String text, String query, {int contextChars = 60, String ellipsis = '...'}) {
   if (text.isEmpty) return '';
   final String q = query.trim();

@@ -11,12 +11,14 @@ extension StringUnicodeExtensions on String {
   /// ```dart
   /// 'café'.normalizeUnicodeNfc();  // returns 'café' (no-op without intl)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String normalizeUnicodeNfc() => this;
 
   /// Normalizes to NFD (canonical decomposition).
   ///
   /// No-op without an external normalization package; returns this string unchanged.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String normalizeUnicodeNfd() => this;
 }

@@ -22,6 +22,7 @@ extension StringMaskExtensions on String {
   /// 'card'.mask(visibleCount: 4, maskChar: 'x'); // 'card'
   /// 'ab'.mask(visibleCount: 5);                // 'ab'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String mask({
     int visibleCount = 4,
@@ -50,6 +51,7 @@ extension StringMaskExtensions on String {
   /// 'user@example.com'.redactEmail();     // 'u***@example.com'
   /// 'a@b.co'.redactEmail(maskChar: 'x');  // 'axxx@b.co'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String redactEmail({
     int localPartVisible = 3,
@@ -82,8 +84,9 @@ extension StringMaskExtensions on String {
   ///
   /// Example:
   /// ```dart
-  /// '+1 (555) 123-4567'.redactPhone(visibleCount: 4); // '+* (**) ***-4567' (digits masked except last 4)
+  /// '+1 (555) 123-4567'.redactPhone(visibleCount: 4); // '+* (***) ***-4567' (digits masked except last 4)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String redactPhone({
     int visibleCount = 4,

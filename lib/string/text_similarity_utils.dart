@@ -4,6 +4,7 @@ library;
 import 'dart:math' show pow, sqrt;
 
 /// Term frequencies for a list of tokens (e.g. words).
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, int> termFrequencies(List<String> tokens) {
   final Map<String, int> tf = <String, int>{};
   for (final String t in tokens) {
@@ -13,6 +14,7 @@ Map<String, int> termFrequencies(List<String> tokens) {
 }
 
 /// Cosine similarity between two term-frequency maps (0.0 to 1.0).
+/// Audited: 2026-06-12 11:26 EDT
 double cosineSimilarity(Map<String, int> a, Map<String, int> b) {
   // An empty vector has no direction, so similarity is undefined — report 0.
   if (a.isEmpty || b.isEmpty) return 0.0;
@@ -41,6 +43,7 @@ double cosineSimilarity(Map<String, int> a, Map<String, int> b) {
 }
 
 /// Tokenizes [s] by splitting on non-letters and lowercasing; returns TF map.
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, int> textToTf(String s) {
   final List<String> tokens = s
       .toLowerCase()
@@ -51,4 +54,5 @@ Map<String, int> textToTf(String s) {
 }
 
 /// Returns cosine similarity of [a] and [b] when treated as bags of words.
+/// Audited: 2026-06-12 11:26 EDT
 double textSimilarity(String a, String b) => cosineSimilarity(textToTf(a), textToTf(b));

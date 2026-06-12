@@ -15,6 +15,7 @@ import 'package:meta/meta.dart';
 // ignore: require_extend_equatable -- manual == is simpler than an equatable dependency for one class
 class BetweenResult {
   /// Creates a [BetweenResult] with the given [content] and [remaining].
+  /// Audited: 2026-06-12 11:26 EDT
   const BetweenResult(this.content, this.remaining);
 
   /// The content found between the delimiters.

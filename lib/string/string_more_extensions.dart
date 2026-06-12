@@ -5,6 +5,7 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 /// String More: strip leading/trailing substring, join lines, wrap at N, capitalize sentence, swap case, etc. Roadmap #251-265.
 extension StringMoreExtensions on String {
   /// Removes leading and trailing occurrences of [substring] until none remain.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String stripSubstring(String substring) {
     // An empty substring must short-circuit: startsWith('') / endsWith('') are
@@ -23,10 +24,12 @@ extension StringMoreExtensions on String {
   }
 
   /// Joins lines (split by newline) with [separator]. Default separator is newline (no-op).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String joinLines([String separator = '\n']) => split('\n').join(separator);
 
   /// Wraps this string at [width] character boundaries (grapheme-safe). Returns chunks joined by newline.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrapAtChars(int width) {
     // A width below one has no sensible chunk size, and a string already within
@@ -51,6 +54,7 @@ extension StringMoreExtensions on String {
   }
 
   /// Capitalizes the first letter after sentence boundaries (start or after `. `).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String capitalizeSentences() {
     if (isEmpty) return this;
@@ -66,6 +70,7 @@ extension StringMoreExtensions on String {
   }
 
   /// Swaps upper-case and lower-case for each character.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String swapCase() => split(
     '',
@@ -79,6 +84,7 @@ extension StringMoreExtensions on String {
   /// ```dart
   /// 'aaabbbccaa'.removeRepeatedChars(); // 'abca'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeRepeatedChars() {
     if (length <= 1) return this;
@@ -98,6 +104,7 @@ extension StringMoreExtensions on String {
   /// ```dart
   /// 'aaaa'.countOccurrences('aa'); // 2
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   int countOccurrences(String substring) {
     if (substring.isEmpty) return 0;
     int count = 0;
@@ -112,6 +119,7 @@ extension StringMoreExtensions on String {
   }
 
   /// Returns all start indices where [substring] occurs (non-overlapping).
+  /// Audited: 2026-06-12 11:26 EDT
   List<int> allIndicesOf(String substring) {
     // An empty needle has no well-defined positions, so report none.
     if (substring.isEmpty) return <int>[];
@@ -136,6 +144,7 @@ extension StringMoreExtensions on String {
   }
 
   /// Returns true if this string reads the same forwards and backwards (optionally ignoring case/punctuation).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isPalindrome({bool ignoreCase = true, bool ignorePunctuation = false}) {
     // Normalize per the flags first, then compare with two cursors moving inward
@@ -151,10 +160,12 @@ extension StringMoreExtensions on String {
   }
 
   /// Reverses the order of words (split on whitespace).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String reverseWords() => split(RegExp(r'\s+')).reversed.join(' ');
 
   /// Returns the first [n] words (split on whitespace). Returns empty string if n <= 0.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String firstNWords(int n) {
     if (n <= 0) return '';
@@ -171,6 +182,7 @@ extension StringMoreExtensions on String {
   /// ```dart
   /// 'the quick brown fox'.lastNWords(2); // 'brown fox'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String lastNWords(int n) {
     if (n <= 0) return '';
@@ -180,6 +192,7 @@ extension StringMoreExtensions on String {
   }
 
   /// Pads this string to [width] with [padChar], on the left if [padLeft] else right.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String padToWidth(int width, {bool padLeft = true, String padChar = ' '}) {
     if (length >= width) return this;
@@ -188,6 +201,7 @@ extension StringMoreExtensions on String {
   }
 
   /// Removes HTML comments (<!-- ... -->) from this string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String stripHtmlComments() => replaceAll(RegExp(r'<!--[\s\S]*?-->'), '');
 }

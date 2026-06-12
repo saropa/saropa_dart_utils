@@ -37,6 +37,7 @@ enum DiffOutputFormat {
 /// [ops] is typically from [MyersDiffUtils.diffLines]. [contextLines] limits
 /// how many unchanged lines are shown in a run of equal ops (first and last
 /// [contextLines] each); use a large value to show all.
+/// Audited: 2026-06-12 11:26 EDT
 String renderUnifiedDiff(
   List<DiffOp> ops, {
   DiffOutputFormat format = DiffOutputFormat.plain,

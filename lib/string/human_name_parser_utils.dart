@@ -4,6 +4,7 @@ library;
 /// Parsed name parts.
 class HumanNameParserUtils {
   /// Creates parsed name parts; any unrecognized component is left null.
+  /// Audited: 2026-06-12 11:26 EDT
   const HumanNameParserUtils({String? first, String? middle, String? last, String? suffix})
     : _first = first,
       _middle = middle,
@@ -12,18 +13,22 @@ class HumanNameParserUtils {
   final String? _first;
 
   /// Given (first) name, or null when none was detected.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get first => _first;
   final String? _middle;
 
   /// Middle name(s) joined by spaces, or null when none was detected.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get middle => _middle;
   final String? _last;
 
   /// Family (last) name, or null when none was detected.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get last => _last;
   final String? _suffix;
 
   /// Generational/honorific suffix such as "Jr.", "Sr.", or "III"; null if absent.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get suffix => _suffix;
 
   @override
@@ -32,6 +37,7 @@ class HumanNameParserUtils {
 }
 
 /// Simple split: "Last, First Middle" or "First Middle Last". Suffix: Jr., Sr., III, etc.
+/// Audited: 2026-06-12 11:26 EDT
 HumanNameParserUtils parseHumanName(String full) {
   final String s = full.trim();
   if (s.isEmpty) return const HumanNameParserUtils();

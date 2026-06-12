@@ -7,10 +7,12 @@ extension StringDiacriticsExtensions on String {
   ///
   /// This map is created only once and cached for high performance. It maps
   /// each diacritic character (e.g., 'á') to its base character (e.g., 'a').
+  /// Audited: 2026-06-12 11:26 EDT
   static final Map<String, String> _reverseAccentsMap = _createReverseMap();
 
   /// A private helper function to create the reversed map from [_accentsMap].
   /// This is executed only once to initialize [_reverseAccentsMap].
+  /// Audited: 2026-06-12 11:26 EDT
   static Map<String, String> _createReverseMap() {
     final Map<String, String> reverseMap = <String, String>{};
     _accentsMap.forEach(
@@ -30,6 +32,7 @@ extension StringDiacriticsExtensions on String {
   /// that can be removed by the `removeDiacritics` method.
   ///
   /// Returns `true` if a known diacritic character is found, `false` otherwise.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool containsDiacritics() {
     // An empty string cannot contain diacritics.
@@ -45,6 +48,7 @@ extension StringDiacriticsExtensions on String {
   /// equivalents (e.g., 'é' becomes 'e').
   ///
   /// This method is optimized to perform well by using a pre-computed map.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeDiacritics() {
     // If the string is empty, return an empty string immediately.

@@ -60,6 +60,7 @@ class KeyphraseOptions {
   ///
   /// [topK] caps the result size; [includeBigrams] also scores adjacent word
   /// pairs (after stopword filtering) so multi-word phrases can rank.
+  /// Audited: 2026-06-12 11:26 EDT
   const KeyphraseOptions({this.topK = 5, this.includeBigrams = false});
 
   /// Maximum number of keyphrases returned.
@@ -78,6 +79,7 @@ class KeyphraseOptions {
 /// ```dart
 /// tokenizeKeyphrases('The quick Brown fox'); // ['quick', 'brown', 'fox']
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<String> tokenizeKeyphrases(String text) => text
     .toLowerCase()
     .split(RegExp(r'[^a-z0-9]+'))
@@ -93,6 +95,7 @@ List<String> tokenizeKeyphrases(String text) => text
 /// ```dart
 /// termFrequencies(['cat', 'cat', 'dog']); // {'cat': 2, 'dog': 1}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, int> termFrequencies(List<String> tokens) {
   final Map<String, int> tf = <String, int>{};
   for (final String t in tokens) {
@@ -110,6 +113,7 @@ Map<String, int> termFrequencies(List<String> tokens) {
 /// ```dart
 /// computeIdf([['cat', 'dog'], ['cat']])['cat']; // ln(1 + 2/2) = ln 2
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, double> computeIdf(List<List<String>> corpus) {
   // Document frequency: number of docs containing each term at least once.
   final Map<String, int> df = <String, int>{};
@@ -135,6 +139,7 @@ Map<String, double> computeIdf(List<List<String>> corpus) {
 /// ```dart
 /// extractKeyphrases('cat cat dog', <List<String>>[]); // [(phrase: 'cat', ...)]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<Keyphrase> extractKeyphrases(
   String doc,
   List<List<String>> corpus, [
@@ -151,6 +156,7 @@ List<Keyphrase> extractKeyphrases(
 }
 
 /// Builds tf*idf scores for unigrams (and bigrams when enabled).
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, double> _scoreTerms(
   List<String> tokens,
   Map<String, double> idf,
@@ -168,6 +174,7 @@ Map<String, double> _scoreTerms(
 
 /// Scores adjacent token pairs using the product of their unigram idf weights,
 /// so a phrase of two rare words outranks either word alone.
+/// Audited: 2026-06-12 11:26 EDT
 void _addBigramScores(
   List<String> tokens,
   Map<String, double> idf,
@@ -188,6 +195,7 @@ void _addBigramScores(
 }
 
 /// Sorts scored phrases and returns the highest [topK].
+/// Audited: 2026-06-12 11:26 EDT
 List<Keyphrase> _rankTopK(Map<String, double> scores, int topK) {
   final List<Keyphrase> ranked = scores.entries
       .map((MapEntry<String, double> e) => (phrase: e.key, score: e.value))

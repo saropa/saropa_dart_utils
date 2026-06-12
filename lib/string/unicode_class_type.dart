@@ -144,4 +144,5 @@ enum UnicodeClassType {
   HalfWidthAndFullWidthForms,
   Specials,
 }
+
 // cspell: enable

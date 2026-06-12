@@ -25,6 +25,7 @@ extension StringSearchExtensions on String {
   /// Returns `true` if this string equals any item in [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isEqualsAny(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) {
@@ -41,12 +42,14 @@ extension StringSearchExtensions on String {
   }
 
   /// Returns true if this string contains any digits.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsDigits() => _containsDigitsRegex.hasMatch(this);
 
   /// Returns `true` if this string contains any item from [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsAnyInList(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) {
@@ -65,6 +68,7 @@ extension StringSearchExtensions on String {
   /// Returns `true` if this string is contained in any item from [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainedInAny(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) {
@@ -81,6 +85,7 @@ extension StringSearchExtensions on String {
   }
 
   /// Returns `true` if this string contains [find] (case-insensitive).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsCaseInsensitive(String? find) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -93,6 +98,7 @@ extension StringSearchExtensions on String {
   /// Returns `true` if this string contains [find], handling `null` safely.
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsNullable(String? find, {bool isCaseSensitive = true}) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -110,6 +116,7 @@ extension StringSearchExtensions on String {
   /// specified [matchType].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isMatchAny(
     List<String>? list, {
@@ -130,6 +137,7 @@ extension StringSearchExtensions on String {
   /// Returns `true` if this string starts with any item in [list].
   ///
   /// When [isCaseSensitive] is `false`, comparison is case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isStartsWithAny(List<String>? list, {bool isCaseSensitive = true}) {
     if (isEmpty || list == null || list.isEmpty) {
@@ -148,6 +156,7 @@ extension StringSearchExtensions on String {
   ///
   /// If the first character is a Latin letter (A-Z), returns it uppercased;
   /// otherwise returns the first character as-is.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String getRepeatableLetter() {
     if (isEmpty) {
@@ -170,6 +179,7 @@ extension StringSearchExtensions on String {
   }
 
   /// Returns true if this string does NOT contain [find].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isNotContains(String? find) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -183,6 +193,7 @@ extension StringSearchExtensions on String {
   ///
   /// Returns true if [condition] is true and the string contains [find],
   /// or if [condition] is false and the string does NOT contain [find].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsConditional(String? find, {required bool condition}) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -197,6 +208,7 @@ extension StringSearchExtensions on String {
   ///
   /// When [isCaseSensitive] is `false` (default), comparison is
   /// case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsAnyWord(List<String>? searchItems, {bool isCaseSensitive = false}) {
     if (isEmpty || searchItems == null || searchItems.isEmpty) {
@@ -216,6 +228,7 @@ extension StringSearchExtensions on String {
   ///
   /// When [isCaseSensitive] is `false` (default), comparison is
   /// case-insensitive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isContainsWord(String? find, {bool isCaseSensitive = false}) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -233,6 +246,7 @@ extension StringSearchExtensions on String {
   }
 
   /// Returns true if this string does NOT start with [find].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isNotStartsWith(String? find) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -246,6 +260,7 @@ extension StringSearchExtensions on String {
   ///
   /// Returns true if [isPositiveSearch] is true and the string starts with [find],
   /// or if [isPositiveSearch] is false and the string does NOT start with [find].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isStartsWithConditional(String? find, {required bool isPositiveSearch}) {
     if (isEmpty || find == null || find.isEmpty) {

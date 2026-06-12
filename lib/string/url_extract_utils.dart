@@ -5,6 +5,7 @@ library;
 class UrlExtractUtils {
   /// Creates an extracted link for [url], with an optional anchor [label] and
   /// surrounding [snippet] of context.
+  /// Audited: 2026-06-12 11:26 EDT
   const UrlExtractUtils(String url, {String? label, String? snippet})
     : _url = url,
       _label = label,
@@ -12,14 +13,17 @@ class UrlExtractUtils {
   final String _url;
 
   /// The extracted URL.
+  /// Audited: 2026-06-12 11:26 EDT
   String get url => _url;
   final String? _label;
 
   /// Visible link text/anchor when the URL was part of markup, else null.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get label => _label;
   final String? _snippet;
 
   /// Surrounding text giving context around the link, or null if unavailable.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get snippet => _snippet;
 
   @override
@@ -28,11 +32,16 @@ class UrlExtractUtils {
 }
 
 /// Extracts URLs from [text]; [snippetLength] chars of context before/after.
+/// Audited: 2026-06-12 11:26 EDT
 List<UrlExtractUtils> extractUrlsWithContext(String text, {int snippetLength = 40}) {
   final RegExp urlPattern = RegExp(r'https?://[^\s<>"\x27]+', caseSensitive: false);
   final List<UrlExtractUtils> out = <UrlExtractUtils>[];
   for (final Match m in urlPattern.allMatches(text)) {
-    final String urlStr = m.group(0) ?? '';
+    // The greedy match swallows trailing sentence punctuation when a URL ends a
+    // sentence (`...a.com.` / `...a.com,`). Trim those terminal characters.
+    // Brackets are deliberately NOT trimmed so paren-bearing URLs (e.g.
+    // Wikipedia `..._(disambiguation)`) survive intact.
+    final String urlStr = (m.group(0) ?? '').replaceFirst(RegExp('''[.,;:!?'"]+\$'''), '');
     final int start = (m.start - snippetLength).clamp(0, text.length);
     final int end = (m.end + snippetLength).clamp(0, text.length);
     // Extract snippet: substring from start to end, or empty if invalid range.

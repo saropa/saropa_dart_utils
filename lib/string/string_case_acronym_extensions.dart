@@ -14,6 +14,7 @@ extension StringCaseAcronymExtensions on String {
   /// ```dart
   /// 'HTTP response'.toCamelCaseAcronyms();  // 'httpResponse'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toCamelCaseAcronyms() {
     if (isEmpty) return this;
@@ -53,6 +54,7 @@ extension StringCaseAcronymExtensions on String {
   /// ```dart
   /// 'HTTPResponse'.toSnakeCaseAcronyms();  // 'http_response'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toSnakeCaseAcronyms() {
     if (isEmpty) return this;

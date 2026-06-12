@@ -27,5 +27,14 @@ void main() {
         'ok and ok',
       );
     });
+
+    test('a value containing another placeholder is NOT re-substituted', () {
+      // Single-pass substitution: {{a}} -> '{{b}}' must stay literal, not get
+      // expanded to 'X' on a second pass (the old chained-replaceAll bug).
+      expect(
+        '{{a}}'.substituteTemplate(<String, String>{'a': '{{b}}', 'b': 'X'}),
+        '{{b}}',
+      );
+    });
   });
 }

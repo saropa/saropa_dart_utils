@@ -9,6 +9,7 @@ class SearchIndexUtils {
   final List<Map<String, int>> _tfs = <Map<String, int>>[];
 
   /// Adds [text] as a document to the index.
+  /// Audited: 2026-06-12 11:26 EDT
   void addDocument(String text) {
     _docs.add(text);
     _tfs.add(textToTf(text));
@@ -16,6 +17,7 @@ class SearchIndexUtils {
 
   /// Returns up to [limit] hits as (documentIndex, score), sorted by score descending.
   /// Each record is (index, score) with index the document index and score the TF similarity.
+  /// Audited: 2026-06-12 11:26 EDT
   List<(int, double)> search(String query, {int limit = 10}) {
     final Map<String, int> qTf = textToTf(query);
     final List<(int, double)> results = List.filled(_tfs.length, (0, 0.0));
@@ -36,9 +38,11 @@ class SearchIndexUtils {
   }
 
   /// Number of documents in the index.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _docs.length;
 
   /// Returns the document at [i].
+  /// Audited: 2026-06-12 11:26 EDT
   String getDocument(int i) => _docs[i];
 
   @override

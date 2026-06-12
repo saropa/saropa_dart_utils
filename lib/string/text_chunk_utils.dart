@@ -5,6 +5,7 @@ import 'string_extensions.dart';
 
 /// Splits [text] into chunks of at most [maxChars] characters, trying to break
 /// at sentence boundaries (.). [overlap] optional characters to overlap between chunks.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> chunkText(String text, {int maxChars = 500, int overlap = 0}) {
   if (text.isEmpty) return <String>[];
   if (maxChars < 1) return <String>[text];
@@ -22,13 +23,20 @@ List<String> chunkText(String text, {int maxChars = 500, int overlap = 0}) {
       final int lastPeriod = text.lastIndexOf('.', end);
       if (lastPeriod > start) end = lastPeriod + 1;
     }
+    final int chunkStart = start;
     final int safeStart = start.clamp(0, text.length);
     final int safeEnd = end.clamp(0, text.length);
     chunks[chunkIndex++] = text.substringSafe(safeStart, safeEnd).trim();
+    // Advance to `end`, then (only when more text remains) rewind by `overlap`
+    // so adjacent chunks share trailing context for search/embedding. Force at
+    // least one char of forward progress past THIS chunk's start: with
+    // `overlap >= maxChars` the rewind would otherwise land at or before
+    // `chunkStart`, looping forever and overflowing the pre-sized `chunks` list.
     start = end;
-    // Rewind the next start by `overlap` chars so adjacent chunks share trailing
-    // context (useful for search/embedding so matches spanning a boundary survive).
-    if (overlap > 0 && start < text.length) start = (start - overlap).clamp(0, text.length);
+    if (overlap > 0 && start < text.length) {
+      final int rewound = end - overlap;
+      start = rewound <= chunkStart ? chunkStart + 1 : rewound.clamp(0, text.length);
+    }
   }
   return chunks.sublist(0, chunkIndex).where((String c) => c.isNotEmpty).toList();
 }

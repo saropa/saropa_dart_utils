@@ -13,6 +13,7 @@ import 'package:saropa_dart_utils/string/unicode_class_type.dart';
 /// ```
 class UnicodeClass {
   /// Creates a block descriptor for [type] spanning [start]..[end] inclusive.
+  /// Audited: 2026-06-12 11:26 EDT
   const UnicodeClass(this.type, {required this.start, required this.end});
 
   /// The named block this range describes.

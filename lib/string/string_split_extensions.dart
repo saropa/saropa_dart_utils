@@ -16,6 +16,7 @@ extension StringSplitExtensions on String {
   /// ```dart
   /// 'a-b-c'.splitKeepingDelimiter('-', includeDelimiters: true);  // ['a', '-', 'b', '-', 'c']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String> splitKeepingDelimiter(Pattern pattern, {bool includeDelimiters = false}) {
     if (isEmpty) return <String>[];

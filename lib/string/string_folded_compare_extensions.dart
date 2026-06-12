@@ -42,6 +42,7 @@ extension StringFoldedCompareExtensions on String? {
   /// 'Foo'.compareStringFolded('fóò');        // != 0 (fold-equal → raw tie-break)
   /// null.compareStringFolded('a');           // -1 (null first)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int compareStringFolded(
     String? other, {
@@ -98,6 +99,7 @@ extension StringFoldedCompareExtensions on String? {
 /// names.sort(foldedCompare);
 /// SplayTreeMap<String, int>(foldedCompare);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 @useResult
 int foldedCompare(
   String? a,
@@ -127,7 +129,8 @@ extension FoldedSortExtension on List<String> {
   /// ```dart
   /// ['Zoe', 'Ángel', 'Andy'].sortedFolded(); // ['Andy', 'Ángel', 'Zoe']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  List<String> sortedFolded({bool natural = false}) => List<String>.of(this)
-    ..sort((String a, String b) => foldedCompare(a, b, natural: natural));
+  List<String> sortedFolded({bool natural = false}) =>
+      List<String>.of(this)..sort((String a, String b) => foldedCompare(a, b, natural: natural));
 }

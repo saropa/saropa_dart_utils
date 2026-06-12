@@ -7,6 +7,7 @@ import 'levenshtein_utils.dart';
 class FuzzySearchUtils {
   /// Creates a match at [index] in the original candidate list, holding the
   /// matched [text] and its computed relevance [score].
+  /// Audited: 2026-06-12 11:26 EDT
   const FuzzySearchUtils(int index, String text, double score)
     : _index = index,
       _text = text,
@@ -14,14 +15,17 @@ class FuzzySearchUtils {
   final int _index;
 
   /// Position of this match within the original `candidates` list.
+  /// Audited: 2026-06-12 11:26 EDT
   int get index => _index;
   final String _text;
 
   /// The candidate string that matched the query.
+  /// Audited: 2026-06-12 11:26 EDT
   String get text => _text;
   final double _score;
 
   /// Relevance score in `[0, 1]`; higher means a closer match to the query.
+  /// Audited: 2026-06-12 11:26 EDT
   double get score => _score;
 
   @override
@@ -32,6 +36,7 @@ class FuzzySearchUtils {
 ///
 /// Score combines token overlap and edit-distance ratio. [maxDistance] caps
 /// per-token edit distance; [minScore] excludes results below that threshold.
+/// Audited: 2026-06-12 11:26 EDT
 List<FuzzySearchUtils> fuzzySearch(
   String query,
   List<String> candidates, {
@@ -68,6 +73,7 @@ List<FuzzySearchUtils> fuzzySearch(
 }
 
 /// Splits [s] into lowercased whitespace-separated tokens, dropping empties.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> _fuzzyTokens(String s) =>
     s.toLowerCase().split(RegExp(r'\s+')).where((String t) => t.isNotEmpty).toList();
 
@@ -81,6 +87,7 @@ List<String> _fuzzyTokens(String s) =>
 /// would be penalized for the extra words. Comparison is case-insensitive.
 ///
 /// Two empty strings score `1.0`; one empty against a non-empty scores `0.0`.
+/// Audited: 2026-06-12 11:26 EDT
 double partialRatio(String a, String b) {
   final String shorter = (a.length <= b.length ? a : b).toLowerCase();
   final String longer = (a.length <= b.length ? b : a).toLowerCase();
@@ -110,6 +117,7 @@ double partialRatio(String a, String b) {
 /// Makes the comparison order-insensitive, so `'York New'` matches `'New York'`
 /// fully — the right metric when word order varies but content does not (names
 /// entered "First Last" vs "Last First").
+/// Audited: 2026-06-12 11:26 EDT
 double tokenSortRatio(String a, String b) {
   final List<String> ta = _fuzzyTokens(a)..sort();
   final List<String> tb = _fuzzyTokens(b)..sort();
@@ -125,6 +133,7 @@ double tokenSortRatio(String a, String b) {
 /// the other's tokens (`'apple pie'` vs `'apple pie with cinnamon'`) scores
 /// high because the shared core aligns exactly. More forgiving of extra words
 /// than [tokenSortRatio]. Comparison is case-insensitive.
+/// Audited: 2026-06-12 11:26 EDT
 double tokenSetRatio(String a, String b) {
   final Set<String> sa = _fuzzyTokens(a).toSet();
   final Set<String> sb = _fuzzyTokens(b).toSet();

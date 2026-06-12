@@ -40,6 +40,7 @@ abstract final class SoundexUtils {
   /// SoundexUtils.encode('Robert');  // 'R163'
   /// SoundexUtils.encode('Rupert');   // 'R163'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static String encode(String s) {
     if (s.isEmpty) return '';
     final String letters = s.toUpperCase().replaceAll(RegExp(r'[^A-Z]'), '');
@@ -48,11 +49,22 @@ abstract final class SoundexUtils {
     int prev = _code(letters[0]);
     int count = 1;
     for (int i = 1; i < letters.length && count < _soundexCodeLength; i++) {
-      final int c = _code(letters[i]);
-      if (c != 0 && c != prev) {
+      final String ch = letters[i];
+      final int c = _code(ch);
+      if (c != 0) {
+        // Only emit a new digit when it differs from the previous coded letter
+        // (adjacent same-code letters collapse), but always remember it.
+        if (c != prev) {
+          out.write(c);
+          count++;
+        }
         prev = c;
-        out.write(c);
-        count++;
+      } else if (_isVowel(ch)) {
+        // Vowels (A,E,I,O,U,Y) BREAK adjacency: reset prev so a following
+        // consonant with the same code as the previous one is still coded
+        // (e.g. 'Gauss' -> G200, not G000). H and W are transparent and must
+        // NOT reset prev, so they fall through and leave it unchanged.
+        prev = 0;
       }
     }
     while (count < _soundexCodeLength) {
@@ -67,7 +79,13 @@ abstract final class SoundexUtils {
     return _soundexCode[char[0]] ?? 0;
   }
 
+  /// True for A,E,I,O,U,Y — the letters that break code adjacency (unlike the
+  /// transparent H and W, which also code to 0 but do not reset the run).
+  /// Audited: 2026-06-12 11:26 EDT
+  static bool _isVowel(String char) => 'AEIOUY'.contains(char);
+
   /// Returns true if [a] and [b] have the same Soundex code.
+  /// Audited: 2026-06-12 11:26 EDT
   static bool soundsLike(String a, String b) => encode(a) == encode(b);
 
   SoundexUtils._();

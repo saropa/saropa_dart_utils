@@ -11,6 +11,7 @@ extension StringIndentExtensions on String {
   /// ```dart
   /// 'a\nb'.indentLines('  ');  // '  a\n  b'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String indentLines(String prefix) {
     if (isEmpty) return this;
@@ -28,6 +29,7 @@ extension StringIndentExtensions on String {
   /// '  a\n  b'.dedent();   // 'a\nb'
   /// '  a\n    b'.dedent(); // 'a\n  b'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String dedent() {
     if (isEmpty) return this;

@@ -11,6 +11,7 @@ extension StringCsvExtensions on String {
   /// 'a"b'.wrapCsvQuotes();  // '"a""b"'
   /// 'normal'.wrapCsvQuotes();  // '"normal"'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrapCsvQuotes() {
     final String escaped = replaceAll('"', '""');

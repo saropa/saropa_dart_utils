@@ -9,6 +9,7 @@ extension StringBetweenExtensions on String {
   ///
   /// Tries parentheses, square brackets, angle brackets, and curly braces in
   /// order. Returns `null` if no bracket pairs are found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   BetweenResult? betweenBracketsResult() {
     if (isEmpty) {
@@ -21,6 +22,7 @@ extension StringBetweenExtensions on String {
 
   /// Returns a [BetweenResult] like `betweenBracketsResult` but searches from
   /// the end.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   BetweenResult? betweenBracketsResultLast() {
     if (isEmpty) {
@@ -36,6 +38,7 @@ extension StringBetweenExtensions on String {
   ///
   /// Tries parentheses, square brackets, angle brackets, and curly braces in
   /// order.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? betweenBrackets() {
     if (isEmpty) {
@@ -64,6 +67,7 @@ extension StringBetweenExtensions on String {
   ///
   /// If [inclusive] is `true` (default), the delimiters themselves are also
   /// removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeBetweenAll(String start, String end, {bool inclusive = true}) {
     if (start.isEmpty) {
@@ -105,6 +109,7 @@ extension StringBetweenExtensions on String {
   /// When [endOptional] is `true` (default), content after the last [start]
   /// delimiter is included even without a closing [end]. When [trim] is `true`
   /// (default), each extracted section is trimmed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? betweenSplit(
     String start,
@@ -148,6 +153,7 @@ extension StringBetweenExtensions on String {
   ///
   /// Uses `indexOf` for [start] (first occurrence) and `lastIndexOf` for
   /// [end] (last occurrence), returning the **outermost** match.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   BetweenResult? betweenResult(
     String start,
@@ -203,6 +209,7 @@ extension StringBetweenExtensions on String {
   /// When [endOptional] is `true` (default) and [end] is not found, returns
   /// content after the last [start]. When [trim] is `true` (default), results
   /// are trimmed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   BetweenResult? betweenResultLast(
     String start,
@@ -235,6 +242,7 @@ extension StringBetweenExtensions on String {
   /// never matches, so the [endOptional] rules apply. With the default
   /// `endOptional: true` this returns everything after [start]; with
   /// `endOptional: false` it returns an empty string. (BUG-029)
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String between(String start, String end, {bool endOptional = true, bool trim = true}) {
     if (isEmpty || start.isEmpty) {
@@ -266,6 +274,7 @@ extension StringBetweenExtensions on String {
   /// If [endOptional] is `true` (default) and [end] is not found, returns
   /// content after the last [start]. When [trim] is `true` (default), the
   /// result is trimmed. Returns an empty string if no match is found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String betweenLast(String start, String end, {bool endOptional = true, bool trim = true}) {
     if (isEmpty || start.isEmpty) {

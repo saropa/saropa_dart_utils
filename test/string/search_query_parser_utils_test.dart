@@ -89,5 +89,12 @@ void main() {
         );
       },
     );
+
+    test('a bare "-" token is skipped, not emitted as an empty negated term', () {
+      expect(
+        SearchQueryParserUtils.parseSearchQuery('foo - bar').map(_t).toList(),
+        <(String, bool)>[('foo', false), ('bar', false)],
+      );
+    });
   });
 }

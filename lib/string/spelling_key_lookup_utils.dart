@@ -4,6 +4,7 @@ library;
 import 'levenshtein_utils.dart';
 
 /// Lookup that returns canonical key if [query] matches any variant within [maxDistance].
+/// Audited: 2026-06-12 11:26 EDT
 String? lookupWithVariants(
   String query,
   Map<String, List<String>> canonicalToVariants, {

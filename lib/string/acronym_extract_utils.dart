@@ -2,6 +2,7 @@
 library;
 
 /// Extracts patterns like "Full Name (ABC)" -> (ABC, Full Name).
+/// Audited: 2026-06-12 11:26 EDT
 List<(String, String)> extractAcronyms(String text) {
   final List<(String, String)> out = <(String, String)>[];
   final RegExp re = RegExp(r'([A-Za-z][A-Za-z\s]+)\s*\(([A-Z]{2,})\)');

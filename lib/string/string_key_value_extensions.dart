@@ -14,6 +14,7 @@ extension StringKeyValueExtensions on String {
   /// ```dart
   /// 'a=1 b=2'.parseKeyValuePairs();  // {'a': '1', 'b': '2'}
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<String, String> parseKeyValuePairs() {
     if (isEmpty) return <String, String>{};

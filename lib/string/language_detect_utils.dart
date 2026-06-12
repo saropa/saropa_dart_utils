@@ -160,6 +160,7 @@ const Map<String, List<String>> _kProfiles = <String, List<String>>{
 /// ```
 class LanguageGuess {
   /// Creates an immutable guess from a [language] code and distance [score].
+  /// Audited: 2026-06-12 11:26 EDT
   const LanguageGuess(this.language, this.score);
 
   /// ISO-639-1 style code of the best-matching profile (e.g. `'en'`).
@@ -169,6 +170,7 @@ class LanguageGuess {
   final double score;
 
   /// Convenience inverse of [score]: higher means a more confident guess.
+  /// Audited: 2026-06-12 11:26 EDT
   double get confidence => 1 - score;
 
   @override
@@ -192,6 +194,7 @@ class LanguageGuess {
 /// ```dart
 /// languageTrigrams('the the'); // ['the', 'he ', 'e t', ...]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<String> languageTrigrams(String text) {
   final String clean = text.toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
   if (clean.length < _kMinTrigrams) return <String>[];
@@ -218,6 +221,7 @@ List<String> languageTrigrams(String text) {
 /// ```dart
 /// detectLanguage('the quick brown fox and the lazy dog')?.language; // 'en'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 LanguageGuess? detectLanguage(String text) {
   final List<String> grams = languageTrigrams(text);
   if (grams.length < _kMinTrigrams) return null;
@@ -234,6 +238,7 @@ LanguageGuess? detectLanguage(String text) {
 }
 
 /// Normalized out-of-place distance between input [grams] and a [profile].
+/// Audited: 2026-06-12 11:26 EDT
 double _profileDistance(List<String> grams, List<String> profile) {
   // For each input trigram, add the absolute rank gap to its profile position;
   // missing trigrams cost _kMaxRank. Dividing by the worst case keeps it in

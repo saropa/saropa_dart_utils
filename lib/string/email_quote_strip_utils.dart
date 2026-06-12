@@ -4,6 +4,7 @@ library;
 const String _kOriginalMessage = 'Original Message';
 
 /// Strips common reply patterns: lines starting with >, On ... wrote:, ----- Original Message -----.
+/// Audited: 2026-06-12 11:26 EDT
 String stripEmailReplyQuotes(String body) {
   final List<String> lines = body.split('\n');
   final List<String> out = <String>[];

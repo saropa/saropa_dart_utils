@@ -18,6 +18,7 @@ extension StringHighlightExtensions on String {
   /// ```dart
   /// 'hello world'.highlightSubstring(substring: 'o', before: '<', after: '>');  // 'hell<o> w<o>rld'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String highlightSubstring({
     required String substring,

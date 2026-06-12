@@ -32,6 +32,7 @@ enum RedlineOp {
 /// ```
 class RedlineEntry {
   /// Creates an immutable redline entry.
+  /// Audited: 2026-06-12 11:26 EDT
   const RedlineEntry(this.op, this.oldLineNo, this.newLineNo, this.text);
 
   /// What happened to this line.
@@ -80,6 +81,7 @@ class RedlineEntry {
 /// ```dart
 /// redlineDiff(['a', 'b'], ['a', 'c']); // unchanged a, changed b->c
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<RedlineEntry> redlineDiff(
   List<String> oldLines,
   List<String> newLines, {
@@ -93,6 +95,7 @@ List<RedlineEntry> redlineDiff(
 }
 
 /// Classic dynamic-programming LCS length table over the two line lists.
+/// Audited: 2026-06-12 11:26 EDT
 List<List<int>> _lcsTable(List<String> a, List<String> b) {
   // table[i][j] = LCS length of a[i..] and b[j..]; computed bottom-up so the
   // forward walk in _emitFromLcs can greedily follow the longest path.
@@ -114,6 +117,7 @@ List<List<int>> _lcsTable(List<String> a, List<String> b) {
 int _maxInt(int x, int y) => x > y ? x : y;
 
 /// Emits entries by walking the LCS table from the front.
+/// Audited: 2026-06-12 11:26 EDT
 List<RedlineEntry> _emitFromLcs(List<String> a, List<String> b, List<List<int>> lcs) {
   final List<RedlineEntry> out = <RedlineEntry>[];
   int i = 0;
@@ -146,6 +150,7 @@ List<RedlineEntry> _emitFromLcs(List<String> a, List<String> b, List<List<int>> 
 }
 
 /// Collapses adjacent removed+added runs into [RedlineOp.changed] pairs.
+/// Audited: 2026-06-12 11:26 EDT
 List<RedlineEntry> _pairAdjacent(List<RedlineEntry> raw) {
   final List<RedlineEntry> out = <RedlineEntry>[];
   int i = 0;

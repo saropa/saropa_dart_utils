@@ -34,6 +34,7 @@ extension StringTextExtensions on String {
   /// space, or `null` if the result is empty.
   ///
   /// When [trim] is `true` (default), the result is also trimmed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? removeConsecutiveSpaces({bool trim = true}) {
     if (isEmpty) {
@@ -46,6 +47,7 @@ extension StringTextExtensions on String {
 
   /// Returns the result of collapsing consecutive whitespace, or `null` if
   /// empty. Alias for `removeConsecutiveSpaces`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? compressSpaces({bool trim = true}) => removeConsecutiveSpaces(trim: trim);
 
@@ -54,6 +56,7 @@ extension StringTextExtensions on String {
   /// When [splitNumbers] is `true`, also splits before digits. When
   /// [splitBySpace] is `true`, further splits each segment by whitespace.
   /// Adjacent segments shorter than [minLength] are merged together.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String> splitCapitalizedUnicode({
     bool splitNumbers = false,
@@ -98,6 +101,7 @@ extension StringTextExtensions on String {
   /// Returns this string split into a list of words, or `null` if empty.
   ///
   /// Uses space as the delimiter and filters out empty words.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? words() {
     if (isEmpty) {
@@ -110,6 +114,7 @@ extension StringTextExtensions on String {
   }
 
   /// Returns the first word of this string, or `null` if empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? firstWord() {
     if (isEmpty) {
@@ -121,6 +126,7 @@ extension StringTextExtensions on String {
 
   /// Returns the second word of this string, or `null` if fewer than two
   /// words.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? secondWord() {
     if (isEmpty) {
@@ -148,6 +154,7 @@ extension StringTextExtensions on String {
   /// 'I am 5 years old'.removeSingleCharacterWords(); // 'am years old'
   /// 'x y z'.removeSingleCharacterWords(); // null (all removed)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? removeSingleCharacterWords({
     bool trim = true,
@@ -170,6 +177,7 @@ extension StringTextExtensions on String {
   }
 
   /// Returns the first [limit] lines of this string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String firstLines(int limit) {
     if (isEmpty || limit <= 0) {
@@ -182,6 +190,7 @@ extension StringTextExtensions on String {
   }
 
   /// Returns a new string with each line trimmed and empty lines removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String trimLines() => split(StringExtensions.newLine)
       .map((String line) => line.trim())
@@ -192,6 +201,7 @@ extension StringTextExtensions on String {
   ///
   /// When [prefixEmptyStrings] is `true`, empty strings also receive the
   /// prefix.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String multiLinePrefix(
     String insertText, {
@@ -226,6 +236,7 @@ extension StringTextExtensions on String {
   /// 'university'.grammarArticle(); // 'a'
   /// 'one-time'.grammarArticle(); // 'a'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String grammarArticle() {
     if (isEmpty) {
@@ -272,6 +283,7 @@ extension StringTextExtensions on String {
   /// 'boss'.possess(); // "boss'" (US style)
   /// 'boss'.possess(isLocaleUS: false); // "boss's" (non-US)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String possess({bool isLocaleUS = true}) {
     if (isEmpty) {
@@ -295,6 +307,7 @@ extension StringTextExtensions on String {
   ///
   /// When [simple] is `true`, just appends 's'. Otherwise, applies English
   /// pluralization rules (e.g., -es, -ies).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String pluralize(num? count, {bool simple = false}) {
     if (isEmpty || count == 1) {
@@ -332,6 +345,7 @@ extension StringTextExtensions on String {
 
   /// Returns a truncated version of this string with ellipsis, keeping the
   /// first and last [minLength] characters.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String trimWithEllipsis({int minLength = 5}) {
     if (length < minLength) {
@@ -352,6 +366,7 @@ extension StringTextExtensions on String {
   ///
   /// When [appendEllipsis] is `true` (default), an ellipsis is appended if
   /// truncated.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String collapseMultilineString({
     required int cropLength,

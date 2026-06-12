@@ -4,10 +4,12 @@ library;
 import 'text_similarity_utils.dart';
 
 /// Returns true if [a] and [b] are near-duplicates (cosine similarity >= [threshold]).
+/// Audited: 2026-06-12 11:26 EDT
 bool isNearDuplicate(String a, String b, {double threshold = 0.85}) =>
     textSimilarity(a, b) >= threshold;
 
 /// Groups [documents] into near-duplicate clusters (greedy).
+/// Audited: 2026-06-12 11:26 EDT
 List<List<int>> clusterNearDuplicates(List<String> documents, {double threshold = 0.85}) {
   // Greedy single-pass clustering: the first unused document seeds a cluster,
   // then every later document similar enough to that seed joins it and is marked

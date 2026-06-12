@@ -21,6 +21,7 @@ abstract final class LevenshteinUtils {
   /// LevenshteinUtils.distance('', 'abc');           // 3
   /// LevenshteinUtils.distance('same', 'same');      // 0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static int distance(String a, String b) {
     final int aLen = a.length;
     final int bLen = b.length;
@@ -71,6 +72,7 @@ abstract final class LevenshteinUtils {
   /// LevenshteinUtils.ratio('', '');             // 1.0
   /// LevenshteinUtils.ratio('abc', 'abc');      // 1.0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static double ratio(String a, String b) {
     final int lengthA = a.length;
     final int lengthB = b.length;
@@ -112,6 +114,7 @@ abstract final class LevenshteinUtils {
   /// LevenshteinUtils.fuzzyContains('hello world', 'worls', 1); // true (1 edit)
   /// LevenshteinUtils.fuzzyContains('hello', 'xyz', 2);         // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static bool fuzzyContains(String source, String target, int maxDistance) {
     if (maxDistance < 0) {
       throw ArgumentError(_kErrMaxDistanceNonNegative, _kParamMaxDistance);

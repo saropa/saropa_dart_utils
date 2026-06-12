@@ -7,6 +7,7 @@ const String _kTagBr = 'br';
 const String _kTagImg = 'img';
 
 /// Truncates [html] to about [maxLength] chars, closing open tags.
+/// Audited: 2026-06-12 11:26 EDT
 String safeHtmlExcerpt(String html, int maxLength) {
   if (html.length <= maxLength) return html;
   final int len = maxLength.clamp(0, html.length);

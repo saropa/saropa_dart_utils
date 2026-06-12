@@ -33,5 +33,13 @@ void main() {
       final List<String> chunks = chunkText('Hi.   ', maxChars: 3);
       expect(chunks, <String>['Hi.']);
     });
+
+    test('overlap >= maxChars terminates instead of hanging', () {
+      // A rewind larger than the window must not loop forever / overflow the
+      // pre-sized buffer; forward progress is forced to at least one char.
+      final List<String> chunks = chunkText('abcdefghij', maxChars: 3, overlap: 5);
+      expect(chunks, isNotEmpty);
+      expect(chunks.length, lessThanOrEqualTo('abcdefghij'.length));
+    });
   });
 }

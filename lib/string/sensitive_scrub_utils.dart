@@ -4,6 +4,7 @@ library;
 /// A scrubber rule: [pattern] is replaced by [replacement] when matched.
 class SensitiveScrubUtils {
   /// Creates a rule that replaces every match of [pattern] with [replacement].
+  /// Audited: 2026-06-12 11:26 EDT
   const SensitiveScrubUtils(this.pattern, this.replacement);
 
   /// Regular expression identifying the sensitive substrings to mask.
@@ -23,6 +24,7 @@ const String _kScrubCard = '[CARD]';
 const String _kScrubSsn = '[SSN]';
 
 /// Default rules: mask emails, phone-like digits, card-like numbers, SSN-like.
+/// Audited: 2026-06-12 11:26 EDT
 List<SensitiveScrubUtils> get defaultScrubRules => <SensitiveScrubUtils>[
   SensitiveScrubUtils(RegExp(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'), _kScrubEmail),
   SensitiveScrubUtils(RegExp(r'\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b'), _kScrubPhone),
@@ -31,6 +33,7 @@ List<SensitiveScrubUtils> get defaultScrubRules => <SensitiveScrubUtils>[
 ];
 
 /// Returns [text] with all matches of [rules] replaced by their replacement string.
+/// Audited: 2026-06-12 11:26 EDT
 String scrubSensitive(String text, List<SensitiveScrubUtils> rules) {
   String out = text;
   for (final SensitiveScrubUtils r in rules) {

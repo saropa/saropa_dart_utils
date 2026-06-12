@@ -2,6 +2,7 @@
 library;
 
 /// Splits [text] into sentences (split on . ! ? followed by space or end).
+/// Audited: 2026-06-12 11:26 EDT
 List<String> tokenizeSentences(String text) {
   // Whitespace-only input has no sentences; guard so the split below cannot
   // emit a single empty token.
@@ -17,6 +18,7 @@ List<String> tokenizeSentences(String text) {
 }
 
 /// Splits [text] into words (non-empty runs of letters/numbers).
+/// Audited: 2026-06-12 11:26 EDT
 List<String> tokenizeWords(String text) => text
     .split(RegExp(r'\s+'))
     .map((String s) => s.replaceAll(RegExp(r'[^\w]'), '').trim())

@@ -17,6 +17,7 @@ extension StringWildcardExtensions on String {
   /// 'file'.wildcardMatch('f?le');         // true
   /// 'ab'.wildcardMatch('a*b');            // true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool wildcardMatch(String pattern) {
     if (pattern.isEmpty) return isEmpty;

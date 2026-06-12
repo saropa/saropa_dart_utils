@@ -19,6 +19,7 @@ extension StringLineExtensions on String {
   /// 'a\r\nb\rc\n'.normalizeLineBreaks();  // 'a\nb\nc\n'
   /// 'a\r\nb'.normalizeLineBreaks('\r\n'); // 'a\r\nb' (CRLF)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String normalizeLineBreaks([String target = '\n']) {
     if (target.isEmpty) {
@@ -37,6 +38,7 @@ extension StringLineExtensions on String {
   /// '\uFEFFhello'.stripBom(); // 'hello'
   /// 'hello'.stripBom();       // 'hello'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String stripBom() {
     if (isEmpty) return this;
@@ -53,6 +55,7 @@ extension StringLineExtensions on String {
   /// 'a\nb\r\nc'.splitIntoLines(); // ['a', 'b', 'c']
   /// ''.splitIntoLines();          // ['']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String> splitIntoLines() {
     if (isEmpty) return const <String>[''];

@@ -43,5 +43,11 @@ void main() {
     test('should return empty string for empty input', () {
       expect(markdownToPlainText(''), '');
     });
+
+    test('drops image syntax without leaving a stray leading bang', () {
+      // ![alt](url) is an image; the old code rewrote the link part and left '!'.
+      expect(markdownToPlainText('![logo](x.png)'), '');
+      expect(markdownToPlainText('see ![logo](x.png) here'), 'see  here');
+    });
   });
 }

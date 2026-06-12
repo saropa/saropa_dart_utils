@@ -23,6 +23,7 @@ extension StringManipulationExtensions on String {
   /// Returns a new string with [newChar] inserted at the specified [position].
   ///
   /// Returns the original string if [position] is out of bounds.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String insert(String newChar, int position) {
     if (position < 0 || position > length) {
@@ -33,6 +34,7 @@ extension StringManipulationExtensions on String {
   }
 
   /// Returns a new string with the last occurrence of [target] removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeLastOccurrence(String target) {
     final int lastIndex = lastIndexOf(target);
@@ -44,12 +46,14 @@ extension StringManipulationExtensions on String {
   }
 
   /// Returns a new string with the outer matching bracket pair removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeMatchingWrappingBrackets() =>
       isBracketWrapped() ? substringSafe(1, length - 1) : this;
 
   /// Returns `true` if this string starts and ends with a matching bracket
   /// pair: parentheses, square brackets, curly braces, or angle brackets.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBracketWrapped() {
     if (length < 2) {
@@ -66,6 +70,7 @@ extension StringManipulationExtensions on String {
   ///
   /// When [trimFirst] is `true` (default), the string is trimmed before
   /// checking.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeWrappingChar(String char, {bool trimFirst = true}) {
     String str = trimFirst ? trim() : this;
@@ -85,6 +90,7 @@ extension StringManipulationExtensions on String {
   ///
   /// When [isCaseSensitive] is `false`, uses case-insensitive matching. When
   /// [trimFirst] is `true`, the string is trimmed before checking.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? removeStart(
     String? start, {
@@ -117,6 +123,7 @@ extension StringManipulationExtensions on String {
   /// index, refusing to split a base+combining-mark cluster and leaving the
   /// suffix un-stripped. Code-unit slicing keeps the contract consistent: a
   /// bare combining mark passed as [end] is stripped, matching `endsWith`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeEnd(String end) => endsWith(end) ? substring(0, length - end.length) : this;
 
@@ -148,6 +155,7 @@ extension StringManipulationExtensions on String {
   /// 'abc'.removeEndNullable('abc');        // ''     (stripped to nothing)
   /// ''.removeEndNullable('x');             // null   (no source to strip)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? removeEndNullable(String? find) => find == null || find.isEmpty
       ? this
@@ -156,6 +164,7 @@ extension StringManipulationExtensions on String {
       : removeEnd(find);
 
   /// Returns a new string with the first character removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeFirstChar() => (length < 1) ? '' : substringSafe(1);
 
@@ -164,6 +173,7 @@ extension StringManipulationExtensions on String {
   /// Counts by grapheme cluster (via [substringSafe]), so a trailing emoji or
   /// base+combining-mark sequence is removed whole and never split into an
   /// orphaned surrogate or a stranded mark. Empty in, empty out.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeLastChar() {
     // Grapheme length, not String.length: substringSafe is grapheme-indexed, so
@@ -190,6 +200,7 @@ extension StringManipulationExtensions on String {
   /// 'Hi'.removeLastChars(5);    // ''
   /// 'Hi'.removeLastChars(0);    // 'Hi'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeLastChars(int count) {
     if (count <= 0) {
@@ -209,17 +220,20 @@ extension StringManipulationExtensions on String {
   }
 
   /// Returns a new string with both the first and last characters removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeFirstLastChar() => (length < 2) ? '' : substringSafe(1, length - 1);
 
   /// Returns a new string with apostrophe variants replaced by a standard
   /// single quote.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String normalizeApostrophe() => replaceAll(_apostropheRegex, "'");
 
   /// Returns a new string with all non-letter characters removed.
   ///
   /// When [allowSpace] is `true`, space characters are preserved.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toAlphaOnly({bool allowSpace = false}) =>
       replaceAll(allowSpace ? _alphaOnlyWithSpaceRegex : _alphaOnlyRegex, '');
@@ -227,6 +241,7 @@ extension StringManipulationExtensions on String {
   /// Returns a new string with all non-alphanumeric characters removed.
   ///
   /// When [allowSpace] is `true`, space characters are preserved.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeNonAlphaNumeric({bool allowSpace = false}) => replaceAll(
     allowSpace ? _alphaNumericOnlyWithSpaceRegex : _alphaNumericOnlyRegex,
@@ -238,10 +253,12 @@ extension StringManipulationExtensions on String {
   ///
   /// For example, `'abc123def'.replaceNonNumbers(replacement: '-')` results
   /// in `'---123---'`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String replaceNonNumbers({String replacement = ''}) => replaceAll(_nonDigitRegex, replacement);
 
   /// Returns a new string with all non-digit characters removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeNonNumbers() => replaceAll(_nonDigitRegex, '');
 
@@ -253,6 +270,7 @@ extension StringManipulationExtensions on String {
   // not re-add a same-named String method here.
 
   /// Returns a new string with all occurrences of [pattern] removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeAll(Pattern? pattern) {
     if (pattern == null) {
@@ -264,6 +282,7 @@ extension StringManipulationExtensions on String {
 
   /// Returns a new string with the last [n] characters replaced by
   /// [replacementChar].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String replaceLastNCharacters(int n, String replacementChar) {
     if (n <= 0 || n > length) {
@@ -275,6 +294,7 @@ extension StringManipulationExtensions on String {
 
   /// Returns a new string with hyphens and spaces replaced by non-breaking
   /// equivalents.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String makeNonBreaking() => replaceAll(
     '-',
@@ -285,6 +305,7 @@ extension StringManipulationExtensions on String {
   ///
   /// When [deduplicate] is `true` (default), consecutive runs of the
   /// replacement string are collapsed into a single occurrence.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String replaceLineBreaks(String? replacement, {bool deduplicate = true}) {
     final String result = replaceAll(_lineBreakRegex, replacement ?? '');
@@ -302,6 +323,7 @@ extension StringManipulationExtensions on String {
   /// removed, or `null` if the result is empty.
   ///
   /// When [trim] is `true`, whitespace is also trimmed between removals.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? removeLeadingAndTrailing(String? find, {bool trim = false}) {
     if (isEmpty || find == null || find.isEmpty) {
@@ -332,6 +354,7 @@ extension StringManipulationExtensions on String {
   /// '123'.lettersOnly(); // ''
   /// 'café'.lettersOnly(); // 'caf' (é removed)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String lettersOnly() {
     if (isEmpty) {
@@ -350,6 +373,7 @@ extension StringManipulationExtensions on String {
   /// 'ABC-def'.lowerCaseLettersOnly(); // 'def'
   /// '123'.lowerCaseLettersOnly(); // ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String lowerCaseLettersOnly() {
     if (isEmpty) {
@@ -362,6 +386,7 @@ extension StringManipulationExtensions on String {
   /// Returns the substring before the first occurrence of [find].
   ///
   /// Returns the original string if [find] is not found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String getEverythingBefore(String find) {
     final int atIndex = indexOf(find);
@@ -371,6 +396,7 @@ extension StringManipulationExtensions on String {
 
   /// Returns the substringSafe after the first occurrence of [find].
   /// Returns the original string if [find] is not found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String getEverythingAfter(String find) {
     final int atIndex = indexOf(find);
@@ -380,6 +406,7 @@ extension StringManipulationExtensions on String {
 
   /// Returns the substringSafe after the last occurrence of [find].
   /// Returns the original string if [find] is not found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String getEverythingAfterLast(String find) {
     if (find.isEmpty) {
@@ -392,6 +419,7 @@ extension StringManipulationExtensions on String {
   }
 
   /// Returns a random character from this string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String getRandomChar() {
     if (isEmpty) {
@@ -412,6 +440,7 @@ extension StringManipulationExtensions on String {
   /// 'x'.repeat(5); // 'xxxxx'
   /// 'test'.repeat(0); // ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String repeat(int count) {
     if (isEmpty || count <= 0) {
@@ -428,11 +457,13 @@ extension StringManipulationExtensions on String {
 
   /// Returns this string with [value] appended, or an empty string if this
   /// string is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String appendNotEmpty(String value) => isEmpty ? '' : this + value;
 
   /// Returns this string with [value] prepended, or this string unchanged if
   /// empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String prefixNotEmpty(String? value) {
     if (isEmpty || value == null || value.isEmpty) {

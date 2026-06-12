@@ -15,6 +15,7 @@ extension StringRegexExtensions on String {
   /// r'$10.00'.escapeForRegex();  // r'\$10\.00'
   /// 'a+b'.escapeForRegex();      // r'a\+b'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String escapeForRegex() {
     if (isEmpty) return this;

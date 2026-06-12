@@ -105,6 +105,7 @@ extension StringExtensions on String {
 
   /// Returns this string wrapped with [before] prepended and [after]
   /// appended.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrap({String? before, String? after}) {
     final String prefix = before ?? '';
@@ -115,6 +116,7 @@ extension StringExtensions on String {
 
   /// Returns this string wrapped with [before] prepended and [after]
   /// appended, or `null` if the string is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? wrapWith({String? before, String? after}) {
     if (isEmpty) {
@@ -128,6 +130,7 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns `''` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrapSingleQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
@@ -141,6 +144,7 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns `""` if [quoteEmpty] is `true`,
   /// otherwise returns an empty string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrapDoubleQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
@@ -154,6 +158,7 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns the empty quote pair if [quoteEmpty]
   /// is `true`, otherwise returns an empty string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrapSingleAccentedQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
@@ -167,6 +172,7 @@ extension StringExtensions on String {
   ///
   /// If the string is empty, returns the empty quote pair if [quoteEmpty]
   /// is `true`, otherwise returns an empty string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String wrapDoubleAccentedQuotes({bool quoteEmpty = false}) {
     if (isEmpty) {
@@ -179,6 +185,7 @@ extension StringExtensions on String {
   /// Returns this string enclosed in parentheses, or `null` if empty.
   ///
   /// When [wrapEmpty] is `true`, returns `'()'` for empty strings.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? encloseInParentheses({bool wrapEmpty = false}) {
     if (isEmpty) {
@@ -190,6 +197,7 @@ extension StringExtensions on String {
 
   /// Returns a new string with a newline character inserted before each
   /// opening parenthesis.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String insertNewLineBeforeBrackets() => replaceAll('(', '\n(');
 
@@ -198,6 +206,7 @@ extension StringExtensions on String {
   ///
   /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the original string if it's shorter than [cutoff].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String truncateWithEllipsis(int? cutoff) {
     if (isEmpty || cutoff == null || cutoff <= 0) {
@@ -222,6 +231,7 @@ extension StringExtensions on String {
   /// 'Hello World'.truncateWithEllipsisPreserveWords(8); // 'Hello…'
   /// 'Hello World'.truncateWithEllipsisPreserveWords(20); // 'Hello World'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String truncateWithEllipsisPreserveWords(int? cutoff) {
     final int charLength = characters.length;
@@ -242,8 +252,12 @@ extension StringExtensions on String {
     return '$trimmed$ellipsis';
   }
 
-  /// Returns a new string with all characters reversed. Handles Unicode
-  /// correctly.
+  /// Returns a new string with all characters reversed, by Unicode code point
+  /// (rune). Surrogate-pair characters survive intact, but grapheme CLUSTERS are
+  /// NOT preserved: a base letter plus a combining mark, or a ZWJ/skin-tone emoji
+  /// sequence, is reordered or split (e.g. `e`+U+0301 reverses to a leading
+  /// combining acute). Reverse over `characters` if cluster integrity matters.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String get reversed => String.fromCharCodes(runes.toList().reversed);
 
@@ -251,6 +265,7 @@ extension StringExtensions on String {
   ///
   /// - [trimFirst]: If true (default), the string is trimmed before the
   ///   check.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? nullIfEmpty({bool trimFirst = true}) {
     if (isEmpty) {
@@ -278,6 +293,7 @@ extension StringExtensions on String {
   /// '🙂hello'.substringSafe(0, 1); // '🙂'
   /// 'hello'.substringSafe(1, 3); // 'el'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String substringSafe(int start, [int? end]) {
     final Characters chars = characters;
@@ -300,6 +316,7 @@ extension StringExtensions on String {
   ///
   /// Uses grapheme clusters for proper Unicode support, including emojis.
   /// Returns the full string if its length is less than [n].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String lastChars(int n) {
     if (n <= 0) {
@@ -320,6 +337,7 @@ extension StringExtensions on String {
   /// sequences such as emoji with skin-tone modifiers or ZWJ sequences.
   ///
   /// Returns the full string if [len] is greater than the grapheme length.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String last(int len) {
     if (isEmpty || len <= 0) {

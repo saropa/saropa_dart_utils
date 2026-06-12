@@ -37,6 +37,7 @@ export 'package:saropa_dart_utils/string/unicode_class_blocks.dart'
 /// findUnicodeClassType('ignore اختبار',
 ///     ignoreBasicLatin: true, firstCharOnly: false); // UnicodeClassType.Arabic
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 UnicodeClassType? findUnicodeClassType(
   String value, {
   bool ignoreBasicLatin = false,
@@ -101,6 +102,7 @@ UnicodeClassType? findUnicodeClassType(
 /// Extracted from [findUnicodeClassType] so the caller's rune loop stays shallow
 /// (one nesting level instead of two). Honors [ignoreBasicLatin] so a Latin rune
 /// reports as unmatched (null) when the caller is scanning for a non-Latin script.
+/// Audited: 2026-06-12 11:26 EDT
 UnicodeClassType? _blockForRune(int rune, {required bool ignoreBasicLatin}) {
   // First match wins: ranges are sorted ascending and non-overlapping, so the
   // first containing block is the correct (lowest) one for this rune.
@@ -132,6 +134,7 @@ UnicodeClassType? _blockForRune(int rune, {required bool ignoreBasicLatin}) {
 /// isUnicodeWhitespace(0x202F); // true  (narrow no-break space)
 /// isUnicodeWhitespace(0x41);   // false ('A')
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool isUnicodeWhitespace(int rune) => _whitespaceRunes.contains(rune);
 
 /// The whitespace code points recognized by [isUnicodeWhitespace].

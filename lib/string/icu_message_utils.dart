@@ -29,6 +29,7 @@ String _pluralForm(int count, {required String other, String? one, String? zero}
 /// icuPlural(1, one: '# file', other: '# files');                   // 1 file
 /// icuPlural(5, one: '# file', other: '# files');                   // 5 files
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String icuPlural(int count, {required String other, String? one, String? zero}) =>
     _pluralForm(count, zero: zero, one: one, other: other).replaceAll('#', '$count');
 
@@ -43,5 +44,6 @@ String icuPlural(int count, {required String other, String? one, String? zero}) 
 /// icuSelect('female', <String, String>{'male': 'He', 'female': 'She'}, other: 'They');
 /// // 'She'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String icuSelect(String value, Map<String, String> cases, {required String other}) =>
     cases[value] ?? other;

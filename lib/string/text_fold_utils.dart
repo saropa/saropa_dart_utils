@@ -8,6 +8,7 @@ const int _kDefaultFoldWidth = 78;
 ///
 /// The quote prefix is one or more ">" tokens, each optionally followed by a
 /// single space; this is the de-facto convention for nested email replies.
+/// Audited: 2026-06-12 11:26 EDT
 final RegExp _kQuotePrefix = RegExp(r'^(?:>\s?)+');
 
 /// Options controlling how [foldText] hard-wraps lines.
@@ -22,6 +23,7 @@ final RegExp _kQuotePrefix = RegExp(r'^(?:>\s?)+');
 /// ```
 class FoldOptions {
   /// Creates fold options with an optional [width] (defaults to 78).
+  /// Audited: 2026-06-12 11:26 EDT
   const FoldOptions({this.width = _kDefaultFoldWidth});
 
   /// Maximum column width (inclusive) for each produced line, prefix included.
@@ -37,6 +39,7 @@ class FoldOptions {
 /// ```dart
 /// splitQuotePrefix('> > hi'); // ('> > ', 'hi')
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 (String prefix, String body) splitQuotePrefix(String line) {
   final RegExpMatch? match = _kQuotePrefix.firstMatch(line);
   if (match == null) return ('', line);
@@ -59,6 +62,7 @@ class FoldOptions {
 /// foldText('> hello world', const FoldOptions(width: 9));
 /// // '> hello\n> world'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String foldText(String text, [FoldOptions options = const FoldOptions()]) {
   // Fold each source line independently so a line's own quote depth governs
   // the prefix repeated on its continuations.
@@ -69,6 +73,7 @@ String foldText(String text, [FoldOptions options = const FoldOptions()]) {
 }
 
 /// Wraps a single [line] to [width], repeating its quote prefix per output line.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> _foldLine(String line, int width) {
   final (String prefix, String body) = splitQuotePrefix(line);
   if (body.isEmpty) return <String>[line];
@@ -79,6 +84,7 @@ List<String> _foldLine(String line, int width) {
 }
 
 /// Greedily packs [words] into lines no wider than [avail] characters.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> _wrapWords(List<String> words, int avail) {
   final List<String> lines = <String>[];
   String current = '';
@@ -108,6 +114,7 @@ List<String> _wrapWords(List<String> words, int avail) {
 /// ```dart
 /// unfoldText('> hello\n> world'); // '> hello world'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String unfoldText(String text) {
   final List<String> out = <String>[];
   String? prefix;
@@ -130,6 +137,7 @@ String unfoldText(String text) {
 }
 
 /// Emits the accumulated [buffer] (with its [prefix]) when non-empty.
+/// Audited: 2026-06-12 11:26 EDT
 void _flush(List<String> out, String? prefix, String buffer) {
   if (prefix != null && buffer.isNotEmpty) out.add('$prefix$buffer');
 }

@@ -18,6 +18,7 @@ extension StringWordsExtensions on String {
   /// 'hello world'.wordCount();  // 2
   /// '  a  b  '.wordCount();    // 2
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int wordCount() {
     if (isEmpty) return 0;
@@ -38,6 +39,7 @@ extension StringWordsExtensions on String {
   /// ```dart
   /// 'hello'.breakLongWords(2, '\u00ad');  // 'hel\u00adlo'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String breakLongWords(int charCount, String separator) {
     if (charCount < 1) {

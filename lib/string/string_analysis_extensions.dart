@@ -13,12 +13,14 @@ final RegExp _curlyBracesRegex = RegExp(r'\{.+?\}');
 extension StringAnalysisExtensions on String {
   /// Returns `true` if this string contains only Latin alphabet characters
   /// (a-z, A-Z).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isLatin() => _latinRegex.hasMatch(this);
 
   /// Returns `true` if this string equals [other], with options for
   /// case-insensitivity via [ignoreCase] and apostrophe normalization via
   /// [normalizeApostrophe].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isEquals(
     String? other, {
@@ -57,6 +59,7 @@ extension StringAnalysisExtensions on String {
   /// 'Hello World'.containsIgnoreCase('HELLO'); // true
   /// 'Hello World'.containsIgnoreCase(null); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool containsIgnoreCase(String? other) {
     if (other == null) {
@@ -72,6 +75,7 @@ extension StringAnalysisExtensions on String {
 
   /// Returns the first character where this string and [other] differ, or an
   /// empty string if they are identical.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String getFirstDiffChar(String other) {
     final int minLength = length < other.length ? length : other.length;
@@ -97,6 +101,7 @@ extension StringAnalysisExtensions on String {
   static const int _invalidUnicodeReplacementRuneCode = 56327;
 
   /// Returns true if this string contains invalid Unicode characters.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get hasInvalidUnicode {
     if (isEmpty) {
@@ -108,6 +113,7 @@ extension StringAnalysisExtensions on String {
 
   /// Returns a new string with all invalid Unicode replacement characters
   /// removed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeInvalidUnicode() {
     if (isEmpty) {
@@ -123,6 +129,7 @@ extension StringAnalysisExtensions on String {
   }
 
   /// Returns true if this single-character string is a vowel.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isVowel() {
     if (isEmpty || length != 1) {
@@ -136,6 +143,7 @@ extension StringAnalysisExtensions on String {
   }
 
   /// Returns true if this string contains any digit characters.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool hasAnyDigits() => contains(_anyDigitsRegex);
 
@@ -149,6 +157,7 @@ extension StringAnalysisExtensions on String {
   /// 'test'.count('x'); // 0
   /// 'hello'.count(''); // 0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int count(String find) {
     if (find.isEmpty) {
@@ -160,6 +169,7 @@ extension StringAnalysisExtensions on String {
 
   /// Returns the index of the second occurrence of [char], or `-1` if not
   /// found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int secondIndex(String char) {
     if (char.isEmpty || isEmpty) {
@@ -188,6 +198,7 @@ extension StringAnalysisExtensions on String {
   /// '{a}{b}{c}'.extractCurlyBraces(); // ['{a}', '{b}', '{c}']
   /// 'no braces'.extractCurlyBraces(); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? extractCurlyBraces() {
     final List<String> matches = _curlyBracesRegex
@@ -211,6 +222,7 @@ extension StringAnalysisExtensions on String {
   /// 'secret'.obscureText(char: '*'); // '******' (length varies)
   /// ''.obscureText(); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? obscureText({String char = '•', int obscureLength = 3}) {
     if (isEmpty) {
@@ -225,6 +237,7 @@ extension StringAnalysisExtensions on String {
   }
 
   /// Returns `true` if this string ends with any character in [find].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool endsWithAny(List<String> find) {
     if (isEmpty || find.isEmpty) {
@@ -237,10 +250,12 @@ extension StringAnalysisExtensions on String {
   }
 
   /// Returns `true` if this string ends with punctuation (`.`, `?`, or `!`).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool endsWithPunctuation() => endsWithAny(const <String>['.', '?', '!']);
 
   /// Returns `true` if this string equals any item in [list].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isAny(List<String> list) {
     if (isEmpty || list.isEmpty) {

@@ -8,6 +8,7 @@ final RegExp _trailingIntRegex = RegExp(r'\d+$');
 /// If the string is empty or does not contain a trailing integer, it returns null.
 extension StringNumberExtensions on String {
   /// Returns `true` if this string can be parsed as a number.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isNumeric() =>
       // Attempt to parse as a double and check if the result is not null.
@@ -36,6 +37,7 @@ extension StringNumberExtensions on String {
   /// '1e3'.isNumber;   // false (scientific notation)
   /// ''.isNumber;      // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNumber => int.tryParse(this) != null;
 
@@ -45,6 +47,7 @@ extension StringNumberExtensions on String {
   double? toDoubleNullable() => isEmpty ? null : double.tryParse(this);
 
   /// Returns this string parsed as an `int`, or `null` if parsing fails.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int? toIntNullable() {
     if (isEmpty) {
@@ -65,6 +68,7 @@ extension StringNumberExtensions on String {
   /// String example = "FUZZY_NAME_60";
   /// print(example.getTrailingInt()); // Output: 60
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int? getTrailingInt() {
     // Exit early if the string is empty

@@ -18,11 +18,13 @@ extension StringNullableExtensions on String? {
   /// text = "Hello";
   /// print(text.isNullOrEmpty); // Output: false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNullOrEmpty => this?.isEmpty ?? true;
 
   /// IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool
   /// Return true if the string is not null and not empty
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNotNullOrEmpty => this?.isNotEmpty ?? false;
 }

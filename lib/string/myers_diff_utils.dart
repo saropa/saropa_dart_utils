@@ -40,6 +40,7 @@ abstract final class MyersDiffUtils {
   /// final script = MyersDiffUtils.diffLines('a\nb\nc', 'a\nx\nc');
   /// // equal('a\n'), delete('b\n'), insert('x\n'), equal('c')
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static List<DiffOp> diffLines(String oldText, String newText) {
     final List<String> a = _splitLines(oldText);
     final List<String> b = _splitLines(newText);
@@ -76,15 +77,18 @@ abstract final class MyersDiffUtils {
 /// so that [text] can represent a multi-line segment.
 class DiffOp {
   /// Creates an edit operation of the given [kind] carrying its segment [text].
+  /// Audited: 2026-06-12 11:26 EDT
   const DiffOp(DiffOpKind kind, String text) : _kind = kind, _text = text;
 
   final DiffOpKind _kind;
 
   /// The kind of edit (equal, insert, or delete).
+  /// Audited: 2026-06-12 11:26 EDT
   DiffOpKind get kind => _kind;
   final String _text;
 
   /// The segment text for this operation.
+  /// Audited: 2026-06-12 11:26 EDT
   String get text => _text;
 
   @override

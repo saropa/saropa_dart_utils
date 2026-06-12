@@ -14,6 +14,7 @@ extension StringPunctuation on String {
   ///
   /// Therefore, the entire regex matches one or more characters that are NOT letters, NOT whitespace, **and NOT numbers**,
   /// effectively targeting punctuation and symbols for removal, while preserving letters, whitespace, and numbers.
+  /// Audited: 2026-06-12 11:26 EDT
   static final RegExp punctuationRegex = RegExp(r'[^\p{L}\s\p{N}]+', unicode: true);
 
   /// Removes punctuation characters from a string, while preserving
@@ -45,6 +46,7 @@ extension StringPunctuation on String {
   /// String cleanedMixedText = mixedText.removePunctuation();
   /// print(cleanedMixedText); // Output: Text with 123 punctuation marks
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removePunctuation() => replaceAll(punctuationRegex, '');
 }

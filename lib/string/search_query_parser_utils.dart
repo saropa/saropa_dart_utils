@@ -8,6 +8,7 @@ abstract final class SearchQueryParserUtils {
   SearchQueryParserUtils._();
 
   /// Parses [query] into a list of [QueryTerm] (words/phrases, AND/OR, minus).
+  /// Audited: 2026-06-12 11:26 EDT
   static List<QueryTerm> parseSearchQuery(String query) {
     final String q = query.trim();
     final RegExp quoted = RegExp(r'"([^"]*)"');
@@ -32,8 +33,11 @@ abstract final class SearchQueryParserUtils {
           if (word.toUpperCase() != 'OR') {
             // Strip the leading '-' from the stored text (consistent with the
             // trailing-words branch below); the negation is captured separately.
-            final String term = word.startsWith('-') ? word.replaceRange(0, 1, '') : word;
-            out[outIndex++] = QueryTerm(term, isNegated: word.startsWith('-'));
+            final bool negated = word.startsWith('-');
+            final String term = negated ? word.replaceRange(0, 1, '') : word;
+            // Skip a bare '-' (term empty after stripping): it is punctuation,
+            // not a real negated term, and would otherwise emit QueryTerm('').
+            if (term.isNotEmpty) out[outIndex++] = QueryTerm(term, isNegated: negated);
           }
         }
       }
@@ -47,8 +51,9 @@ abstract final class SearchQueryParserUtils {
     final String rest = restStart < q.length ? q.substringSafe(restStart) : '';
     for (final String word in rest.split(ws).where((String x) => x.isNotEmpty)) {
       if (word.toUpperCase() != 'OR') {
-        final String term = word.startsWith('-') ? word.replaceRange(0, 1, '') : word;
-        out[outIndex++] = QueryTerm(term, isNegated: word.startsWith('-'));
+        final bool negated = word.startsWith('-');
+        final String term = negated ? word.replaceRange(0, 1, '') : word;
+        if (term.isNotEmpty) out[outIndex++] = QueryTerm(term, isNegated: negated);
       }
     }
     return out.sublist(0, outIndex);
@@ -58,6 +63,7 @@ abstract final class SearchQueryParserUtils {
 /// Parsed query term: phrase or word, optional negated.
 class QueryTerm {
   /// Creates a query term for [text]; set [isNegated] for excluded ("-word") terms.
+  /// Audited: 2026-06-12 11:26 EDT
   const QueryTerm(this.text, {this.isNegated = false});
 
   /// The word or quoted phrase to match (without the leading "-" if negated).

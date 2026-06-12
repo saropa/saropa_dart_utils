@@ -2,6 +2,7 @@
 library;
 
 /// Extracts text under first heading matching [headingPattern] (e.g. r'^#\s+Install').
+/// Audited: 2026-06-12 11:26 EDT
 String? extractSectionByHeading(String markdown, RegExp headingPattern) {
   final List<String> lines = markdown.split('\n');
   // Find the matching heading; the section body starts on the line after it.
@@ -24,6 +25,7 @@ String? extractSectionByHeading(String markdown, RegExp headingPattern) {
 }
 
 /// Returns first fenced code block content or null.
+/// Audited: 2026-06-12 11:26 EDT
 String? extractFirstCodeBlock(String markdown) {
   final RegExp re = RegExp(r'```[\w]*\n([\s\S]*?)```');
   final Match? m = re.firstMatch(markdown);

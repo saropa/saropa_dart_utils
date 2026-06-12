@@ -2,6 +2,7 @@
 library;
 
 /// Extracts first fenced code block (```lang\n...\n```) or returns null.
+/// Audited: 2026-06-12 11:26 EDT
 String? extractFirstCodeBlock(String text) {
   final RegExp fenced = RegExp(r'```[\w]*\n([\s\S]*?)```');
   final Match? m = fenced.firstMatch(text);
@@ -9,6 +10,7 @@ String? extractFirstCodeBlock(String text) {
 }
 
 /// Returns all fenced code blocks as list of (language, code).
+/// Audited: 2026-06-12 11:26 EDT
 List<(String, String)> extractAllCodeBlocks(String text) {
   final RegExp fenced = RegExp(r'```(\w*)\n([\s\S]*?)```');
   return fenced

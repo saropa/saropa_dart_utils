@@ -62,7 +62,11 @@ void main() {
       test('should classify CJK ideographs', () {
         // '相浦由莉絵' — String.fromCharCodes is not a const constructor.
         final String cjk = String.fromCharCodes(<int>[
-          0x76F8, 0x6D66, 0x7531, 0x83C9, 0x7D75,
+          0x76F8,
+          0x6D66,
+          0x7531,
+          0x83C9,
+          0x7D75,
         ]);
         expect(findUnicodeClassType(cjk), UnicodeClassType.CJKUnifiedIdeographs);
       });
@@ -70,9 +74,28 @@ void main() {
       test('should classify Arabic script', () {
         // 'سلامی جمہوریہ پاكِستان'
         final String arabic = String.fromCharCodes(<int>[
-          0x0633, 0x0644, 0x0627, 0x0645, 0x06CC, 0x0020,
-          0x062C, 0x0645, 0x06C1, 0x0648, 0x0631, 0x06CC, 0x06C1, 0x0020,
-          0x067E, 0x0627, 0x0643, 0x0650, 0x0633, 0x062A, 0x0627, 0x0646,
+          0x0633,
+          0x0644,
+          0x0627,
+          0x0645,
+          0x06CC,
+          0x0020,
+          0x062C,
+          0x0645,
+          0x06C1,
+          0x0648,
+          0x0631,
+          0x06CC,
+          0x06C1,
+          0x0020,
+          0x067E,
+          0x0627,
+          0x0643,
+          0x0650,
+          0x0633,
+          0x062A,
+          0x0627,
+          0x0646,
         ]);
         expect(findUnicodeClassType(arabic), UnicodeClassType.Arabic);
       });
@@ -81,8 +104,19 @@ void main() {
         // ingnore latin
         // 'ignore اختبار'
         final String mixed = String.fromCharCodes(<int>[
-          0x69, 0x67, 0x6E, 0x6F, 0x72, 0x65, 0x20,
-          0x0627, 0x062E, 0x062A, 0x0628, 0x0627, 0x0631,
+          0x69,
+          0x67,
+          0x6E,
+          0x6F,
+          0x72,
+          0x65,
+          0x20,
+          0x0627,
+          0x062E,
+          0x062A,
+          0x0628,
+          0x0627,
+          0x0631,
         ]);
         expect(
           findUnicodeClassType(mixed, ignoreBasicLatin: true, firstCharOnly: false),
@@ -353,8 +387,9 @@ void main() {
       });
 
       test('should contain every enum value exactly once', () {
-        final List<UnicodeClassType> typesInTable =
-            unicodeClassRanges.map((UnicodeClass b) => b.type).toList();
+        final List<UnicodeClassType> typesInTable = unicodeClassRanges
+            .map((UnicodeClass b) => b.type)
+            .toList();
         // Catch a future enum addition that forgets its range entry, and any
         // accidental duplicate range row.
         for (final UnicodeClassType type in UnicodeClassType.values) {
@@ -373,11 +408,31 @@ void main() {
 /// Every whitespace code point the predicate must recognize, per the spec's
 /// Bulletproofing list (ASCII controls + Unicode space separators).
 const List<int> _whitespaceSamples = <int>[
-  0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x20, 0x85, 0xA0,
+  0x09,
+  0x0A,
+  0x0B,
+  0x0C,
+  0x0D,
+  0x20,
+  0x85,
+  0xA0,
   0x1680,
-  0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
-  0x2006, 0x2007, 0x2008, 0x2009, 0x200A,
-  0x2028, 0x2029, 0x202F, 0x205F, 0x3000,
+  0x2000,
+  0x2001,
+  0x2002,
+  0x2003,
+  0x2004,
+  0x2005,
+  0x2006,
+  0x2007,
+  0x2008,
+  0x2009,
+  0x200A,
+  0x2028,
+  0x2029,
+  0x202F,
+  0x205F,
+  0x3000,
 ];
 
 /// True for the three surrogate blocks, which are unreachable from a valid Dart

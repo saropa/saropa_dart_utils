@@ -31,6 +31,7 @@ extension StringCaseExtensions on String {
   /// '123'.isAllLetterLowerCase;     // Returns false
   /// ''.isAllLetterLowerCase;        // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isAllLetterLowerCase => _allLetterLowerCaseRegex.hasMatch(this);
 
@@ -53,6 +54,7 @@ extension StringCaseExtensions on String {
   /// ```
   ///
   /// NOTE: supports unicode
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isAnyCaseLetter => _anyCaseLetterRegex.hasMatch(this);
 
@@ -73,6 +75,7 @@ extension StringCaseExtensions on String {
   /// '123'.isAllLetterUpperCase;     // Returns false
   /// ''.isAllLetterUpperCase;        // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isAllLetterUpperCase => _allLetterUpperCaseRegex.hasMatch(this);
 
@@ -95,6 +98,7 @@ extension StringCaseExtensions on String {
   /// 'mixed CASE words'.capitalizeWords(lowerCaseRemaining: true); // Returns 'Mixed Case Words'
   /// ''.capitalizeWords(); // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String capitalizeWords({bool makeLowerCaseRemaining = false}) {
     if (isEmpty) {
@@ -131,6 +135,7 @@ extension StringCaseExtensions on String {
   /// 'lowercase'.lowerCaseFirstChar(); // Returns 'lowercase'
   /// ''.lowerCaseFirstChar();        // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String lowerCaseFirstChar() => isEmpty ? '' : this[0].toLowerCase() + substringSafe(1);
 
@@ -147,6 +152,7 @@ extension StringCaseExtensions on String {
   /// 'UPPERCASE'.upperCaseFirstChar(); // Returns 'UPPERCASE'
   /// ''.upperCaseFirstChar();        // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String upperCaseFirstChar() => isEmpty ? '' : this[0].toUpperCase() + substringSafe(1);
 
@@ -163,6 +169,7 @@ extension StringCaseExtensions on String {
   /// 'TITLE CASE'.titleCase(); // Returns 'Title case'
   /// ''.titleCase();           // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String titleCase() => isEmpty ? '' : this[0].toUpperCase() + substringSafe(1).toLowerCase();
 
@@ -185,6 +192,7 @@ extension StringCaseExtensions on String {
   /// 'UPPERCASE'.toUpperLatinOnly();    // Returns 'UPPERCASE' (already uppercase)
   /// ''.toUpperLatinOnly();             // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toUpperLatinOnly() {
     if (isEmpty) {
@@ -243,6 +251,7 @@ extension StringCaseExtensions on String {
   /// 'mIxEd'.capitalize(lowerCaseRemaining: true); // Returns 'Mixed'
   /// ''.capitalize();        // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String capitalize({bool makeLowerCaseRemaining = false}) {
     if (isEmpty) {
@@ -276,6 +285,7 @@ extension StringCaseExtensions on String {
   /// 'lowercase'.upperCaseLettersOnly();       // Returns ''
   /// ''.upperCaseLettersOnly();                // Returns ''
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String upperCaseLettersOnly() {
     if (isEmpty) {
@@ -315,6 +325,7 @@ extension StringCaseExtensions on String {
   /// 'No capitalized words'.findCapitalizedWords();  // Returns null
   /// ''.findCapitalizedWords();                     // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? findCapitalizedWords() {
     if (isEmpty) {
@@ -349,6 +360,7 @@ extension StringCaseExtensions on String {
   ///
   /// NOTE:  No split for Unicode
   /// NOTE:  .trim() is applied afterwards
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String insertSpaceBetweenCapitalized({bool splitNumbers = false}) {
     if (isEmpty) {
@@ -386,6 +398,7 @@ extension StringCaseExtensions on String {
   /// 'Numbers123Split'.splitCapitalized(splitNumbers: true); // Returns ['Numbers', '123', 'Split']
   /// ''.splitCapitalized(); // Returns []
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String> splitCapitalized({bool splitNumbers = false}) {
     // Return empty list for empty input string
@@ -419,6 +432,7 @@ extension StringCaseExtensions on String {
   /// 'CAPITALIZED WORDS'.unCapitalizedWords();           // Returns null
   /// ''.unCapitalizedWords();                              // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String>? unCapitalizedWords() => words()
       ?.where((String word) => word.isNotEmpty && word[0].isAllLetterLowerCase)

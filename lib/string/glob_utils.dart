@@ -18,6 +18,7 @@ abstract final class GlobUtils {
   /// GlobUtils.match('lib/foo.dart', 'lib/*.dart');  // true
   /// GlobUtils.match('a/b/c', 'a/**/c');            // true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static bool match(String path, String pattern) {
     if (path.isEmpty && pattern.isEmpty) return true;
     if (path.isEmpty || pattern.isEmpty) return false;

@@ -91,14 +91,16 @@ void main() {
   // U+002D vs Unicode hyphen U+2010 vs non-breaking hyphen U+2011) fails loudly.
   group('exact code point per constant', () {
     const Map<String, MapEntry<String, int>> codePoints = <String, MapEntry<String, int>>{
-      'accentedQuoteOpening':
-          MapEntry<String, int>(StringExtensions.accentedQuoteOpening, 0x2018),
-      'accentedQuoteClosing':
-          MapEntry<String, int>(StringExtensions.accentedQuoteClosing, 0x2019),
-      'accentedDoubleQuoteOpening':
-          MapEntry<String, int>(StringExtensions.accentedDoubleQuoteOpening, 0x201C),
-      'accentedDoubleQuoteClosing':
-          MapEntry<String, int>(StringExtensions.accentedDoubleQuoteClosing, 0x201D),
+      'accentedQuoteOpening': MapEntry<String, int>(StringExtensions.accentedQuoteOpening, 0x2018),
+      'accentedQuoteClosing': MapEntry<String, int>(StringExtensions.accentedQuoteClosing, 0x2019),
+      'accentedDoubleQuoteOpening': MapEntry<String, int>(
+        StringExtensions.accentedDoubleQuoteOpening,
+        0x201C,
+      ),
+      'accentedDoubleQuoteClosing': MapEntry<String, int>(
+        StringExtensions.accentedDoubleQuoteClosing,
+        0x201D,
+      ),
       'ellipsis': MapEntry<String, int>(StringExtensions.ellipsis, 0x2026),
       'doubleChevron': MapEntry<String, int>(StringExtensions.doubleChevron, 0x00BB),
       'apostrophe': MapEntry<String, int>(StringExtensions.apostrophe, 0x2019),

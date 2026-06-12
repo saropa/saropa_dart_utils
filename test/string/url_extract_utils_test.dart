@@ -69,5 +69,10 @@ void main() {
       final List<UrlExtractUtils> links = extractUrlsWithContext('go HTTPS://x.com now');
       expect(links.single.url, 'HTTPS://x.com');
     });
+
+    test('trims trailing sentence punctuation the greedy match swallowed', () {
+      expect(extractUrlsWithContext('visit https://a.com.').single.url, 'https://a.com');
+      expect(extractUrlsWithContext('see https://a.com, then').single.url, 'https://a.com');
+    });
   });
 }

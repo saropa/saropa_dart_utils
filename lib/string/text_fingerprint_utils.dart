@@ -1,10 +1,20 @@
-/// Text fingerprinting (simhash-style) — roadmap #417.
+/// Text fingerprinting (order-sensitive word-hash) — roadmap #417.
+///
+/// NOTE: this is NOT a simhash. It XORs each word's full hash (mixed with its
+/// position) into a single value, which is good for an equality/identity
+/// fingerprint but is NOT locality-preserving — a single word change flips many
+/// bits, so [fingerprintDistance] (a Hamming bit-count) is NOT a similarity
+/// measure. Use it for "are these two texts identical?", not "how similar?".
+/// The per-word hash is Dart's `String.hashCode`, which is deterministic within
+/// a run but not guaranteed stable across Dart versions/platforms; do not
+/// persist fingerprints for long-term cross-build comparison.
 library;
 
 const int _kFingerprintPrime = 31;
 const int _kMask32 = 0xFFFFFFFF;
 
 /// Simple 32-bit fingerprint: hash of word shingles. [text] split on non-letters.
+/// Audited: 2026-06-12 11:26 EDT
 int textFingerprint(String text) {
   // Lowercase and split on any non-alphanumeric run so punctuation/casing do not
   // change the fingerprint; drop one-character tokens, which are mostly noise and
@@ -26,6 +36,7 @@ int textFingerprint(String text) {
 }
 
 /// Hamming distance between two 32-bit fingerprints (number of differing bits).
+/// Audited: 2026-06-12 11:26 EDT
 int fingerprintDistance(int a, int b) {
   int x = (a ^ b) & _kMask32;
   int n = 0;

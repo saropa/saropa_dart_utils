@@ -25,6 +25,7 @@ extension StringWrapExtensions on String {
   /// 'hello world'.wordWrap(5);  // ['hello', 'world']
   /// 'hi'.wordWrap(10);          // ['hi']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<String> wordWrap(int columnWidth) {
     if (columnWidth < 1) {
@@ -76,6 +77,7 @@ extension StringWrapExtensions on String {
   /// 'hello👋world'.truncateAtGrapheme(5);  // 'hello'
   /// 'ab'.truncateAtGrapheme(10);           // 'ab'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String truncateAtGrapheme(int maxGraphemes) {
     if (maxGraphemes < 0) {
@@ -114,6 +116,7 @@ extension StringWrapExtensions on String {
   /// 'Results (5)'.preventOrphans();     // 'Results\u{00A0}(5)'
   /// 'Importing Demo'.preventOrphans();  // 'Importing Demo'  (both long)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String preventOrphans({int minWrapChars = 4}) {
     if (length < 2) return this;

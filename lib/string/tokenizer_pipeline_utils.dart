@@ -17,6 +17,7 @@ import 'package:meta/meta.dart';
 class TokenRule {
   /// Creates a rule labelled [type] matching [pattern]. Set [shouldSkip] for
   /// tokens to consume but not emit (whitespace, comments).
+  /// Audited: 2026-06-12 11:26 EDT
   const TokenRule(this.type, this.pattern, {this.shouldSkip = false});
 
   /// The label attached to tokens this rule produces (e.g. `'number'`).
@@ -34,6 +35,7 @@ class TokenRule {
 @immutable
 class Token {
   /// Creates a token of [type] holding [value], found at [start].
+  /// Audited: 2026-06-12 11:26 EDT
   const Token(this.type, this.value, this.start);
 
   /// The label from the [TokenRule] that produced this token.
@@ -71,6 +73,7 @@ class Token {
 ///   TokenRule('num', RegExp(r'\d+')),
 /// ]); // id "ab", op "=", num "12"
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<Token> tokenize(String input, List<TokenRule> rules) {
   final List<Token> tokens = <Token>[];
   int pos = 0;

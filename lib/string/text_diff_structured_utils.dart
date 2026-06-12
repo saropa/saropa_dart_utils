@@ -25,6 +25,7 @@ enum SeqDiffKind {
 @immutable
 class SeqDiffOp<T> {
   /// Creates an op of [kind] carrying [value].
+  /// Audited: 2026-06-12 11:26 EDT
   const SeqDiffOp(this.kind, this.value);
 
   /// Whether this value was kept, added, or removed.
@@ -48,6 +49,7 @@ class SeqDiffOp<T> {
 /// `equal` / `delete` / `insert` ops in input order. `delete` items appear only
 /// in [a], `insert` items only in [b], and the `equal` items are their longest
 /// common subsequence. O(n·m) time and space.
+/// Audited: 2026-06-12 11:26 EDT
 List<SeqDiffOp<T>> diffSequences<T>(List<T> a, List<T> b) {
   final int n = a.length;
   final int m = b.length;
@@ -104,10 +106,12 @@ List<SeqDiffOp<T>> _backtrack<T>(List<T> a, List<T> b, List<List<int>> dp) {
 
 /// Word-level structured diff of [oldText] vs [newText], reusing
 /// `tokenizeWords` to split into words (punctuation stripped).
+/// Audited: 2026-06-12 11:26 EDT
 List<SeqDiffOp<String>> diffWords(String oldText, String newText) =>
     diffSequences<String>(tokenizeWords(oldText), tokenizeWords(newText));
 
 /// Sentence-level structured diff of [oldText] vs [newText], reusing
 /// `tokenizeSentences` to split on sentence boundaries.
+/// Audited: 2026-06-12 11:26 EDT
 List<SeqDiffOp<String>> diffSentences(String oldText, String newText) =>
     diffSequences<String>(tokenizeSentences(oldText), tokenizeSentences(newText));

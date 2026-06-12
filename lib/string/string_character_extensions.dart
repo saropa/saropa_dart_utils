@@ -17,6 +17,7 @@ extension StringCharacterExtensions on String {
   ///
   /// **Returns:**
   /// The substring between the grapheme indices, or empty string if invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String substringCharacter(int graphemeStart, [int? graphemeEnd]) {
     if (isEmpty) {
@@ -51,6 +52,7 @@ extension StringCharacterExtensions on String {
   ///
   /// **Returns:**
   /// The first character, or empty string if the string is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String firstCharacter({bool trim = true, bool supportGraphemes = true}) {
     final String effective = trim ? this.trim() : this;
@@ -75,6 +77,7 @@ extension StringCharacterExtensions on String {
   ///
   /// **Returns:**
   /// The second character, or empty string if the string has fewer than 2 characters.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String secondCharacter({bool trim = true, bool supportGraphemes = true}) {
     final String effective = trim ? this.trim() : this;
@@ -105,6 +108,7 @@ extension StringCharacterExtensions on String {
   /// This counts Unicode grapheme clusters rather than code units.
   /// For example, an emoji like 👨‍👩‍👧 counts as 1 grapheme even though
   /// it consists of multiple code points.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get graphemeLength => characters.length;
 }

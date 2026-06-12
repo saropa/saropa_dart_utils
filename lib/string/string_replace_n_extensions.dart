@@ -17,6 +17,7 @@ extension StringReplaceNExtensions on String {
   /// 'a-b-c'.replaceFirstN('-', '_', 2);  // 'a_b_c'
   /// 'a-b-c'.replaceFirstN('-', '_', 1);  // 'a_b-c'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String replaceFirstN(String pattern, String replacement, [int? n]) {
     if (pattern.isEmpty) {
@@ -46,6 +47,7 @@ extension StringReplaceNExtensions on String {
   /// ```dart
   /// 'a-b-c'.replaceLast('-', '_');  // 'a-b_c'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String replaceLast(String pattern, String replacement) {
     if (pattern.isEmpty) {

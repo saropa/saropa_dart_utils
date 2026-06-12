@@ -38,6 +38,7 @@ abstract final class StringUtils {
   /// Returns a string containing the n-th letter of the alphabet in uppercase,
   /// or `null` if [n] is not within the valid range or an error occurs.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getNthLatinLetterUpper(int n) {
     // Check if n is within the valid range.
@@ -61,6 +62,7 @@ abstract final class StringUtils {
   /// Returns a string containing the n-th letter of the alphabet in lowercase,
   /// or `null` if [n] is not within the valid range or an error occurs.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getNthLatinLetterLower(int n) {
     // Check if n is within the valid range.

@@ -4,6 +4,7 @@ library;
 import 'levenshtein_utils.dart';
 
 /// Returns up to [limit] words from [dictionary] closest to [word] by edit distance.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> didYouMean(String word, List<String> dictionary, {int limit = 5}) {
   // Nothing to match against (no query or no dictionary) yields no suggestions.
   if (word.isEmpty || dictionary.isEmpty) return <String>[];

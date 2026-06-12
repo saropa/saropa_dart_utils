@@ -14,6 +14,7 @@ extension StringAnsiExtensions on String {
   /// ```dart
   /// '\x1b[31mred\x1b[0m'.stripAnsi();  // 'red'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String stripAnsi() {
     if (isEmpty) return this;

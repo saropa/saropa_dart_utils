@@ -60,6 +60,7 @@ abstract final class TextDirectionParseUtils {
   /// TextDirectionParseUtils.tryParse('auto');    // null
   /// TextDirectionParseUtils.tryParse(null);      // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static TextWritingDirection? tryParse(String? value) =>
       // Total by construction: a null input maps straight to null, and the
       // switch's exhaustive default turns every unmatched token into null,

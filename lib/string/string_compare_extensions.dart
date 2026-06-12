@@ -34,6 +34,7 @@ extension StringNullableCompareExtensions on String? {
   /// null.compareStringNullable('a', nullsLast: true);         //  1 (null last)
   /// null.compareStringNullable(null);                         //  0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int compareStringNullable(
     String? other, {

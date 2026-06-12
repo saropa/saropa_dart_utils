@@ -24,9 +24,10 @@ extension StringTruncateMiddleExtensions on String {
   ///
   /// Example:
   /// ```dart
-  /// '/Users/craig/projects/report.pdf'.truncateMiddle(20); // '/Users/cr…report.pdf'
+  /// '/Users/craig/projects/report.pdf'.truncateMiddle(20); // '/Users/cra…eport.pdf'
   /// 'abcdef'.truncateMiddle(10); // 'abcdef' (already fits)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String truncateMiddle(int? maxLength, {String ellipsis = '…'}) {
     if (maxLength == null || maxLength <= 0) {

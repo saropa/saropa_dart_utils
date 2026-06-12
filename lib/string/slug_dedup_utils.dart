@@ -4,6 +4,7 @@ library;
 /// Returns a slug that is not in [takenSlugs].
 /// If [baseSlug] is not in [takenSlugs], returns it as-is.
 /// Otherwise tries [baseSlug]-1, [baseSlug]-2, ... until one is free.
+/// Audited: 2026-06-12 11:26 EDT
 String deduplicateSlug(String baseSlug, Set<String> takenSlugs) {
   final String trimmed = baseSlug.trim();
   if (trimmed.isEmpty) {

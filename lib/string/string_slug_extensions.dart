@@ -14,6 +14,7 @@ extension StringSlugExtensions on String {
   /// '  déjà  vu  '.toSlug();           // 'd-j-vu' (diacritics not normalized)
   /// 'one___two'.toSlug();               // 'one-two'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toSlug() {
     if (isEmpty) return this;
@@ -38,6 +39,7 @@ extension StringSlugExtensions on String {
   /// 'Hello World Again'.toSlugWithMaxLength(10); // 'hello-worl'
   /// 'a-b-c'.toSlugWithMaxLength(3);             // 'a-b'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toSlugWithMaxLength(int maxLength) {
     if (maxLength < 1) return toSlug();
@@ -60,6 +62,7 @@ extension StringSlugExtensions on String {
   /// 'a/b/c'.sanitizeFilename(replacement: '-');    // 'a-b-c'
   /// 'long name'.sanitizeFilename(maxLength: 4);   // 'long'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String sanitizeFilename({
     String replacement = '_',
