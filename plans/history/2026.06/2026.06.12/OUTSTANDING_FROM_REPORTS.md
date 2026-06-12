@@ -232,6 +232,7 @@ them. Item 5 (`saropa_lints` version bump) is the single item deliberately left
 untouched — a gated dependency change awaiting explicit permission. The two
 "known-accepted" lint diagnostics remain accepted by project rule.
 
-This plan stays ACTIVE in `plans/` solely to track the still-open item 5. Once
-that bump is authorized and applied (or declined), the plan moves to
-`plans/history/`.
+Items 1–4 being closed, this plan is archived to
+`plans/history/2026.06/2026.06.12/`. The one remaining open item (item 5, the
+gated `saropa_lints` bump) and the known-accepted register were split into the
+active plan `plans/PENDING_saropa_lints_bump.md`.
