@@ -129,3 +129,7 @@ This fixes all future `/finish` runs in every project that uses the shared skill
 ## Commits
 
 <!-- Add commit hashes as remediation lands. -->
+
+- `c4c71e6` — Rewrite 27 persisted finish reports into third-person record voice;
+  remove "reviewed by another AI" boilerplate, objectify `**Trigger:**` sections and
+  inline deixis; close this bug (full deixis sweep → 0).
