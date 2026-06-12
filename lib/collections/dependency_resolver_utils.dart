@@ -24,6 +24,7 @@ import 'package:saropa_dart_utils/parsing/version_parse_utils.dart';
 /// dependencies (`depName → constraint string`, e.g. `'^1.2.0'`).
 class PackageManifest {
   /// Creates a manifest for [name] at [version] depending on [dependencies].
+  /// Audited: 2026-06-12 11:26 EDT
   const PackageManifest(
     this.name,
     this.version, {
@@ -44,6 +45,7 @@ class PackageManifest {
 /// an [installOrder] with dependencies ahead of the packages that need them.
 class DependencyResolution {
   /// Creates a resolution result.
+  /// Audited: 2026-06-12 11:26 EDT
   const DependencyResolution(this.versions, this.installOrder);
 
   /// Resolved package name → chosen version.
@@ -57,6 +59,7 @@ class DependencyResolution {
 /// satisfying the constraints, or a dependency cycle.
 class DependencyResolutionException implements Exception {
   /// Creates an exception describing why resolution failed.
+  /// Audited: 2026-06-12 11:26 EDT
   const DependencyResolutionException(this.message);
 
   /// Human-readable failure reason.
@@ -70,6 +73,7 @@ class DependencyResolutionException implements Exception {
 /// package version), returning the chosen versions and a topological install
 /// order. Throws [DependencyResolutionException] on an unknown package, an
 /// unsatisfiable constraint set, or a cycle.
+/// Audited: 2026-06-12 11:26 EDT
 DependencyResolution resolveDependencies({
   required Map<String, String> root,
   required List<PackageManifest> universe,
@@ -94,6 +98,7 @@ DependencyResolution resolveDependencies({
 /// Resolves one package off the worklist: picks the highest version satisfying
 /// all of its accumulated constraints and, when that choice changes, enqueues
 /// its dependencies so their constraints propagate.
+/// Audited: 2026-06-12 11:26 EDT
 void _resolveOne(
   String name,
   Map<String, List<PackageManifest>> byName,
@@ -123,6 +128,7 @@ void _resolveOne(
 
 /// The highest [PackageManifest] in [versions] whose version satisfies every
 /// constraint in [active], or null if none qualifies.
+/// Audited: 2026-06-12 11:26 EDT
 PackageManifest? _highestSatisfying(List<PackageManifest> versions, List<String> active) {
   PackageManifest? best;
   for (final PackageManifest m in versions) {
@@ -138,6 +144,7 @@ PackageManifest? _highestSatisfying(List<PackageManifest> versions, List<String>
 
 /// Builds the dependency graph over the [chosen] packages and topologically
 /// sorts it (dependencies first), throwing on a cycle.
+/// Audited: 2026-06-12 11:26 EDT
 List<String> _installOrder(Map<String, String> chosen, Map<String, List<PackageManifest>> byName) {
   final List<String> names = chosen.keys.toList();
   final Map<String, int> index = <String, int>{
@@ -168,6 +175,7 @@ List<String> _installOrder(Map<String, String> chosen, Map<String, List<PackageM
 /// Whether [version] satisfies one [constraint]. Supports `*`/`any`/empty (all),
 /// caret (`^1.2.0`), the comparison operators `>= <= > < == =`, a bare exact
 /// version, and space-separated compound constraints (logical AND).
+/// Audited: 2026-06-12 11:26 EDT
 bool _satisfies(String version, String constraint) {
   final String c = constraint.trim();
   if (c.isEmpty || c == '*' || c == 'any') {
@@ -188,6 +196,7 @@ bool _satisfies(String version, String constraint) {
 }
 
 /// Maps a comparison [op] and the sign of `compareVersions` ([cmp]) to a result.
+/// Audited: 2026-06-12 11:26 EDT
 bool _matchesOperator(String op, int cmp) {
   switch (op) {
     case '>=':
@@ -206,6 +215,7 @@ bool _matchesOperator(String op, int cmp) {
 /// Caret semantics: `>= base` and below the next version that changes the
 /// left-most non-zero component (`^1.2.3` → `<2.0.0`, `^0.2.3` → `<0.3.0`,
 /// `^0.0.3` → `<0.0.4`).
+/// Audited: 2026-06-12 11:26 EDT
 bool _satisfiesCaret(String version, String base) {
   final (int, int, int)? parsed = parseVersion(base);
   if (parsed == null || compareVersions(version, base) < 0) {

@@ -69,5 +69,23 @@ void main() {
       );
       expect(result, hasLength(2));
     });
+
+    test('should populate k distinct clusters for k well-separated groups', () {
+      // Three tight, far-apart groups with k=3 must yield three distinct
+      // cluster ids. The old all-at-points[0] seeding collapsed this to <=2.
+      final List<int> result = kmeans2D([
+        (0.0, 0.0),
+        (0.1, 0.1),
+        (50.0, 50.0),
+        (50.1, 49.9),
+        (100.0, 0.0),
+        (99.9, 0.1),
+      ], 3);
+      // Each group shares one id; the three groups use three different ids.
+      expect(result[0], result[1]);
+      expect(result[2], result[3]);
+      expect(result[4], result[5]);
+      expect(<int>{result[0], result[2], result[4]}, hasLength(3));
+    });
   });
 }

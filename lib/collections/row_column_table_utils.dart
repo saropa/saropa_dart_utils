@@ -4,6 +4,7 @@ library;
 import 'package:collection/collection.dart';
 
 /// From columnar map (key -> list of values) to list of row maps.
+/// Audited: 2026-06-12 11:26 EDT
 List<Map<String, Object?>> columnarToRows(Map<String, List<Object?>> columnar) {
   // Transpose column-major data (column name -> values) into row maps.
   if (columnar.isEmpty) return <Map<String, Object?>>[];

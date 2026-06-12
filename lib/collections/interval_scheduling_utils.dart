@@ -6,14 +6,17 @@ import 'package:collection/collection.dart';
 /// Interval with [start] and [end] (inclusive or exclusive per usage).
 class IntervalSchedulingUtils {
   /// Creates an interval spanning [start] to [end].
+  /// Audited: 2026-06-12 11:26 EDT
   const IntervalSchedulingUtils(num start, num end) : _start = start, _end = end;
   final num _start;
 
   /// Start of the interval.
+  /// Audited: 2026-06-12 11:26 EDT
   num get start => _start;
   final num _end;
 
   /// End of the interval.
+  /// Audited: 2026-06-12 11:26 EDT
   num get end => _end;
 
   @override
@@ -24,6 +27,7 @@ class IntervalSchedulingUtils {
 /// chosen by earliest end time (greedy).
 ///
 /// See [IntervalSchedulingUtils] for the interval type.
+/// Audited: 2026-06-12 11:26 EDT
 List<IntervalSchedulingUtils> maxNonOverlappingIntervals(List<IntervalSchedulingUtils> intervals) {
   if (intervals.isEmpty) return <IntervalSchedulingUtils>[];
   final List<IntervalSchedulingUtils> sorted = List<IntervalSchedulingUtils>.of(intervals)

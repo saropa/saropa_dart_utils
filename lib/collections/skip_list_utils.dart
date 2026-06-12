@@ -17,12 +17,14 @@ import 'dart:math';
 /// One skip-list node holding a [value] and forward links per level.
 class _SkipNode<T> {
   /// Builds a data node carrying [value], linkable up to [level].
+  /// Audited: 2026-06-12 11:26 EDT
   _SkipNode(T value, int level) : forward = List<_SkipNode<T>?>.filled(level + 1, null) {
     this.value = value;
   }
 
   /// Builds the head sentinel: it owns forward links at every level but never a
   /// value, so [value] is deliberately left unassigned and must never be read.
+  /// Audited: 2026-06-12 11:26 EDT
   _SkipNode.head(int level) : forward = List<_SkipNode<T>?>.filled(level + 1, null);
 
   /// The stored value. Non-nullable for data nodes; on the head sentinel it is
@@ -42,6 +44,7 @@ class _SkipNode<T> {
 class SkipList<T> {
   /// Creates an empty set ordered by [compare]. Pass [random] (seeded) for
   /// deterministic level promotion; defaults to a fresh [Random].
+  /// Audited: 2026-06-12 11:26 EDT
   SkipList(this._compare, {Random? random}) : _random = random ?? Random();
 
   final Comparator<T> _compare;
@@ -52,6 +55,7 @@ class SkipList<T> {
   static const int _maxLevel = 32;
 
   /// Head sentinel; its forward links are the entry points at each level.
+  /// Audited: 2026-06-12 11:26 EDT
   final _SkipNode<T> _head = _SkipNode<T>.head(_maxLevel);
 
   /// Highest level currently in use (0-based).
@@ -59,14 +63,17 @@ class SkipList<T> {
   int _length = 0;
 
   /// Number of elements in the set.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _length;
 
   /// Whether the set holds no elements.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isEmpty => _length == 0;
 
   /// Draws a node level: keep promoting while a coin flip stays heads, capped at
   /// [_maxLevel]. Geometric distribution with p = 1/2 gives the `O(log n)`
   /// expected height.
+  /// Audited: 2026-06-12 11:26 EDT
   int _randomLevel() {
     int level = 0;
     while (level < _maxLevel - 1 && _random.nextBool()) {
@@ -78,6 +85,7 @@ class SkipList<T> {
   /// Fills [update] with, for each level, the last node whose value is strictly
   /// less than [value]; returns the candidate node at level 0 (which holds
   /// [value] if present). Shared by [add], [remove], [contains].
+  /// Audited: 2026-06-12 11:26 EDT
   _SkipNode<T>? _findPredecessors(T value, List<_SkipNode<T>?> update) {
     _SkipNode<T> current = _head;
     // Descend from the top level, walking right while the next value is < target.
@@ -101,6 +109,7 @@ class SkipList<T> {
   /// s.add(3); // true
   /// s.add(3); // false (already present)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   bool add(T value) {
     final List<_SkipNode<T>?> update = List<_SkipNode<T>?>.filled(_maxLevel, null);
     final _SkipNode<T>? candidate = _findPredecessors(value, update);
@@ -128,6 +137,7 @@ class SkipList<T> {
   }
 
   /// Whether [value] is present.
+  /// Audited: 2026-06-12 11:26 EDT
   bool contains(T value) {
     final List<_SkipNode<T>?> update = List<_SkipNode<T>?>.filled(_maxLevel, null);
     final _SkipNode<T>? candidate = _findPredecessors(value, update);
@@ -135,6 +145,7 @@ class SkipList<T> {
   }
 
   /// Removes [value]; returns false (and changes nothing) if it was absent.
+  /// Audited: 2026-06-12 11:26 EDT
   bool remove(T value) {
     final List<_SkipNode<T>?> update = List<_SkipNode<T>?>.filled(_maxLevel, null);
     final _SkipNode<T>? candidate = _findPredecessors(value, update);
@@ -158,6 +169,7 @@ class SkipList<T> {
   }
 
   /// All values in ascending order.
+  /// Audited: 2026-06-12 11:26 EDT
   Iterable<T> get values sync* {
     // forward always has level 0, so the head's first link is in range.
     _SkipNode<T>? node = _head.forward[0];
@@ -175,6 +187,7 @@ class SkipList<T> {
   ///   ..add(2)..add(5)..add(9);
   /// s.floor(7); // 5
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   T? floor(T value) {
     final List<_SkipNode<T>?> update = List<_SkipNode<T>?>.filled(_maxLevel, null);
     final _SkipNode<T>? candidate = _findPredecessors(value, update);
@@ -190,6 +203,7 @@ class SkipList<T> {
   }
 
   /// The smallest value `>= value`, or null if every value is smaller.
+  /// Audited: 2026-06-12 11:26 EDT
   T? ceiling(T value) {
     final List<_SkipNode<T>?> update = List<_SkipNode<T>?>.filled(_maxLevel, null);
     final _SkipNode<T>? candidate = _findPredecessors(value, update);

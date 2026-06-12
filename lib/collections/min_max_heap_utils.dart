@@ -18,19 +18,23 @@ import 'package:collection/collection.dart';
 /// A double-ended priority queue backed by a min-max heap.
 class MinMaxHeap<T> {
   /// Creates an empty heap ordered by [compare].
+  /// Audited: 2026-06-12 11:26 EDT
   MinMaxHeap(this._compare);
 
   final Comparator<T> _compare;
   final List<T> _items = <T>[];
 
   /// Number of elements in the heap.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _items.length;
 
   /// Whether the heap holds no elements.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isEmpty => _items.isEmpty;
 
   /// The smallest element without removing it.
   /// Throws [StateError] when the heap is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T get min {
     if (_items.isEmpty) throw StateError('min on an empty MinMaxHeap');
     // The root of a min-max heap is always the global minimum; the guard above
@@ -40,15 +44,18 @@ class MinMaxHeap<T> {
 
   /// The largest element without removing it.
   /// Throws [StateError] when the heap is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T get max {
     if (_items.isEmpty) throw StateError('max on an empty MinMaxHeap');
     return _items[_maxIndex()];
   }
 
   /// The smallest element, or null when empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T? get minOrNull => _items.firstOrNull;
 
   /// The largest element, or null when empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T? get maxOrNull => _items.isEmpty ? null : _items[_maxIndex()];
 
   /// Inserts [value], in `O(log n)`.
@@ -60,6 +67,7 @@ class MinMaxHeap<T> {
   /// h.removeMin(); // 1
   /// h.removeMax(); // 9
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void add(T value) {
     _items.add(value);
     _trickleUp(_items.length - 1);
@@ -67,6 +75,7 @@ class MinMaxHeap<T> {
 
   /// Removes and returns the smallest element, in `O(log n)`.
   /// Throws [StateError] when the heap is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T removeMin() {
     if (_items.isEmpty) throw StateError('removeMin on an empty MinMaxHeap');
     // Root holds the min; swap the last element in and sink it back down.
@@ -75,6 +84,7 @@ class MinMaxHeap<T> {
 
   /// Removes and returns the largest element, in `O(log n)`.
   /// Throws [StateError] when the heap is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   T removeMax() {
     if (_items.isEmpty) throw StateError('removeMax on an empty MinMaxHeap');
     return _removeAt(_maxIndex());
@@ -82,6 +92,7 @@ class MinMaxHeap<T> {
 
   /// Index of the maximum: the root when the heap has one element, otherwise the
   /// larger of the (one or two) children on the max level.
+  /// Audited: 2026-06-12 11:26 EDT
   int _maxIndex() {
     if (_items.length == 1) return 0;
     if (_items.length == 2) return 1;
@@ -91,6 +102,7 @@ class MinMaxHeap<T> {
 
   /// Removes the element at [index] by moving the last item into its slot and
   /// re-establishing the heap order from there.
+  /// Audited: 2026-06-12 11:26 EDT
   T _removeAt(int index) {
     final T removed = _items[index];
     final T last = _items.removeLast();
@@ -103,9 +115,11 @@ class MinMaxHeap<T> {
   }
 
   /// Whether [level] (0-based depth) is a min level. Even levels are min levels.
+  /// Audited: 2026-06-12 11:26 EDT
   bool _isMinLevel(int level) => level.isEven;
 
   /// Depth of node [index]: floor(log2(index + 1)).
+  /// Audited: 2026-06-12 11:26 EDT
   int _levelOf(int index) {
     int level = 0;
     int i = index + 1;
@@ -119,6 +133,7 @@ class MinMaxHeap<T> {
 
   /// Restores order after inserting at [index] by pushing it up toward whichever
   /// end (min or max) its level belongs to.
+  /// Audited: 2026-06-12 11:26 EDT
   void _trickleUp(int index) {
     if (index == 0) return;
     final int parent = (index - 1) >> 1;
@@ -144,6 +159,7 @@ class MinMaxHeap<T> {
   /// Bubbles [index] up to its same-kind grandparent while it violates the
   /// min (max == false) or max (max == true) ordering. The grandparent sits two
   /// levels up, so it shares this node's level kind.
+  /// Audited: 2026-06-12 11:26 EDT
   void _trickleUpToward(int index, {required bool max}) {
     int i = index;
     // A grandparent exists only once the index is past the first three slots
@@ -160,6 +176,7 @@ class MinMaxHeap<T> {
 
   /// Restores order after a removal by sinking [index] toward the leaves on its
   /// own level kind (min or max).
+  /// Audited: 2026-06-12 11:26 EDT
   void _trickleDown(int index) {
     if (_isMinLevel(_levelOf(index))) {
       _trickleDownToward(index, max: false);
@@ -170,6 +187,7 @@ class MinMaxHeap<T> {
 
   /// Sinks [index] down, swapping with the most extreme child-or-grandchild
   /// (smallest for a min level, largest for a max level) until order holds.
+  /// Audited: 2026-06-12 11:26 EDT
   void _trickleDownToward(int index, {required bool max}) {
     int i = index;
     // Each iteration finds the extreme descendant within two levels of i.
@@ -194,6 +212,7 @@ class MinMaxHeap<T> {
   /// Index of the most extreme (smallest when max == false, largest when
   /// max == true) among the children and grandchildren of [index], or -1 if
   /// [index] has no children.
+  /// Audited: 2026-06-12 11:26 EDT
   int _extremeDescendant(int index, {required bool max}) {
     final List<int> kin = <int>[];
     final int left = 2 * index + 1;
@@ -218,6 +237,7 @@ class MinMaxHeap<T> {
   }
 
   /// Swaps the elements at [a] and [b].
+  /// Audited: 2026-06-12 11:26 EDT
   void _swap(int a, int b) {
     final T tmp = _items[a];
     _items[a] = _items[b];

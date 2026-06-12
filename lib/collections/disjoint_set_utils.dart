@@ -4,6 +4,7 @@ library;
 /// Union-find over integer elements 0 .. n-1.
 class DisjointSetUtils {
   /// Creates a union-find structure with [n] singleton sets numbered 0 .. n-1.
+  /// Audited: 2026-06-12 11:26 EDT
   DisjointSetUtils(int n)
     : _parent = List<int>.generate(n, (int i) => i),
       _rank = List<int>.filled(n, 0);
@@ -12,6 +13,7 @@ class DisjointSetUtils {
   final List<int> _rank;
 
   /// Representative (root) of the set containing [x].
+  /// Audited: 2026-06-12 11:26 EDT
   int find(int x) {
     if (_parent[x] != x) _parent[x] = find(_parent[x]);
     return _parent[x];
@@ -19,6 +21,7 @@ class DisjointSetUtils {
 
   /// Merges the sets containing [x] and [y], using union-by-rank to keep the
   /// trees shallow. Does nothing if they are already in the same set.
+  /// Audited: 2026-06-12 11:26 EDT
   void union(int x, int y) {
     final int rootX = find(x);
     final int rootY = find(y);
@@ -34,6 +37,7 @@ class DisjointSetUtils {
   }
 
   /// True if [x] and [y] are in the same set.
+  /// Audited: 2026-06-12 11:26 EDT
   bool connected(int x, int y) => find(x) == find(y);
 
   @override

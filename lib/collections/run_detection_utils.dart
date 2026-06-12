@@ -5,6 +5,7 @@ library;
 class RunDetectionUtils<T extends Object> {
   /// Creates a run beginning at [start], spanning [length] elements, with the
   /// shared [value] (or null for a non-constant run).
+  /// Audited: 2026-06-12 11:26 EDT
   const RunDetectionUtils(int start, int length, T? value)
     : _start = start,
       _length = length,
@@ -12,14 +13,17 @@ class RunDetectionUtils<T extends Object> {
   final int _start;
 
   /// Start index in the source list.
+  /// Audited: 2026-06-12 11:26 EDT
   int get start => _start;
   final int _length;
 
   /// Length of the run.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _length;
   final T? _value;
 
   /// Constant value for the run, or null for non-constant runs.
+  /// Audited: 2026-06-12 11:26 EDT
   T? get value => _value;
 
   @override
@@ -28,6 +32,7 @@ class RunDetectionUtils<T extends Object> {
 }
 
 /// Detects runs of equal consecutive values in [list].
+/// Audited: 2026-06-12 11:26 EDT
 List<RunDetectionUtils<T>> runsEqual<T extends Object>(List<T> list) {
   final List<RunDetectionUtils<T>> out = <RunDetectionUtils<T>>[];
   int i = 0;

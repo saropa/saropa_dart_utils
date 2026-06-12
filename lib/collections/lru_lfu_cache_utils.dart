@@ -39,6 +39,7 @@ class LruLfuCacheUtils<K, V> {
   /// Creates a cache holding at most [capacity] entries. Throws an
   /// [ArgumentError] when [capacity] is negative; a [capacity] of 0 is allowed
   /// and stores nothing.
+  /// Audited: 2026-06-12 11:26 EDT
   factory LruLfuCacheUtils(int capacity) {
     // Validate in the factory so a negative capacity never yields a
     // partially-constructed object with corrupt invariants.
@@ -58,10 +59,12 @@ class LruLfuCacheUtils<K, V> {
   int _tick = 0;
 
   /// Number of entries currently held (0 to [capacity]).
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _entries.length;
 
   /// Returns the value for [key], updating its recency and frequency, or null
   /// when absent. A miss does not create an entry, so it never affects scoring.
+  /// Audited: 2026-06-12 11:26 EDT
   V? get(K key) {
     final _CacheEntry<V>? entry = _entries[key];
     if (entry == null) return null;
@@ -73,6 +76,7 @@ class LruLfuCacheUtils<K, V> {
   /// Inserts or updates [key] with [value]. Updating an existing key bumps its
   /// recency and frequency like [get]; inserting a new key past [capacity]
   /// evicts the lowest-scoring victim first.
+  /// Audited: 2026-06-12 11:26 EDT
   void put(K key, V value) {
     // Capacity 0 stores nothing: skip the bookkeeping entirely rather than
     // insert-then-immediately-evict, which would needlessly churn the tick.
@@ -89,6 +93,7 @@ class LruLfuCacheUtils<K, V> {
   }
 
   /// Removes [key] and returns its value, or null when it was not present.
+  /// Audited: 2026-06-12 11:26 EDT
   V? remove(K key) => _entries.remove(key)?.value;
 
   // Drops the single worst entry: lowest frequency, then lowest recency among

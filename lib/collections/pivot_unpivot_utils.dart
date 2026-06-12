@@ -1,7 +1,12 @@
-/// Pivot and unpivot for tabular data (list of maps) — roadmap #469.
+/// Pivot for tabular data (list of maps) — roadmap #469.
+///
+/// Provides [pivot] (long-to-wide). The inverse `unpivot` (wide-to-long) is not
+/// currently implemented despite the roadmap title; callers needing it should
+/// reshape manually or track it as a feature gap.
 library;
 
 /// Pivot: one row per [rowKey] value, one column per [colKey] value, [valueKey] as cell.
+/// Audited: 2026-06-12 11:26 EDT
 List<Map<String, Object?>> pivot(
   List<Map<String, Object?>> rows,
   String rowKey,

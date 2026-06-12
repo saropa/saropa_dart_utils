@@ -7,6 +7,7 @@ final Random _rand = Random();
 
 /// Takes a sample of [k] items from [items] with equal probability per item (single pass).
 /// If [items].length <= k, returns a copy of [items]; otherwise returns k random items.
+/// Audited: 2026-06-12 11:26 EDT
 List<T> reservoirSample<T>(List<T> items, int k, [Random? random]) {
   final Random r = random ?? _rand;
   if (items.isEmpty || k < 1) return <T>[];

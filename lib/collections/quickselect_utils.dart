@@ -17,6 +17,7 @@ library;
 /// ```dart
 /// nthSmallest<int>([7, 2, 5, 1], 1, (a, b) => a.compareTo(b)); // 2 (2nd smallest)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 T? nthSmallest<T>(Iterable<T> items, int k, Comparator<T> compare) {
   final List<T> a = items.toList();
   if (k < 0 || k >= a.length) {
@@ -44,12 +45,14 @@ T? nthSmallest<T>(Iterable<T> items, int k, Comparator<T> compare) {
 /// Returns the [k]-th largest element (0-based: `k = 0` is the maximum), or
 /// `null` if [k] is out of range. Equivalent to `nthSmallest` from the other
 /// end.
+/// Audited: 2026-06-12 11:26 EDT
 T? nthLargest<T>(Iterable<T> items, int k, Comparator<T> compare) =>
     nthSmallest(items, k, (T a, T b) => compare(b, a));
 
 /// Lomuto partition around a median-of-three pivot, returning the pivot's
 /// final index. Median-of-three avoids the O(n^2) worst case on already-sorted
 /// or reverse-sorted input that a naive first/last pivot would hit.
+/// Audited: 2026-06-12 11:26 EDT
 int _partition<T>(List<T> a, int lo, int hi, Comparator<T> compare) {
   final int mid = lo + (hi - lo) ~/ 2;
   _medianOfThreeToHi(a, lo, mid, hi, compare);
@@ -67,6 +70,7 @@ int _partition<T>(List<T> a, int lo, int hi, Comparator<T> compare) {
 }
 
 /// Orders the lo/mid/hi triple and parks the median at [hi] for use as pivot.
+/// Audited: 2026-06-12 11:26 EDT
 void _medianOfThreeToHi<T>(List<T> a, int lo, int mid, int hi, Comparator<T> compare) {
   if (compare(a[mid], a[lo]) < 0) _swap(a, lo, mid);
   if (compare(a[hi], a[lo]) < 0) _swap(a, lo, hi);

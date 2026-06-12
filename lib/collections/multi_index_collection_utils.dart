@@ -34,18 +34,23 @@ class MultiIndexCollection<T> {
   final List<T> _items = <T>[];
 
   /// Total number of items held.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _items.length;
 
   /// Whether the collection is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isEmpty => _items.isEmpty;
 
   /// The configured index names.
+  /// Audited: 2026-06-12 11:26 EDT
   Iterable<String> get indexNames => _indexers.keys;
 
   /// All items in insertion order (an unmodifiable view).
+  /// Audited: 2026-06-12 11:26 EDT
   List<T> get all => List<T>.unmodifiable(_items);
 
   /// Adds [item], updating every index.
+  /// Audited: 2026-06-12 11:26 EDT
   void add(T item) {
     _items.add(item);
     for (final MapEntry<String, Object Function(T)> entry in _indexers.entries) {
@@ -55,6 +60,7 @@ class MultiIndexCollection<T> {
   }
 
   /// Adds every item in [items].
+  /// Audited: 2026-06-12 11:26 EDT
   void addAll(Iterable<T> items) {
     for (final T item in items) {
       add(item);
@@ -63,6 +69,7 @@ class MultiIndexCollection<T> {
 
   /// Items whose [index] key equals [key], as an unmodifiable list (empty if
   /// none). Throws [ArgumentError] for an unknown [index] name.
+  /// Audited: 2026-06-12 11:26 EDT
   List<T> getBy(String index, Object key) {
     final Map<Object, List<T>>? buckets = _indexes[index];
     if (buckets == null) {
@@ -73,14 +80,17 @@ class MultiIndexCollection<T> {
 
   /// The first item whose [index] key equals [key], or null. The convenience for
   /// a unique index. Throws [ArgumentError] for an unknown [index] name.
+  /// Audited: 2026-06-12 11:26 EDT
   T? getOneBy(String index, Object key) => getBy(index, key).firstOrNull;
 
   /// Whether any item has [key] under [index]. Throws for an unknown [index].
+  /// Audited: 2026-06-12 11:26 EDT
   bool containsKey(String index, Object key) => getBy(index, key).isNotEmpty;
 
   /// Removes [item] (matched by `==`) from the collection and every index.
   /// Returns whether it was present. A bucket left empty is pruned so the index
   /// doesn't accumulate dead keys.
+  /// Audited: 2026-06-12 11:26 EDT
   bool remove(T item) {
     if (!_items.remove(item)) {
       return false;

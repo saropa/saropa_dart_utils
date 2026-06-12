@@ -45,6 +45,7 @@ class BacktrackingSolver<State, Choice> {
   /// - [isComplete]: whether a state is a full, accepted solution.
   /// - [isValid]: whether a partial state is still worth exploring; returning
   ///   false prunes the whole branch before any deeper recursion.
+  /// Audited: 2026-06-12 11:26 EDT
   const BacktrackingSolver({
     required this.choices,
     required this.apply,
@@ -53,19 +54,24 @@ class BacktrackingSolver<State, Choice> {
   });
 
   /// Candidate choices available from a given state.
+  /// Audited: 2026-06-12 11:26 EDT
   final Iterable<Choice> Function(State) choices;
 
   /// The state reached by applying a choice to a state (no mutation).
+  /// Audited: 2026-06-12 11:26 EDT
   final State Function(State, Choice) apply;
 
   /// Whether a state is a complete, accepted solution.
+  /// Audited: 2026-06-12 11:26 EDT
   final bool Function(State) isComplete;
 
   /// Whether a partial state is still valid (worth descending into).
+  /// Audited: 2026-06-12 11:26 EDT
   final bool Function(State) isValid;
 
   /// Returns the first complete solution reachable from [initial], or null if
   /// the search exhausts every valid branch without finding one.
+  /// Audited: 2026-06-12 11:26 EDT
   State? solveFirst(State initial) {
     final List<State> found = _search(initial, 1);
     // _search caps at the requested limit, so at most one element is present;
@@ -76,11 +82,13 @@ class BacktrackingSolver<State, Choice> {
 
   /// Returns up to [limit] complete solutions reachable from [initial], in
   /// discovery (depth-first) order. A null [limit] collects every solution.
+  /// Audited: 2026-06-12 11:26 EDT
   List<State> solveAll(State initial, {int? limit}) => _search(initial, limit);
 
   /// Depth-first walk collecting complete solutions until [limit] is reached.
   /// A null [limit] means unbounded. Pruning happens via [isValid] at the top
   /// of each visit, so invalid branches never spawn children.
+  /// Audited: 2026-06-12 11:26 EDT
   List<State> _search(State initial, int? limit) {
     final List<State> solutions = <State>[];
     // The boolean result signals "limit reached" to unwind recursion; at the
@@ -92,6 +100,7 @@ class BacktrackingSolver<State, Choice> {
 
   /// Recursive visitor; appends to [out] and stops descending once [out] holds
   /// [limit] solutions. Returns true once the limit is hit so callers unwind.
+  /// Audited: 2026-06-12 11:26 EDT
   bool _visit(State state, int? limit, List<State> out) {
     // Prune first: an invalid partial state and its entire subtree are skipped.
     if (!isValid(state)) {

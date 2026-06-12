@@ -20,14 +20,17 @@ typedef SegmentCombine = num Function(num a, num b);
 /// A segment tree over `num` supporting point updates and range queries.
 class SegmentTree {
   /// Builds a sum tree: range queries return the sum over the range.
+  /// Audited: 2026-06-12 11:26 EDT
   SegmentTree.sum(List<num> values) : this._(values, _add, 0);
 
   /// Builds a min tree: range queries return the minimum over the range.
   /// The identity is `double.infinity` so an empty merge never lowers a result.
+  /// Audited: 2026-06-12 11:26 EDT
   SegmentTree.min(List<num> values) : this._(values, math.min, double.infinity);
 
   /// Builds a max tree: range queries return the maximum over the range.
   /// The identity is `double.negativeInfinity` for the symmetric reason.
+  /// Audited: 2026-06-12 11:26 EDT
   SegmentTree.max(List<num> values) : this._(values, math.max, double.negativeInfinity);
 
   SegmentTree._(List<num> values, this._combine, this._identity)
@@ -50,6 +53,7 @@ class SegmentTree {
   static num _add(num a, num b) => a + b;
 
   /// Number of elements in the tree.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _n;
 
   /// Sets the element at [index] (0-based) to [value], in `O(log n)`.
@@ -61,6 +65,7 @@ class SegmentTree {
   /// t.update(1, 10);
   /// t.query(0, 2); // 14
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void update(int index, num value) {
     assert(index >= 0 && index < _n, 'index ($index) out of range [0, $_n)');
     int pos = index + _n;
@@ -79,6 +84,7 @@ class SegmentTree {
   /// final SegmentTree t = SegmentTree.max(<num>[3, 1, 4, 1, 5]);
   /// t.query(1, 3); // 4
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   num query(int low, int high) {
     assert(low >= 0 && low <= high, 'low ($low) must be in 0..high ($high)');
     assert(high < _n, 'high ($high) out of range [0, $_n)');
@@ -98,6 +104,7 @@ class SegmentTree {
 
   /// The current value at [index] (0-based).
   /// Requires `0 <= index < length`.
+  /// Audited: 2026-06-12 11:26 EDT
   num valueAt(int index) {
     assert(index >= 0 && index < _n, 'index ($index) out of range [0, $_n)');
     return _tree[index + _n];

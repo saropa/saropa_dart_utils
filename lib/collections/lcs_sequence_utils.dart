@@ -19,6 +19,7 @@ library;
 /// longestCommonSubsequence(['a','b','c','d'], ['b','d']); // ['b', 'd']
 /// longestCommonSubsequence([1,2,3], [4,5]); // []
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<T> longestCommonSubsequence<T>(List<T> a, List<T> b) {
   if (a.isEmpty || b.isEmpty) {
     return <T>[];
@@ -68,6 +69,7 @@ List<T> longestCommonSubsequence<T>(List<T> a, List<T> b) {
 ///
 /// Cheaper than [longestCommonSubsequence] when only the length (e.g. a
 /// similarity score) is needed: O(min(a, b)) space instead of the full table.
+/// Audited: 2026-06-12 11:26 EDT
 int longestCommonSubsequenceLength<T>(List<T> a, List<T> b) {
   if (a.isEmpty || b.isEmpty) {
     return 0;

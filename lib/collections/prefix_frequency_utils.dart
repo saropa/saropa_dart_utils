@@ -2,6 +2,7 @@
 library;
 
 /// Builds map: prefix -> count of strings having that prefix. [maxPrefixLen] limits key length.
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, int> prefixFrequencyTable(List<String> strings, {int maxPrefixLen = 20}) {
   final Map<String, int> out = <String, int>{};
   // Each string contributes one count to every one of its prefixes (lengths

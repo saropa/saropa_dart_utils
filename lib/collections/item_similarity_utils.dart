@@ -30,11 +30,13 @@ import 'package:meta/meta.dart';
 @immutable
 class ItemSimilarityModel<T> {
   /// Private constructor; use [ItemSimilarityModel.fromBaskets].
+  /// Audited: 2026-06-12 11:26 EDT
   const ItemSimilarityModel._(this._basketsByItem);
 
   /// Builds a model from [baskets], where each basket is the set of items seen
   /// together once. Duplicate items within a basket collapse to one membership
   /// (a basket is a set), and empty baskets contribute nothing.
+  /// Audited: 2026-06-12 11:26 EDT
   factory ItemSimilarityModel.fromBaskets(Iterable<Iterable<T>> baskets) {
     // Map each item to the set of basket indices it appeared in. The index set
     // is the per-item signature Jaccard similarity is later computed over.
@@ -54,12 +56,14 @@ class ItemSimilarityModel<T> {
   final Map<T, Set<int>> _basketsByItem;
 
   /// Every distinct item the model knows about.
+  /// Audited: 2026-06-12 11:26 EDT
   Set<T> get items => _basketsByItem.keys.toSet();
 
   /// Jaccard similarity between items [a] and [b]: the number of baskets
   /// containing both, divided by the number containing either. The result is
   /// symmetric and lies in `[0, 1]`. Returns 0 when either item is unknown or
   /// the two never co-occur; returns 1 for items with identical basket sets.
+  /// Audited: 2026-06-12 11:26 EDT
   double similarity(T a, T b) {
     final Set<int>? setA = _basketsByItem[a];
     final Set<int>? setB = _basketsByItem[b];
@@ -83,6 +87,7 @@ class ItemSimilarityModel<T> {
   /// The query [item] itself is excluded, as is any candidate scoring 0 (no
   /// co-occurrence). An unknown [item] yields an empty list. Ties keep the
   /// order in which candidates were first seen.
+  /// Audited: 2026-06-12 11:26 EDT
   List<({T item, double score})> recommend(T item, {int topN = 10}) {
     // An unknown query has no neighbors; return early before scoring.
     if (!_basketsByItem.containsKey(item)) {

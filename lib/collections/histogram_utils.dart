@@ -2,6 +2,7 @@
 library;
 
 /// Build histogram: [values] binned by [edges] (sorted). Returns count per bin; edges.length - 1 bins.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> histogramFixed(List<num> values, List<num> edges) {
   // n edges define n-1 bins; counts[i] tallies values in [edges[i], edges[i+1]).
   if (edges.length < 2) return <int>[];
@@ -21,6 +22,7 @@ List<int> histogramFixed(List<num> values, List<num> edges) {
 }
 
 /// Bin boundaries at quantiles (e.g. 0, 0.25, 0.5, 0.75, 1). [quantiles] in [0,1], sorted.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> histogramQuantile(List<num> values, List<double> quantiles) {
   if (values.isEmpty || quantiles.length < 2) return <int>[];
   final List<num> sorted = List<num>.of(values)..sort();

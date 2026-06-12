@@ -3,6 +3,7 @@ library;
 
 /// Returns length of LIS of [list] using comparable order, and optionally
 /// the indices of one such subsequence (reconstruction).
+/// Audited: 2026-06-12 11:26 EDT
 int lisLength<T extends Comparable<Object>>(List<T> list) {
   if (list.isEmpty) return 0;
   final List<int> dp = List.filled(list.length, 1);
@@ -17,6 +18,7 @@ int lisLength<T extends Comparable<Object>>(List<T> list) {
 }
 
 /// Returns one LIS as a list of indices into [list].
+/// Audited: 2026-06-12 11:26 EDT
 List<int> lisIndices<T extends Comparable<Object>>(List<T> list) {
   if (list.isEmpty) return <int>[];
   // Quadratic dynamic program. For each position, the dp list holds the length

@@ -18,6 +18,7 @@ enum WindowAggregate {
 
 /// Returns a list where each element is the [agg] of [values] over a window of length [size].
 /// If [size] > length, returns empty list.
+/// Audited: 2026-06-12 11:26 EDT
 List<double> slidingWindow(List<num> values, int size, WindowAggregate agg) {
   if (size < 1 || values.length < size) return <double>[];
   final List<double> out = <double>[];

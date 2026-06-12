@@ -27,6 +27,7 @@ class _IndexUnionFind {
   final List<int> _size;
 
   /// Root of [x], compressing the path so later lookups are near-constant time.
+  /// Audited: 2026-06-12 11:26 EDT
   int find(int x) {
     int root = x;
     // Walk up to the root first (no recursion: inputs can be large).
@@ -44,6 +45,7 @@ class _IndexUnionFind {
   }
 
   /// Merges the sets of [a] and [b], attaching the smaller tree under the larger.
+  /// Audited: 2026-06-12 11:26 EDT
   void union(int a, int b) {
     final int rootA = find(a);
     final int rootB = find(b);
@@ -76,6 +78,7 @@ class _IndexUnionFind {
 /// );
 /// // groups == [[1, 2, 3], [9]]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<List<T>> clusterBySimilarity<T>(
   List<T> items, {
   required bool Function(T, T) areSimilar,
@@ -104,6 +107,7 @@ List<List<T>> clusterBySimilarity<T>(
 /// );
 /// // reps == [1, 9]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<T> dedupBySimilarity<T>(
   List<T> items, {
   required bool Function(T, T) areSimilar,
@@ -120,6 +124,7 @@ List<T> dedupBySimilarity<T>(
 /// Buckets [items] by their union-find root, preserving first-seen order of both
 /// items (within a cluster) and clusters (by the index where each root first
 /// appears). A linked map keyed by root index gives that ordering directly.
+/// Audited: 2026-06-12 11:26 EDT
 List<List<T>> _groupByRoot<T>(List<T> items, _IndexUnionFind uf) {
   final Map<int, List<T>> byRoot = <int, List<T>>{};
   // Iterating in index order means each root's list is built first-seen first,

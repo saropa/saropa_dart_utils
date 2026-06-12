@@ -35,6 +35,7 @@ class HyperLogLogUtils {
   /// [precision] must be in `[4, 16]`; higher precision means more registers,
   /// more memory, and a tighter estimate. Out-of-range values throw because a
   /// silent clamp would hide a sizing mistake.
+  /// Audited: 2026-06-12 11:26 EDT
   HyperLogLogUtils({this.precision = 12})
     : _registers = List<int>.filled(_validatedRegisterCount(precision), 0);
 
@@ -58,9 +59,11 @@ class HyperLogLogUtils {
   }
 
   /// Number of registers (`2^precision`).
+  /// Audited: 2026-06-12 11:26 EDT
   int get registerCount => _registers.length;
 
   /// Folds [element] into the sketch (idempotent for equal elements).
+  /// Audited: 2026-06-12 11:26 EDT
   void add(Object? element) {
     // Top `precision` bits pick the register; the remaining bits' leading-zero
     // run (rank) is what HyperLogLog records — a long run is rare and signals
@@ -72,6 +75,7 @@ class HyperLogLogUtils {
   }
 
   /// Approximate count of distinct elements added so far (0 for empty).
+  /// Audited: 2026-06-12 11:26 EDT
   int cardinality() {
     final int m = _registers.length;
     double sum = 0;
@@ -91,6 +95,7 @@ class HyperLogLogUtils {
   /// Register-wise max is the exact merge rule for HLL: the union's rank in a
   /// bucket is whichever sketch saw the longer leading-zero run there, so
   /// merging never loses information. Differing precision throws.
+  /// Audited: 2026-06-12 11:26 EDT
   HyperLogLogUtils merge(HyperLogLogUtils other) {
     if (other.precision != precision) {
       throw ArgumentError.value(
@@ -109,6 +114,7 @@ class HyperLogLogUtils {
   /// Small-range correction: when many registers are still empty the harmonic
   /// estimator is biased, so linear counting (`m * ln(m / zeros)`) is far more
   /// accurate near zero. Above the threshold the raw HLL estimate stands.
+  /// Audited: 2026-06-12 11:26 EDT
   static double _corrected(double raw, int m, int zeros) {
     const double smallRangeFactor = 2.5;
     if (raw <= smallRangeFactor * m && zeros > 0) {
@@ -119,6 +125,7 @@ class HyperLogLogUtils {
 
   /// Bias-correction constant alpha_m for the harmonic-mean estimator; the
   /// `< 128` cases are the published HLL constants, the rest is the limit form.
+  /// Audited: 2026-06-12 11:26 EDT
   static double _alpha(int m) {
     if (m >= 128) return 0.7213 / (1 + 1.079 / m);
     if (m >= 64) return 0.709;
@@ -128,6 +135,7 @@ class HyperLogLogUtils {
 
   /// Position of the first set bit (1-based) scanning from the most significant
   /// of [width] bits; all-zero (within the window) yields `width + 1`.
+  /// Audited: 2026-06-12 11:26 EDT
   static int _rank(int bits, int width) {
     for (int i = 0; i < width; i++) {
       if ((bits >>> (63 - i)) & 1 == 1) return i + 1;
@@ -137,6 +145,7 @@ class HyperLogLogUtils {
 
   /// Avalanche-mixes a 32-ish-bit [Object.hashCode] into a 64-bit value so the
   /// top bits (register index) and low bits (rank) are both well distributed.
+  /// Audited: 2026-06-12 11:26 EDT
   static int _hash64(int h) {
     int x = h & 0xFFFFFFFF;
     x = (x ^ (x >>> 30)) * 0xbf58476d1ce4e5b9;

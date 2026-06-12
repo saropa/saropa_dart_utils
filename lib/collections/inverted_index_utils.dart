@@ -2,6 +2,7 @@
 library;
 
 /// Builds term -> list of document indices containing that term.
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, List<int>> buildInvertedIndex(List<String> documents) {
   // Build a term -> document-indices map (a search index). Each document is
   // lower-cased and tokenized on non-alphanumeric runs; toSet() dedupes so a

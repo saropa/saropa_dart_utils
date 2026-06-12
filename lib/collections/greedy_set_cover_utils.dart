@@ -3,6 +3,7 @@ library;
 
 /// Returns subset of indices into [sets] that covers [universe].
 /// [sets] is list of sets; [universe] is the full set of elements to cover.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> greedySetCover(List<Set<Object>> sets, Set<Object> universe) {
   final Set<Object> remaining = Set<Object>.of(universe);
   final List<int> cover = <int>[];

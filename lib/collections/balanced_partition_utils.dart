@@ -2,6 +2,7 @@
 library;
 
 /// Greedy: assign each element of [values] to current smallest partition. Returns partition indices per element.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> balancedPartitionIndices(List<num> values, int k) {
   if (k < 1 || values.isEmpty) return <int>[];
   // Greedy multiway partition: track each bucket's running total and drop every

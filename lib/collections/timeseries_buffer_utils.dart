@@ -26,18 +26,23 @@ class TimeBucket {
   num _max = double.negativeInfinity;
 
   /// Number of points folded into this bucket.
+  /// Audited: 2026-06-12 11:26 EDT
   int get count => _count;
 
   /// Sum of folded values.
+  /// Audited: 2026-06-12 11:26 EDT
   num get sum => _sum;
 
   /// Smallest folded value.
+  /// Audited: 2026-06-12 11:26 EDT
   num get min => _min;
 
   /// Largest folded value.
+  /// Audited: 2026-06-12 11:26 EDT
   num get max => _max;
 
   /// Arithmetic mean of folded values, or `0` when the bucket is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   double get mean => _count == 0 ? 0 : _sum / _count;
 
   void _add(num value) {
@@ -58,6 +63,7 @@ typedef RawPoint = ({int t, num v});
 class TimeSeriesBuffer {
   /// Keeps at most [rawCapacity] raw points; evicted points fold into buckets
   /// [bucketSizeMs] milliseconds wide. Both must be positive.
+  /// Audited: 2026-06-12 11:26 EDT
   TimeSeriesBuffer({required int rawCapacity, required int bucketSizeMs})
     : assert(rawCapacity > 0, 'rawCapacity ($rawCapacity) must be > 0'),
       assert(bucketSizeMs > 0, 'bucketSizeMs ($bucketSizeMs) must be > 0'),
@@ -80,6 +86,7 @@ class TimeSeriesBuffer {
   ///   ..add(1500, 30); // (0,10) evicted into the [0,1000) bucket
   /// b.aggregates.first.mean; // 10
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void add(int timestampMs, num value) {
     _raw.add((t: timestampMs, v: value));
     if (_raw.length > _rawCapacity) _evictOldest();
@@ -87,16 +94,22 @@ class TimeSeriesBuffer {
 
   void _evictOldest() {
     final RawPoint p = _raw.removeAt(0);
-    final int start = (p.t ~/ _bucketSizeMs) * _bucketSizeMs;
+    // FLOOR, not truncate-toward-zero (`~/`): a negative-epoch timestamp would
+    // otherwise fold into the next-higher bucket start. (Positive timestamps,
+    // the common case, are unaffected — floor and `~/` agree there.)
+    final int start = (p.t / _bucketSizeMs).floor() * _bucketSizeMs;
     _buckets.putIfAbsent(start, () => TimeBucket._(start))._add(p.v);
   }
 
   /// The raw points still held, oldest first (an unmodifiable snapshot).
+  /// Audited: 2026-06-12 11:26 EDT
   List<RawPoint> get raw => List<RawPoint>.unmodifiable(_raw);
 
   /// The down-sampled buckets for evicted history, ordered by start time.
-  List<TimeBucket> get aggregates => _buckets.values.toList()
-    ..sort((TimeBucket a, TimeBucket b) => a.startMs.compareTo(b.startMs));
+  /// Audited: 2026-06-12 11:26 EDT
+  List<TimeBucket> get aggregates =>
+      _buckets.values.toList()
+        ..sort((TimeBucket a, TimeBucket b) => a.startMs.compareTo(b.startMs));
 
   @override
   String toString() =>

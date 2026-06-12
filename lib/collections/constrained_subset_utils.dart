@@ -49,6 +49,7 @@ class _KeyedItem<T> {
 /// );
 /// // picked.length == 2; 'a' chosen far more often across seeds
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<T> weightedSubset<T>(
   List<T> items, {
   required int count,
@@ -67,6 +68,7 @@ List<T> weightedSubset<T>(
 
 /// Builds the keyed list of eligible items, skipping excluded items and any with
 /// a non-positive or non-finite weight (which can never be sampled).
+/// Audited: 2026-06-12 11:26 EDT
 List<_KeyedItem<T>> _keyEligible<T>(
   List<T> items,
   double Function(T) weight,
@@ -87,6 +89,7 @@ List<_KeyedItem<T>> _keyEligible<T>(
 
 /// The Efraimidis-Spirakis key `u^(1/weight)` for a uniform `u` in `(0, 1]`.
 /// Computed as `exp(ln(u) / weight)` for numerical stability with large weights.
+/// Audited: 2026-06-12 11:26 EDT
 double _selectionKey(double weight, Random rng) {
   // nextDouble() is in [0, 1); shift to (0, 1] so ln(u) is always finite.
   final double u = 1.0 - rng.nextDouble();

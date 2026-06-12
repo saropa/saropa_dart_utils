@@ -48,5 +48,18 @@ void main() {
       final Map<DateTime, int> result = bucketByTime([base], const Duration(minutes: 5));
       expect(result, {base: 1});
     });
+
+    test('should floor-bucket negative (pre-1970) epoch timestamps', () {
+      // A point at -1 ms with a 1000 ms bucket belongs to [-1000, 0), not [0,
+      // 1000). Truncating division (~/) would wrongly land it in bucket 0.
+      final DateTime preEpoch = DateTime.fromMillisecondsSinceEpoch(-1);
+      final Map<DateTime, int> result = bucketByTime([preEpoch], const Duration(seconds: 1));
+      expect(result.keys.single, DateTime.fromMillisecondsSinceEpoch(-1000));
+    });
+
+    test('should return empty for a non-positive bucket width', () {
+      final DateTime base = DateTime.fromMillisecondsSinceEpoch(0);
+      expect(bucketByTime([base], Duration.zero), isEmpty);
+    });
   });
 }

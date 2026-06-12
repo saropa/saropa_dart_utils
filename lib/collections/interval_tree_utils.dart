@@ -21,6 +21,7 @@ import 'package:meta/meta.dart';
 class IntervalEntry<T> {
   /// Creates an interval `[low, high]` (inclusive) labeled with [value].
   /// Requires `low <= high`.
+  /// Audited: 2026-06-12 11:26 EDT
   IntervalEntry(this.low, this.high, this.value)
     : assert(low <= high, 'low ($low) must be <= high ($high)');
 
@@ -34,11 +35,13 @@ class IntervalEntry<T> {
   final T value;
 
   /// Whether [point] lies within `[low, high]` (inclusive).
+  /// Audited: 2026-06-12 11:26 EDT
   bool contains(num point) => low <= point && point <= high;
 
   /// Whether this interval overlaps the inclusive range `[low, high]` given by
   /// [otherLow]/[otherHigh]. Two inclusive ranges overlap iff each starts at or
   /// before the other ends.
+  /// Audited: 2026-06-12 11:26 EDT
   bool overlaps(num otherLow, num otherHigh) => low <= otherHigh && high >= otherLow;
 
   @override
@@ -71,6 +74,7 @@ class _IntervalNode<T> {
 class IntervalTree<T> {
   /// Builds a balanced tree from [entries] (any order). Construction is
   /// `O(n log n)` to sort; queries are then `O(log n + k)`.
+  /// Audited: 2026-06-12 11:26 EDT
   IntervalTree(Iterable<IntervalEntry<T>> entries) {
     final List<IntervalEntry<T>> sorted = entries.toList()
       ..sort((IntervalEntry<T> a, IntervalEntry<T> b) => a.low.compareTo(b.low));
@@ -82,9 +86,11 @@ class IntervalTree<T> {
   int _size = 0;
 
   /// Number of intervals in the tree.
+  /// Audited: 2026-06-12 11:26 EDT
   int get size => _size;
 
   /// Whether the tree holds no intervals.
+  /// Audited: 2026-06-12 11:26 EDT
   bool get isEmpty => _size == 0;
 
   /// All intervals that contain [point], in ascending `low` order.
@@ -93,6 +99,7 @@ class IntervalTree<T> {
 
   /// All intervals overlapping the inclusive range `[low, high]`, in ascending
   /// `low` order. Requires `low <= high`.
+  /// Audited: 2026-06-12 11:26 EDT
   List<IntervalEntry<T>> queryRange(num low, num high) {
     assert(low <= high, 'low ($low) must be <= high ($high)');
     final List<IntervalEntry<T>> results = <IntervalEntry<T>>[];
@@ -102,6 +109,7 @@ class IntervalTree<T> {
 
   /// Whether any interval overlaps `[low, high]`. Short-circuits on the first
   /// match, so it is cheaper than checking `queryRange(...).isNotEmpty`.
+  /// Audited: 2026-06-12 11:26 EDT
   bool hasOverlap(num low, num high) {
     assert(low <= high, 'low ($low) must be <= high ($high)');
     return _anyOverlap(_root, low, high);
@@ -110,6 +118,7 @@ class IntervalTree<T> {
   /// Builds a balanced subtree from `sorted[lo..hi]`, picking the median as the
   /// root so the tree height stays `O(log n)`, then setting each node's
   /// [_IntervalNode.maxHigh] bottom-up.
+  /// Audited: 2026-06-12 11:26 EDT
   _IntervalNode<T>? _build(List<IntervalEntry<T>> sorted, int lo, int hi) {
     if (lo > hi) {
       return null;
@@ -127,10 +136,12 @@ class IntervalTree<T> {
 
   /// The subtree's `maxHigh`, or negative infinity for an absent child so it
   /// never wins the `max`.
+  /// Audited: 2026-06-12 11:26 EDT
   num _subtreeMax(_IntervalNode<T>? node) => node?.maxHigh ?? double.negativeInfinity;
 
   /// In-order walk collecting every overlap, pruning branches via [_IntervalNode.maxHigh]
   /// (left) and the node's own `low` (right).
+  /// Audited: 2026-06-12 11:26 EDT
   void _collect(_IntervalNode<T>? node, num low, num high, List<IntervalEntry<T>> out) {
     // No interval in this subtree reaches `low`, so none can overlap.
     if (node == null || node.maxHigh < low) {
@@ -148,6 +159,7 @@ class IntervalTree<T> {
   }
 
   /// Same pruning as [_collect] but returns on the first overlap found.
+  /// Audited: 2026-06-12 11:26 EDT
   bool _anyOverlap(_IntervalNode<T>? node, num low, num high) {
     // Augmented-tree prune: node.maxHigh is the largest endpoint in this whole
     // subtree, so if it ends before the query starts, nothing here can overlap.

@@ -15,6 +15,7 @@ typedef VectorDistance = double Function(List<double> a, List<double> b);
 /// ```dart
 /// euclideanDistance([0, 0], [3, 4]); // 5.0
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double euclideanDistance(List<double> a, List<double> b) {
   final int n = a.length < b.length ? a.length : b.length;
   double sumSq = 0;
@@ -43,6 +44,7 @@ enum ClusterLinkage { single, complete, average }
 /// ```
 class MergeStep {
   /// Creates an immutable dendrogram merge record.
+  /// Audited: 2026-06-12 11:26 EDT
   const MergeStep({required this.a, required this.b, required this.distance, required this.size});
 
   /// First merged cluster id.
@@ -69,6 +71,7 @@ class MergeStep {
 /// ```dart
 /// hierarchicalCluster([[0], [0.1], [9]]).length; // 2
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<MergeStep> hierarchicalCluster(
   List<List<double>> points, {
   ClusterLinkage linkage = ClusterLinkage.average,
@@ -95,6 +98,7 @@ List<MergeStep> hierarchicalCluster(
 /// ```dart
 /// cutClustersByCount(hierarchicalCluster(pts), pts.length, 2);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> cutClustersByCount(List<MergeStep> steps, int n, int k) {
   if (n <= 0) return <int>[];
   final int wanted = k < 1 ? 1 : (k > n ? n : k);
@@ -118,6 +122,7 @@ List<int> cutClustersByCount(List<MergeStep> steps, int n, int k) {
 /// ```dart
 /// cutClustersByDistance(hierarchicalCluster(pts), pts.length, 0.5);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> cutClustersByDistance(List<MergeStep> steps, int n, double threshold) {
   if (n <= 0) return <int>[];
   final _UnionFind uf = _UnionFind(n);
@@ -261,6 +266,7 @@ class _UnionFind {
   /// Binding [mergeId] is essential: a later step may reference it as a child,
   /// and without the link its subtree's leaves would be orphaned. Only the a/b
   /// join changes the leaf component count.
+  /// Audited: 2026-06-12 11:26 EDT
   void unionMerge(int a, int b, int mergeId) {
     final int ra = _find(a);
     final int rb = _find(b);
@@ -272,6 +278,7 @@ class _UnionFind {
   }
 
   /// Per-leaf labels in 0..components-1, numbered in first-appearance order.
+  /// Audited: 2026-06-12 11:26 EDT
   List<int> denseLabels() {
     final Map<int, int> seen = <int, int>{};
     return List<int>.generate(_n, (int i) => seen.putIfAbsent(_find(i), () => seen.length));

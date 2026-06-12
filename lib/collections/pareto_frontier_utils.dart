@@ -35,6 +35,7 @@ class ParetoOptions<T> {
   ///
   /// A length mismatch would silently ignore objectives or read past the end
   /// during dominance checks, so it is rejected up front rather than mid-scan.
+  /// Audited: 2026-06-12 11:26 EDT
   factory ParetoOptions({
     // ignore: prefer_correct_callback_field_name -- objective extractors, not event handlers; on-prefix does not apply
     required List<num Function(T item)> criteria,
@@ -69,6 +70,7 @@ class ParetoOptions<T> {
 /// );
 /// paretoFrontier([[1, 2], [2, 1], [3, 3]], opts); // [[1, 2], [2, 1]]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<T> paretoFrontier<T>(List<T> items, ParetoOptions<T> options) {
   // Precompute every item's objective vector once; recomputing inside the
   // quadratic dominance scan would re-run the user's extractors for every pair.
@@ -87,6 +89,7 @@ List<T> paretoFrontier<T>(List<T> items, ParetoOptions<T> options) {
 }
 
 /// True when any item other than [target] dominates the item at [target].
+/// Audited: 2026-06-12 11:26 EDT
 bool _anyDominates(List<List<num>> scores, int target, List<ParetoDirection> dirs) {
   for (int j = 0; j < scores.length; j++) {
     if (j != target && _dominates(scores[j], scores[target], dirs)) return true;
@@ -95,6 +98,7 @@ bool _anyDominates(List<List<num>> scores, int target, List<ParetoDirection> dir
 }
 
 /// True when vector [a] dominates [b]: no worse on all objectives, better on one.
+/// Audited: 2026-06-12 11:26 EDT
 bool _dominates(List<num> a, List<num> b, List<ParetoDirection> dirs) {
   bool strictlyBetter = false;
   for (int k = 0; k < dirs.length; k++) {

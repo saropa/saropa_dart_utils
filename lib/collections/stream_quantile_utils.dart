@@ -1,25 +1,33 @@
-/// Stream quantile estimation (P²-style approximate) — roadmap #453.
+/// Exact streaming quantile over a retained sample — roadmap #453.
 library;
 
-/// Approximate percentile from a stream of values (single pass, fixed memory).
+/// Computes an EXACT percentile over every value fed in. This retains all
+/// values (memory grows O(n)); it is NOT an approximate, fixed-memory P²
+/// estimator despite the roadmap title. Use it when exactness matters and the
+/// stream is bounded; for unbounded streams with a memory cap, downsample
+/// before feeding values in.
 class StreamQuantileUtils {
   /// Creates an estimator for the quantile at [p], where [p] ranges from 0 to 1
   /// (e.g. 0.5 for the median).
+  /// Audited: 2026-06-12 11:26 EDT
   StreamQuantileUtils(double p) : _p = p;
   final double _p;
 
   /// The target quantile in the range 0 to 1.
+  /// Audited: 2026-06-12 11:26 EDT
   double get p => _p;
   final List<double> _buffer = <double>[];
-  static const int _maxSize = 100;
 
-  /// Feeds [value] into the estimator for inclusion in the quantile estimate.
+  /// Feeds [value] into the estimator. The value is retained for an exact
+  /// quantile; [quantile] sorts a copy on demand, so this is O(1) amortized.
+  /// Audited: 2026-06-12 11:26 EDT
   void add(num value) {
     _buffer.add(value.toDouble());
-    if (_buffer.length > _maxSize) _buffer.sort();
   }
 
-  /// Current approximate quantile at [p] (e.g. median when p is 0.5).
+  /// Current exact quantile at [p] (e.g. median when p is 0.5), or NaN when no
+  /// values have been added.
+  /// Audited: 2026-06-12 11:26 EDT
   double get quantile {
     if (_buffer.isEmpty) return double.nan;
     final List<double> sorted = List<double>.of(_buffer)..sort();

@@ -4,6 +4,7 @@ library;
 /// Interval with weight.
 class WeightedIntervalUtils {
   /// Creates an interval spanning [start] to [end] with the given [weight].
+  /// Audited: 2026-06-12 11:26 EDT
   const WeightedIntervalUtils(int start, int end, int weight)
     : _start = start,
       _end = end,
@@ -11,14 +12,17 @@ class WeightedIntervalUtils {
   final int _start;
 
   /// Start of the interval.
+  /// Audited: 2026-06-12 11:26 EDT
   int get start => _start;
   final int _end;
 
   /// End of the interval.
+  /// Audited: 2026-06-12 11:26 EDT
   int get end => _end;
   final int _weight;
 
   /// Weight (value) contributed when this interval is selected.
+  /// Audited: 2026-06-12 11:26 EDT
   int get weight => _weight;
 
   @override
@@ -26,6 +30,7 @@ class WeightedIntervalUtils {
 }
 
 /// Returns the maximum total weight of non-overlapping intervals (DP by end time).
+/// Audited: 2026-06-12 11:26 EDT
 int maxWeightIntervals(List<WeightedIntervalUtils> intervals) {
   if (intervals.isEmpty) return 0;
   // Sort by end time so that for any interval, every compatible (earlier-ending,

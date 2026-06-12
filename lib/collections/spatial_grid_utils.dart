@@ -24,6 +24,7 @@ class _Entry<T> {
 class SpatialGrid<T> {
   /// Creates a grid whose square cells are [cellSize] units on a side.
   /// Requires `cellSize > 0`.
+  /// Audited: 2026-06-12 11:26 EDT
   SpatialGrid(double cellSize)
     : assert(cellSize > 0, 'cellSize ($cellSize) must be > 0'),
       _cellSize = cellSize;
@@ -34,6 +35,7 @@ class SpatialGrid<T> {
   int _size = 0;
 
   /// Total number of points stored.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _size;
 
   int _cell(double v) => (v / _cellSize).floor();
@@ -48,6 +50,7 @@ class SpatialGrid<T> {
   ///   ..insert('b', 5, 5);
   /// g.queryRadius(0, 0, 3); // ['a']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void insert(T item, double x, double y) {
     final (int, int) key = (_cell(x), _cell(y));
     _cells.putIfAbsent(key, () => <_Entry<T>>[]).add(_Entry<T>(item, x, y));
@@ -56,6 +59,7 @@ class SpatialGrid<T> {
 
   /// Items whose stored position lies within Euclidean distance [radius] of
   /// ([x], [y]). Requires `radius >= 0`. Order is unspecified.
+  /// Audited: 2026-06-12 11:26 EDT
   List<T> queryRadius(double x, double y, double radius) {
     assert(radius >= 0, 'radius ($radius) must be >= 0');
     final double r2 = radius * radius;

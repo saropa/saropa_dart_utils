@@ -50,5 +50,11 @@ void main() {
     test('should report length in toString', () {
       expect(DifferenceArrayUtils(5).toString(), 'DifferenceArrayUtils(length: 5)');
     });
+
+    test('should ignore a reversed range (l > r) as a no-op', () {
+      // A reversed range must not corrupt the array; it is silently ignored.
+      final DifferenceArrayUtils diff = DifferenceArrayUtils(4)..addRange(3, 1, 5);
+      expect(diff.toArray(), [0, 0, 0, 0]);
+    });
   });
 }

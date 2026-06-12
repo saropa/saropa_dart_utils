@@ -3,7 +3,13 @@ library;
 
 import 'package:collection/collection.dart';
 
-/// Returns indices of top [k] elements in [values] by [keyOf] (largest first).
+/// Returns the indices of the top [k] elements in [values] by [keyOf].
+///
+/// Order is NOT guaranteed: when there are more than [k] elements the result is
+/// in ascending-key order (smallest of the kept k first); when there are at
+/// most [k] it is the original input order. Sort the result yourself if a
+/// specific order (e.g. largest first) is required.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> topKIndices<T>(List<T> values, int k, num Function(T) keyOf) {
   if (values.isEmpty || k < 1) return <int>[];
   // Everything qualifies when there are at most k elements — return all indices.

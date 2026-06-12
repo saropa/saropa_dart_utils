@@ -30,6 +30,7 @@ class _BkNode {
 /// An approximate-match index over a set of strings.
 class BkTree {
   /// Creates an index using [distance] (defaults to Damerau–Levenshtein).
+  /// Audited: 2026-06-12 11:26 EDT
   BkTree([StringDistance? distance]) : _distance = distance ?? damerauLevenshteinDistance;
 
   final StringDistance _distance;
@@ -37,6 +38,7 @@ class BkTree {
   int _size = 0;
 
   /// Number of distinct words stored (duplicates are ignored).
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _size;
 
   /// Inserts [word]. A word already present (distance 0 to an existing node) is
@@ -47,6 +49,7 @@ class BkTree {
   /// final BkTree t = BkTree()..add('book')..add('books')..add('cake');
   /// t.search('boo', 2); // ['book', 'books']
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void add(String word) {
     final _BkNode? root = _root;
     if (root == null) {
@@ -72,6 +75,7 @@ class BkTree {
 
   /// Returns every stored word within edit distance [maxDistance] of [query],
   /// in no particular order. Requires `maxDistance >= 0`.
+  /// Audited: 2026-06-12 11:26 EDT
   List<String> search(String query, int maxDistance) {
     assert(maxDistance >= 0, 'maxDistance ($maxDistance) must be >= 0');
     final List<String> matches = <String>[];

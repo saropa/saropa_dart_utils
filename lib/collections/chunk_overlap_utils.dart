@@ -2,6 +2,7 @@
 library;
 
 /// Splits [list] into chunks of [chunkSize] with [overlap] between consecutive chunks.
+/// Audited: 2026-06-12 11:26 EDT
 List<List<T>> chunksWithOverlap<T>(List<T> list, int chunkSize, int overlap) {
   // Guard nonsensical parameters (overlap must be smaller than the chunk, or the
   // window could never advance): degrade to a single chunk of the whole list.

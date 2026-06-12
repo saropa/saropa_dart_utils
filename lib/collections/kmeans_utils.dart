@@ -4,17 +4,18 @@ library;
 import 'dart:math' show pow;
 
 /// Runs up to [maxIterations] of K-means; [points] are 2D, returns cluster index per point.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> kmeans2D(List<(double, double)> points, int k, {int maxIterations = 100}) {
   if (points.isEmpty || k < 1) return <int>[];
   const int coordX = 0;
   const int coordY = 1;
   final List<int> assign = List.filled(points.length, 0);
-  // All centroids start at the first point. They diverge on the first iteration
-  // because empty clusters keep their seed while the populated one moves to its
-  // mean — a simple, deterministic seeding (no randomness to make tests vary).
-  final double firstX = points[0].$1;
-  final double firstY = points[0].$2;
-  final List<List<double>> centroids = List.generate(k, (_) => [firstX, firstY]);
+  // Seed centroids spread across the data (maximin / greedy k-means++) so the
+  // clusters can actually separate. Seeding all k at points[0] (the previous
+  // behavior) collapsed the output to at most two clusters: identical centroids
+  // never diverge under Lloyd's algorithm because every tie breaks to the
+  // lowest index, so clusters 1..k-1 stayed pinned at the seed forever.
+  final List<List<double>> centroids = _seedCentroids(points, k);
   // Lloyd's algorithm: alternate assign-to-nearest and recompute-means until the
   // centroids stop moving or the iteration cap is hit (the cap bounds runtime if
   // it never fully settles).
@@ -58,6 +59,49 @@ List<int> kmeans2D(List<(double, double)> points, int k, {int maxIterations = 10
     if (hasConverged) break;
   }
   return assign;
+}
+
+/// Squared distance from point [p] to its NEAREST seed in [seeds].
+double _nearestSeedDist2((double, double) p, List<List<double>> seeds) {
+  const int coordX = 0;
+  const int coordY = 1;
+  double nearest = double.infinity;
+  for (final List<double> s in seeds) {
+    final double d = _dist2(p, (s[coordX], s[coordY]));
+    if (d < nearest) nearest = d;
+  }
+  return nearest;
+}
+
+/// Maximin (greedy k-means++) seeding: start at the first point, then
+/// repeatedly add the point FARTHEST from all chosen seeds. Spreading the
+/// initial centroids across the data lets genuinely separate groups each claim
+/// a seed; naive "first k distinct points" can drop two seeds inside one tight
+/// cluster and split it. Deterministic (no randomness). When fewer than [k]
+/// distinct points exist, the array is padded with the first point.
+/// Audited: 2026-06-12 11:26 EDT
+List<List<double>> _seedCentroids(List<(double, double)> points, int k) {
+  // Hoist points[0] so the fallback below is not a constant-index read in a loop.
+  final (double, double) firstPoint = points[0];
+  final List<List<double>> seeds = <List<double>>[
+    <double>[firstPoint.$1, firstPoint.$2],
+  ];
+  while (seeds.length < k) {
+    int bestIdx = -1;
+    double bestDist = -1;
+    for (int i = 0; i < points.length; i++) {
+      final double nearest = _nearestSeedDist2(points[i], seeds);
+      if (nearest > bestDist) {
+        bestDist = nearest;
+        bestIdx = i;
+      }
+    }
+    // bestDist == 0 means every remaining point coincides with an existing
+    // seed (fewer distinct points than k); pad with the first point.
+    final (double, double) pick = bestDist > 0 ? points[bestIdx] : firstPoint;
+    seeds.add(<double>[pick.$1, pick.$2]);
+  }
+  return seeds;
 }
 
 double _dist2((double, double) a, (double, double) b) {

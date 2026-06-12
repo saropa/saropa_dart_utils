@@ -23,6 +23,7 @@ library;
 ///   print(p); // [1,2,3], [1,3,2], [2,1,3], ...
 /// }
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> permutations<T>(List<T> items, {int? length}) sync* {
   final int k = length ?? items.length;
   // A negative or oversized length can produce nothing; 0 yields one empty
@@ -36,6 +37,7 @@ Iterable<List<T>> permutations<T>(List<T> items, {int? length}) sync* {
 /// Recursive helper that grows [chosen] (a list of source indices) until it
 /// holds [k] entries, marking used positions in [used] so each index appears
 /// at most once per arrangement.
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> _permute<T>(
   List<T> items,
   int k,
@@ -71,6 +73,7 @@ Iterable<List<T>> _permute<T>(
 /// ```dart
 /// combinations<int>(<int>[1, 2, 3, 4], 2); // [1,2],[1,3],[1,4],[2,3],...
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> combinations<T>(List<T> items, int k) sync* {
   // Out-of-range k has no combinations; k == 0 falls through to yield [].
   if (k < 0 || k > items.length) {
@@ -81,6 +84,7 @@ Iterable<List<T>> combinations<T>(List<T> items, int k) sync* {
 
 /// Recursive helper that picks increasing source indices into [chosen] starting
 /// at [start], so each combination is generated once in index order.
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> _combine<T>(
   List<T> items,
   int k,
@@ -110,12 +114,14 @@ Iterable<List<T>> _combine<T>(
 /// cartesianProduct<int>(<List<int>>[<int>[1, 2], <int>[3, 4]]);
 /// // [1,3], [1,4], [2,3], [2,4]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> cartesianProduct<T>(List<List<T>> lists) sync* {
   yield* _product<T>(lists, 0, <T>[]);
 }
 
 /// Recursive helper that fixes one element from `lists[depth]` into [prefix]
 /// before recursing into the next list, emitting a full tuple at the leaves.
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> _product<T>(
   List<List<T>> lists,
   int depth,
@@ -142,6 +148,7 @@ Iterable<List<T>> _product<T>(
 /// ```dart
 /// powerSet<int>(<int>[1, 2]); // [], [1], [2], [1,2]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<List<T>> powerSet<T>(List<T> items) sync* {
   // Emit subsets grouped by size so the empty set comes first and the full set
   // last; each size delegates to the lazy combinations generator.

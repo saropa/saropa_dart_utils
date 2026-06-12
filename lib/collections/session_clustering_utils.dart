@@ -28,6 +28,7 @@ import 'package:collection/collection.dart';
 ///   maxGap: const Duration(minutes: 30),
 /// );
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<List<T>> clusterIntoSessions<T>(
   List<T> items, {
   required DateTime Function(T) timestamp,
@@ -75,6 +76,7 @@ List<List<T>> clusterIntoSessions<T>(
 ///   maxGap: const Duration(hours: 1),
 /// );
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<({DateTime start, DateTime end, List<T> items})> sessionsWithBounds<T>(
   List<T> items, {
   required DateTime Function(T) timestamp,
@@ -107,6 +109,7 @@ List<({DateTime start, DateTime end, List<T> items})> sessionsWithBounds<T>(
 
 /// Returns a new list of [items] ordered ascending by [timestamp]; the source
 /// list is never mutated so callers keep their original ordering.
+/// Audited: 2026-06-12 11:26 EDT
 List<T> _sortedByTimestamp<T>(List<T> items, DateTime Function(T) timestamp) =>
     items.toList()..sort(
       (T a, T b) => timestamp(a).compareTo(timestamp(b)),

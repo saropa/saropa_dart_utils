@@ -33,6 +33,7 @@ class TimeDecayCounter {
   /// ```dart
   /// final c = TimeDecayCounter(halfLifeMillis: 500);
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   TimeDecayCounter({required this.halfLifeMillis})
     : assert(halfLifeMillis > 0, 'halfLifeMillis must be > 0'),
       _lambda = ln2 / halfLifeMillis;
@@ -59,6 +60,7 @@ class TimeDecayCounter {
   /// final c = TimeDecayCounter(halfLifeMillis: 1000)..add(10, atTimeMillis: 0);
   /// c.value(asOfTimeMillis: 1000); // 5.0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   double value({required int asOfTimeMillis}) => _decayedTo(asOfTimeMillis);
 
   /// Adds [weight] at [atTimeMillis], decaying any prior value to that instant.
@@ -75,6 +77,7 @@ class TimeDecayCounter {
   ///   ..add(4, atTimeMillis: 1000);
   /// c.value(asOfTimeMillis: 1000); // 6.0 (2.0 decayed + 4.0 fresh)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void add(double weight, {required int atTimeMillis}) {
     _value = _decayedTo(atTimeMillis) + weight;
     // Never move the reference time backwards; a late add ages to "now", not past.
@@ -91,6 +94,7 @@ class TimeDecayCounter {
   /// final c = TimeDecayCounter(halfLifeMillis: 1000)..add(5, atTimeMillis: 0)..reset();
   /// c.value(asOfTimeMillis: 0); // 0.0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void reset() {
     _value = 0.0;
     _lastMillis = null;

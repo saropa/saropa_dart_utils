@@ -5,14 +5,17 @@ library;
 class KnapsackUtils {
   /// Creates a knapsack item with the given [weight] (cost) and [value]
   /// (profit).
+  /// Audited: 2026-06-12 11:26 EDT
   const KnapsackUtils(int weight, int value) : _weight = weight, _value = value;
   final int _weight;
 
   /// Item weight (cost).
+  /// Audited: 2026-06-12 11:26 EDT
   int get weight => _weight;
   final int _value;
 
   /// Item value (profit).
+  /// Audited: 2026-06-12 11:26 EDT
   int get value => _value;
 
   @override
@@ -20,6 +23,7 @@ class KnapsackUtils {
 }
 
 /// Solves the 0/1 knapsack: (max value, indices of chosen items). [items] and [capacity] must be non-negative.
+/// Audited: 2026-06-12 11:26 EDT
 (int value, List<int> indices) knapsack01(List<KnapsackUtils> items, int capacity) {
   if (capacity <= 0 || items.isEmpty) return (0, <int>[]);
   final int n = items.length;

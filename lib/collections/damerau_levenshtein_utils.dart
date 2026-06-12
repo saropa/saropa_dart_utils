@@ -2,6 +2,7 @@
 library;
 
 /// Returns Damerau–Levenshtein distance (insert, delete, substitute, transpose).
+/// Audited: 2026-06-12 11:26 EDT
 int damerauLevenshteinDistance(String a, String b) {
   final int aLen = a.length;
   final int bLen = b.length;

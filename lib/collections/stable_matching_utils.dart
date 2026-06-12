@@ -52,6 +52,7 @@ typedef StableMatchingPrefs = ({
 ///   acceptors: {'x': ['a', 'b'], 'y': ['a', 'b']},
 /// )); // {'a': 'x', 'b': 'y'}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, String> stableMatching(StableMatchingPrefs prefs) {
   _validate(prefs);
   // Precompute each acceptor's rank map so it can compare two suitors in
@@ -80,6 +81,7 @@ Map<String, String> stableMatching(StableMatchingPrefs prefs) {
 /// Advances [proposer] through its remaining choices, proposing to the first
 /// acceptor that ranks it; on a successful displacement the ousted proposer is
 /// pushed back onto [free] to propose again later.
+/// Audited: 2026-06-12 11:26 EDT
 void _propose(
   String proposer,
   List<String> choices,
@@ -112,6 +114,7 @@ void _propose(
 /// Settles one proposal: accepts when [acceptor] is open or prefers [proposer]
 /// over its current partner, displacing that partner; returns whether the
 /// proposer ended up matched here.
+/// Audited: 2026-06-12 11:26 EDT
 bool _tryAccept(
   String proposer,
   String acceptor,
@@ -137,6 +140,7 @@ bool _tryAccept(
 
 /// Builds `acceptor → (proposer → rank index)` from each acceptor's ranking, so
 /// preference comparisons during proposals are constant-time map reads.
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, Map<String, int>> _acceptorRanks(Map<String, List<String>> acceptors) =>
     <String, Map<String, int>>{
       for (final MapEntry<String, List<String>> e in acceptors.entries)
@@ -147,6 +151,7 @@ Map<String, Map<String, int>> _acceptorRanks(Map<String, List<String>> acceptors
 
 /// Rejects malformed [prefs]: a list referencing a party absent from the other
 /// side, or a duplicate entry within a single list (ties are disallowed).
+/// Audited: 2026-06-12 11:26 EDT
 void _validate(StableMatchingPrefs prefs) {
   _checkSide(prefs.proposers, prefs.acceptors.keys.toSet(), 'proposer');
   _checkSide(prefs.acceptors, prefs.proposers.keys.toSet(), 'acceptor');
@@ -154,6 +159,7 @@ void _validate(StableMatchingPrefs prefs) {
 
 /// Validates one [side]'s lists against the [known] members of the opposite
 /// side, throwing on an unknown reference or an intra-list duplicate.
+/// Audited: 2026-06-12 11:26 EDT
 void _checkSide(Map<String, List<String>> side, Set<String> known, String label) {
   for (final MapEntry<String, List<String>> e in side.entries) {
     final Set<String> seen = <String>{};

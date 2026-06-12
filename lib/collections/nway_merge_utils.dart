@@ -2,6 +2,7 @@
 library;
 
 /// Merges [iterables] (each sorted by natural order) into one sorted list.
+/// Audited: 2026-06-12 11:26 EDT
 List<T> nWayMerge<T extends Comparable<Object>>(List<Iterable<T>> iterables) {
   if (iterables.isEmpty) return <T>[];
   // Classic k-way merge: keep one live cursor per source plus a `head` array of

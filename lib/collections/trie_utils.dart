@@ -4,11 +4,13 @@ library;
 /// Simple trie for string keys: insert, delete, prefix search.
 class TrieUtils {
   /// Creates an empty trie.
+  /// Audited: 2026-06-12 11:26 EDT
   TrieUtils() : _root = _TrieNode();
 
   final _TrieNode _root;
 
   /// Inserts [key] into the trie; empty key is ignored.
+  /// Audited: 2026-06-12 11:26 EDT
   void insert(String key) {
     if (key.isEmpty) return;
     _TrieNode node = _root;
@@ -19,15 +21,18 @@ class TrieUtils {
   }
 
   /// True if [key] was inserted as a complete word (not merely a prefix).
+  /// Audited: 2026-06-12 11:26 EDT
   bool search(String key) {
     final _TrieNode? node = _find(key);
     return node != null && node.isEnd;
   }
 
   /// True if some key has [prefix] as a prefix.
+  /// Audited: 2026-06-12 11:26 EDT
   bool startsWith(String prefix) => _find(prefix) != null;
 
   /// Removes [key] from the trie if present.
+  /// Audited: 2026-06-12 11:26 EDT
   void delete(String key) {
     if (key.isEmpty) return;
     // ignore: saropa_lints/avoid_ignoring_return_values -- bool signals child-prune to caller; root is never pruned here
@@ -61,6 +66,7 @@ class TrieUtils {
   }
 
   /// All keys with prefix [prefix].
+  /// Audited: 2026-06-12 11:26 EDT
   List<String> keysWithPrefix(String prefix) {
     final _TrieNode? start = _find(prefix);
     if (start == null) return <String>[];

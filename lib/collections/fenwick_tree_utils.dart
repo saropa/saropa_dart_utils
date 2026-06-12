@@ -16,6 +16,7 @@ library;
 class FenwickTree {
   /// Creates a tree of [size] elements, all initialized to zero.
   /// Requires `size >= 0`.
+  /// Audited: 2026-06-12 11:26 EDT
   FenwickTree(int size)
     : assert(size >= 0, 'size ($size) must be >= 0'),
       _size = size,
@@ -23,6 +24,7 @@ class FenwickTree {
       _tree = List<num>.filled(size + 1, 0);
 
   /// Creates a tree seeded with [values], in `O(n)`.
+  /// Audited: 2026-06-12 11:26 EDT
   FenwickTree.fromList(List<num> values) : this._fromList(values);
 
   // Private delegate so the public factory body can run after the field
@@ -40,6 +42,7 @@ class FenwickTree {
   final List<num> _tree;
 
   /// Number of elements in the tree.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _size;
 
   /// Adds [delta] to the element at [index] (0-based), in `O(log n)`.
@@ -51,6 +54,7 @@ class FenwickTree {
   /// t.update(2, 7); // element 2 becomes 7
   /// t.prefixSum(2); // 7
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   void update(int index, num delta) {
     assert(index >= 0 && index < _size, 'index ($index) out of range [0, $_size)');
     // Walk to each responsible node by adding the lowest set bit (i & -i).
@@ -61,6 +65,7 @@ class FenwickTree {
 
   /// Sum of elements `[0..index]` inclusive (0-based), in `O(log n)`.
   /// Requires `0 <= index < length`.
+  /// Audited: 2026-06-12 11:26 EDT
   num prefixSum(int index) {
     assert(index >= 0 && index < _size, 'index ($index) out of range [0, $_size)');
     num sum = 0;
@@ -79,6 +84,7 @@ class FenwickTree {
   /// final FenwickTree t = FenwickTree.fromList(<num>[1, 2, 3, 4]);
   /// t.rangeSum(1, 3); // 9
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   num rangeSum(int low, int high) {
     assert(low >= 0 && low <= high, 'low ($low) must be in 0..high ($high)');
     assert(high < _size, 'high ($high) out of range [0, $_size)');
@@ -91,6 +97,7 @@ class FenwickTree {
 
   /// The current value at [index] (0-based), in `O(log n)`.
   /// Requires `0 <= index < length`.
+  /// Audited: 2026-06-12 11:26 EDT
   num valueAt(int index) {
     assert(index >= 0 && index < _size, 'index ($index) out of range [0, $_size)');
     // ignore: no_equal_arguments -- a single-element sum is the degenerate range [index, index]

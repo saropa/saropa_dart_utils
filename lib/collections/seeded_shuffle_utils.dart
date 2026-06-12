@@ -4,6 +4,7 @@ library;
 import 'dart:math' show Random;
 
 /// Returns a new list with elements shuffled using [seed].
+/// Audited: 2026-06-12 11:26 EDT
 List<T> shuffleWithSeed<T>(List<T> list, int seed) {
   final List<T> out = List<T>.of(list);
   final Random r = Random(seed);

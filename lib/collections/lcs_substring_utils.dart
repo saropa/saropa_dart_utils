@@ -2,6 +2,7 @@
 library;
 
 /// Returns the length of the longest common substring of [a] and [b].
+/// Audited: 2026-06-12 11:26 EDT
 int longestCommonSubstringLength(String a, String b) {
   if (a.isEmpty || b.isEmpty) return 0;
   int maxLen = 0;
@@ -22,6 +23,7 @@ int longestCommonSubstringLength(String a, String b) {
 }
 
 /// Returns one longest common substring of [a] and [b] (empty if none).
+/// Audited: 2026-06-12 11:26 EDT
 String longestCommonSubstring(String a, String b) {
   if (a.isEmpty || b.isEmpty) return '';
   int maxLen = 0;

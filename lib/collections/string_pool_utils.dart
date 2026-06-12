@@ -8,6 +8,7 @@ library;
 class StringPoolUtils {
   /// Creates a string pool. Pass [maxSize] to bound the pool with FIFO
   /// eviction; omit it for unbounded pooling.
+  /// Audited: 2026-06-12 11:26 EDT
   StringPoolUtils({int? maxSize})
     : _maxSize = maxSize,
       _order = maxSize != null ? <String>[] : null;
@@ -17,6 +18,7 @@ class StringPoolUtils {
   final Map<String, String> _pool = <String, String>{};
 
   /// Returns the canonical string equal to [s]; deduplicates repeated strings.
+  /// Audited: 2026-06-12 11:26 EDT
   String intern(String s) {
     final String? existing = _pool[s];
     if (existing != null) return existing;
@@ -30,6 +32,7 @@ class StringPoolUtils {
   }
 
   /// Number of distinct interned strings.
+  /// Audited: 2026-06-12 11:26 EDT
   int get size => _pool.length;
 
   @override

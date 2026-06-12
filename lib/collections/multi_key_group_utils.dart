@@ -13,6 +13,7 @@ import 'package:meta/meta.dart';
 @immutable
 class MultiKey {
   /// Wraps the ordered selector [values] that make up this composite key.
+  /// Audited: 2026-06-12 11:26 EDT
   const MultiKey(this.values);
 
   /// The selector values in selector order (e.g. `[country, year]`).
@@ -37,6 +38,7 @@ class MultiKey {
 /// ```dart
 /// groupByKeys(rows, [(r) => r['country'], (r) => r['year']]);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<MultiKey, List<T>> groupByKeys<T>(Iterable<T> items, List<Object? Function(T)> keys) {
   final Map<MultiKey, List<T>> out = <MultiKey, List<T>>{};
   for (final T item in items) {
@@ -54,6 +56,7 @@ Map<MultiKey, List<T>> groupByKeys<T>(Iterable<T> items, List<Object? Function(T
 /// ```dart
 /// aggregateByKeys(rows, [(r) => r['country']], (g) => g.length); // count
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<MultiKey, R> aggregateByKeys<T, R>(
   Iterable<T> items,
   List<Object? Function(T)> keys,

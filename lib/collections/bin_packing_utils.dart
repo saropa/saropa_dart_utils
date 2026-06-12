@@ -2,6 +2,7 @@
 library;
 
 /// Assigns each [itemWeights] to a bin; [capacity] per bin. Returns bin index per item (0-based).
+/// Audited: 2026-06-12 11:26 EDT
 List<int> firstFitBinPacking(List<num> itemWeights, num capacity) {
   // First-fit heuristic: place each item in the FIRST existing bin it fits;
   // if none fits, open a new bin. Not optimal (first-fit-decreasing does better

@@ -5,6 +5,7 @@ const int _base = 31;
 const int _mod = 1000000007;
 
 /// Polynomial rolling hash of [s] in range [start, end).
+/// Audited: 2026-06-12 11:26 EDT
 int rollingHash(String s, int start, int end) {
   int h = 0;
   for (int i = start; i < end && i < s.length; i++) {
@@ -14,6 +15,7 @@ int rollingHash(String s, int start, int end) {
 }
 
 /// Returns index of [pattern] in [text] using rolling hash, or -1.
+/// Audited: 2026-06-12 11:26 EDT
 int rollingHashSearch(String text, String pattern) {
   if (pattern.isEmpty) return 0;
   if (pattern.length > text.length) return -1;
