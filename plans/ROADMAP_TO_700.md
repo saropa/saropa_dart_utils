@@ -55,8 +55,8 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | Calendars, Recurrence & Scheduling (591–620) | 13 |
 | Parsing & Formats, Structured Data (621–650) | 8 |
 | Async, Concurrency & Streams (651–680) | 8 |
-| Validation, Security & Robustness (681–700) | 6 |
-| **Total remaining** | **75** |
+| Validation, Security & Robustness (681–700) | 4 |
+| **Total remaining** | **73** |
 
 ---
 
@@ -207,8 +207,6 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 
 | # | Idea | Usefulness | Importance | Complexity | Size |
 |---|------|------------|------------|------------|------|
-| 683 | Normalized error model (code, message, details, cause) with mappers | High | High | Medium | ✅ |
-| 684 | Error aggregation helpers (collect multiple validation errors) | High | High | Medium | ✅ |
 | 689 | Signed URL helper (HMAC‑based signatures over path/query; crypto delegated to caller) | Low | Medium | High | ✅ |
 | 690 | Request replay detection helpers (nonce + timestamp windows) | Low | Medium | High | ✅ |
 | 698 | Security header suggestion helpers for web backends (non‑HTTP specific models) | Low | Medium | Medium | ✅ |
