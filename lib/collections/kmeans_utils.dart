@@ -62,6 +62,7 @@ List<int> kmeans2D(List<(double, double)> points, int k, {int maxIterations = 10
 }
 
 /// Squared distance from point [p] to its NEAREST seed in [seeds].
+/// Audited: 2026-06-12 11:26 EDT
 double _nearestSeedDist2((double, double) p, List<List<double>> seeds) {
   const int coordX = 0;
   const int coordY = 1;
