@@ -22,8 +22,15 @@ import 'dart:math' show sqrt;
 /// ```
 /// Audited: 2026-06-12 11:26 EDT
 List<double> rollingCorrelation(List<num> x, List<num> y, int window) {
-  assert(x.length == y.length, 'rollingCorrelation requires equal-length series');
-  assert(window >= 2, 'rollingCorrelation requires window >= 2');
+  // Validate with if-throw, not assert: asserts are stripped from release
+  // builds, so a mismatched-length or tiny-window call would silently read
+  // out of bounds in production instead of failing fast.
+  if (x.length != y.length) {
+    throw ArgumentError('rollingCorrelation requires equal-length series');
+  }
+  if (window < 2) {
+    throw ArgumentError.value(window, 'window', 'must be >= 2');
+  }
   // No full window fits, so there are no correlations to emit.
   if (x.length < window) return <double>[];
   final List<double> out = <double>[];

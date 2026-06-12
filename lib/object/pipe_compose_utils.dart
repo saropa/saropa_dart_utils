@@ -1,4 +1,5 @@
 /// Pipe (chain unary functions). Compose (f(g(x))). Once (run block only once). Roadmap #246-248.
+library;
 
 /// Builds a function that threads its input left-to-right through [fns],
 /// passing each result to the next. Throws a [StateError] if the final value

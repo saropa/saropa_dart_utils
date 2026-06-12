@@ -145,8 +145,8 @@ int nextPowerOfTwo(int n) {
   int v = n - 1;
   // Smear the highest set bit down into every lower bit, then add 1. Dart ints
   // are 64-bit, so the shift chain MUST reach 32: stopping at 16 (the 32-bit
-  // recipe) leaves inputs above 2^32 with an unfilled high half and a wrong
-  // result.
+  // recipe) leaves inputs above 2^32 with an unfilled high half, producing a
+  // wrong result.
   v |= v >> 1;
   v |= v >> 2;
   v |= v >> 4;

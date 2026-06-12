@@ -1,4 +1,6 @@
 /// URL encode/decode (component vs full). Safe decode. Roadmap #166, #171.
+library;
+
 import 'dart:developer' as dev;
 
 const String _kLogSafeDecodeUriFailed = 'safeDecodeUri failed';

@@ -48,9 +48,9 @@ DateTime? parseIsoWeekString(String s) {
   final DateTime targetMonday = DateTime(monday.year, monday.month, monday.day + (weekVal - 1) * 7);
   // Reject a week number the year does not have (e.g. 2025-W53 — 2025 has only
   // 52 ISO weeks). The ISO week-YEAR of any week is the calendar year of that
-  // week's Thursday; if the Thursday is not in yearVal, the week is not part of
-  // yearVal. (The previous year-of-Monday check missed 2025-W53, whose Monday
-  // 2025-12-29 stays in 2025 but whose Thursday lands in 2026.)
+  // week's Thursday; if the Thursday is not in the requested year, the week is
+  // not part of it. A previous year-of-Monday check missed 2025-W53, whose
+  // Monday 2025-12-29 stays in 2025 but whose Thursday lands in 2026.
   final DateTime thursday = DateTime(targetMonday.year, targetMonday.month, targetMonday.day + 3);
   if (thursday.year != yearVal) return null;
   return targetMonday;

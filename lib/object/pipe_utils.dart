@@ -1,4 +1,5 @@
 /// Also/let style (pipe value through function). Roadmap #202.
+library;
 
 /// Runs [fn] for its side effects on [value] and returns [value] unchanged.
 ///

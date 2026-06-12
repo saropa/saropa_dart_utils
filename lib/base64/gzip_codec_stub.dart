@@ -1,6 +1,7 @@
 /// Stub gzip implementation for platforms without `dart:io` (e.g., web).
 ///
 /// Returns `null` since gzip is unavailable on these platforms.
+library;
 
 /// Gzip-encodes the given bytes. Returns `null` on unsupported platforms.
 /// Audited: 2026-06-12 11:26 EDT

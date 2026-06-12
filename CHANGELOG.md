@@ -25,6 +25,23 @@ cspell:disable
 -->
 
 
+## [Unreleased]
+
+Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the seven dangling library doc comments pana reported plus the other eleven plugin findings it counts in the same check. `dart analyze` is now fully clean. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
+### Fixed
+
+- Added `library;` after the dangling file-level doc comment in: `base64/gzip_codec_io.dart`, `base64/gzip_codec_stub.dart`, `object/pipe_compose_utils.dart`, `object/pipe_utils.dart`, `object/shallow_copy_utils.dart`, `testing/debug_utils.dart`, `url/url_encode_utils.dart`.
+- `stats/rolling_correlation_utils.dart`: replaced two release-stripped `assert`s with `if`-throw guards (now `ArgumentError`) so equal-length and `window >= 2` preconditions are enforced in release builds, not just debug.
+- `collections/skip_list_utils.dart`: replaced a `!` null-assertion in `add` with an explicit invariant guard that throws `StateError`, and switched three `[0]` reads to `firstOrNull` (added the `package:collection` import) so neither the unsafe-collection nor null-assertion lint fires.
+- `parsing/varint_utils_test.dart`: `expect(encoded.length, 10)` → `expect(encoded, hasLength(10))` for a proper matcher and clearer failure output.
+- Reworded three explanatory comments (`num/num_more_extensions.dart`, `datetime/date_time_week_extensions.dart`, `validation/jwt_structure_utils.dart`) so no line begins with an `identifier.member` token, which the commented-out-code lint misread as dead code. No code or behavior change.
+
+### Changed
+
+- `collections/fenwick_tree_utils.dart`: `valueAt` converted to an expression body (`=>`).
+- `analysis_options.yaml`: enabled `dangling_library_doc_comments` so the lint surfaces in the local `dart analyze` CLI (which otherwise does not load the pana-only check).
+
 ## [1.6.0] - 2026-06-12
 
 Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-source graph search, time-series analytics, calendar/billing helpers, and async cancellation; then a second batch of range-query trees, approximate string search, spatial indexing, async write caches, graph simplification/serialization, and rate-limited scheduling — plus a null-year-tolerant day-count helper. Then a full-project correctness audit of all 476 library files: ~40 algorithm/crash/concurrency bug fixes (incl. a semaphore permit race and two process hangs), ~30 documentation-accuracy corrections, 40 new regression tests, and a per-method audit-date stamp on every method. All fixes preserve existing signatures (backward-compatible).

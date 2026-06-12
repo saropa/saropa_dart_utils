@@ -112,11 +112,10 @@ class FenwickTree {
   /// The current value at [index] (0-based), in `O(log n)`.
   /// Requires `0 <= index < length`.
   /// Audited: 2026-06-12 11:26 EDT
-  num valueAt(int index) {
-    // Bounds are enforced by rangeSum below, so no separate check is needed.
-    // ignore: no_equal_arguments -- a single-element sum is the degenerate range [index, index]
-    return rangeSum(index, index);
-  }
+  num valueAt(int index) =>
+      // Bounds are enforced by rangeSum, so no separate check is needed.
+      // ignore: no_equal_arguments -- a single-element sum is the degenerate range [index, index]
+      rangeSum(index, index);
 
   @override
   String toString() => 'FenwickTree(length: $_size)';

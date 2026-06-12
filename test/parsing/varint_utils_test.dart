@@ -50,7 +50,7 @@ void main() {
 
     test('negative one encodes to the full 10-byte form', () {
       final List<int> encoded = encodeVarint(-1);
-      expect(encoded.length, 10);
+      expect(encoded, hasLength(10));
     });
   });
 }

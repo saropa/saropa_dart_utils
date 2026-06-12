@@ -1,4 +1,5 @@
 /// Testing/Debug: pretty-print, dump iterable, assert equals with tolerance, range, repeat, timed. Roadmap #366-375.
+library;
 
 /// Recursively renders [obj] as an indented, human-readable string for
 /// debugging. Maps and lists are expanded over multiple lines; `null` becomes

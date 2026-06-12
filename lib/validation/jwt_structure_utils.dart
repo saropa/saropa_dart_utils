@@ -35,8 +35,8 @@ Map<String, Object?>? jwtPayload(String token) {
     // base64url omits '=' padding, but base64Url.decode requires the length to be
     // a multiple of four — restore the stripped padding before decoding. The
     // outer `% block` keeps this at 0 when the length is already aligned;
-    // `block - 0` would otherwise append a spurious full '====' block and make
-    // base64Url.decode reject an otherwise-valid token.
+    // `block - 0` would otherwise append a spurious full '====' block, making
+    // the decoder reject an otherwise-valid token.
     final int padLen =
         (_base64PaddingBlockSize - payload.length % _base64PaddingBlockSize) %
         _base64PaddingBlockSize;

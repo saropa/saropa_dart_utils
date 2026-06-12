@@ -14,6 +14,8 @@ library;
 
 import 'dart:math';
 
+import 'package:collection/collection.dart';
+
 /// One skip-list node holding a [value] and forward links per level.
 class _SkipNode<T> {
   /// Builds a data node carrying [value], linkable up to [level].
@@ -128,7 +130,13 @@ class SkipList<T> {
     }
     final _SkipNode<T> node = _SkipNode<T>(value, newLevel);
     for (int i = 0; i <= newLevel; i++) {
-      final _SkipNode<T> pred = update[i]!;
+      // update[0..newLevel] were all populated above (by _findPredecessors for
+      // existing levels, by the head-extension loop for taller ones), so a null
+      // here is a broken invariant, not a data case — fail loud instead of `!`.
+      final _SkipNode<T>? pred = update[i];
+      if (pred == null) {
+        throw StateError('SkipList.add: missing predecessor at level $i');
+      }
       node.forward[i] = pred.forward[i];
       pred.forward[i] = node;
     }
@@ -171,15 +179,14 @@ class SkipList<T> {
   /// All values in ascending order.
   /// Audited: 2026-06-12 11:26 EDT
   Iterable<T> get values sync* {
-    // forward always has level 0, so the head's first link is in range.
-    _SkipNode<T>? node = _head.forward[0];
+    // forward always has level 0, so firstOrNull yields the level-0 link
+    // (never the empty-list null, only a genuine "no successor" null).
+    _SkipNode<T>? node = _head.forward.firstOrNull;
     while (node != null) {
       yield node.value;
-      // forward[0] is the level-0 successor link. node is reassigned every
-      // iteration, so this is a genuine list walk, not the wasteful fixed-element
-      // re-read the constant-index lint assumes.
-      // ignore: avoid_accessing_collections_by_constant_index -- node changes each iteration; level-0 link walk, not a fixed re-read
-      node = node.forward[0];
+      // firstOrNull is the level-0 successor link; node is reassigned every
+      // iteration, so this is a genuine list walk to the next node.
+      node = node.forward.firstOrNull;
     }
   }
 
@@ -201,7 +208,7 @@ class SkipList<T> {
     }
     // Otherwise the level-0 predecessor is the largest value strictly below;
     // when that predecessor is the head sentinel, nothing is <= value.
-    final _SkipNode<T>? pred = update[0];
+    final _SkipNode<T>? pred = update.firstOrNull;
     if (pred == null || identical(pred, _head)) return null;
     return pred.value;
   }

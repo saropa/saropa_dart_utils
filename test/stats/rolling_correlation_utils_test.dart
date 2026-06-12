@@ -49,17 +49,19 @@ void main() {
       expect(rollingCorrelation(<num>[1, 2], <num>[3, 4], 3), isEmpty);
     });
 
+    // Validation moved from assert to if-throw so it also runs in release
+    // builds, where asserts are stripped; the guard now throws ArgumentError.
     test('mismatched lengths are rejected', () {
       expect(
         () => rollingCorrelation(<num>[1, 2, 3], <num>[1, 2], 2),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
 
     test('window below 2 is rejected', () {
       expect(
         () => rollingCorrelation(<num>[1, 2, 3], <num>[1, 2, 3], 1),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
   });

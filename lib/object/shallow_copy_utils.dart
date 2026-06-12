@@ -1,4 +1,5 @@
 /// Shallow copy list/map. Roadmap #207.
+library;
 
 /// Returns a new list with the same elements as [source]. Elements are shared
 /// by reference (not deep-copied).

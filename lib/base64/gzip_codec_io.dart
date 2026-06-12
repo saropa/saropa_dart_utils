@@ -1,4 +1,6 @@
 /// IO-based gzip implementation using `dart:io`.
+library;
+
 import 'dart:io' as io;
 
 /// Gzip-encodes [bytes] using `dart:io`.
