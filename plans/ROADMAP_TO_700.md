@@ -48,15 +48,15 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | Section | Remaining |
 |---------|-----------|
 | Advanced String & Text (401–440) | 1 |
-| Advanced Collections & Algorithms (441–490) | 12 |
-| Data Structures & Indexes (491–530) | 27 |
-| Graphs & Pathfinding (531–560) | 13 |
-| Statistics & Analytics (561–590) | 12 |
-| Calendars, Recurrence & Scheduling (591–620) | 19 |
-| Parsing & Formats, Structured Data (621–650) | 11 |
-| Async, Concurrency & Streams (651–680) | 9 |
+| Advanced Collections & Algorithms (441–490) | 5 |
+| Data Structures & Indexes (491–530) | 25 |
+| Graphs & Pathfinding (531–560) | 9 |
+| Statistics & Analytics (561–590) | 8 |
+| Calendars, Recurrence & Scheduling (591–620) | 15 |
+| Parsing & Formats, Structured Data (621–650) | 8 |
+| Async, Concurrency & Streams (651–680) | 8 |
 | Validation, Security & Robustness (681–700) | 6 |
-| **Total remaining** | **110** |
+| **Total remaining** | **85** |
 
 ---
 
@@ -78,16 +78,9 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 |---|------|------------|------------|------------|------|
 | 458 | External merge helper (merge many sorted chunks from disk‑sized lists) | Low | Medium | High | ✅ |
 | 460 | Sliding window distinct count (using approximate structures) | Medium | Medium | High | ✅ |
-| 461 | Deduplicate by similarity (cluster near‑duplicates using similarity function) | Medium | Medium | High | ✅ |
-| 476 | Random subset selection with constraints (weights, exclusion sets) | Medium | Medium | High | ✅ |
 | 478 | Sparse matrix helpers (CSR/CSC simple representation for 2D data) | Low | Medium | High | ✅ |
-| 483 | Segment tree / Fenwick tree helpers for range queries | Low | Medium | High | ✅ |
-| 485 | Online clustering of timeseries points into sessions (gap‑based) | Medium | Medium | High | ✅ |
-| 486 | Generic backtracking framework with pruning and limits | Medium | Medium | High | ✅ |
 | 487 | Constraint satisfaction helper (variables, domains, simple backtracking solver) | Low | Medium | High | ✅ |
-| 488 | Turn key combinatorics utilities into lazily evaluated iterables | Medium | Medium | Medium | ✅ |
 | 489 | Heuristic search helpers (best‑first / beam search utilities) | Low | Medium | High | ✅ |
-| 490 | Simple recommendation utilities (co‑occurrence, item‑to‑item similarity matrix) | Medium | Medium | High | ✅ |
 
 ---
 
@@ -101,9 +94,7 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 493 | BK‑tree for approximate string matching | Medium | Medium | High | ✅ |
 | 495 | Segment tree wrapper for range sum/min/max | Low | Medium | High | ✅ |
 | 497 | B‑tree/B+‑tree‑style structure for sorted in‑memory data (small scale) | Low | Medium | High | ✅ |
-| 499 | Double‑ended priority queue (min‑max heap) | Low | Medium | High | ✅ |
 | 501 | Persistent immutable list/map wrappers with structural sharing (lightweight) | Medium | Medium | High | ✅ |
-| 502 | Skip list for ordered sets/maps | Low | Medium | High | ✅ |
 | 503 | Time‑ordered event store abstraction (append‑only, index by time and id) | Medium | Medium | High | ✅ |
 | 504 | Partitioned map (sharded by hash/range for concurrency) | Medium | Medium | Medium | ✅ |
 | 506 | Spatial index (grid/quadtree‑lite) for 2D points | Low | Medium | High | ✅ |
@@ -133,15 +124,11 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 
 | # | Idea | Usefulness | Importance | Complexity | Size |
 |---|------|------------|------------|------------|------|
-| 535 | Multi‑source shortest path utilities | Low | Medium | High | ✅ |
-| 541 | Simple influence propagation / PageRank‑like scoring | Low | Medium | High | ✅ |
 | 542 | Community detection (modularity‑based, small graphs) | Low | Low | High | ✅ |
-| 543 | Path enumeration with constraints (max depth, unique nodes) | Low | Medium | High | ✅ |
 | 544 | K‑shortest paths (Yen’s algorithm simplified) | Low | Low | High | ✅ |
 | 545 | Graph simplification utilities (remove degree‑2 nodes, merge chains) | Low | Low | High | ✅ |
 | 548 | Geo‑adjacent clustering (group nodes by proximity in coordinate graph) | Low | Low | High | ✅ |
 | 549 | Cycle basis enumeration for small graphs | Low | Low | High | ✅ |
-| 551 | Reachability matrix computation and caching | Low | Low | High | ✅ |
 | 552 | Simple route planner over weighted graph with constraints (avoid nodes/tags) | Low | Medium | High | ✅ |
 | 554 | Graph serialization/deserialization helpers (compact text/JSON forms) | Medium | Medium | Medium | ✅ |
 | 559 | Heap‑based event simulation helpers (discrete‑event simulation core) | Low | Low | High | ✅ |
@@ -157,13 +144,9 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 |---|------|------------|------------|------------|------|
 | 566 | Time series smoothing (Holt‑Winters‑lite) | Low | Medium | High | ✅ |
 | 567 | Seasonality/period detection (autocorrelation heuristics) | Low | Low | High | ✅ |
-| 568 | Change‑point detection (CUSUM‑style) | Low | Low | High | ✅ |
-| 573 | Gini coefficient / inequality metrics | Low | Low | High | ✅ |
-| 577 | Rolling correlation between two time series | Low | Medium | High | ✅ |
 | 578 | Timeseries alignment and resampling (different granularities) | Medium | Medium | High | ✅ |
 | 579 | Cohort analysis utilities (group by start date, track over time) | Medium | Medium | High | ✅ |
 | 582 | AB‑test metrics helpers (lift, p‑value approximations, sample sizing hints) | Medium | Medium | High | ✅ |
-| 585 | Data binning by custom boundaries (quantile, equal‑width, domain‑specific) | Medium | Medium | Medium | ✅ |
 | 586 | Index/benchmark comparison utilities (relative to baseline series) | Low | Low | Medium | ✅ |
 | 588 | Error bar/calibration helpers for forecasts | Low | Low | Medium | ✅ |
 | 590 | Small in‑memory OLAP‑lite cube (multi‑dim group/aggregate cache) | Low | Medium | High | ✅ |
@@ -180,16 +163,12 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 596 | Calendar merge utilities (merge several calendars, conflict detection) | Medium | Medium | High | ✅ |
 | 597 | Recurring event exceptions (skip/override particular instances) | Medium | Medium | High | ✅ |
 | 598 | Next open/closed time helpers for stores (per weekly schedule and holidays) | Medium | Medium | High | ✅ |
-| 599 | Humanized recurrence description (“every 2nd Tuesday”) | Medium | Medium | Medium | ✅ |
 | 601 | Sliding window schedule conflict detection across users | Medium | Medium | High | ✅ |
 | 602 | Timezone‑safe “local day” utilities for recurring events | Medium | Medium | High | ✅ |
-| 603 | Calendar heatmap data generator (counts per day/week) | Medium | Medium | Medium | ✅ |
 | 604 | Workload balancer (spread tasks across days given capacities) | Low | Medium | High | ✅ |
 | 605 | Date rules engine (e.g. pay day rules, last business day, etc.) | Medium | Medium | High | ✅ |
-| 606 | Time series gap detector/filler (find missing samples and fill strategies) | Medium | Medium | High | ✅ |
 | 607 | Vacation/leave period overlap resolution utilities | Medium | Medium | Medium | ✅ |
 | 608 | Calendar diff (added/removed/changed events) | Medium | Medium | Medium | ✅ |
-| 609 | Monthly billing cycle helper (anniversary dates, edge cases) | Medium | High | Medium | ✅ |
 | 611 | Rolling window schedule generation (e.g. next 90 days of occurrences) | Medium | Medium | Medium | ✅ |
 | 612 | Rate limiting schedule (max N events per period with cooldowns) | Medium | High | High | ✅ |
 | 617 | SLO/SLI time window helpers (rolling windows, burn‑rate style) | Low | Low | High | ✅ |
@@ -206,14 +185,11 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 |---|------|------------|------------|------------|------|
 | 625 | YAML/JSON “dual” loader (accept either, normalize to Map) for config | Medium | High | Medium | ✅ |
 | 627 | TOML‑lite parser (subset sufficient for most configs) | Low | Medium | High | ✅ |
-| 632 | HTTP header parsing helpers (ETag, Cache‑Control, etc., without HTTP dep) | Medium | Medium | Medium | ✅ |
 | 638 | Diff/patch for tabular data (rows added/removed/changed) | Medium | Medium | High | ✅ |
 | 640 | Structured log event model helpers (normalize level, timestamp, fields) | Medium | Medium | Medium | ✅ |
 | 641 | CSV/JSON schema inference from samples | Low | Low | High | ✅ |
 | 643 | Filter + projection language compiler for in‑memory queries | Low | Low | High | ✅ |
 | 645 | “Secrets in config” detector (flags likely secret values) | Medium | Medium | High | ✅ |
-| 648 | CSV/JSON normalizer for BI tools (flatten nested objects, explode arrays) | Low | Medium | High | ✅ |
-| 649 | Checksum and hash helpers for structured data (stable field ordering) | Medium | Medium | Medium | ✅ |
 | 650 | Data migration helpers (map from old schema to new with rules) | Medium | Medium | High | ✅ |
 
 ---
@@ -230,7 +206,6 @@ In this roadmap, we bias strongly toward **High** complexity items that justify 
 | 665 | Stream tee/branching utilities (fan‑out to multiple listeners) | Medium | Medium | Medium | ✅ |
 | 672 | Saga‑style orchestrator primitives (steps with compensation functions) | Low | Medium | High | ✅ |
 | 673 | Async retry with per‑error‑type strategies | Medium | Medium | High | ✅ |
-| 674 | Cancellable computations abstraction (cooperative cancellation tokens) | Medium | Medium | High | ✅ |
 | 678 | Stream reconciliation helper (compare two streams, emit diffs) | Low | Low | High | ✅ |
 | 679 | Async “watchdog” utilities (restart tasks that stop unexpectedly) | Medium | Medium | High | ✅ |
 

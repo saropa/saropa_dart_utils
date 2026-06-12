@@ -59,6 +59,10 @@ export 'datetime/iso_interval_parse_utils.dart';
 export 'datetime/sla_calculator_utils.dart';
 export 'datetime/quiet_hours_utils.dart';
 export 'datetime/hebrew_date_converter.dart';
+export 'datetime/billing_cycle_utils.dart';
+export 'datetime/humanize_recurrence_utils.dart';
+export 'datetime/calendar_heatmap_utils.dart';
+export 'datetime/timeseries_gap_utils.dart';
 
 // Double extensions
 export 'double/double_aspect_ratio_extensions.dart';
@@ -169,6 +173,15 @@ export 'collections/hyperloglog_utils.dart';
 export 'collections/pareto_frontier_utils.dart';
 export 'collections/time_decay_counter_utils.dart';
 export 'collections/lru_lfu_cache_utils.dart';
+export 'collections/fenwick_tree_utils.dart';
+export 'collections/min_max_heap_utils.dart';
+export 'collections/skip_list_utils.dart';
+export 'collections/similarity_dedup_utils.dart';
+export 'collections/constrained_subset_utils.dart';
+export 'collections/session_clustering_utils.dart';
+export 'collections/backtracking_utils.dart';
+export 'collections/lazy_combinatorics_utils.dart';
+export 'collections/item_similarity_utils.dart';
 
 // Graph (roadmap 531+)
 export 'graph/graph_utils.dart';
@@ -186,6 +199,10 @@ export 'graph/bipartite_utils.dart';
 export 'graph/tree_utils.dart';
 export 'graph/graph_diff_utils.dart';
 export 'graph/dag_scheduler_utils.dart';
+export 'graph/multi_source_bfs_utils.dart';
+export 'graph/pagerank_utils.dart';
+export 'graph/path_enumeration_utils.dart';
+export 'graph/reachability_utils.dart';
 
 // Stats (roadmap 561+)
 export 'stats/robust_stats_utils.dart' hide median;
@@ -206,6 +223,10 @@ export 'stats/log_transform_utils.dart';
 export 'stats/feature_encoding_utils.dart';
 export 'stats/cdf_utils.dart';
 export 'stats/grouped_stats_utils.dart';
+export 'stats/change_point_cusum_utils.dart';
+export 'stats/gini_utils.dart';
+export 'stats/rolling_correlation_utils.dart';
+export 'stats/data_binning_utils.dart';
 
 // JSON utilities
 export 'json/json_epoch_scale.dart';
@@ -422,6 +443,7 @@ export 'async/sliding_window_rate_limiter_utils.dart';
 export 'async/resource_pool_utils.dart';
 export 'async/bounded_work_queue_utils.dart';
 export 'async/read_write_lock_utils.dart';
+export 'async/cancellation_token_utils.dart';
 
 // Parsing and validation
 export 'parsing/csv_parse_utils.dart';
@@ -458,6 +480,9 @@ export 'parsing/ini_parser_utils.dart';
 export 'parsing/expression_evaluator_utils.dart';
 export 'parsing/sql_filter_utils.dart';
 export 'parsing/log_line_parser_utils.dart';
+export 'parsing/http_header_parse_utils.dart';
+export 'parsing/stable_hash_utils.dart';
+export 'parsing/flatten_explode_utils.dart';
 
 // URL and path utilities
 export 'url/path_extension_utils.dart';
