@@ -31,6 +31,8 @@ Adds a null-year-tolerant, non-throwing day-count helper for partial or untruste
 
 ### Changed
 
+- Rewrote `HebrewDateConverter.getMonthName` leap-year branch as a Dart 3 `switch` expression ([hebrew_date_converter.dart](lib/datetime/hebrew_date_converter.dart)) — clears `prefer_returning_conditional_expressions` (saropa_lints) without introducing the nested ternary the project's `dart.md` bans. Behavior unchanged (all 100 converter tests pass): the default arm covers both the 1-5 and 8+ direct-index months; 6 → Adar I, 7 → Adar II.
+- Suppressed a `prefer_setup_teardown` (saropa_lints) false positive in [color_light_test.dart](test/flutter/color_light_test.dart) with a documented `// ignore:` — the flagged per-group arrange is a known false positive fixed upstream in saropa_lints 13.12.4 (raises the duplicate threshold when a file-level `setUp` already exists); the project pins 13.12.3, so the fix has not arrived. Tests stay explicit per the project's clarity-over-DRY testing rule.
 - Suppressed `require_timezone_display` (saropa_lints) in the two `intl` clock-rendering files ([date_time_intl_time_display_extensions.dart](lib/datetime/date_time_intl_time_display_extensions.dart), [date_time_intl_display_render.dart](lib/datetime/date_time_intl_display_render.dart)) with a documented `// ignore_for_file` reason. These are locale clock-rendering primitives where the caller owns the timezone-display decision; two flagged sites are provable false positives (a `DateFormat.jm()` read only for its `.pattern` string and never formatted, and a seconds-only `DateFormat('ss')` whose field is timezone-invariant). Filed upstream as a saropa_lints false-positive bug report.
 
 ### Added

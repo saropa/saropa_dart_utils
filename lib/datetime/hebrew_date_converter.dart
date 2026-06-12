@@ -378,22 +378,20 @@ abstract final class HebrewDateConverter {
     final bool isLeap = isHebrewLeapYear(hebrewYear);
     final List<String> names = useHebrew ? monthNamesHebrew : monthNames;
 
-    // Leap year: months 1-5 are direct; 6/7 are the two Adars (which need the
-    // "I"/"II" disambiguator, not the bare list entry); 8+ continue from Nisan.
+    // Leap year: months 1-5 and 8+ index directly (month-1); 6 and 7 are the two
+    // Adars — month 6 needs the "I" disambiguator (not the bare list entry), and
+    // month 7 is Adar II at list index 6. The default arm covers both 1-5 and 8+.
     if (isLeap) {
-      if (month <= 5) {
-        return names[month - 1];
-      } else if (month == 6) {
-        return useHebrew ? 'אֲדָר א׳' : 'Adar I';
-      } else {
-        // Month 7 is Adar II (index 6); 8+ is Nisan onwards (index month - 1).
-        return month == 7 ? names[6] : names[month - 1];
-      }
-    } else {
-      // Regular year: months 1-6 are direct; from 7 on, index by [month] (not
-      // month-1) to skip the Adar II slot at index 6 and land on Nisan etc.
-      return month <= 6 ? names[month - 1] : names[month];
+      return switch (month) {
+        6 => useHebrew ? 'אֲדָר א׳' : 'Adar I',
+        7 => names[6],
+        _ => names[month - 1],
+      };
     }
+
+    // Regular year: months 1-6 are direct; from 7 on, index by [month] (not
+    // month-1) to skip the Adar II slot at index 6 and land on Nisan etc.
+    return month <= 6 ? names[month - 1] : names[month];
   }
 
   /// Formats a day-of-month [day] using Hebrew numerals (gematria).
