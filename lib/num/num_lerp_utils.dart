@@ -1,4 +1,5 @@
 /// Lerp, inverse lerp, map value from one range to another. Roadmap #130–132.
+/// Audited: 2026-06-12 11:26 EDT
 double lerp(double a, double b, double t) => a + (b - a) * t;
 
 /// Returns where [value] falls between [a] and [b] as a fraction in `0.0`–`1.0`.
@@ -12,6 +13,7 @@ double lerp(double a, double b, double t) => a + (b - a) * t;
 /// inverseLerp(0, 10, 5); // 0.5
 /// inverseLerp(0, 10, 20); // 1.0 (clamped)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double inverseLerp(double a, double b, double value) {
   if (a == b) return 0;
   return ((value - a) / (b - a)).clamp(0.0, 1.0);
@@ -27,6 +29,7 @@ double inverseLerp(double a, double b, double value) {
 /// ```dart
 /// mapRange(5, 0, 10, 0, 100); // 50.0
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double mapRange(double value, double fromMin, double fromMax, double toMin, double toMax) {
   final double t = inverseLerp(fromMin, fromMax, value);
   return lerp(toMin, toMax, t);

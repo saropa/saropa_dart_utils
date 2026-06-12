@@ -4,14 +4,17 @@ library;
 /// Step name and count of users who reached it.
 class FunnelUtils {
   /// Creates a funnel step named [name] reached by [count] users.
+  /// Audited: 2026-06-12 11:26 EDT
   const FunnelUtils(String name, int count) : _name = name, _count = count;
   final String _name;
 
   /// The step's display name.
+  /// Audited: 2026-06-12 11:26 EDT
   String get name => _name;
   final int _count;
 
   /// Number of users who reached this step.
+  /// Audited: 2026-06-12 11:26 EDT
   int get count => _count;
 
   @override
@@ -19,6 +22,7 @@ class FunnelUtils {
 }
 
 /// Returns conversion rate from step i to i+1 (and overall to last step).
+/// Audited: 2026-06-12 11:26 EDT
 List<double> funnelConversionRates(List<FunnelUtils> steps) {
   if (steps.length < 2) return <double>[];
   final List<double> out = <double>[];

@@ -4,6 +4,7 @@ library;
 import 'package:collection/collection.dart';
 
 /// [events] = list of (userId, date). Returns map: dayIndex -> retained count (users who had event on day0 and on dayIndex).
+/// Audited: 2026-06-12 11:26 EDT
 Map<int, int> retentionByDay(List<(Object, DateTime)> events) {
   if (events.isEmpty) return <int, int>{};
   // Cohort-style retention: bucket every event by its user, then measure each

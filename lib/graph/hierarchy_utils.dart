@@ -5,14 +5,17 @@ library;
 class HierarchyUtils {
   /// Creates a node with the given [id] and optional [parentId] (null for a
   /// root node).
+  /// Audited: 2026-06-12 11:26 EDT
   const HierarchyUtils(String id, [String? parentId]) : _id = id, _parentId = parentId;
   final String _id;
 
   /// Unique node identifier.
+  /// Audited: 2026-06-12 11:26 EDT
   String get id => _id;
   final String? _parentId;
 
   /// Parent node id; null for roots.
+  /// Audited: 2026-06-12 11:26 EDT
   String? get parentId => _parentId;
 
   @override
@@ -23,6 +26,7 @@ class HierarchyUtils {
 ///
 /// Assumes an acyclic parent graph: a cycle among [nodes] causes unbounded
 /// recursion. Recursion depth equals the tree height.
+/// Audited: 2026-06-12 11:26 EDT
 List<(String, int)> flattenHierarchy(List<HierarchyUtils> nodes) {
   final Map<String, String?> parent = {for (final n in nodes) n.id: n.parentId};
   final List<(String, int)> out = <(String, int)>[];
@@ -40,6 +44,7 @@ List<(String, int)> flattenHierarchy(List<HierarchyUtils> nodes) {
 }
 
 /// Builds parent map from flat list: id -> parentId (roots have null).
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, String?> hierarchyFromParentIds(List<HierarchyUtils> nodes) => {
   for (final n in nodes) n.id: n.parentId,
 };

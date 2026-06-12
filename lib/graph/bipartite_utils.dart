@@ -4,6 +4,7 @@ library;
 import 'graph_utils.dart';
 
 /// Returns (true, left, right) if bipartite, else (false, [], []).
+/// Audited: 2026-06-12 11:26 EDT
 (bool isBipartite, List<int> left, List<int> right) bipartitePartition(Adjacency graph) {
   // A graph is bipartite iff it is 2-colorable. BFS-color each vertex: -1 means
   // unvisited, 0 and 1 are the two sides. An edge whose endpoints share a color

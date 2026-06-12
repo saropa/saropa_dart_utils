@@ -4,6 +4,7 @@ library;
 import 'dart:math' show pow, sqrt;
 
 /// Pearson correlation between [x] and [y]. Returns value in [-1, 1] or NaN if insufficient data.
+/// Audited: 2026-06-12 11:26 EDT
 double pearsonCorrelation(List<num> x, List<num> y) {
   if (x.length != y.length || x.length < 2) return double.nan;
   final int n = x.length;

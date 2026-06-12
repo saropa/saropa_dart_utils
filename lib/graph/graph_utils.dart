@@ -5,6 +5,7 @@ library;
 class GraphUtils {
   /// Creates a directed edge from node [from] to node [to] with optional
   /// [weight] (defaults to 1.0).
+  /// Audited: 2026-06-12 11:26 EDT
   const GraphUtils(int from, int to, [double weight = 1.0])
     : _from = from,
       _to = to,
@@ -12,14 +13,17 @@ class GraphUtils {
   final int _from;
 
   /// Source node index.
+  /// Audited: 2026-06-12 11:26 EDT
   int get from => _from;
   final int _to;
 
   /// Target node index.
+  /// Audited: 2026-06-12 11:26 EDT
   int get to => _to;
   final double _weight;
 
   /// Edge weight (cost).
+  /// Audited: 2026-06-12 11:26 EDT
   double get weight => _weight;
 
   @override
@@ -30,6 +34,7 @@ class GraphUtils {
 typedef WeightedAdjacency = List<List<(int, double)>>;
 
 /// Builds [WeightedAdjacency] from [edges]; [nodeCount] = max node index + 1.
+/// Audited: 2026-06-12 11:26 EDT
 WeightedAdjacency buildWeightedGraph(List<GraphUtils> edges, int nodeCount) {
   final WeightedAdjacency adj = List.generate(nodeCount, (_) => <(int, double)>[]);
   for (final GraphUtils e in edges) {
@@ -50,6 +55,7 @@ typedef Adjacency = List<List<int>>;
 /// ```dart
 /// buildGraph([(0, 1), (1, 2)], 3); // [[1], [2], []]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Adjacency buildGraph(List<(int, int)> edges, int nodeCount) {
   final Adjacency adj = List.generate(nodeCount, (_) => <int>[]);
   for (final (int u, int v) in edges) {

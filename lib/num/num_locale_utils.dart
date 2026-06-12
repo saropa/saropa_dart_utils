@@ -4,6 +4,7 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 /// Simple implementation: no full locale data; configurable separators.
 
 /// Parses a number string with optional thousands separator. [decimalSep] default '.', [groupSep] default ','.
+/// Audited: 2026-06-12 11:26 EDT
 double? parseNumberLocale(
   String input, {
   String decimalSep = '.',
@@ -17,6 +18,7 @@ double? parseNumberLocale(
 }
 
 /// Formats number with [decimalPlaces] and optional [groupSep] (e.g. ',').
+/// Audited: 2026-06-12 11:26 EDT
 String formatNumberLocale(
   num value, {
   int decimalPlaces = 0,

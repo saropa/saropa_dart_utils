@@ -4,6 +4,7 @@ library;
 import 'dart:math' show pow, sqrt;
 
 /// Z-score: (x - mean) / stdDev. Returns new list.
+/// Audited: 2026-06-12 11:26 EDT
 List<double> zScoreNormalize(List<num> values) {
   if (values.isEmpty) return <double>[];
   final double mean = values.fold<double>(0, (s, x) => s + x.toDouble()) / values.length;
@@ -18,6 +19,7 @@ List<double> zScoreNormalize(List<num> values) {
 }
 
 /// Min-max scale to [low, high]. Returns new list.
+/// Audited: 2026-06-12 11:26 EDT
 List<double> minMaxScale(List<num> values, {double low = 0.0, double high = 1.0}) {
   if (values.isEmpty) return <double>[];
   final doubles = values.map((num x) => x.toDouble()).toList();

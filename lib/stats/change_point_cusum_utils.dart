@@ -30,6 +30,7 @@ import 'dart:math' show max;
 /// // both flagged relative to the series mean.
 /// cusumChangePoints(<num>[0, 0, 0, 10, 10, 10], threshold: 5); // [1, 4]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> cusumChangePoints(
   List<num> series, {
   required double threshold,
@@ -61,6 +62,7 @@ List<int> cusumChangePoints(
 }
 
 /// Arithmetic mean of [values]; caller guarantees non-empty.
+/// Audited: 2026-06-12 11:26 EDT
 double _mean(List<num> values) {
   double sum = 0;
   for (int i = 0; i < values.length; i++) {

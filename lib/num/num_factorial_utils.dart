@@ -1,4 +1,5 @@
 /// Factorial with overflow guard. Roadmap #128.
+/// Audited: 2026-06-12 11:26 EDT
 int? factorial(int n) {
   if (n < 0) return null;
   if (n == 0 || n == 1) return 1;

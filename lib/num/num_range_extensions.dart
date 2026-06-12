@@ -3,11 +3,13 @@ import 'package:meta/meta.dart';
 /// Extension methods for `num` (and its subtypes like `int`, `double`).
 extension NumRangeExtensions on num {
   /// Returns true if the number is between [min] and [max] inclusive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isInRange(num min, final num max) => this >= min && this <= max;
 
   /// Returns the [min] if the number is less than [min], [max] if greater
   /// than [max], or the number itself otherwise.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   num forceInRange(num min, final num max) => this < min ? min : (this > max ? max : this);
 
@@ -17,6 +19,7 @@ extension NumRangeExtensions on num {
   /// print(0.5.isBetween(0, 10)); // true
   /// print(10.isBetween(1, 10)); // true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isNotBetween(num from, final num to) => !isBetween(from, to);
 
@@ -26,6 +29,7 @@ extension NumRangeExtensions on num {
   /// print(0.5.isBetween(0, 10)); // true
   /// print(10.isBetween(1, 10)); // true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBetween(num from, final num to) => from <= this && to >= this;
 }

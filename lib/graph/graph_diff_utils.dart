@@ -4,6 +4,7 @@ library;
 import 'graph_utils.dart';
 
 /// Compares two adjacency lists; returns (added edges, removed edges). Edges are (from, to).
+/// Audited: 2026-06-12 11:26 EDT
 (List<(int, int)> added, List<(int, int)> removed) graphEdgeDiff(
   Adjacency before,
   Adjacency after,

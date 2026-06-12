@@ -19,6 +19,7 @@ import 'graph_utils.dart';
 /// final Adjacency g = buildGraph([(0, 1), (1, 2), (3, 4)], 5);
 /// multiSourceBfsDistances(g, [0, 3]); // [0, 1, 2, 0, 1]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> multiSourceBfsDistances(Adjacency graph, Iterable<int> sources) {
   // Distances are the first element of the (dist, nearest) pair; the nearest
   // bookkeeping is computed regardless but discarded here to keep callers that
@@ -33,6 +34,7 @@ List<int> multiSourceBfsDistances(Adjacency graph, Iterable<int> sources) {
 /// `nearestSource[i]` is the node index of that seed (or `-1` if unreachable).
 /// When several seeds tie for nearest, the one enqueued first (earliest in
 /// [sources]) wins, because BFS settles each node exactly once on first reach.
+/// Audited: 2026-06-12 11:26 EDT
 (List<int> dist, List<int> nearestSource) multiSourceBfsNearest(
   Adjacency graph,
   Iterable<int> sources,

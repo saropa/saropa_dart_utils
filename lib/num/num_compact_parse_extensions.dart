@@ -1,4 +1,5 @@
 /// Parse compact number ("1.2K" → 1200). Roadmap #121.
+/// Audited: 2026-06-12 11:26 EDT
 double? parseCompactNumber(String input) {
   final String s = input.trim().toUpperCase().replaceAll(' ', '');
   if (s.isEmpty) return null;

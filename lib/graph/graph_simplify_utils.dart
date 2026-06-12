@@ -32,6 +32,7 @@ typedef SimplifiedGraph = ({Set<(int, int)> edges, Set<int> removed});
 /// final Adjacency g = <List<int>>[<int>[1], <int>[0, 2], <int>[1, 3], <int>[2]];
 /// simplifyDegree2Chains(g).edges; // {(0, 3)}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 SimplifiedGraph simplifyDegree2Chains(Adjacency graph) {
   final List<Set<int>> neighbors = _neighborSets(graph);
   final Set<int> removed = <int>{
@@ -45,6 +46,7 @@ SimplifiedGraph simplifyDegree2Chains(Adjacency graph) {
 
   /// Walks from a junction's neighbor through any degree-2 chain to the next
   /// junction (or back to a non-removed node), marking the beads consumed.
+  /// Audited: 2026-06-12 11:26 EDT
   int walk(int fromPrev, int fromCur) {
     int prev = fromPrev;
     int cur = fromCur;

@@ -2,6 +2,7 @@
 library;
 
 /// Parent array: entry at index i is the parent of node i; root has -1.
+/// Audited: 2026-06-12 11:26 EDT
 int lowestCommonAncestor(List<int> parent, int u, int v) {
   // Record every ancestor of u up to the root (a node is its own ancestor here),
   // following the parent links until -1 signals the root.
@@ -24,6 +25,7 @@ int lowestCommonAncestor(List<int> parent, int u, int v) {
 }
 
 /// Returns depth of each node (root = 0). [parent] at index i is the parent of node i.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> treeDepths(List<int> parent) {
   final List<int> depth = List.filled(parent.length, 0);
   for (int i = 0; i < parent.length; i++) {

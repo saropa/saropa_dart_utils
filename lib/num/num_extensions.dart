@@ -12,6 +12,7 @@ extension NumberExtensions on num {
   /// 0.isNotZeroOrNegative; // Returns false
   /// (-3).isNotZeroOrNegative; // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNotZeroOrNegative => this != 0 && !isNegative;
 
@@ -25,6 +26,7 @@ extension NumberExtensions on num {
   /// 0.isZeroOrNegative; // Returns true
   /// (-3).isZeroOrNegative; // Returns true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isZeroOrNegative => this == 0 || isNegative;
 
@@ -48,6 +50,7 @@ extension NumberExtensions on num {
   /// ```
   ///
   /// NOTE: negative zero is removed when formatting. I.e. -0 becomes 0
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int length() => toString().length;
 }
@@ -65,6 +68,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNotNullZeroOrNegative; // Returns false
   /// num? n4 = -3; n4.isNotNullZeroOrNegative; // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNotNullZeroOrNegative {
     final value = this;
@@ -83,6 +87,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNullZeroOrNegative; // Returns true
   /// num? n4 = -3; n4.isNullZeroOrNegative; // Returns true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNullZeroOrNegative {
     final value = this;
@@ -99,6 +104,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNullOrZero; // Returns true
   /// num? n4 = -3; n4.isNullOrZero; // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNullOrZero => this == null || this == 0;
 
@@ -111,6 +117,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isNotNullOrZero; // Returns false
   /// num? n4 = -3; n4.isNotNullOrZero; // Returns true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isNotNullOrZero => this != null && this != 0;
 
@@ -123,6 +130,7 @@ extension NumberNullableExtensions on num? {
   /// num? n3 = 0; n3.isGreaterThanZero; // Returns false
   /// num? n4 = -3; n4.isGreaterThanZero; // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isGreaterThanZero {
     final num? self = this;
@@ -140,6 +148,7 @@ extension NumberNullableExtensions on num? {
   /// num? n4 = 0; n4.isGreaterThanOne; // Returns false
   /// num? n5 = -3; n5.isGreaterThanOne; // Returns false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isGreaterThanOne {
     final num? self = this;
@@ -148,10 +157,12 @@ extension NumberNullableExtensions on num? {
   }
 
   /// Converts this nullable num to a double, or returns null if null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double? toDoubleOrNull() => this?.toDouble();
 
   /// Converts this nullable num to an int, or returns null if null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int? toIntOrNull() => this?.toInt();
 }

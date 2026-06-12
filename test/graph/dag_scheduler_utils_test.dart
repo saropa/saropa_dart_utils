@@ -35,5 +35,21 @@ void main() {
       final Adjacency g = buildGraph(<(int, int)>[], 3);
       expect(dagSchedule(g, (int _) => 5), <int>[0, 1, 2]);
     });
+
+    test('topology wins when priority conflicts with a dependency edge', () {
+      // 0 must precede 1, but node 1 has the lower (earlier) priority. Priority
+      // must NOT pull 1 ahead of its dependency 0: the result stays [0, 1].
+      final Adjacency g = buildGraph(<(int, int)>[(0, 1)], 2);
+      final List<int> priorities = <int>[10, 1];
+      expect(dagSchedule(g, (int n) => priorities[n]), <int>[0, 1]);
+    });
+
+    test('priority orders only nodes that are ready together', () {
+      // 0 -> {1, 2}; once 0 is emitted, 1 and 2 are both ready and priority
+      // decides their order (node 2 has the lower priority, so it comes first).
+      final Adjacency g = buildGraph(<(int, int)>[(0, 1), (0, 2)], 3);
+      final List<int> priorities = <int>[0, 5, 1];
+      expect(dagSchedule(g, (int n) => priorities[n]), <int>[0, 2, 1]);
+    });
   });
 }

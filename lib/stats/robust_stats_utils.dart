@@ -2,6 +2,7 @@
 library;
 
 /// Median of [values] (assumes non-empty; sorts a copy).
+/// Audited: 2026-06-12 11:26 EDT
 double median(List<num> values) {
   if (values.isEmpty) return double.nan;
   final List<num> sorted = List<num>.of(values)..sort();
@@ -11,6 +12,7 @@ double median(List<num> values) {
 }
 
 /// Median absolute deviation: median of |x_i - median(x)|.
+/// Audited: 2026-06-12 11:26 EDT
 double medianAbsoluteDeviation(List<num> values) {
   if (values.isEmpty) return double.nan;
   final double m = median(values);
@@ -19,6 +21,7 @@ double medianAbsoluteDeviation(List<num> values) {
 }
 
 /// Trimmed mean: drop [trim] fraction from each tail (0..0.5), then average.
+/// Audited: 2026-06-12 11:26 EDT
 double trimmedMean(List<num> values, double trim) {
   if (values.isEmpty) return double.nan;
   // trim <= 0 is a plain mean (no trimming) — short-circuit without sorting.

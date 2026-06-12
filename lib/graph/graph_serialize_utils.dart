@@ -21,6 +21,7 @@ import 'graph_utils.dart';
 /// final Adjacency g = <List<int>>[<int>[1, 2], <int>[], <int>[0]];
 /// serializeAdjacency(g); // '0>1,2;1;2>0'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String serializeAdjacency(Adjacency graph) => <String>[
   for (int i = 0; i < graph.length; i++)
     // Omit the '>' suffix entirely for nodes with no out-edges to stay compact.
@@ -38,6 +39,7 @@ String serializeAdjacency(Adjacency graph) => <String>[
 /// ```dart
 /// parseAdjacency('0>1,2;1;2>0'); // [[1, 2], [], [0]]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Adjacency parseAdjacency(String text) {
   final String trimmed = text.trim();
   if (trimmed.isEmpty) return <List<int>>[];

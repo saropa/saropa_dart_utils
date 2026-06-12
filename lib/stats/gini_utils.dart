@@ -24,6 +24,7 @@ library;
 /// giniCoefficient(<num>[1, 1, 1, 1]); // 0.0 (perfect equality)
 /// giniCoefficient(<num>[0, 0, 0, 10]); // -> (n-1)/n
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double giniCoefficient(List<num> values) {
   // Empty input has no distribution; NaN signals "undefined" per house convention.
   if (values.isEmpty) return double.nan;

@@ -42,6 +42,16 @@ Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-sou
 
 - **`pathRelative` now emits leading `..` for up-traversal** ([path_join_utils.dart](lib/url/path_join_utils.dart)) — `pathRelative('a/b/c', 'a/b/d')` returned `'d'` instead of `'../d'`. The function computed the correct climb-out segments but joined them through `pathJoin`, which treats a leading `..` as a pop with nothing above it and discards it. It now joins the already-clean segments directly, so any relative path that must ascend out of `base` is correct (`'a/b/c/d'`→`'a/x'` yields `'../../../x'`, pure ascent yields `'../..'`). Identical paths still yield `''`; `pathJoin`/`pathNormalize` pop semantics are unchanged for their other callers. Pinned by three new up-traversal tests.
 
+- **Project audit pass 1 — graph & num algorithm corrections** (stats/graph/num categories):
+  - `floydWarshall` ([floyd_warshall_utils.dart](lib/graph/floyd_warshall_utils.dart)) now seeds the distance matrix with the **minimum** edge weight per `(i, j)`, not the last one — parallel edges in a multigraph and positive self-loops no longer overwrite a shorter distance or the diagonal `0`.
+  - `dagSchedule` ([dag_scheduler_utils.dart](lib/graph/dag_scheduler_utils.dart)) now applies `priority` as a tiebreaker among nodes that are simultaneously ready (priority-aware Kahn), instead of sorting the whole topological order by priority — the old form could place a dependency after its dependent, breaking topology.
+  - `douglasPeuckerIndices` ([line_simplify_utils.dart](lib/graph/line_simplify_utils.dart)) perpendicular distance now divides by the chord length (`sqrt(dx²+dy²)`), not the squared length — `epsilon` is once again a true distance tolerance; the degenerate zero-length chord uses Euclidean distance.
+  - `dijkstraDistances`/`dijkstraWithParents`/`astar`/`bfs`/`dfs`/`criticalPathDistances` now guard an empty graph or out-of-range start/source/goal instead of throwing `RangeError` (astar returns `null`, matching its no-path contract).
+  - `nextPowerOfTwo` ([num_more_extensions.dart](lib/num/num_more_extensions.dart)) bit-smear now reaches `>> 32`, fixing wrong results for 64-bit inputs above 2³².
+  - `lcm` ([math_utils.dart](lib/num/math_utils.dart)) divides before multiplying to avoid 64-bit overflow on large operands.
+  - Doc accuracy: `outlierIndicesByMAD` no longer claims the modified z-score cutoff (it omits the 0.6745 constant — now documented); `divideSafe` drops the impossible "or null" divisor note; `NumUtils.generateIntList` drops the "prints a warning" claim (it does not print).
+  - 6 new regression tests pin the corrected behaviors. Per-method audit-date stamps added across stats/graph/num doc headers.
+
 ### Added
 
 Roadmap batch — 25 advanced, tree-shakeable utilities (each its own file + full test suite; 276 new tests):

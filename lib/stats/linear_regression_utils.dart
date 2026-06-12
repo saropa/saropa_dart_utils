@@ -4,6 +4,7 @@ library;
 import 'dart:math' show pow;
 
 /// Simple linear regression y ~ x. Returns (slope, intercept).
+/// Audited: 2026-06-12 11:26 EDT
 (double slope, double intercept) linearRegression(List<num> x, List<num> y) {
   // A line needs paired data and at least two points; mismatched lengths or
   // fewer than two points cannot define a fit, so signal that with NaN rather

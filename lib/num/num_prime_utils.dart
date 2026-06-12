@@ -1,4 +1,5 @@
 /// Is prime (small numbers), prime factors. Roadmap #126–127.
+/// Audited: 2026-06-12 11:26 EDT
 bool isPrime(int n) {
   // Primes are >= 2; handle 2 (the only even prime) and reject other evens so
   // the trial-division loop can step by 2 over odd candidates only.
@@ -27,6 +28,7 @@ int _isqrt(int n) {
 }
 
 /// Prime factors (small numbers). Returns list of prime factors with multiplicity.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> primeFactors(int n) {
   if (n <= 1) return <int>[];
   final List<int> out = <int>[];

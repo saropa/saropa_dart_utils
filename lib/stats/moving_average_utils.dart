@@ -2,6 +2,7 @@
 library;
 
 /// Simple moving average of [values] over window [size].
+/// Audited: 2026-06-12 11:26 EDT
 List<double> simpleMovingAverage(List<num> values, int size) {
   // No window fits when size is non-positive or larger than the data, so there
   // are no averages to emit — return empty rather than a partial/garbage window.
@@ -25,6 +26,7 @@ List<double> simpleMovingAverage(List<num> values, int size) {
 }
 
 /// Exponential moving average: [alpha] in (0,1]; first value = first input.
+/// Audited: 2026-06-12 11:26 EDT
 List<double> exponentialMovingAverage(List<num> values, double alpha) {
   if (values.isEmpty) return <double>[];
   // Out-of-range alpha (outside 0..1) is treated as "no smoothing": return the

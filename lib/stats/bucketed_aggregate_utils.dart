@@ -5,6 +5,7 @@ library;
 typedef BucketedValues<K> = Map<K, List<num>>;
 
 /// Groups [values] by [keyOf](index, value), then returns map of key -> list of values.
+/// Audited: 2026-06-12 11:26 EDT
 Map<K, List<num>> bucketBy<K>(List<num> values, K Function(int index, num value) keyOf) {
   final Map<K, List<num>> out = <K, List<num>>{};
   for (int i = 0; i < values.length; i++) {
@@ -21,6 +22,7 @@ const String _kAggMin = 'min';
 const String _kAggMax = 'max';
 
 /// For each bucket, compute [aggregate] (sum, count, avg, min, max).
+/// Audited: 2026-06-12 11:26 EDT
 double bucketAggregate(List<num> bucket, String aggregate) {
   // NaN signals "no value" for an empty bucket — avg would divide by zero and
   // min/max have no defined element, so every branch below assumes non-empty.

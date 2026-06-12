@@ -59,6 +59,7 @@ extension NumIntlFormatExtensions on num {
   /// 1234.5.formatNumber(format: '#,##0.00');              // '1,234.50'
   /// 1234567.formatNumber(format: '##,##,##0', locale: 'en_IN'); // '12,34,567'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   String formatNumber({String format = '#,##0', String? locale}) =>
       NumberFormat(format, locale).format(this);
 }

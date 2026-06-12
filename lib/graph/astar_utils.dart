@@ -5,12 +5,17 @@ import 'graph_utils.dart';
 
 /// A* from [start] to [goal]. [heuristic](node) must be admissible (never overestimate).
 /// Returns path from start to goal (empty if not found), or null if no path.
+/// Audited: 2026-06-12 11:26 EDT
 List<int>? astar(
   WeightedAdjacency graph,
   int start,
   int goal,
   double Function(int node) heuristic,
 ) {
+  // Out-of-range endpoints have no path; return null before indexing the
+  // distance arrays so a bad node index is a clean "no path", not a RangeError.
+  if (start < 0 || start >= graph.length) return null;
+  if (goal < 0 || goal >= graph.length) return null;
   if (start == goal) return <int>[start];
   // g = best known cost from start to each node; f = g + heuristic estimate to
   // goal (A*'s priority); parent threads the path back for reconstruction.

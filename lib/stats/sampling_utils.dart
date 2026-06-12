@@ -4,6 +4,7 @@ library;
 import 'dart:math' show Random;
 
 /// Systematic sampling: take every [step]-th element starting at [start].
+/// Audited: 2026-06-12 11:26 EDT
 List<T> systematicSample<T>(List<T> list, int step, {int start = 0}) {
   if (step < 1) return <T>[];
   final List<T> out = <T>[];
@@ -14,6 +15,7 @@ List<T> systematicSample<T>(List<T> list, int step, {int start = 0}) {
 }
 
 /// Stratified: [strata] gives group id per index; sample [perGroup] from each.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> stratifiedSampleIndices(List<Object?> strata, int perGroup, [Random? random]) {
   // Accept an injected Random so tests can seed it for deterministic samples;
   // default to a fresh source otherwise.

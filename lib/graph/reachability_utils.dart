@@ -19,6 +19,7 @@ import 'graph_utils.dart';
 /// final Adjacency g = buildGraph([(0, 1), (1, 2)], 3);
 /// reachabilitySets(g); // [{1, 2}, {2}, {}]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<Set<int>> reachabilitySets(Adjacency graph) => <Set<int>>[
   for (int i = 0; i < graph.length; i++) _reachableFrom(graph, i),
 ];
@@ -27,6 +28,7 @@ List<Set<int>> reachabilitySets(Adjacency graph) => <Set<int>>[
 ///
 /// `matrix[i][j]` is true exactly when node j is reachable from node i via one
 /// or more edges, so the diagonal is true only for nodes on a cycle.
+/// Audited: 2026-06-12 11:26 EDT
 List<List<bool>> reachabilityMatrix(Adjacency graph) {
   final int n = graph.length;
   final List<Set<int>> sets = reachabilitySets(graph);
@@ -40,6 +42,7 @@ List<List<bool>> reachabilityMatrix(Adjacency graph) {
 ///
 /// Returns false for out-of-range endpoints. `from == to` is true only when a
 /// genuine path leads back, never trivially, matching [reachabilitySets].
+/// Audited: 2026-06-12 11:26 EDT
 bool canReach(Adjacency graph, int from, int to) {
   // Validate endpoints before traversing so an out-of-range query is a clean
   // false rather than a range error inside the BFS.
@@ -50,6 +53,7 @@ bool canReach(Adjacency graph, int from, int to) {
 
 /// BFS collecting every node reachable from [source] (source excluded unless on
 /// a cycle that leads back to it).
+/// Audited: 2026-06-12 11:26 EDT
 Set<int> _reachableFrom(Adjacency graph, int source) {
   final Set<int> reached = <int>{};
   // Seed the queue with source's direct successors, NOT source itself, so source

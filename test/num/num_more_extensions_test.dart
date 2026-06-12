@@ -161,6 +161,14 @@ void main() {
       expect(nextPowerOfTwo(0), 1);
       expect(nextPowerOfTwo(-5), 1);
     });
+
+    test('handles 64-bit inputs above 2^32', () {
+      // The bit-smear must reach >> 32 for Dart's 64-bit ints. Without it these
+      // large inputs round up wrongly.
+      expect(nextPowerOfTwo((1 << 32) + 1), 1 << 33);
+      expect(nextPowerOfTwo((1 << 40) + 1), 1 << 41);
+      expect(nextPowerOfTwo(1 << 50), 1 << 50);
+    });
   });
 
   group('isqrt', () {

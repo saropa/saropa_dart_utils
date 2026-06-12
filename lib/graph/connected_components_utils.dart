@@ -4,6 +4,7 @@ library;
 import 'graph_utils.dart';
 
 /// Returns list of components (each component = list of node indices).
+/// Audited: 2026-06-12 11:26 EDT
 List<List<int>> connectedComponents(Adjacency graph) {
   final List<bool> seen = List.filled(graph.length, false);
   final List<List<int>> out = <List<int>>[];

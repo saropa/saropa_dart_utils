@@ -12,6 +12,7 @@ library;
 /// [min] clamp into bin 0 and values at or above [max] clamp into the last
 /// bin, so out-of-range data is never dropped or out of index. Result indices
 /// are in `0..bins-1`.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> binByWidth(
   List<num> values, {
   required num min,
@@ -25,6 +26,7 @@ List<int> binByWidth(
 }
 
 /// Bin index for one value; clamps below 0 and above bins-1.
+/// Audited: 2026-06-12 11:26 EDT
 int _widthBin(double value, double min, double width, int bins) {
   final int raw = ((value - min) / width).floor();
   // Clamp so out-of-range values land in the edge bins rather than out of index.
@@ -37,6 +39,7 @@ int _widthBin(double value, double min, double width, int bins) {
 /// Returns an empty list when [bins] < 2 or [values] is empty (no internal
 /// cut exists). Each boundary is the value at the corresponding quantile
 /// position in the ascending-sorted data.
+/// Audited: 2026-06-12 11:26 EDT
 List<num> quantileBoundaries(List<num> values, int bins) {
   assert(bins >= 1, 'quantileBoundaries requires bins >= 1');
   // One bin (or fewer) and empty input both have no internal cut points.
@@ -57,10 +60,12 @@ List<num> quantileBoundaries(List<num> values, int bins) {
 /// (upper-bound search): values `<= boundaries[0]` go to bin 0, and values
 /// greater than every boundary go to bin `boundaries.length`. Result indices
 /// are in `0..boundaries.length`.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> binByBoundaries(List<num> values, List<num> boundaries) =>
     values.map((num v) => _upperBoundBin(v.toDouble(), boundaries)).toList();
 
 /// Index of the first boundary not exceeded by [value]; boundaries.length if none.
+/// Audited: 2026-06-12 11:26 EDT
 int _upperBoundBin(double value, List<num> boundaries) {
   int lo = 0;
   int hi = boundaries.length;
@@ -80,6 +85,7 @@ int _upperBoundBin(double value, List<num> boundaries) {
 ///
 /// Returns a list of length [bins]; indices outside `0..bins-1` are ignored
 /// so a stray out-of-range index cannot grow or corrupt the histogram.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> binCounts(List<int> binIndices, int bins) {
   assert(bins >= 1, 'binCounts requires bins >= 1');
   final List<int> counts = List<int>.filled(bins, 0);

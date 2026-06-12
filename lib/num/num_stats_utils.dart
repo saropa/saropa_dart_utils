@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 /// Variance, standard deviation, median, percentile. Roadmap #122–125.
+/// Audited: 2026-06-12 11:26 EDT
 double variance(Iterable<num> values, {bool isPopulation = false}) {
   final List<num> list = values.toList();
   if (list.isEmpty) return 0;
@@ -15,6 +16,7 @@ double variance(Iterable<num> values, {bool isPopulation = false}) {
 }
 
 /// Standard deviation (square root of variance).
+/// Audited: 2026-06-12 11:26 EDT
 double standardDeviation(Iterable<num> values, {bool isPopulation = false}) {
   final double v = variance(values, isPopulation: isPopulation);
   if (!v.isFinite || v <= 0) return 0;
@@ -31,6 +33,7 @@ double standardDeviation(Iterable<num> values, {bool isPopulation = false}) {
 /// median([3, 1, 2]); // 2.0
 /// median([4, 1, 2, 3]); // 2.5
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double? median(Iterable<num> values) {
   // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort without mutating the caller's input
   final List<double> list = values.map((num n) => n.toDouble()).toList()..sort();
@@ -50,6 +53,7 @@ double? median(Iterable<num> values) {
 /// ```dart
 /// percentile([1, 2, 3, 4], 0.5); // 2.5
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 double? percentile(Iterable<num> values, double p) {
   if (p < 0 || p > 1) return null;
   // ignore: saropa_lints/avoid_large_list_copy -- needs an independent copy to sort without mutating the caller's input

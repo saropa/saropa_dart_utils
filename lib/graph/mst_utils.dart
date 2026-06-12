@@ -5,6 +5,7 @@ import 'package:saropa_dart_utils/collections/disjoint_set_utils.dart';
 import 'graph_utils.dart';
 
 /// MST from [edges] (GraphUtils); returns (mst edges, total cost).
+/// Audited: 2026-06-12 11:26 EDT
 (List<GraphUtils> edges, double cost) kruskalMST(int nodeCount, List<GraphUtils> edges) {
   final List<GraphUtils> sorted = List<GraphUtils>.of(edges)
     ..sort((a, b) => a.weight.compareTo(b.weight));

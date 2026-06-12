@@ -20,6 +20,7 @@ import 'dart:math' show sqrt;
 /// ```dart
 /// rollingCorrelation(<num>[1, 2, 3, 4], <num>[2, 4, 6, 8], 3); // [1.0, 1.0]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<double> rollingCorrelation(List<num> x, List<num> y, int window) {
   assert(x.length == y.length, 'rollingCorrelation requires equal-length series');
   assert(window >= 2, 'rollingCorrelation requires window >= 2');
@@ -33,6 +34,7 @@ List<double> rollingCorrelation(List<num> x, List<num> y, int window) {
 }
 
 /// Single-pass Pearson correlation over `[start, start + window)`.
+/// Audited: 2026-06-12 11:26 EDT
 double _windowCorrelation(List<num> x, List<num> y, int start, int window) {
   double sumX = 0, sumY = 0, sumXX = 0, sumYY = 0, sumXY = 0;
   for (int i = start; i < start + window; i++) {

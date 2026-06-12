@@ -76,5 +76,18 @@ void main() {
       ];
       expect(douglasPeuckerIndices(points, 0.001), <int>[0, 1, 2]);
     });
+
+    test('tolerance is a true perpendicular distance, not distance/length', () {
+      // Chord (0,0)->(10,0) has length 10. The middle point (5,5) sits exactly
+      // 5 units off the chord. With epsilon 2 it MUST be kept (5 > 2). The old
+      // buggy formula divided by the squared length (100), giving 0.5 < 2, which
+      // would wrongly drop it -> this test pins the corrected distance.
+      final List<LineSimplifyUtils> points = <LineSimplifyUtils>[
+        const LineSimplifyUtils(0, 0),
+        const LineSimplifyUtils(5, 5),
+        const LineSimplifyUtils(10, 0),
+      ];
+      expect(douglasPeuckerIndices(points, 2), <int>[0, 1, 2]);
+    });
   });
 }

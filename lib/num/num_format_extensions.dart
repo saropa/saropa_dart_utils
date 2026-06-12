@@ -9,6 +9,7 @@ extension NumFormatExtensions on num {
   /// Rounds to [significantDigits] significant digits.
   ///
   /// [significantDigits] must be positive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double roundToSignificantDigits(int significantDigits) {
     if (significantDigits < 1) {
@@ -27,6 +28,7 @@ extension NumFormatExtensions on num {
   /// Formats as compact string (e.g. 1200 → "1.2K", 1500000 → "1.5M").
   ///
   /// [decimals] is the max decimal places for the fractional part.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toCompactString({int decimals = 1}) {
     final double n = toDouble().abs();

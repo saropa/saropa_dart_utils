@@ -21,6 +21,7 @@ import 'graph_utils.dart';
 /// final Adjacency g = buildGraph([(0, 1), (0, 2), (1, 2)], 3);
 /// enumeratePaths(g, 0, 2); // [[0, 2], [0, 1, 2]]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<List<int>> enumeratePaths(
   Adjacency graph,
   int start,
@@ -38,6 +39,7 @@ List<List<int>> enumeratePaths(
 }
 
 /// DFS that records [current] whenever it reaches [target] as a simple path.
+/// Audited: 2026-06-12 11:26 EDT
 void _walk(
   Adjacency graph,
   int node,

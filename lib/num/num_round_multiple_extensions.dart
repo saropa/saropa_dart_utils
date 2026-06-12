@@ -6,6 +6,7 @@ const String _kParamMultiple = 'multiple';
 /// Round/floor/ceil to multiple. Roadmap #133–134.
 extension NumRoundMultipleExtensions on num {
   /// Rounds to nearest multiple of [multiple]. [multiple] must be positive.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double roundToMultiple(num multiple) {
     if (multiple <= 0) throw ArgumentError(_kErrMultiplePositive, _kParamMultiple);
@@ -13,6 +14,7 @@ extension NumRoundMultipleExtensions on num {
   }
 
   /// Floors to multiple of [multiple].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double floorToMultiple(num multiple) {
     if (multiple <= 0) throw ArgumentError(_kErrMultiplePositive, _kParamMultiple);
@@ -20,6 +22,7 @@ extension NumRoundMultipleExtensions on num {
   }
 
   /// Ceils to multiple of [multiple].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double ceilToMultiple(num multiple) {
     if (multiple <= 0) throw ArgumentError(_kErrMultiplePositive, _kParamMultiple);

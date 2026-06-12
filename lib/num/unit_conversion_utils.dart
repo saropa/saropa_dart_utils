@@ -37,6 +37,7 @@ abstract final class LengthConversionUtils {
   /// ```dart
   /// LengthConversionUtils.convertMetersToFeet(1); // 3.280839895
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static double convertMetersToFeet(double meters) => meters * conversionFactor;
 
@@ -48,6 +49,7 @@ abstract final class LengthConversionUtils {
   /// ```dart
   /// LengthConversionUtils.convertFeetToMeters(3.280839895); // 1.0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static double convertFeetToMeters(double feet) => feet / conversionFactor;
 
@@ -71,6 +73,7 @@ abstract final class LengthConversionUtils {
   /// LengthConversionUtils.feetToString(5.5, useAbbreviations: true); // '5 ft 6 in'
   /// LengthConversionUtils.feetToString(5.5, showInches: false); // '5.5 feet'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String feetToString(
     double feet, {
@@ -96,6 +99,7 @@ abstract final class LengthConversionUtils {
   /// Renders finite [feet] as `"<feet> ft <inches> in"` with carry + sign
   /// handling. Split out of [feetToString] to keep each function small and to
   /// isolate the boundary logic that the public contract depends on.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String _feetInchesString(
     double feet, {
@@ -133,6 +137,7 @@ abstract final class LengthConversionUtils {
   /// ```dart
   /// LengthConversionUtils.metersToString(1.78); // '1.78 meters'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String metersToString(
     double meters, {
@@ -162,6 +167,7 @@ abstract final class WeightConversionUtils {
   /// ```dart
   /// WeightConversionUtils.convertKilogramsToPounds(1); // 2.2046226218
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static double convertKilogramsToPounds(double kilograms) => kilograms * conversionFactor;
 
@@ -173,6 +179,7 @@ abstract final class WeightConversionUtils {
   /// ```dart
   /// WeightConversionUtils.convertPoundsToKilograms(2.2046226218); // 1.0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static double convertPoundsToKilograms(double pounds) => pounds / conversionFactor;
 
@@ -182,6 +189,7 @@ abstract final class WeightConversionUtils {
   /// ```dart
   /// WeightConversionUtils.poundsToString(80); // '80 pounds'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String poundsToString(
     double pounds, {
@@ -197,6 +205,7 @@ abstract final class WeightConversionUtils {
   /// ```dart
   /// WeightConversionUtils.kilogramsToString(80); // '80 kilograms'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String kilogramsToString(
     double kilograms, {

@@ -4,6 +4,7 @@ library;
 import 'graph_utils.dart';
 
 /// Returns sorted node indices, or null if cycle detected.
+/// Audited: 2026-06-12 11:26 EDT
 List<int>? topologicalSort(Adjacency graph) {
   // Kahn's algorithm: repeatedly emit a node with in-degree 0 and decrement its
   // successors' in-degrees, queuing each one once it reaches 0.

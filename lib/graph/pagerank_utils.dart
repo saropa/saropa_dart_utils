@@ -20,6 +20,7 @@ import 'graph_utils.dart';
 /// final Adjacency g = buildGraph([(0, 1), (1, 2), (2, 0)], 3);
 /// pageRank(g); // ~[0.333, 0.333, 0.333]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<double> pageRank(
   Adjacency graph, {
   double damping = 0.85,
@@ -46,6 +47,7 @@ List<double> pageRank(
 }
 
 /// One power-iteration pass: teleport mass plus damped inbound contributions.
+/// Audited: 2026-06-12 11:26 EDT
 List<double> _pageRankStep(Adjacency graph, List<double> rank, double damping) {
   final int n = graph.length;
   // Dangling nodes (no out-edges) keep no link to spread their mass; pool it

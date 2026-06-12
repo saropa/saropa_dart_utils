@@ -1,19 +1,22 @@
 /// Line simplification (Douglas–Peucker) — roadmap #547.
 library;
 
-import 'dart:math' show pow;
+import 'dart:math' show pow, sqrt;
 
 /// Point for polyline.
 class LineSimplifyUtils {
   /// Creates a 2D point at coordinates ([x], [y]).
+  /// Audited: 2026-06-12 11:26 EDT
   const LineSimplifyUtils(double x, double y) : _x = x, _y = y;
   final double _x;
 
   /// X coordinate.
+  /// Audited: 2026-06-12 11:26 EDT
   double get x => _x;
   final double _y;
 
   /// Y coordinate.
+  /// Audited: 2026-06-12 11:26 EDT
   double get y => _y;
 
   @override
@@ -21,6 +24,7 @@ class LineSimplifyUtils {
 }
 
 /// Douglas–Peucker line simplification: returns indices of [points] to keep within [epsilon] tolerance.
+/// Audited: 2026-06-12 11:26 EDT
 List<int> douglasPeuckerIndices(List<LineSimplifyUtils> points, double epsilon) {
   if (points.length < 3) return List.generate(points.length, (int i) => i);
   return _douglasPeucker(points, 0, points.length - 1, epsilon);
@@ -58,6 +62,10 @@ double _perpendicularDistance(LineSimplifyUtils p, LineSimplifyUtils a, LineSimp
   final double n = pow(deltaX, 2).toDouble() + pow(deltaY, 2).toDouble();
   final double px = p._x - a._x;
   final double py = p._y - a._y;
-  if (n == 0) return px.abs() + py.abs();
-  return (px * deltaY - py * deltaX).abs() / n;
+  // Degenerate chord (a == b): distance is just the Euclidean |p - a|.
+  if (n == 0) return sqrt(px * px + py * py);
+  // Perpendicular distance = |cross(p-a, b-a)| / |b-a|. |b-a| is sqrt(n), NOT n:
+  // dividing by n (the squared length) yields distance/length, not a distance,
+  // so the epsilon tolerance would not be in real coordinate units.
+  return (px * deltaY - py * deltaX).abs() / sqrt(n);
 }

@@ -14,6 +14,7 @@ import 'package:saropa_dart_utils/collections/histogram_utils.dart';
 @immutable
 class CdfPoint {
   /// Creates a CDF step at [value] with cumulative probability [p].
+  /// Audited: 2026-06-12 11:26 EDT
   const CdfPoint(this.value, this.p);
 
   /// A distinct sample value, ascending across the returned list.
@@ -41,6 +42,7 @@ class CdfPoint {
 /// empiricalCdf(<num>[1, 2, 2, 3]);
 /// // [CdfPoint(1, 0.25), CdfPoint(2, 0.75), CdfPoint(3, 1.0)]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<CdfPoint> empiricalCdf(List<num> values) {
   if (values.isEmpty) return <CdfPoint>[];
   final List<num> sorted = List<num>.of(values)..sort();
@@ -63,6 +65,7 @@ List<CdfPoint> empiricalCdf(List<num> values) {
 
 /// The empirical CDF of [values] evaluated at [x]: the fraction of samples that
 /// are ≤ [x], in `[0, 1]`. Returns 0 for no samples.
+/// Audited: 2026-06-12 11:26 EDT
 double cdfAt(List<num> values, num x) {
   if (values.isEmpty) return 0;
   int count = 0;
@@ -80,6 +83,7 @@ double cdfAt(List<num> values, num x) {
 /// ```dart
 /// cumulativeHistogram(<num>[1, 2, 3, 4], <num>[0, 2, 4, 6]); // [1, 3, 4]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> cumulativeHistogram(List<num> values, List<num> edges) {
   final List<int> counts = histogramFixed(values, edges);
   final List<int> cumulative = List<int>.filled(counts.length, 0);

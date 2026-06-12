@@ -14,6 +14,7 @@ abstract final class NumUtils {
   /// NumberUtils.maxOf(10, null); // Returns 10
   /// NumberUtils.maxOf(null, null); // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static num? maxOf(num? a, num? b) {
     // If both numbers are null, return null
@@ -37,15 +38,16 @@ abstract final class NumUtils {
 
   /// Generates a list of integers in ascending order, starting from [start] and ending at [end] (inclusive).
   ///
-  /// Returns `null` if [start] is greater than [end], indicating an invalid range.
-  /// In case of an invalid range, a warning debug message is printed.
+  /// Returns `null` if [start] is greater than [end], indicating an invalid
+  /// range.
   ///
   /// Example:
   /// ```dart
   /// NumberUtils.generateIntList(1, 5); // Returns [1, 2, 3, 4, 5]
   /// NumberUtils.generateIntList(3, 3); // Returns [3]
-  /// NumberUtils.generateIntList(5, 1); // Returns null, prints a warning
+  /// NumberUtils.generateIntList(5, 1); // Returns null (start > end)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<int>? generateIntList(int start, int end) {
     if (start > end) {

@@ -13,6 +13,7 @@ import 'package:meta/meta.dart';
 class NumericStats {
   /// Creates a stat bundle. Built by [groupedStats]; every field is derived
   /// from at least one value, so [count] is always ≥ 1.
+  /// Audited: 2026-06-12 11:26 EDT
   const NumericStats({
     required this.count,
     required this.sum,
@@ -90,6 +91,7 @@ class _Acc {
 /// groupedStats(rows, keyOf: (r) => r.country, valueOf: (r) => r.sales);
 /// // {US: NumericStats(count: 2, sum: 15, min: 5, max: 10, mean: 7.5), ...}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<K, NumericStats> groupedStats<T, K>(
   Iterable<T> items, {
   required K Function(T) keyOf,

@@ -74,5 +74,23 @@ void main() {
       expect(dist[2][1], 2);
       expect(dist[1][0], 2);
     });
+
+    test('parallel edges keep the minimum weight (multigraph seeding)', () {
+      // Two 0->1 edges, the smaller listed FIRST; seeding must take the min (2),
+      // not the last-written value (5).
+      final WeightedAdjacency g = buildWeightedGraph(<GraphUtils>[
+        const GraphUtils(0, 1, 2),
+        const GraphUtils(0, 1, 5),
+      ], 2);
+      expect(floydWarshall(g)[0][1], 2);
+    });
+
+    test('positive self-loop does not overwrite the diagonal zero', () {
+      // A self-edge of weight 5 must not raise dist[0][0] above 0.
+      final WeightedAdjacency g = buildWeightedGraph(<GraphUtils>[
+        const GraphUtils(0, 0, 5),
+      ], 1);
+      expect(floydWarshall(g)[0][0], 0);
+    });
   });
 }

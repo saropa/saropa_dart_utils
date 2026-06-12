@@ -4,10 +4,14 @@ library;
 import 'graph_utils.dart';
 
 /// Longest path from [start] to each node (DAG). Returns distances.
+/// Audited: 2026-06-12 11:26 EDT
 List<double> criticalPathDistances(WeightedAdjacency graph, int start) {
   // Longest-path (critical path) in a DAG. Seed distances to -infinity so only
   // nodes actually reachable from start get a finite value; start itself is 0.
   final List<double> dist = List.filled(graph.length, double.negativeInfinity);
+  // Empty graph or out-of-range start: nothing is reachable, so return the
+  // all -infinity distances rather than letting `dist[start] = 0` throw.
+  if (start < 0 || start >= graph.length) return dist;
   dist[start] = 0;
   // Relax edges in topological order so a node's longest distance is final
   // before its successors are processed — what makes one pass correct.

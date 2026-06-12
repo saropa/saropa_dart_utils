@@ -4,12 +4,16 @@ library;
 import 'graph_utils.dart';
 
 /// BFS from [start]; calls [visit](node, depth) for each node. [maxDepth] caps depth (-1 = no limit).
+/// Audited: 2026-06-12 11:26 EDT
 void bfs(
   Adjacency graph,
   int start,
   void Function(int node, int depth) visit, {
   int maxDepth = -1,
 }) {
+  // Nothing to traverse from an out-of-range/empty start; return before
+  // indexing `seen[start]` so a bad start index does not throw a RangeError.
+  if (start < 0 || start >= graph.length) return;
   // Breadth-first: a FIFO queue of (node, depth) pairs. Mark each node seen
   // when it is ENQUEUED, not when visited, so it can never be queued twice.
   final List<bool> seen = List.filled(graph.length, false);
@@ -33,12 +37,15 @@ void bfs(
 ///
 /// Recurses to the traversal depth; pass [maxDepth] to bound it for deep or
 /// untrusted graphs, since deep recursion can exhaust the call stack.
+/// Audited: 2026-06-12 11:26 EDT
 void dfs(
   Adjacency graph,
   int start,
   void Function(int node, int depth) visit, {
   int maxDepth = -1,
 }) {
+  // Guard a bad/empty start before the recursion indexes `seen`.
+  if (start < 0 || start >= graph.length) return;
   final List<bool> seen = List.filled(graph.length, false);
   void go(int u, int d) {
     if (seen[u]) return;
