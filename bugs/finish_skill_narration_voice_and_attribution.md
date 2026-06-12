@@ -107,12 +107,17 @@ This fixes all future `/finish` runs in every project that uses the shared skill
   asked/ran/pasted" / "this commit" deixis rephrased. Files live under
   `plans/history/**` and carry no runtime behavior. Full deixis sweep now returns 0
   (the only remaining hit is this bug file, which quotes the phrase as its subject).
-- **Published-history content scrub:** NOT recommended. The narration text is file
-  *content* inside internal report docs, not commit attribution; scrubbing it from
-  published history means rewriting `origin/main` and force-pushing (every hash
-  changes, clones/PRs/CI break, release tags dangle). The cost vastly exceeds the
-  value of clean snapshots of internal docs nobody reads. Fix the working files and
-  commit; leave history as the immutable record.
+- **Published-history content scrub:** DONE (2026-06-12), by explicit maintainer
+  direction (the working-file fix alone was judged insufficient — released tags
+  `v1.2.0`/`v1.3.0`/`v1.4.1`/`v1.5.1` still snapshotted the narration). `origin/main`
+  was rewritten with `git filter-repo`: a blob callback replaced each exact pre-scrub
+  narration blob with its scrubbed equivalent across all 88 commits from the first
+  narration commit forward. Commits before that keep their original hashes; the four
+  release tags were re-pointed to the rewritten commits and force-pushed. Trade-off
+  accepted knowingly: every rewritten hash changed, so existing clones/forks and any
+  SHA-pinned references must re-clone or hard-reset. A full pre-rewrite backup bundle
+  was retained off-tree. Verified: full-history deixis sweep over `origin/main` and
+  all four published tags → `0`.
 
 ---
 
@@ -120,8 +125,11 @@ This fixes all future `/finish` runs in every project that uses the shared skill
 
 - `git log origin/main --pretty=format:'%b' | grep -ciE 'co-authored-by|🤖'` → `0`
 - After backup-ref drop + gc: `git rev-list --all | … grep co-authored-by` → `0`
-- Narration scrub (full deixis sweep over `plans/*.md`) → `0`; the only repo-wide
-  `'reviewed by another AI'` hit is this bug file itself.
+- Narration scrub (full deixis sweep over `plans/*.md` at HEAD) → `0`; the only
+  repo-wide `'reviewed by another AI'` hit is this bug file itself.
+- Published-history scrub — sweep every commit reachable from `origin/main` and the
+  four published tags:
+  `git rev-list origin/main v1.2.0 v1.3.0 v1.4.1 v1.5.1 | while read c; do git grep -lE 'reviewed by another AI|^\*\*Trigger' "$c" -- 'plans/*.md'; done` → empty.
 - Future runs: generator change is in `~/.claude/skills/finish/SKILL.md`.
 
 ---
@@ -132,4 +140,9 @@ This fixes all future `/finish` runs in every project that uses the shared skill
 
 - `c4c71e6` — Rewrite 27 persisted finish reports into third-person record voice;
   remove "reviewed by another AI" boilerplate, objectify `**Trigger:**` sections and
-  inline deixis; close this bug (full deixis sweep → 0).
+  inline deixis; close this bug (full deixis sweep → 0). (Hash from before the
+  history rewrite; preserved here as the working-file remediation reference.)
+- Published-history rewrite (2026-06-12, `git filter-repo`): `origin/main`
+  force-pushed `4f70f7c → ae4359e`; tags re-pointed `v1.2.0 ed134ec→2d90a4a`,
+  `v1.3.0 293d0ff→c036978`, `v1.4.1 03e7458→a093cbb`, `v1.5.1 a500108→0d7928a`.
+  All hashes in this report's body reference the pre-rewrite history.
