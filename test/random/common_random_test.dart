@@ -8,13 +8,19 @@ void main() {
     test('unique instances with default seed', () async {
       final Random random1 = CommonRandom();
 
-      // Add a small delay
-      await Future<void>.delayed(const Duration(milliseconds: 1));
+      // Delay past a millisecond boundary so the two time-based default seeds
+      // differ (CommonRandom seeds from millisecondsSinceEpoch).
+      await Future<void>.delayed(const Duration(milliseconds: 2));
 
       final Random random2 = CommonRandom();
 
-      // Ensure two instances are producing different values
-      expect(random1.nextInt(100) != random2.nextInt(100), isTrue);
+      // Compare a SEQUENCE, not a single draw. Two differently-seeded RNGs still
+      // collide on any single nextInt(100) ~1% of the time, which made the old
+      // single-sample assertion flaky (~1% spurious CI failures). The chance that
+      // ten consecutive draws all match is 100^-10 — effectively zero.
+      final List<int> seq1 = List<int>.generate(10, (_) => random1.nextInt(100));
+      final List<int> seq2 = List<int>.generate(10, (_) => random2.nextInt(100));
+      expect(seq1, isNot(equals(seq2)));
     });
 
     test('consistent values with custom seed', () {
