@@ -2,7 +2,7 @@
 
 **Severity:** 🟡 Medium (no library/runtime impact; process + provenance hygiene)
 **Category:** Tooling / Process (not a library bug, not a lint-exclusion decision)
-**Status:** Fix Ready
+**Status:** Closed
 
 <!-- Status values: Open → Investigating → Fix Ready → Closed -->
 
@@ -46,8 +46,12 @@ git log --all --pretty=format:'%b' | grep -iE 'co-authored-by|generated with|�
 # Crucial: these were NOT on the published branch
 git log origin/main --pretty=format:'%b' | grep -ciE 'co-authored-by|🤖'   # -> 0
 
-# Narration voice in persisted report files
-git grep -lE 'reviewed by another AI|^\*\*Trigger' -- '*.md'   # ~24 files
+# Narration voice in persisted report files.
+# NOTE: the two-marker, case-sensitive grep below UNDERCOUNTS — it misses
+# "Reviewed by another AI." (capital R) and deixis like "the user asked" that
+# carries neither marker. The full case-insensitive deixis sweep finds 27 files.
+git grep -lE 'reviewed by another AI|^\*\*Trigger' -- '*.md'   # 24 (undercount)
+git grep -liE 'reviewed by another ai|^\*\*Trigger|the user (asked|wanted|said|ran|pasted)|this finish pass|this commit|honest self-assessment|when challenged|the explicit mandate' -- 'plans/*.md'   # 27 (true surface)
 ```
 
 **Root cause (generator, not this repo):** `~/.claude/skills/finish/SKILL.md`
@@ -96,9 +100,13 @@ This fixes all future `/finish` runs in every project that uses the shared skill
   backup refs were dropped and `git gc --prune=now` run on 2026-06-11 → **0
   attributed objects remain, 0 dangling.** No force-push or remote rewrite was
   required (the remote was never polluted).
-- **Narration voice in working report files (~24 `.md`):** rewrite into record
-  voice is the remaining local cleanup. These live under `plans/history/**` (or this
-  repo's equivalent history root) and contain no runtime behavior.
+- **Narration voice in working report files (27 `.md`):** DONE (2026-06-11). The true
+  surface was 27, not the ~24 the two-marker grep reported (see Attribution Evidence).
+  All "reviewed by another AI" boilerplate lines were removed, every `**Trigger:**`
+  chat-recap rewritten to an objective problem statement, and inline "the user
+  asked/ran/pasted" / "this commit" deixis rephrased. Files live under
+  `plans/history/**` and carry no runtime behavior. Full deixis sweep now returns 0
+  (the only remaining hit is this bug file, which quotes the phrase as its subject).
 - **Published-history content scrub:** NOT recommended. The narration text is file
   *content* inside internal report docs, not commit attribution; scrubbing it from
   published history means rewriting `origin/main` and force-pushing (every hash
@@ -112,6 +120,8 @@ This fixes all future `/finish` runs in every project that uses the shared skill
 
 - `git log origin/main --pretty=format:'%b' | grep -ciE 'co-authored-by|🤖'` → `0`
 - After backup-ref drop + gc: `git rev-list --all | … grep co-authored-by` → `0`
+- Narration scrub (full deixis sweep over `plans/*.md`) → `0`; the only repo-wide
+  `'reviewed by another AI'` hit is this bug file itself.
 - Future runs: generator change is in `~/.claude/skills/finish/SKILL.md`.
 
 ---
