@@ -8,6 +8,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// When [isAlwaysPositive] is `true` (default), the result is always
   /// non-negative.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int? getTimeDifferenceMs(DateTime? compareTo, {bool isAlwaysPositive = true}) {
     if (compareTo == null) {
@@ -29,6 +30,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added years.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime addYears(int years) {
     if (years == 0) {
@@ -45,6 +47,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added months.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime addMonths(int months) {
     if (months == 0) {
@@ -61,6 +64,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added days.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime addDays(int days) {
     if (days == 0) {
@@ -77,6 +81,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added hours.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime addHours(int hours) {
     if (hours == 0) {
@@ -93,6 +98,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the added minutes.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime addMinutes(int minutes) {
     if (minutes == 0) {
@@ -109,6 +115,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted minutes.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime subtractMinutes(int minutes) {
     if (minutes == 0) {
@@ -125,6 +132,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted hours.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime subtractHours(int hours) {
     if (hours == 0) {
@@ -141,6 +149,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted months.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime subtractMonths(int months) {
     if (months == 0) {
@@ -160,6 +169,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted years.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime subtractYears(int years) {
     if (years == 0) {
@@ -176,6 +186,7 @@ extension DateTimeArithmeticExtensions on DateTime {
   ///
   /// Returns:
   ///   DateTime: A new [DateTime] object with the subtracted days.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime subtractDays(int? days) {
     if (days == null || days == 0) {

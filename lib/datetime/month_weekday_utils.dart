@@ -3,6 +3,7 @@ import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
 /// One day, used to step off a month boundary.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration _oneDay = Duration(days: 1);
 
 /// Static `(year, month)`-keyed weekday-occurrence helpers, the no-seed
@@ -27,6 +28,7 @@ abstract final class MonthWeekdayUtils {
   /// // 2nd Sunday of March 2026 (US daylight-saving start).
   /// MonthWeekdayUtils.nthWeekdayOfMonth(2026, 3, 2, DateTime.sunday);
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime? nthWeekdayOfMonth(int year, int month, int n, int weekday) {
     // Guard explicitly: DateTime(year, month) would normalize an out-of-range
@@ -55,6 +57,7 @@ abstract final class MonthWeekdayUtils {
   /// // Last Sunday of October 2026 (EU daylight-saving end).
   /// MonthWeekdayUtils.lastWeekdayOfMonth(2026, 10, DateTime.sunday);
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime lastWeekdayOfMonth(int year, int month, int weekday) {
     // Day 0 of the NEXT month is the last day of THIS month (handles 28/29/30/31

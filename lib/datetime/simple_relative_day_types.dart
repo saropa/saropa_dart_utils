@@ -73,6 +73,7 @@ enum SimpleRelativeDay {
 class RelativeDayResult {
   /// Creates a result for the given [type], with an optional [weekdayName]
   /// that callers attach only for the weekday buckets.
+  /// Audited: 2026-06-12 11:26 EDT
   const RelativeDayResult(this.type, {this.weekdayName});
 
   /// The classified calendar-day bucket.

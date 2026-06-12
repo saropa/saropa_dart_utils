@@ -27,6 +27,7 @@ class _IsoDuration {
   /// Applies this duration to [base] in direction [sign] (+1 forward, -1 back),
   /// preserving [base]'s time-of-day fields and UTC-ness. Calendar fields shift
   /// first (via the constructor's normalization), then the fixed [time] part.
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime applyTo(DateTime base, int sign) {
     final DateTime shifted = base.isUtc
         ? DateTime.utc(
@@ -56,6 +57,7 @@ class _IsoDuration {
 /// `P[nY][nM][nW][nD][T[nH][nM][nS]]`; weeks combine with other fields here
 /// (lenient vs. the strict spec where `PnW` stands alone). Time components allow
 /// a decimal fraction; date components are whole units.
+/// Audited: 2026-06-12 11:26 EDT
 final RegExp _isoDurationPattern = RegExp(
   r'^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?'
   r'(?:T(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?)?$',
@@ -71,6 +73,7 @@ final RegExp _isoDurationPattern = RegExp(
 /// parseIsoInterval('2026-01-01T00:00:00Z/P1DT12H');
 /// // start 2026-01-01T00:00Z, end 2026-01-02T12:00Z
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 DateTimeRange parseIsoInterval(String input) {
   final List<String> halves = input.trim().split('/');
   if (halves.length != 2) {
@@ -96,6 +99,7 @@ DateTimeRange parseIsoInterval(String input) {
 
 /// Builds the range, rejecting an inverted interval (`start` after `end`) before
 /// the [DateTimeRange] assertion would, with a clearer message.
+/// Audited: 2026-06-12 11:26 EDT
 DateTimeRange _range(DateTime start, DateTime end, String input) {
   if (start.isAfter(end)) {
     throw FormatException('ISO interval start is after end', input);
@@ -106,6 +110,7 @@ DateTimeRange _range(DateTime start, DateTime end, String input) {
 /// Parses one ISO 8601 timestamp half, throwing a [FormatException] on anything
 /// `DateTime` can't read (used instead of `DateTime.parse`, which would throw a
 /// less specific error and is flagged as unvalidated).
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _parseDateTime(String value) {
   final DateTime? parsed = DateTime.tryParse(value);
   if (parsed == null) {
@@ -116,6 +121,7 @@ DateTime _parseDateTime(String value) {
 
 /// Parses an ISO 8601 duration string into an [_IsoDuration]. Requires at least
 /// one component (a bare `P` or `PT` is rejected).
+/// Audited: 2026-06-12 11:26 EDT
 _IsoDuration _parseIsoDuration(String value) {
   final RegExpMatch? m = _isoDurationPattern.firstMatch(value);
   if (m == null || List<int>.generate(7, (int i) => i + 1).every((int g) => m.group(g) == null)) {

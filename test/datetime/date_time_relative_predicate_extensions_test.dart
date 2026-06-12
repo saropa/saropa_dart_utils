@@ -220,8 +220,7 @@ void main() {
 
       test('true for one microsecond before start-of-yesterday', () {
         final DateTime now = DateTime(2024, 6, 15, 12);
-        final DateTime justBefore =
-            DateTime(2024, 6, 14).subtract(const Duration(microseconds: 1));
+        final DateTime justBefore = DateTime(2024, 6, 14).subtract(const Duration(microseconds: 1));
         expect(justBefore.isOlderThanYesterday(now: now), isTrue);
       });
 
@@ -432,8 +431,7 @@ void main() {
 
       test('89.6 minutes: floor stays within "about an hour" band', () {
         // 89.6 min < 100 min -> still the about-an-hour cusp regardless of round.
-        final DateTime t =
-            now.subtract(const Duration(minutes: 89, seconds: 36));
+        final DateTime t = now.subtract(const Duration(minutes: 89, seconds: 36));
         expect(t.relativeTime(now: now), equals('about an hour ago'));
         expect(
           t.relativeTime(now: now, roundUp: true),
@@ -442,8 +440,7 @@ void main() {
       });
 
       test('2.6 days: floor -> 2 days, roundUp -> 3 days', () {
-        final DateTime t =
-            now.subtract(const Duration(days: 2, hours: 14, minutes: 24));
+        final DateTime t = now.subtract(const Duration(days: 2, hours: 14, minutes: 24));
         expect(t.relativeTime(now: now), equals('2 days ago'));
         expect(t.relativeTime(now: now, roundUp: true), equals('3 days ago'));
       });
@@ -588,7 +585,9 @@ void main() {
 
       test('combined with terse mode', () {
         expect(
-          now.subtract(const Duration(hours: 5)).relativeTime(
+          now
+              .subtract(const Duration(hours: 5))
+              .relativeTime(
                 now: now,
                 isDescriptive: false,
                 isDescriptiveTimeSuffix: false,

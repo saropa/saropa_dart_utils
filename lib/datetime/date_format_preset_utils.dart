@@ -21,6 +21,7 @@ class DateFormatNames {
   /// and [weekdays] 7, so every month/weekday index is in range — a `List`
   /// length cannot be asserted in a const constructor, so this is a documented
   /// contract; a shorter list throws `RangeError` from the presets.
+  /// Audited: 2026-06-12 11:26 EDT
   const DateFormatNames({required this.months, required this.monthsShort, required this.weekdays});
 
   /// Full month names, January..December (index = month - 1).
@@ -33,6 +34,7 @@ class DateFormatNames {
   final List<String> weekdays;
 
   /// English default used when no localized names are supplied.
+  /// Audited: 2026-06-12 11:26 EDT
   static const DateFormatNames english = DateFormatNames(
     months: <String>[
       'January',
@@ -83,17 +85,20 @@ String _pad2(int n) => n.toString().padLeft(2, '0');
 /// Short preset: unambiguous ISO-8601 calendar date `yyyy-MM-dd`
 /// (e.g. `2026-06-10`). No names, so it is locale-independent and sorts
 /// lexically — ideal for compact dashboard columns.
+/// Audited: 2026-06-12 11:26 EDT
 String formatDateShort(DateTime date) =>
     '${date.year.toString().padLeft(4, '0')}-${_pad2(date.month)}-${_pad2(date.day)}';
 
 /// Medium preset: abbreviated month, day, year (e.g. `Jun 10, 2026`). Month
 /// name comes from [names], defaulting to English.
+/// Audited: 2026-06-12 11:26 EDT
 String formatDateMedium(DateTime date, {DateFormatNames names = DateFormatNames.english}) =>
     '${names.monthsShort[date.month - 1]} ${date.day}, ${date.year}';
 
 /// Long preset: weekday, full month, day, year
 /// (e.g. `Wednesday, June 10, 2026`). Weekday and month names come from
 /// [names], defaulting to English.
+/// Audited: 2026-06-12 11:26 EDT
 String formatDateLong(DateTime date, {DateFormatNames names = DateFormatNames.english}) =>
     '${names.weekdays[date.weekday - 1]}, ${names.months[date.month - 1]} '
     '${date.day}, ${date.year}';

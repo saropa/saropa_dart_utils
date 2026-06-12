@@ -21,6 +21,7 @@ extension DateTimeIntlTimeDisplayExtensions on DateTime {
   /// The clock and its AM/PM marker are joined with a non-breaking space
   /// (U+00A0) so a bare time never wraps across two lines; any `, N s` seconds
   /// suffix stays breakable. Returns `null` on failure.
+  /// Audited: 2026-06-12 11:26 EDT
   String? makeDisplayTime({
     bool showSeconds = false,
     bool? showAMPM,
@@ -59,6 +60,7 @@ extension DateTimeIntlTimeDisplayExtensions on DateTime {
   /// DateTime(2026, 1, 15, 20, 31)
   ///     .utcTimeDisplay(UtcTimeDisplayEnum.twelveHourAMPM); // '8:31 PM'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   String utcTimeDisplay(UtcTimeDisplayEnum type, {String? locale}) {
     final String formatted = switch (type) {
       UtcTimeDisplayEnum.twelveHourWithSecondsAMPM => DateFormat.jms(locale).format(this),

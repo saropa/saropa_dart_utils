@@ -106,6 +106,7 @@ abstract final class HebrewDateConverter {
   /// HebrewDateConverter.isHebrewLeapYear(5784); // true
   /// HebrewDateConverter.isHebrewLeapYear(5785); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static bool isHebrewLeapYear(int hebrewYear) => (hebrewYear * 7 + 1) % 19 < 7;
 
   /// Returns the number of months in [hebrewYear]: 13 in a leap year, else 12.
@@ -115,6 +116,7 @@ abstract final class HebrewDateConverter {
   /// HebrewDateConverter.monthsInHebrewYear(5784); // 13
   /// HebrewDateConverter.monthsInHebrewYear(5785); // 12
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static int monthsInHebrewYear(int hebrewYear) => isHebrewLeapYear(hebrewYear) ? 13 : 12;
 
   /// Number of lunar months elapsed from the epoch to the start of [hebrewYear].
@@ -122,6 +124,7 @@ abstract final class HebrewDateConverter {
   /// Derives the month count from the 235-months-per-19-years Metonic ratio
   /// applied to the completed years (`hebrewYear - 1`); this is the input the
   /// molad (mean lunar conjunction) arithmetic in [_elapsedDays] needs.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int _elapsedMonths(int hebrewYear) {
     final int y = hebrewYear - 1;
@@ -138,6 +141,7 @@ abstract final class HebrewDateConverter {
   /// adjustments the year boundaries — and therefore every converted date —
   /// would be wrong. The rules are kept verbatim from the reference algorithm
   /// precisely because they are non-obvious and must not be "simplified".
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int _elapsedDays(int hebrewYear) {
     final int m = _elapsedMonths(hebrewYear);
@@ -184,6 +188,7 @@ abstract final class HebrewDateConverter {
   /// ```dart
   /// HebrewDateConverter.daysInHebrewYear(5785); // 355
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static int daysInHebrewYear(int hebrewYear) =>
       _elapsedDays(hebrewYear + 1) - _elapsedDays(hebrewYear);
 
@@ -192,6 +197,7 @@ abstract final class HebrewDateConverter {
   /// Cheshvan and Kislev are the only variable-length months. A complete year
   /// (355 or 385 days) ends in digit 5, which is the signal that Cheshvan took
   /// the extra day.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool _isLongCheshvan(int hebrewYear) => daysInHebrewYear(hebrewYear) % 10 == 5;
 
@@ -199,6 +205,7 @@ abstract final class HebrewDateConverter {
   ///
   /// A deficient year (353 or 383 days) ends in digit 3, which is the signal that
   /// Kislev lost its usual extra day.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool _isShortKislev(int hebrewYear) => daysInHebrewYear(hebrewYear) % 10 == 3;
 
@@ -218,6 +225,7 @@ abstract final class HebrewDateConverter {
   /// HebrewDateConverter.daysInHebrewMonth(5784, 6); // 30 (Adar I, leap year)
   /// HebrewDateConverter.daysInHebrewMonth(5785, 6); // 29 (Adar, regular year)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static int daysInHebrewMonth(int hebrewYear, int month) {
     final bool isLeap = isHebrewLeapYear(hebrewYear);
 
@@ -280,6 +288,7 @@ abstract final class HebrewDateConverter {
   /// year including pre-1582 and negative (BCE) years. Only the year/month/day are
   /// read; the time-of-day is ignored, which is what makes the converter a civil
   /// date mapping rather than a sunset-aware one.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int _gregorianToJulianDay(DateTime date) {
     final int year = date.year;
@@ -294,6 +303,7 @@ abstract final class HebrewDateConverter {
   }
 
   /// Returns the Julian Day Number of 1 Tishrei (Rosh Hashanah) of [hebrewYear].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int _hebrewNewYearJd(int hebrewYear) => _hebrewEpochJd + _elapsedDays(hebrewYear);
 
@@ -304,6 +314,7 @@ abstract final class HebrewDateConverter {
   /// is close enough that the search moves at most a couple of years, never
   /// looping unboundedly. With the year fixed, it walks the months accumulating
   /// their (possibly variable) lengths until the target day falls inside one.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static ({int year, int month, int day}) _julianDayToHebrew(int jd) {
     // Approximate the year from the mean year length, then converge exactly. The
@@ -351,6 +362,7 @@ abstract final class HebrewDateConverter {
   /// ```dart
   /// HebrewDateConverter.fromGregorian(DateTime(2024, 10, 3)); // (5785, 1, 1)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static ({int year, int month, int day}) fromGregorian(DateTime date) {
     final int jd = _gregorianToJulianDay(date);
 
@@ -374,6 +386,7 @@ abstract final class HebrewDateConverter {
   /// HebrewDateConverter.getMonthName(6, 5784); // 'Adar I'
   /// HebrewDateConverter.getMonthName(6, 5785); // 'Adar'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static String getMonthName(int month, int hebrewYear, {bool useHebrew = false}) {
     final bool isLeap = isHebrewLeapYear(hebrewYear);
     final List<String> names = useHebrew ? monthNamesHebrew : monthNames;
@@ -406,6 +419,7 @@ abstract final class HebrewDateConverter {
   /// HebrewDateConverter.formatDayHebrew(15); // 'ט״ו'
   /// HebrewDateConverter.formatDayHebrew(31); // '31'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static String formatDayHebrew(int day) {
     if (day < 1 || day > 30) {
       return day.toString();
@@ -424,6 +438,7 @@ abstract final class HebrewDateConverter {
   /// ```dart
   /// HebrewDateConverter.formatYearHebrew(5785); // 'תשפ״ה'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String formatYearHebrew(int year) {
     // Drop the thousands digit (5785 -> 785) per the writing convention.
@@ -441,6 +456,7 @@ abstract final class HebrewDateConverter {
   /// early returns deliberately keep any hundreds already written so a value like
   /// 215 is not truncated to its tens+units. Returns an empty string for zero or
   /// negative input.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String _numberToHebrewNumerals(int number) {
     if (number <= 0) return '';
@@ -504,6 +520,7 @@ abstract final class HebrewDateConverter {
   /// ```dart
   /// HebrewDateConverter.format(DateTime(2024, 10, 12)); // '10 Tishrei 5785'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static String format(DateTime date, {bool useHebrew = false}) {
     final ({int year, int month, int day}) hebrew = fromGregorian(date);
     final String monthName = getMonthName(hebrew.month, hebrew.year, useHebrew: useHebrew);
@@ -527,12 +544,11 @@ abstract final class HebrewDateConverter {
   /// ```dart
   /// HebrewDateConverter.formatDayMonth(DateTime(2024, 10, 3)); // '1 Tishrei'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static String formatDayMonth(DateTime date, {bool useHebrew = false}) {
     final ({int year, int month, int day}) hebrew = fromGregorian(date);
     final String monthName = getMonthName(hebrew.month, hebrew.year, useHebrew: useHebrew);
 
-    return useHebrew
-        ? '${formatDayHebrew(hebrew.day)} $monthName'
-        : '${hebrew.day} $monthName';
+    return useHebrew ? '${formatDayHebrew(hebrew.day)} $monthName' : '${hebrew.day} $monthName';
   }
 }

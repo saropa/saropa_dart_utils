@@ -2,6 +2,7 @@
 library;
 
 /// Rounds [minutes] to nearest [step] (e.g. 5, 10, 15). [mode]: 0=nearest, 1=floor, 2=ceil.
+/// Audited: 2026-06-12 11:26 EDT
 int roundMinutes(int minutes, int step, {int mode = 0}) {
   // A non-positive step has no meaningful quotient (and would divide by zero),
   // so leave the input untouched rather than throw.

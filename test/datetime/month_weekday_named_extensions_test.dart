@@ -132,7 +132,10 @@ void main() {
       // The named wrappers never expose a 5th-occurrence query; that genuinely
       // nullable case is served by MonthWeekdayUtils.nthWeekdayOfMonth directly.
       test('5th Monday of January 2024 exists', () {
-        expect(MonthWeekdayUtils.nthWeekdayOfMonth(2024, 1, 5, DateTime.monday), DateTime(2024, 1, 29));
+        expect(
+          MonthWeekdayUtils.nthWeekdayOfMonth(2024, 1, 5, DateTime.monday),
+          DateTime(2024, 1, 29),
+        );
       });
 
       test('5th Monday of February 2024 does not exist (null)', () {
@@ -212,7 +215,10 @@ void main() {
       test('ordinal-wrapper results are local midnight (not UTC)', () {
         final DateTime result = DayInMonthCalculations.secondSunday(2026, 3);
         expect(result.isUtc, isFalse);
-        expect(<int>[result.hour, result.minute, result.second, result.millisecond], <int>[0, 0, 0, 0]);
+        expect(
+          <int>[result.hour, result.minute, result.second, result.millisecond],
+          <int>[0, 0, 0, 0],
+        );
       });
 
       test('last-wrapper results are local midnight even across a DST fold', () {
@@ -220,7 +226,10 @@ void main() {
         // 23:00 offset across the EU DST fold (last Sunday of October).
         final DateTime result = DayInMonthCalculations.lastSunday(2026, 10);
         expect(result.isUtc, isFalse);
-        expect(<int>[result.hour, result.minute, result.second, result.millisecond], <int>[0, 0, 0, 0]);
+        expect(
+          <int>[result.hour, result.minute, result.second, result.millisecond],
+          <int>[0, 0, 0, 0],
+        );
       });
     });
 

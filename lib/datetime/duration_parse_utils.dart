@@ -1,6 +1,7 @@
 /// Parses duration string like "1.5h", "90m", "2d 3h 30m".
 ///
 /// Supports: d, h, m, s, ms. Returns null if invalid.
+/// Audited: 2026-06-12 11:26 EDT
 Duration? parseDuration(String input) {
   final String s = input.trim().toLowerCase();
   if (s.isEmpty) return null;

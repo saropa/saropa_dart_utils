@@ -4,6 +4,7 @@ import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';
 
 /// One day duration used for month-end calculations.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration _oneDay = Duration(days: 1);
 
 /// Extension on [DateTimeRange] to provide additional functionality
@@ -29,6 +30,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// // Check if 2nd Monday of January falls in range
   /// range.isNthDayOfMonthInRange(n: 2, dayOfWeek: DateTime.monday, month: 1); // true (Jan 2024)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isNthDayOfMonthInRange({
     required int n,
@@ -89,6 +91,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// range.inRange(DateTime(2024, 1, 1)); // true (inclusive by default)
   /// range.inRange(DateTime(2024, 1, 1), isInclusive: false); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool inRange(DateTime date, {bool isInclusive = true}) =>
       date.isBetween(start, end, isInclusive: isInclusive);
@@ -101,6 +104,7 @@ extension DateTimeRangeExtensions on DateTimeRange {
   /// NOTE: You can't really make date optional, even if looking for now,
   /// because of microsecond precision. So just cache DateTime.now()
   /// and pass it in for consistent results.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isNowInRange({DateTime? now, bool isInclusive = true}) {
     final DateTime resolvedNow = now ?? DateTime.now();

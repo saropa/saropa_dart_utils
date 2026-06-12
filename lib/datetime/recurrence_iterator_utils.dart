@@ -25,17 +25,25 @@ import 'package:saropa_dart_utils/datetime/rrule_parse_utils.dart';
 /// expandRecurrence(rule, DateTime(2026, 1, 5)).toList();
 /// // Mon Jan 5, Wed Jan 7, Mon Jan 12, Wed Jan 14
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<DateTime> expandRecurrence(
   RecurrenceRule rule,
   DateTime start, {
   int? limit,
 }) sync* {
   int emitted = 0;
+  // Counts periods that produced nothing since the last yield. An IMPOSSIBLE
+  // rule (e.g. BYMONTHDAY=30;BYMONTH=2 — Feb 30 never exists) yields forever-
+  // nothing, so without this bound even `.take(n)` would hang. A long empty run
+  // with nothing emitted means no occurrence will ever appear. Valid infinite
+  // rules yield regularly, resetting the counter, so they still iterate forever.
+  int emptyPeriods = 0;
   DateTime anchor = start;
   // Walk one FREQ×INTERVAL period at a time; each period yields its sorted
   // candidate dates. Periods advance monotonically forward, so the first
   // candidate past `until` ends the whole sequence.
   while (true) {
+    bool yieldedThisPeriod = false;
     for (final DateTime occurrence in _candidatesFor(rule, start, anchor)) {
       if (occurrence.isBefore(start)) {
         continue;
@@ -46,16 +54,34 @@ Iterable<DateTime> expandRecurrence(
       }
       yield occurrence;
       emitted++;
+      yieldedThisPeriod = true;
       if (_reachedLimit(rule, limit, emitted)) {
         return;
       }
     }
     anchor = _advanceAnchor(rule, anchor);
+    // Stop once the period itself is past `until` (an impossible rule never
+    // emits, so the per-occurrence `until` check above can never fire for it).
+    final DateTime? until = rule.until;
+    if (until != null && anchor.isAfter(until)) {
+      return;
+    }
+    if (yieldedThisPeriod) {
+      emptyPeriods = 0;
+    } else if (++emptyPeriods >= _maxEmptyPeriods) {
+      return;
+    }
   }
 }
 
+/// Consecutive empty periods after which an apparently-impossible rule (one that
+/// can never produce an occurrence) is abandoned. Generous enough that any valid
+/// sparse rule (e.g. a Feb-29 yearly rule, empty in non-leap years) keeps going.
+const int _maxEmptyPeriods = 100000;
+
 /// True once the rule's `count` or the caller's [limit] (whichever exists and is
 /// hit first) has been reached.
+/// Audited: 2026-06-12 11:26 EDT
 bool _reachedLimit(RecurrenceRule rule, int? limit, int emitted) {
   final int? count = rule.count;
   if (count != null && emitted >= count) {
@@ -65,6 +91,7 @@ bool _reachedLimit(RecurrenceRule rule, int? limit, int emitted) {
 }
 
 /// The sorted candidate occurrences within the period represented by [anchor].
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> _candidatesFor(RecurrenceRule rule, DateTime start, DateTime anchor) {
   // Dispatch to the frequency-specific generator. Each returns the occurrences
   // that fall inside the single period [anchor] names (one day, one week, one
@@ -84,6 +111,7 @@ List<DateTime> _candidatesFor(RecurrenceRule rule, DateTime start, DateTime anch
 
 /// Advances [anchor] to the next period start (interval units of the frequency).
 /// Day/month overflow is left to the `DateTime` constructor to normalize.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _advanceAnchor(RecurrenceRule rule, DateTime anchor) {
   switch (rule.frequency) {
     case RecurFrequency.daily:
@@ -98,6 +126,7 @@ DateTime _advanceAnchor(RecurrenceRule rule, DateTime anchor) {
 }
 
 /// DAILY: the single anchor day, kept only if it passes every active BY filter.
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> _dailyCandidates(RecurrenceRule rule, DateTime start, DateTime anchor) {
   // DAILY produces at most the anchor day itself. Each active BY* filter is an
   // independent gate: if the day fails any one, the period yields nothing (empty
@@ -125,6 +154,7 @@ List<DateTime> _dailyCandidates(RecurrenceRule rule, DateTime start, DateTime an
 
 /// WEEKLY: each BYDAY weekday within the anchor's week (BYDAY empty → the start's
 /// weekday), positioned relative to WKST, then BYMONTH-filtered and sorted.
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> _weeklyCandidates(RecurrenceRule rule, DateTime start, DateTime anchor) {
   final List<RecurWeekday> days = rule.byWeekDays.isEmpty
       ? <RecurWeekday>[RecurWeekday.values[start.weekday - 1]]
@@ -143,6 +173,7 @@ List<DateTime> _weeklyCandidates(RecurrenceRule rule, DateTime start, DateTime a
 
 /// MONTHLY: each BYMONTHDAY in the anchor's month (empty → the start's day),
 /// dropping days that don't exist that month, BYMONTH-filtered and sorted.
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> _monthlyCandidates(RecurrenceRule rule, DateTime start, DateTime anchor) {
   if (rule.byMonths.isNotEmpty && !rule.byMonths.contains(anchor.month)) {
     return const <DateTime>[];
@@ -156,6 +187,7 @@ List<DateTime> _monthlyCandidates(RecurrenceRule rule, DateTime start, DateTime 
 
 /// YEARLY: the cross product of BYMONTH (empty → start's month) and BYMONTHDAY
 /// (empty → start's day) within the anchor's year, invalid days dropped, sorted.
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> _yearlyCandidates(RecurrenceRule rule, DateTime start, DateTime anchor) {
   final List<int> months = rule.byMonths.isEmpty ? <int>[start.month] : rule.byMonths;
   final List<DateTime> out = <DateTime>[];
@@ -170,6 +202,7 @@ List<DateTime> _yearlyCandidates(RecurrenceRule rule, DateTime start, DateTime a
 /// Resolves BYMONTHDAY entries (or [fallback] when BYMONTHDAY is empty) to real
 /// day numbers for [year]/[month], discarding any that don't exist that month.
 /// Negative entries count from the month end (-1 = last day).
+/// Audited: 2026-06-12 11:26 EDT
 Iterable<int> _resolvedDays(RecurrenceRule rule, int year, int month, {int? fallback}) {
   final List<int> raw = rule.byMonthDays.isEmpty
       ? <int>[if (fallback != null) fallback]
@@ -180,6 +213,7 @@ Iterable<int> _resolvedDays(RecurrenceRule rule, int year, int month, {int? fall
 
 /// Maps one BYMONTHDAY value to a 1..[lastDay] day, or null if it falls outside
 /// the month (e.g. day 31 in a 30-day month, or a negative beyond the start).
+/// Audited: 2026-06-12 11:26 EDT
 int? _resolveDay(int raw, int lastDay) {
   if (raw > 0) {
     return raw <= lastDay ? raw : null;
@@ -189,6 +223,7 @@ int? _resolveDay(int raw, int lastDay) {
 }
 
 /// The date of the WKST-aligned start of the week containing [date].
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _weekStartDate(DateTime date, RecurWeekday weekStart) {
   final int back = (date.weekday - weekStart.isoWeekday + 7) % 7;
   return _addDays(date, -back);
@@ -196,6 +231,7 @@ DateTime _weekStartDate(DateTime date, RecurWeekday weekStart) {
 
 /// Builds a date at [year]/[month]/[day] carrying [reference]'s time-of-day and
 /// UTC-ness, so every occurrence keeps the start instant's clock and zone.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _dateWith(DateTime reference, int year, int month, int day) {
   if (reference.isUtc) {
     return DateTime.utc(
@@ -223,5 +259,6 @@ DateTime _dateWith(DateTime reference, int year, int month, int day) {
 
 /// Shifts [date] by [days], preserving its time-of-day and UTC-ness. Built from
 /// calendar fields (not a `Duration`) so it never drifts across a DST boundary.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _addDays(DateTime date, int days) =>
     _dateWith(date, date.year, date.month, date.day + days);

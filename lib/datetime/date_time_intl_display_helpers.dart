@@ -26,6 +26,7 @@ class _ClockSpec {
   final bool hasSeconds;
 
   /// intl pattern for the clock portion, given whether the time has minutes.
+  /// Audited: 2026-06-12 11:26 EDT
   String clockPattern({required bool hasMinutes}) {
     // Bare hour only when eliding is on, the time is on the hour, and no seconds.
     final bool isHourOnly = shouldOmitZeroMinutes && !hasMinutes && !hasSeconds;
@@ -48,6 +49,7 @@ const String _intlFieldLetters = 'GyMkSEahKHcLQdDmsvzZ';
 /// text instead of throwing, so the only way to honor the "invalid pattern → ''"
 /// contract is to detect them before formatting. Letters inside single-quoted
 /// literal sections are skipped because there they are intended as literal text.
+/// Audited: 2026-06-12 11:26 EDT
 bool _patternHasUnknownField(String pattern) {
   bool inQuotes = false;
   for (final int unit in pattern.codeUnits) {
@@ -56,8 +58,7 @@ bool _patternHasUnknownField(String pattern) {
       inQuotes = !inQuotes;
       continue;
     }
-    final bool isAsciiLetter =
-        (unit >= 0x41 && unit <= 0x5A) || (unit >= 0x61 && unit <= 0x7A);
+    final bool isAsciiLetter = (unit >= 0x41 && unit <= 0x5A) || (unit >= 0x61 && unit <= 0x7A);
     if (!inQuotes && isAsciiLetter && !_intlFieldLetters.contains(String.fromCharCode(unit))) {
       return true;
     }
@@ -71,6 +72,7 @@ bool _patternHasUnknownField(String pattern) {
 /// "th" despite ending in 1/2/3, so the teens exception is checked BEFORE the
 /// ones digit. English-only by design — ordinals do not localize, which is why
 /// callers that want ordinals accept fixed English month-day order.
+/// Audited: 2026-06-12 11:26 EDT
 String _ordinal(int n) {
   // Teens (…11, …12, …13) are always 'th' regardless of the ones digit.
   if (n % 100 >= 11 && n % 100 <= 13) {

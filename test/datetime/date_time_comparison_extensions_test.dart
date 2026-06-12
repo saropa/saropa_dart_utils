@@ -200,6 +200,25 @@ void main() {
         );
         expect(DateTime(0, 1, 15).isAnnualDateInRange(range), isTrue);
       });
+
+      test('year 0 Feb 29 does not match a non-leap year via Mar 1 rollover', () {
+        // 2023 is not a leap year, so Feb 29 does not exist that year. The check
+        // must NOT silently roll the annual Feb 29 to Mar 1 and match it.
+        final DateTimeRange nonLeap = DateTimeRange(
+          start: DateTime(2023, 2, 1),
+          end: DateTime(2023, 3, 31),
+        );
+        expect(DateTime(0, 2, 29).isAnnualDateInRange(nonLeap), isFalse);
+      });
+
+      test('year 0 Feb 29 matches inside a leap year', () {
+        // 2024 is a leap year, so Feb 29 exists and falls in the range.
+        final DateTimeRange leap = DateTimeRange(
+          start: DateTime(2024, 2, 1),
+          end: DateTime(2024, 3, 31),
+        );
+        expect(DateTime(0, 2, 29).isAnnualDateInRange(leap), isTrue);
+      });
     });
 
     group('isDateAfterToday', () {

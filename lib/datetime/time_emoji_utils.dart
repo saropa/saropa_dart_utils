@@ -15,7 +15,8 @@ abstract final class TimeEmojiUtils {
   /// Daytime range: hour >= [DateConstants.dayStartHour] (7) and hour < [DateConstants.dayEndHour] (18).
   /// At exactly 7am, sun is shown. At exactly 6pm (18:00), moon is shown.
   ///
-  /// Returns `null` if `tzHour` is null or in case of any error during processing, logging the error.
+  /// Returns `null` only when `tzHour` is null. The hour is not range-validated:
+  /// values outside 0–23 are not errors and fall into the night (moon) branch.
   ///
   /// Example:
   /// ```dart
@@ -25,6 +26,7 @@ abstract final class TimeEmojiUtils {
   /// TimeEmojiUtils.getEmojiDayOrNight(20); // Returns '🌙' (8pm)
   /// TimeEmojiUtils.getEmojiDayOrNight(null); // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getEmojiDayOrNight(int? tzHour) {
     if (tzHour == null) {
@@ -50,6 +52,7 @@ extension EmojiDateTimeExtensions on DateTime {
   /// DateTime now = DateTime.now();
   /// String? emoji = now.emojiDayOrNight; // Returns '☀️' or '🌙' based on the current hour.
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? get emojiDayOrNight => TimeEmojiUtils.getEmojiDayOrNight(hour);
 }

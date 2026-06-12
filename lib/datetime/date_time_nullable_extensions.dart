@@ -25,6 +25,7 @@ extension DateTimeNullableExtensions on DateTime? {
   /// dt1.isBeforeNullable(dt3); // false (non-null is not before null)
   /// dt3.isBeforeNullable(null); // false (not strictly before, but not considered before for sorting)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBeforeNullable(DateTime? other) {
     final DateTime? self = this;
@@ -61,6 +62,7 @@ extension DateTimeNullableExtensions on DateTime? {
   /// dt1.compareDateTimeNullable(dt3); // 1 (non-null is considered after null)
   /// dt3.compareDateTimeNullable(null); // 0 (both null are considered equal)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int compareDateTimeNullable(DateTime? other) {
     final DateTime? self = this;

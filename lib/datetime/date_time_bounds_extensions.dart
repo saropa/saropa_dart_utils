@@ -9,10 +9,12 @@ import 'package:saropa_dart_utils/datetime/date_time_utils.dart';
 /// Start/end of day, week, month, quarter, year; quarter; next weekday; isWeekend.
 extension DateTimeBoundsExtensions on DateTime {
   /// Start of day (00:00:00.000000).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get startOfDay => DateTime(year, month, day);
 
   /// End of day (23:59:59.999999).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get endOfDay => DateTime(
     year,
@@ -28,6 +30,7 @@ extension DateTimeBoundsExtensions on DateTime {
   /// Start of week. [firstWeekday] 1 = Monday, 7 = Sunday (default Monday).
   ///
   /// Returns the [DateTime] at 00:00:00 on the first day of the week.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime startOfWeek({int firstWeekday = DateTime.monday}) {
     final int delta =
@@ -38,6 +41,7 @@ extension DateTimeBoundsExtensions on DateTime {
   /// End of week (last day 23:59:59.999999). [firstWeekday] 1 = Monday.
   ///
   /// Returns the [DateTime] at 23:59:59.999999 on the last day of the week.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime endOfWeek({int firstWeekday = DateTime.monday}) {
     final DateTime start = startOfWeek(firstWeekday: firstWeekday);
@@ -54,10 +58,12 @@ extension DateTimeBoundsExtensions on DateTime {
   }
 
   /// Start of month (first day 00:00:00).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get startOfMonth => DateTime(year, month);
 
   /// End of month (last day 23:59:59.999999).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get endOfMonth {
     final int lastDay = DateTimeUtils.monthDayCount(year: year, month: month);
@@ -74,12 +80,14 @@ extension DateTimeBoundsExtensions on DateTime {
   }
 
   /// Quarter (1–4).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get quarter =>
       ((month - DateConstants.minMonth) / DateConstants.monthsPerQuarter).floor() +
       DateConstants.minMonth;
 
   /// Start of quarter (first day of quarter month 00:00:00).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get startOfQuarter {
     final int qMonth =
@@ -89,6 +97,7 @@ extension DateTimeBoundsExtensions on DateTime {
   }
 
   /// End of quarter (last day of quarter month 23:59:59.999999).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get endOfQuarter {
     final int qMonth = quarter * DateConstants.monthsPerQuarter;
@@ -106,10 +115,12 @@ extension DateTimeBoundsExtensions on DateTime {
   }
 
   /// Start of year (Jan 1 00:00:00). Same as [DateTime.yearStart] in date_time_extensions.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get startOfYear => DateTime(year);
 
   /// End of year (Dec 31 23:59:59.999999).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get endOfYear => DateTime(
     year,
@@ -123,10 +134,12 @@ extension DateTimeBoundsExtensions on DateTime {
   );
 
   /// True if Saturday or Sunday.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isWeekend => weekday == DateTime.saturday || weekday == DateTime.sunday;
 
   /// Next date that is a weekday (skips Saturday/Sunday). If this is already weekday, returns this date at 00:00:00.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime nextWeekday() {
     DateTime d = DateTime(year, month, day);
@@ -139,6 +152,7 @@ extension DateTimeBoundsExtensions on DateTime {
   /// Same calendar date as the receiver with time components from [other].
   ///
   /// Returns a new [DateTime] with this date and [other]'s time.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime sameTimeOn(DateTime other) => DateTime(
     year,
@@ -177,6 +191,7 @@ extension DateTimeBoundsExtensions on DateTime {
   /// DateTime(2024, 3, 15, 10, 30).toAnnualDate; // DateTime(0, 3, 15)
   /// DateTime(1999, 3, 15).toAnnualDate == DateTime(2024, 3, 15).toAnnualDate; // true
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get toAnnualDate => DateTime(0, month, day);
 
@@ -206,6 +221,7 @@ extension DateTimeBoundsExtensions on DateTime {
   /// DateTime(2024, 3, 15, 10, 30).toDayRange();
   /// // start: DateTime(2024, 3, 15), end: DateTime(2024, 3, 15, 23, 59, 59, 999, 999)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTimeRange toDayRange() => DateTimeRange(start: startOfDay, end: endOfDay);
 }

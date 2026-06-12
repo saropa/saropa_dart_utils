@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 /// One full day, used in date boundary calculations.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration _oneDay = Duration(days: 1);
 
 /// Smallest possible duration unit, used for end-of-day precision.
+/// Audited: 2026-06-12 11:26 EDT
 const Duration _oneMicrosecond = Duration(microseconds: 1);
 
 /// Extensions on [DateTime] for comparison, range, and equality checks.
@@ -12,17 +14,20 @@ extension DateTimeComparisonExtensions on DateTime {
   /// Checks if the date is in the future compared to the current date and time.
   ///
   /// Returns `true` if this date is after [now] (defaults to current time).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isAfterNow([DateTime? now]) => isAfter(now ?? DateTime.now());
 
   /// Checks if the date is in the past compared to the current date and time.
   ///
   /// Returns `true` if this date is before [now] (defaults to current time).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBeforeNow([DateTime? now]) => isBefore(now ?? DateTime.now());
 
   /// Returns `false` if [other] is `null`, otherwise returns the result of
   /// comparing this [DateTime] with [other] using the `isBefore` method.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBeforeNullable(DateTime? other) {
     if (other == null) {
@@ -34,6 +39,7 @@ extension DateTimeComparisonExtensions on DateTime {
 
   /// Returns `false` if [other] is `null`, otherwise returns the result of
   /// comparing this [DateTime] with [other] using the `isAfter` method.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isAfterNullable(DateTime? other) {
     if (other == null) {
@@ -47,12 +53,14 @@ extension DateTimeComparisonExtensions on DateTime {
   ///
   /// Returns `true` if this date's year matches [now]'s year.
   /// Pass [now] to override the current time (useful for testing).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isYearCurrent({DateTime? now}) => year == (now ?? DateTime.now()).year;
 
   /// Returns true if this date (date-only) is the same as or after [other].
   ///
   /// Compares only year/month/day — time components are ignored.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isSameDateOrAfter(DateTime other) {
     final DateTime selfDate = toDateOnly();
@@ -64,6 +72,7 @@ extension DateTimeComparisonExtensions on DateTime {
   /// Returns true if this date (date-only) is the same as or before [other].
   ///
   /// Compares only year/month/day — time components are ignored.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isSameDateOrBefore(DateTime other) {
     final DateTime selfDate = toDateOnly();
@@ -74,6 +83,7 @@ extension DateTimeComparisonExtensions on DateTime {
 
   /// Removes the time component from the [DateTime] object, returning only
   /// the date part (year, month, and day).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime toDateOnly() => DateTime(year, month, day);
 
@@ -85,6 +95,7 @@ extension DateTimeComparisonExtensions on DateTime {
   ///
   /// If [isInclusive] is `true` (default), the start and end dates of the range
   /// are included in the check. Returns `true` if [range] is `null`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isAnnualDateInRange(DateTimeRange? range, {bool isInclusive = true}) {
     if (range == null) {
@@ -94,6 +105,13 @@ extension DateTimeComparisonExtensions on DateTime {
     if (year == 0) {
       for (int checkYear = range.start.year; checkYear <= range.end.year; checkYear++) {
         final DateTime dateInYear = DateTime(checkYear, month, day);
+
+        // Skip years where this annual date does not exist: e.g. Feb 29 in a
+        // non-leap year, which DateTime silently normalizes to Mar 1. Testing
+        // the rolled-over Mar 1 would give a false match.
+        if (dateInYear.month != month || dateInYear.day != day) {
+          continue;
+        }
 
         if (dateInYear.isBetween(
           range.start,
@@ -116,6 +134,7 @@ extension DateTimeComparisonExtensions on DateTime {
   /// If [isInclusive] is `true` (default), the start and end dates of the range
   /// are included in the check (closed interval). If `false`, only dates
   /// strictly between start and end are considered in range (open interval).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBetweenRange(DateTimeRange? range, {bool isInclusive = true}) {
     if (range == null) {
@@ -129,6 +148,7 @@ extension DateTimeComparisonExtensions on DateTime {
   ///
   /// If [isInclusive] is `true` (default), [start] and [end] are included
   /// in the check. If `false`, only dates strictly between them match.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isBetween(DateTime start, DateTime end, {bool isInclusive = true}) {
     if (isInclusive) {
@@ -143,6 +163,7 @@ extension DateTimeComparisonExtensions on DateTime {
   /// later).
   ///
   /// Pass [now] to override the current time (useful for testing).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isDateAfterToday({DateTime? now}) {
     final DateTime currentNow = now ?? DateTime.now();
@@ -161,6 +182,7 @@ extension DateTimeComparisonExtensions on DateTime {
   ///
   /// Pass [now] to override the current time (useful for testing). If
   /// [ignoreYear] is `true`, the year is excluded from the comparison.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isToday({DateTime? now, bool ignoreYear = false}) {
     final DateTime resolvedNow = now ?? DateTime.now();
@@ -173,6 +195,7 @@ extension DateTimeComparisonExtensions on DateTime {
   /// as another [DateTime].
   ///
   /// Returns `true` when year, month, and day all match.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isSameDateOnly(DateTime other) =>
       year == other.year && month == other.month && day == other.day;
@@ -181,6 +204,7 @@ extension DateTimeComparisonExtensions on DateTime {
   /// [DateTime].
   ///
   /// Returns `true` when month and day match, ignoring year.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isSameDayMonth(DateTime other) => month == other.month && day == other.day;
 
@@ -188,6 +212,7 @@ extension DateTimeComparisonExtensions on DateTime {
   /// [DateTime].
   ///
   /// Returns `true` when the month values match.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isSameMonth(DateTime other) => month == other.month;
 }

@@ -26,6 +26,7 @@ extension DateConstantExtensions on DateTime {
   /// Returns `true` if the year, month, and day match the Unix epoch date,
   /// and `false` otherwise.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isUnixEpochDate =>
       year == DateConstants.unixEpochDate.year &&
@@ -38,6 +39,7 @@ extension DateConstantExtensions on DateTime {
   /// Returns `true` if the `DateTime` instance represents the exact
   /// Unix epoch date and time, and `false` otherwise.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get isUnixEpochDateTime => this == DateConstants.unixEpochDate;
 }

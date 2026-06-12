@@ -8,6 +8,7 @@ import 'dart:developer' as developer;
 const String _kTimeboxExceeded = 'Timebox exceeded';
 
 /// Runs [fn]; if not completed in [timeout], returns [onTimeout] result (or throws).
+/// Audited: 2026-06-12 11:26 EDT
 Future<T> timebox<T>(Future<T> Function() fn, Duration timeout, {T? onTimeout}) async {
   // Race fn() against a timer via a single Completer: whichever finishes first
   // wins, and the isCompleted guards make the loser a no-op (a Completer can be
@@ -40,10 +41,12 @@ Future<T> timebox<T>(Future<T> Function() fn, Duration timeout, {T? onTimeout}) 
 /// Thrown when [timebox] exceeds the allowed duration and no [onTimeout] was provided.
 class TimeboxException implements Exception {
   /// Creates the exception with a [message] describing the timeout.
+  /// Audited: 2026-06-12 11:26 EDT
   TimeboxException(String message) : _message = message;
   final String _message;
 
   /// Description of the timeout.
+  /// Audited: 2026-06-12 11:26 EDT
   String get message => _message;
 
   @override

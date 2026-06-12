@@ -12,10 +12,8 @@
 /// padded with 0, so every row is always length 7.
 library;
 
-/// One day, used to step the grid forward a single date at a time.
-const Duration _oneDay = Duration(days: 1);
-
 /// Strips the time component, normalizing to local midnight on the same date.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
 /// Counts how many [events] fall on each calendar date, keyed by date-only
@@ -26,6 +24,7 @@ DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 /// dailyCounts(<DateTime>[DateTime(2026, 3, 1, 9), DateTime(2026, 3, 1, 23)]);
 /// // { 2026-03-01: 2 }
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<DateTime, int> dailyCounts(Iterable<DateTime> events) {
   final Map<DateTime, int> counts = <DateTime, int>{};
   // Collapse each event to its date key so same-day events accumulate together.
@@ -50,6 +49,7 @@ Map<DateTime, int> dailyCounts(Iterable<DateTime> events) {
 /// heatmapGrid(d, DateTime(2026, 3, 2), DateTime(2026, 3, 8));
 /// // single week starting Monday 2026-03-02, with a 1 on Tuesday.
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<List<int>> heatmapGrid(
   Map<DateTime, int> daily,
   DateTime start,
@@ -67,7 +67,10 @@ List<List<int>> heatmapGrid(
   // completed even when [end] lands mid-week, keeping every row length 7.
   while (!day.isAfter(lastDay) || week.isNotEmpty) {
     week.add(day.isBefore(_dateOnly(start)) ? 0 : (daily[day] ?? 0));
-    day = day.add(_oneDay);
+    // Step with calendar fields, NOT `day.add(Duration(days: 1))`: a fixed 24h
+    // step on a LOCAL midnight lands at 01:00 across a spring-forward DST day,
+    // which then misses the date-only midnight keys in `daily` and reads 0.
+    day = DateTime(day.year, day.month, day.day + 1);
     if (week.length == DateTime.daysPerWeek) {
       weeks.add(week);
       week = <int>[];
@@ -81,6 +84,7 @@ List<List<int>> heatmapGrid(
 /// count.
 ///
 /// An empty map yields `(maxCount: 0, total: 0, activeDays: 0)`.
+/// Audited: 2026-06-12 11:26 EDT
 ({int maxCount, int total, int activeDays}) heatmapStats(Map<DateTime, int> daily) {
   int maxCount = 0;
   int total = 0;
@@ -102,7 +106,10 @@ List<List<int>> heatmapGrid(
 /// The most recent [weekStartsOn] weekday on or before [date]. Stepping back by
 /// the positive modulus aligns any date to its week's first column; the `+ 7`
 /// keeps the result non-negative when [date]'s weekday precedes [weekStartsOn].
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _weekStart(DateTime date, int weekStartsOn) {
   final int offset = (date.weekday - weekStartsOn + DateTime.daysPerWeek) % DateTime.daysPerWeek;
-  return date.subtract(Duration(days: offset));
+  // Calendar-field step (not `subtract(Duration(days: offset))`) so the week
+  // start stays at local midnight even when the span crosses a DST boundary.
+  return DateTime(date.year, date.month, date.day - offset);
 }

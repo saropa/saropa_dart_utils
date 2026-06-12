@@ -20,8 +20,8 @@ part 'simple_relative_day_types.dart';
 /// zero (Mar 10 → Mar 11 2024 in a US zone). Reading only the calendar fields
 /// also makes the delta independent of the receiver's UTC-vs-local kind, so a
 /// kind mismatch no longer shifts the day count by the zone offset.
-DateTime _toDateOnly(DateTime value) =>
-    DateTime.utc(value.year, value.month, value.day);
+/// Audited: 2026-06-12 11:26 EDT
+DateTime _toDateOnly(DateTime value) => DateTime.utc(value.year, value.month, value.day);
 
 /// Classifies a [DateTime] into a [SimpleRelativeDay] bucket relative to `now`.
 extension DateTimeSimpleRelativeDayExtension on DateTime {
@@ -43,8 +43,8 @@ extension DateTimeSimpleRelativeDayExtension on DateTime {
   /// DateTime(2024, 11, 15).getSimpleRelativeDay(now: now); // lastMonth
   /// DateTime(2025, 3, 15).getSimpleRelativeDay(now: now);  // null
   /// ```
-  SimpleRelativeDay? getSimpleRelativeDay({DateTime? now}) =>
-      getRelativeDayResult(now: now)?.type;
+  /// Audited: 2026-06-12 11:26 EDT
+  SimpleRelativeDay? getSimpleRelativeDay({DateTime? now}) => getRelativeDayResult(now: now)?.type;
 
   /// Returns the full [RelativeDayResult] (bucket plus optional weekday name)
   /// for this date relative to [now].
@@ -71,6 +71,7 @@ extension DateTimeSimpleRelativeDayExtension on DateTime {
   /// r?.type;        // nextWeekday
   /// r?.weekdayName; // 'Wednesday'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   RelativeDayResult? getRelativeDayResult({
     DateTime? now,
     String Function(DateTime)? weekdayFormatter,
@@ -96,6 +97,7 @@ extension DateTimeSimpleRelativeDayExtension on DateTime {
   /// Split out so [getRelativeDayResult] stays within the project's per-function
   /// length limit and so the cheap exact matches are checked before the more
   /// expensive weekday/month logic runs.
+  /// Audited: 2026-06-12 11:26 EDT
   RelativeDayResult? _exactBucket(int daysDiff) {
     // Ordered nearest-first; each offset is mutually exclusive by construction.
     switch (daysDiff) {
@@ -120,6 +122,7 @@ extension DateTimeSimpleRelativeDayExtension on DateTime {
   /// The weekday string is computed only inside this window and at most once, so
   /// a `null` formatter never runs for the exact/month buckets and a throwing
   /// formatter only fires when a weekday label was genuinely requested.
+  /// Audited: 2026-06-12 11:26 EDT
   RelativeDayResult? _weekdayWindowBucket(
     int daysDiff,
     DateTime dateOnly,
@@ -152,9 +155,9 @@ extension DateTimeSimpleRelativeDayExtension on DateTime {
   /// delta (same month, beyond the two-week window) and any delta of two or
   /// more months both return `null`: there is no compact relative label for
   /// those, so the caller can fall back to an absolute date.
+  /// Audited: 2026-06-12 11:26 EDT
   RelativeDayResult? _monthBucket(DateTime dateOnly, DateTime today) {
-    final int monthDiff =
-        (dateOnly.year - today.year) * 12 + dateOnly.month - today.month;
+    final int monthDiff = (dateOnly.year - today.year) * 12 + dateOnly.month - today.month;
 
     if (monthDiff == 1) {
       return const RelativeDayResult(SimpleRelativeDay.nextMonth);

@@ -63,6 +63,7 @@ abstract final class DateTimeUtils {
   /// Returns:
   ///   int?: The calculated age at death, or null if either [dob] or [dod]
   ///   is null, or if [dod] is before [dob].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int? calculateAgeAtDeath({required DateTime? dob, required DateTime? dod}) {
     // Check if either dob or dod is null
@@ -98,6 +99,7 @@ abstract final class DateTimeUtils {
   ///
   /// @param input The string to search for a 4-digit year.
   /// @return The extracted year as an integer, or null if no year is found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int? extractYear(String input) {
     // Regular expression to match a 4-digit year
@@ -122,6 +124,7 @@ abstract final class DateTimeUtils {
   /// Pass [now] to override the current date (useful for testing). The
   /// returned date has its time set to [hour], [minute], and [second]
   /// (all defaulting to 0).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime tomorrow({DateTime? now, int? hour, int minute = 0, int second = 0}) {
     // Calculate the date for tomorrow at the specified time
@@ -149,6 +152,7 @@ abstract final class DateTimeUtils {
   /// DateTimeUtils.isDateMonthFirst(localeName: 'en_US'); // true
   /// DateTimeUtils.isDateMonthFirst(localeName: 'de_DE'); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool isDateMonthFirst({required String localeName}) =>
       _monthFirstLocales.contains(localeName);
@@ -172,6 +176,7 @@ abstract final class DateTimeUtils {
   }) => count == 1 ? singular : plural;
 
   /// Joins duration parts with 'and' for readability.
+  /// Audited: 2026-06-12 11:26 EDT
   static String _joinWithAnd(List<String> parts) {
     if (parts.length == 1) {
       return parts[0];
@@ -200,12 +205,13 @@ abstract final class DateTimeUtils {
   /// Example:
   /// ```dart
   /// convertDaysToYearsAndMonths(400); // '1 year and 1 month'
-  /// convertDaysToYearsAndMonths(365); // '1 year'
+  /// convertDaysToYearsAndMonths(366); // '1 year' (365 days is only 11 months)
   /// convertDaysToYearsAndMonths(45); // '1 month'
-  /// convertDaysToYearsAndMonths(45, includeRemainingDays: true); // '1 month and 14 days'
+  /// convertDaysToYearsAndMonths(45, includeRemainingDays: true); // '1 month and 15 days'
   /// convertDaysToYearsAndMonths(10); // '0 days'
   /// convertDaysToYearsAndMonths(10, includeRemainingDays: true); // '10 days'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? convertDaysToYearsAndMonths(
     int? days, {
@@ -246,6 +252,7 @@ abstract final class DateTimeUtils {
   }
 
   /// Builds the list of duration parts (years, months, days).
+  /// Audited: 2026-06-12 11:26 EDT
   static List<String> _buildDurationParts({
     required int years,
     required int months,
@@ -280,6 +287,7 @@ abstract final class DateTimeUtils {
 
   /// Returns the first day of the month following the given [month] and [year],
   /// or `null` if [month] is invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime? firstDayNextMonth({required int month, required int year}) {
     // ref: https://stackoverflow.com/questions/61881850/sort-list-based-on-boolean
@@ -302,6 +310,7 @@ abstract final class DateTimeUtils {
   /// Returns the later of two dates.
   ///
   /// If [date2] is null, [date1] is returned.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime maxDate(DateTime date1, DateTime? date2) {
     if (date2 == null) {
@@ -314,6 +323,7 @@ abstract final class DateTimeUtils {
   /// Returns the earlier of two dates.
   ///
   /// If [date2] is null, [date1] is returned.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime minDate(DateTime date1, DateTime? date2) {
     if (date2 == null) {
@@ -326,6 +336,7 @@ abstract final class DateTimeUtils {
   /// Checks if the given year is a leap year.
   ///
   /// Returns true if the year is a leap year, false otherwise.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool isLeapYear({required int year}) {
     final bool isDivisibleBy4 = year % DateConstants.leapYearModulo4 == 0;
@@ -340,6 +351,7 @@ abstract final class DateTimeUtils {
   /// Takes into account leap years for February.
   ///
   /// Throws [ArgumentError] if [month] is not between 1 and 12.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int monthDayCount({required int year, required int month}) {
     if (month < DateConstants.minMonth || month > DateConstants.maxMonth) {
@@ -392,6 +404,7 @@ abstract final class DateTimeUtils {
   /// DateTimeUtils.monthDayCountSafe(year: null, month: 1); // 31
   /// DateTimeUtils.monthDayCountSafe(year: 2024, month: 13); // 30 (no throw)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int monthDayCountSafe({required int? year, required int month}) {
     // February is the only month whose length depends on the year, so it is
@@ -415,6 +428,7 @@ abstract final class DateTimeUtils {
   }
 
   /// Returns `true` if [value] is `null` or within [min]..[max] inclusive.
+  /// Audited: 2026-06-12 11:26 EDT
   static bool _isInRange({required int? value, required int min, required int max}) {
     if (value == null) {
       return true;
@@ -482,6 +496,7 @@ abstract final class DateTimeUtils {
   }
 
   /// Validates the [day] component given [month] and [year].
+  /// Audited: 2026-06-12 11:26 EDT
   static bool _isValidDay({int? day, int? month, int? year}) {
     if (day == null) {
       return true;

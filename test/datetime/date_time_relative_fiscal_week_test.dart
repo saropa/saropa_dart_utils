@@ -35,5 +35,16 @@ void main() {
       expect(m != null, isTrue);
       expect(m!.weekday, DateTime.monday);
     });
+
+    test('rejects a week the year does not have (2025 has 52 ISO weeks)', () {
+      // 2025-W53 is invalid: its Monday (2025-12-29) stays in 2025 but its
+      // Thursday lands in 2026, so the week belongs to 2026-W01, not 2025.
+      expect(parseIsoWeekString('2025-W53'), isNull);
+    });
+
+    test('accepts week 53 in a year that actually has it (2026)', () {
+      // 2026 starts on a Thursday, so it has 53 ISO weeks.
+      expect(parseIsoWeekString('2026-W53'), isNotNull);
+    });
   });
 }

@@ -45,6 +45,7 @@ enum UtcTimeDisplayEnum {
 /// formatUtcOffset(const Duration(hours: 5, minutes: 30)); // 'UTC+5:30'
 /// formatUtcOffset(Duration.zero, verbose: true);          // 'UTC±00:00'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String formatUtcOffset(Duration offset, {bool verbose = false}) {
   // Zero is signless: '±' communicates "no offset" without picking a direction.
   if (offset.inSeconds == 0) {

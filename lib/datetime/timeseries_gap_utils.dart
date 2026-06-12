@@ -27,6 +27,7 @@ import 'package:collection/collection.dart';
 ///   const Duration(hours: 1),
 /// ); // one gap from 00:00 to 03:00 (3h delta > 1.5h threshold)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<({DateTime start, DateTime end})> findGaps(
   List<DateTime> timestamps,
   Duration expectedInterval, {
@@ -66,7 +67,14 @@ List<({DateTime start, DateTime end})> findGaps(
 ///   const Duration(hours: 1),
 /// ); // [00:00, 01:00, 02:00, 03:00]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> fillMissing(List<DateTime> timestamps, Duration interval) {
+  // A non-positive interval would never advance `current` past `last`, so the
+  // fill loop would spin forever and grow `grid` until OOM. There is no grid to
+  // build without a positive step; return the input sorted as-is.
+  if (interval <= Duration.zero) {
+    return List<DateTime>.of(timestamps)..sort((DateTime a, DateTime b) => a.compareTo(b));
+  }
   // Fewer than two points can't define a grid span; return them sorted as-is.
   if (timestamps.length < 2) {
     return List<DateTime>.of(timestamps)..sort((DateTime a, DateTime b) => a.compareTo(b));
@@ -101,6 +109,7 @@ List<DateTime> fillMissing(List<DateTime> timestamps, Duration interval) {
 /// forwardFill(<num?>[null, 1, null, null, 3, null]);
 /// // [null, 1, 1, 1, 3, 3]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<num?> forwardFill(List<num?> values) {
   final List<num?> filled = <num?>[];
   num? last;

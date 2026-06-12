@@ -18,6 +18,7 @@ class BusinessCalendar {
   /// [weekendDays] are `DateTime.weekday` values (Mon = 1 … Sun = 7), defaulting
   /// to Saturday + Sunday. Pass e.g. `{DateTime.friday, DateTime.saturday}` for
   /// a Fri/Sat weekend.
+  /// Audited: 2026-06-12 11:26 EDT
   BusinessCalendar({
     Iterable<DateTime> holidays = const <DateTime>[],
     Set<int>? weekendDays,
@@ -37,15 +38,19 @@ class BusinessCalendar {
   final Set<DateTime> _holidays;
 
   /// Whether [date] falls on a configured weekend day.
+  /// Audited: 2026-06-12 11:26 EDT
   bool isWeekend(DateTime date) => weekendDays.contains(date.weekday);
 
   /// Whether [date]'s calendar day is in the holiday set.
+  /// Audited: 2026-06-12 11:26 EDT
   bool isHoliday(DateTime date) => _holidays.contains(_dateOnly(date));
 
   /// Whether [date] is a working day: neither a weekend nor a holiday.
+  /// Audited: 2026-06-12 11:26 EDT
   bool isBusinessDay(DateTime date) => !isWeekend(date) && !isHoliday(date);
 
   /// The first business day strictly after [date].
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime nextBusinessDay(DateTime date) {
     DateTime d = _addDays(_dateOnly(date), 1);
     while (!isBusinessDay(d)) {
@@ -55,6 +60,7 @@ class BusinessCalendar {
   }
 
   /// The first business day strictly before [date].
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime previousBusinessDay(DateTime date) {
     DateTime d = _addDays(_dateOnly(date), -1);
     while (!isBusinessDay(d)) {
@@ -66,6 +72,7 @@ class BusinessCalendar {
   /// Adds [n] business days to [date], skipping weekends and holidays. Negative
   /// [n] moves backward; `n == 0` returns [date] unchanged (time-of-day intact).
   /// The result is date-only at local midnight for any non-zero [n].
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime addBusinessDays(DateTime date, int n) {
     if (n == 0) {
       return date;
@@ -88,6 +95,7 @@ class BusinessCalendar {
   /// Counts business days in `[start, end)` — inclusive of [start], exclusive of
   /// [end]. Returns 0 when [end] is not after [start]. Weekends and holidays are
   /// excluded.
+  /// Audited: 2026-06-12 11:26 EDT
   int businessDaysBetween(DateTime start, DateTime end) {
     final DateTime stop = _dateOnly(end);
     DateTime day = _dateOnly(start);
@@ -106,6 +114,7 @@ class BusinessCalendar {
 
   /// Lists the business days in `[start, end)` in ascending order — inclusive of
   /// [start], exclusive of [end]. Empty when [end] is not after [start].
+  /// Audited: 2026-06-12 11:26 EDT
   List<DateTime> businessDaysIn(DateTime start, DateTime end) {
     final DateTime stop = _dateOnly(end);
     final List<DateTime> out = <DateTime>[];
@@ -122,8 +131,10 @@ class BusinessCalendar {
 
 /// Strips time and zone, yielding local midnight on the input's calendar day, so
 /// holiday storage and lookups share one canonical key.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
 /// Calendar-field day shift (not a `Duration`), so stepping never drifts across
 /// a DST boundary. Day overflow/underflow is normalized by the constructor.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _addDays(DateTime d, int days) => DateTime(d.year, d.month, d.day + days);

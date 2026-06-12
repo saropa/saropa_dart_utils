@@ -16,6 +16,7 @@ part of 'date_time_intl_display_extensions.dart';
 
 /// Fixed English `Month 15th, 1945` rendering for the ordinal path of
 /// [DateTimeIntlDisplayExtensions.dateDisplay].
+/// Audited: 2026-06-12 11:26 EDT
 String _ordinalDateDisplay(
   DateTime date,
   String monthFormat,
@@ -31,6 +32,7 @@ String _ordinalDateDisplay(
 
 /// Locale-reordered skeleton rendering for the non-ordinal path of
 /// [DateTimeIntlDisplayExtensions.dateDisplay].
+/// Audited: 2026-06-12 11:26 EDT
 String _skeletonDateDisplay(
   DateTime date,
   String monthFormat,
@@ -48,6 +50,7 @@ String _skeletonDateDisplay(
 
 /// Picks the weekday/year skeleton combination for
 /// [DateTimeIntlDisplayExtensions.makeDisplayDate].
+/// Audited: 2026-06-12 11:26 EDT
 String _displayDateFor(DateTime date, bool showYear, bool showWeekday, String? locale) {
   // Four skeletons: weekday vs not, year vs not. yMMMEd / MMMEd carry the
   // weekday (the leading "Thu, "); yMMMd / MMMd omit it.
@@ -61,11 +64,13 @@ String _displayDateFor(DateTime date, bool showYear, bool showWeekday, String? l
 /// any seconds suffix for [DateTimeIntlDisplayExtensions.makeDisplayTime]. The
 /// clock uses U+00A0 so "8:31 PM" never wraps; the ", N s" suffix keeps a
 /// normal breakable space.
+/// Audited: 2026-06-12 11:26 EDT
 String _composeDisplayTime(DateTime date, _ClockSpec spec, String? locale) {
   final String pattern = spec.clockPattern(hasMinutes: date.minute != 0);
   // Seconds suffix uses a normal breakable space; the clock itself is non-broken.
-  final String displaySeconds =
-      spec.hasSeconds ? ', ${DateFormat('ss', locale).format(date)} s' : '';
+  final String displaySeconds = spec.hasSeconds
+      ? ', ${DateFormat('ss', locale).format(date)} s'
+      : '';
   // U+00A0 inside the clock so "8:31 PM" never wraps; only the clock is non-broken.
   final String clock = DateFormat(pattern, locale).format(date).replaceAll(' ', ' ');
   return clock + displaySeconds;

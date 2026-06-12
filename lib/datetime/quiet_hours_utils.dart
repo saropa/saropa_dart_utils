@@ -19,6 +19,7 @@ library;
 class QuietWindow {
   /// Creates a window from [startMinute] to [endMinute] (0..1440), wrapping when
   /// start > end.
+  /// Audited: 2026-06-12 11:26 EDT
   const QuietWindow(this.startMinute, this.endMinute)
     : assert(startMinute >= 0 && startMinute <= 1440, 'startMinute must be 0..1440'),
       assert(endMinute >= 0 && endMinute <= 1440, 'endMinute must be 0..1440'),
@@ -31,6 +32,7 @@ class QuietWindow {
   final int endMinute;
 
   /// Whether [minuteOfDay] falls inside this window, honoring midnight wrap.
+  /// Audited: 2026-06-12 11:26 EDT
   bool containsMinute(int minuteOfDay) {
     if (startMinute < endMinute) {
       return minuteOfDay >= startMinute && minuteOfDay < endMinute;
@@ -45,9 +47,11 @@ class QuietWindow {
 /// queries. Immutable.
 class QuietHours {
   /// Creates quiet hours from [windows] (applied every day).
+  /// Audited: 2026-06-12 11:26 EDT
   const QuietHours(this.windows);
 
   /// Convenience for a single daily window `[startMinute, endMinute)`.
+  /// Audited: 2026-06-12 11:26 EDT
   factory QuietHours.daily(int startMinute, int endMinute) =>
       QuietHours(<QuietWindow>[QuietWindow(startMinute, endMinute)]);
 
@@ -55,6 +59,7 @@ class QuietHours {
   final List<QuietWindow> windows;
 
   /// Whether [at] falls inside any quiet window (minute resolution).
+  /// Audited: 2026-06-12 11:26 EDT
   bool isQuiet(DateTime at) {
     final int minute = _minuteOfDay(at);
     return windows.any((QuietWindow w) => w.containsMinute(minute));
@@ -64,6 +69,7 @@ class QuietHours {
   /// notification can be scheduled for then); otherwise null. Back-to-back and
   /// overlapping windows are chained so the result is the end of the contiguous
   /// quiet stretch, not just the first window.
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime? quietUntil(DateTime at) {
     if (!isQuiet(at)) {
       return null;
@@ -86,6 +92,7 @@ class QuietHours {
   }
 
   /// The latest end instant among the windows covering [at], or null if none.
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime? _latestEndCovering(DateTime at) {
     final int minute = _minuteOfDay(at);
     DateTime? latest;
@@ -110,6 +117,7 @@ class QuietHours {
   /// The instant window [w] (which covers [at] at [minute]) ends. A same-day
   /// window ends today; a wrapped window ends tomorrow when [at] is in the
   /// evening tail, today when it is in the morning head.
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime _endInstant(DateTime at, QuietWindow w, int minute) {
     final DateTime day = _dateOnly(at);
     if (w.startMinute < w.endMinute || minute < w.endMinute) {
@@ -120,19 +128,23 @@ class QuietHours {
 }
 
 /// Minutes past midnight for [t] (seconds/sub-second dropped — minute precision).
+/// Audited: 2026-06-12 11:26 EDT
 int _minuteOfDay(DateTime t) => t.hour * 60 + t.minute;
 
 /// Midnight on [d]'s calendar day, preserving its UTC-ness (so the returned
 /// instants stay in the input's zone).
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _dateOnly(DateTime d) =>
     d.isUtc ? DateTime.utc(d.year, d.month, d.day) : DateTime(d.year, d.month, d.day);
 
 /// Calendar-field day shift (not a `Duration`), DST-safe and UTC-preserving.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _addDays(DateTime d, int days) =>
     d.isUtc ? DateTime.utc(d.year, d.month, d.day + days) : DateTime(d.year, d.month, d.day + days);
 
 /// The instant [minute] minutes past midnight on [day], preserving its UTC-ness.
 /// `1440` normalizes to the next midnight.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _atMinute(DateTime day, int minute) {
   final int hour = minute ~/ 60;
   final int min = minute % 60;

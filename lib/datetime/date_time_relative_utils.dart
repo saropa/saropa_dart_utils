@@ -21,6 +21,7 @@ String _relativeUnit(int n, String singular, String plural) => n == 1 ? singular
 /// Returns a relative time string: "2 hours ago", "in 3 days", "just now".
 ///
 /// [clock] defaults to [DateTime.now]. English only.
+/// Audited: 2026-06-12 11:26 EDT
 String relativeTimeString(DateTime dateTime, {DateTime? clock}) {
   final DateTime now = clock ?? DateTime.now();
   final Duration diff = dateTime.difference(now);

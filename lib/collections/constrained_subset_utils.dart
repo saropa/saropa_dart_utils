@@ -91,7 +91,7 @@ List<_KeyedItem<T>> _keyEligible<T>(
 /// Computed as `exp(ln(u) / weight)` for numerical stability with large weights.
 /// Audited: 2026-06-12 11:26 EDT
 double _selectionKey(double weight, Random rng) {
-  // nextDouble() is in [0, 1); shift to (0, 1] so ln(u) is always finite.
+  // Note that nextDouble() is in [0, 1); shift to (0, 1] so ln(u) is always finite.
   final double u = 1.0 - rng.nextDouble();
   return exp(log(u) / weight);
 }

@@ -14,6 +14,7 @@ library;
 
 /// Validates the billing anchor day, throwing in release builds (unlike
 /// `assert`, which the compiler strips, letting bad input through unchecked).
+/// Audited: 2026-06-12 11:26 EDT
 void _checkAnchor(int anchorDay) {
   if (anchorDay < 1 || anchorDay > 31) {
     throw ArgumentError.value(anchorDay, 'anchorDay', 'must be 1..31');
@@ -21,11 +22,13 @@ void _checkAnchor(int anchorDay) {
 }
 
 /// Strips the time component, normalizing to local midnight on the same date.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
 /// Number of days in [month] of [year]. Day 0 of the next month is the last day
 /// of this month, which handles 28/29/30/31 and the December roll-over
 /// (`month + 1 == 13` normalizes to the next January) without a leap-year table.
+/// Audited: 2026-06-12 11:26 EDT
 int _daysInMonth(int year, int month) => DateTime(year, month + 1, 0).day;
 
 /// The billing date for [anchorDay] within [month] of [year], with the anchor
@@ -39,6 +42,7 @@ int _daysInMonth(int year, int month) => DateTime(year, month + 1, 0).day;
 /// // Anchor 31 in February 2024 (leap) clamps to the 29th.
 /// billingDateInMonth(2024, 2, 31); // 2024-02-29
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 DateTime billingDateInMonth(int year, int month, int anchorDay) {
   _checkAnchor(anchorDay);
 
@@ -61,6 +65,7 @@ DateTime billingDateInMonth(int year, int month, int anchorDay) {
 /// // Anchor 15, from the 20th -> next month's 15th.
 /// nextBillingDate(DateTime(2026, 3, 20), 15); // 2026-04-15
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 DateTime nextBillingDate(DateTime from, int anchorDay) {
   _checkAnchor(anchorDay);
 
@@ -86,6 +91,7 @@ DateTime nextBillingDate(DateTime from, int anchorDay) {
 /// billingSchedule(DateTime(2024, 1, 31), 31, 3);
 /// // [2024-01-31, 2024-02-29, 2024-03-31]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<DateTime> billingSchedule(DateTime start, int anchorDay, int count) {
   _checkAnchor(anchorDay);
   if (count < 0) {
@@ -117,6 +123,7 @@ List<DateTime> billingSchedule(DateTime start, int anchorDay, int count) {
 /// currentCycle(DateTime(2026, 3, 20), 15);
 /// // (start: 2026-03-15, end: 2026-04-15)
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 ({DateTime start, DateTime end}) currentCycle(DateTime on, int anchorDay) {
   _checkAnchor(anchorDay);
 

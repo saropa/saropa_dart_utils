@@ -5,6 +5,7 @@ import 'package:saropa_dart_utils/datetime/date_time_utils.dart';
 /// Fiscal year start/end (configurable start month).
 extension DateTimeFiscalExtensions on DateTime {
   /// Fiscal year when year starts in [startMonth] (1–12). E.g. startMonth 4 → FY runs Apr–Mar.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int fiscalYear({int startMonth = 1}) {
     if (startMonth < 1 || startMonth > DateConstants.maxMonth) return year;
@@ -13,6 +14,7 @@ extension DateTimeFiscalExtensions on DateTime {
   }
 
   /// Start of fiscal year (first day of [startMonth] at 00:00:00).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime startOfFiscalYear({int startMonth = 1}) {
     if (startMonth < 1 || startMonth > DateConstants.maxMonth) return DateTime(year);
@@ -21,6 +23,7 @@ extension DateTimeFiscalExtensions on DateTime {
   }
 
   /// End of fiscal year (last day of (startMonth-1) at 23:59:59.999999).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime endOfFiscalYear({int startMonth = 1}) {
     if (startMonth < 1 || startMonth > DateConstants.maxMonth) {

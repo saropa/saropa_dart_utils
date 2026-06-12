@@ -369,7 +369,10 @@ void main() {
           DateTime(9999, 12, 31),
         ]) {
           final ({int year, int month, int day}) hebrew = HebrewDateConverter.fromGregorian(date);
-          expect(hebrew.month, inInclusiveRange(1, HebrewDateConverter.monthsInHebrewYear(hebrew.year)));
+          expect(
+            hebrew.month,
+            inInclusiveRange(1, HebrewDateConverter.monthsInHebrewYear(hebrew.year)),
+          );
           final int dim = HebrewDateConverter.daysInHebrewMonth(hebrew.year, hebrew.month);
           expect(hebrew.day, inInclusiveRange(1, dim));
         }

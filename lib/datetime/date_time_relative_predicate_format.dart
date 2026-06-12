@@ -32,6 +32,7 @@ extension RelativeTimeFormatUtils on DateTime {
   /// DateTime(2024, 6, 20).relativeTime(now: DateTime(2024, 6, 15));
   /// //                                                    // "5 days from now"
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? relativeTime({
     DateTime? now,
@@ -84,6 +85,7 @@ extension RelativeTimeFormatUtils on DateTime {
 /// [_relativeTimeMessage] otherwise. Split out of
 /// [RelativeTimeFormatUtils.relativeTime] to keep that method within the
 /// function-length limit.
+/// Audited: 2026-06-12 11:26 EDT
 String? _relativePhraseBody({
   required DateTime from,
   required DateTime now,
@@ -117,6 +119,7 @@ String? _relativePhraseBody({
 /// then back off one if the anniversary has not yet occurred in [toDate]'s
 /// year. Returns `null` for sub-year spans so the caller falls through to the
 /// bucketed message (this is the off-by-one fix the date-based path exists for).
+/// Audited: 2026-06-12 11:26 EDT
 String? _relativeYearMessage({
   required DateTime fromDate,
   required DateTime toDate,
@@ -150,6 +153,7 @@ String? _relativeYearMessage({
 /// (seconds → minutes → hours → days → months → years). Bands are split into
 /// small helpers below to stay within the function-length limit; the threshold
 /// ladder and "about a …" cusps are preserved exactly.
+/// Audited: 2026-06-12 11:26 EDT
 String _relativeTimeMessage({
   required int elapsed,
   bool isDescriptive = true,

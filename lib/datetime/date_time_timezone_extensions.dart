@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Timezone offset string (e.g. +01:00, -05:30) from [DateTime].
 extension DateTimeTimezoneOffsetExtensions on DateTime {
   /// Offset string for the local timezone (e.g. +01:00). Uses [timeZoneOffset].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String get timeZoneOffsetString {
     final Duration offset = timeZoneOffset;

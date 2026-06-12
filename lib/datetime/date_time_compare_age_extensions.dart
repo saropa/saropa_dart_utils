@@ -33,6 +33,7 @@ import 'package:meta/meta.dart';
 /// compareAges(older, null, ascending: false);  // -1 (null still last)
 /// compareAges(null, null);                      //  0
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 @useResult
 int compareAges(DateTime? a, DateTime? b, {bool ascending = true}) {
   // Null handling runs before the direction multiplier so nulls stay LAST in

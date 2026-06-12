@@ -40,6 +40,7 @@ class RecurrenceSpec {
   /// types `OpenWindow`/`QuietWindow`): throwing from the constructor body would
   /// leave a partially built object, so a bad interval is treated as a
   /// programming error caught in debug rather than a recoverable runtime fault.
+  /// Audited: 2026-06-12 11:26 EDT
   const RecurrenceSpec(
     this.frequency, {
     this.interval = 1,
@@ -86,6 +87,7 @@ class RecurrenceSpec {
 ///   RecurrenceSpec(RecurrenceFrequency.weekly, interval: 2, weekday: DateTime.tuesday),
 /// ); // 'every 2 weeks on Tuesday'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String humanizeRecurrence(RecurrenceSpec spec) {
   // Dispatch on frequency; each branch reads only the fields it needs.
   switch (spec.frequency) {
@@ -101,10 +103,12 @@ String humanizeRecurrence(RecurrenceSpec spec) {
 }
 
 /// "every <singular>" for interval 1, otherwise "every N <plural>".
+/// Audited: 2026-06-12 11:26 EDT
 String _everyUnit(int interval, String singular, String plural) =>
     interval == 1 ? 'every $singular' : 'every $interval $plural';
 
 /// Weekly phrasing, appending " on <Weekday>" only when a weekday is set.
+/// Audited: 2026-06-12 11:26 EDT
 String _weekly(RecurrenceSpec spec) {
   // "weekly" reads better than "every week" for the interval-1 case.
   final String base = spec.interval == 1 ? 'weekly' : 'every ${spec.interval} weeks';
@@ -114,6 +118,7 @@ String _weekly(RecurrenceSpec spec) {
 
 /// Monthly phrasing: nth-weekday-of-month when both week + weekday are present,
 /// otherwise by month-day, otherwise the bare interval phrase.
+/// Audited: 2026-06-12 11:26 EDT
 String _monthly(RecurrenceSpec spec) {
   final String? dayName = WeekdayUtils.getDayLongName(spec.weekday);
 
@@ -131,6 +136,7 @@ String _monthly(RecurrenceSpec spec) {
 
 /// Yearly phrasing "yearly on <Month> <day>", falling back to the bare interval
 /// phrase when the month is missing.
+/// Audited: 2026-06-12 11:26 EDT
 String _yearly(RecurrenceSpec spec) {
   final int? month = spec.month;
   final int? monthDay = spec.monthDay;
@@ -146,6 +152,7 @@ String _yearly(RecurrenceSpec spec) {
 /// English ordinal for [n] (1 -> "1st", 2 -> "2nd", 3 -> "3rd", 11 -> "11th",
 /// 21 -> "21st"). The 11/12/13 exception always takes "th" regardless of the
 /// last digit, which is why the teens are checked before the ones digit.
+/// Audited: 2026-06-12 11:26 EDT
 String _ordinal(int n) {
   final int lastTwo = n % 100;
   // 11th, 12th, 13th are irregular and override the ones-digit rule below.

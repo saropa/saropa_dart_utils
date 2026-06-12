@@ -9,8 +9,7 @@ import 'package:saropa_dart_utils/datetime/date_time_intl_display_extensions.dar
 // space. Visible-content assertions use this so they do not depend on which
 // exact non-breaking code point the installed intl version produces; the
 // non-breaking INVARIANT is asserted separately against the raw string.
-String visible(String? s) =>
-    (s ?? '').replaceAll(' ', ' ').replaceAll(' ', ' ');
+String visible(String? s) => (s ?? '').replaceAll(' ', ' ').replaceAll(' ', ' ');
 
 void main() {
   // Required for non-en locales: date_symbol_data_local must load once per
@@ -102,14 +101,17 @@ void main() {
       // glyph: a paste/encoding glitch that swapped or flattened the CJK
       // characters would change these code points and fail the test.
       // 年 = U+5E74, 月 = U+6708, 日 = U+65E5.
-      expect(result.runes.toList(), equals(<int>[
-        0x31, 0x39, 0x34, 0x35, // 1945
-        0x5E74, //                年
-        0x31, //                  1
-        0x6708, //                月
-        0x31, 0x35, //            15
-        0x65E5, //                日
-      ]));
+      expect(
+        result.runes.toList(),
+        equals(<int>[
+          0x31, 0x39, 0x34, 0x35, // 1945
+          0x5E74, //                年
+          0x31, //                  1
+          0x6708, //                月
+          0x31, 0x35, //            15
+          0x65E5, //                日
+        ]),
+      );
     });
 
     test('should return empty string for an unknown locale (no throw)', () {
@@ -249,8 +251,11 @@ void main() {
       // DateTime(0) has year <= 0; the year > 0 guard must hide the year, so the
       // weekday+month+day form (no trailing ", <year>") is rendered.
       final String? result = DateTime(0, 7, 21).makeDisplayDate(locale: 'en_US');
-      final String? withoutYear =
-          DateTime(0, 7, 21).makeDisplayDate(locale: 'en_US', showWeekday: false);
+      final String? withoutYear = DateTime(
+        0,
+        7,
+        21,
+      ).makeDisplayDate(locale: 'en_US', showWeekday: false);
       expect(result, isNotNull);
       // No 4-digit year leaks through (the year > 0 guard suppressed it).
       expect(RegExp(r'\d{4}').hasMatch(result!), isFalse);
@@ -383,8 +388,10 @@ void main() {
     final DateTime at2031 = DateTime(2026, 1, 15, 20, 31, 45);
 
     test('should strip ASCII space from the twelveHourAMPM clock', () {
-      final String result =
-          at2031.utcTimeDisplay(UtcTimeDisplayEnum.twelveHourAMPM, locale: 'en_US');
+      final String result = at2031.utcTimeDisplay(
+        UtcTimeDisplayEnum.twelveHourAMPM,
+        locale: 'en_US',
+      );
       expect(result.contains(' '), isFalse);
       expect(result, startsWith('8:31'));
       expect(result, endsWith('PM'));
@@ -398,8 +405,10 @@ void main() {
     });
 
     test('should render twelveHourWithSecondsAMPM with seconds', () {
-      final String result =
-          at2031.utcTimeDisplay(UtcTimeDisplayEnum.twelveHourWithSecondsAMPM, locale: 'en_US');
+      final String result = at2031.utcTimeDisplay(
+        UtcTimeDisplayEnum.twelveHourWithSecondsAMPM,
+        locale: 'en_US',
+      );
       expect(result, startsWith('8:31:45'));
       expect(result, endsWith('PM'));
     });

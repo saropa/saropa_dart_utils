@@ -18,6 +18,7 @@ library;
 class CalendarEvent {
   /// Creates an event. [end] should not precede [start]; this is not enforced
   /// because a diff over malformed data should still classify, not throw.
+  /// Audited: 2026-06-12 11:26 EDT
   const CalendarEvent({
     required this.id,
     required this.start,
@@ -39,6 +40,7 @@ class CalendarEvent {
 
   /// True when [other] has the same start, end, and title (id is identity, not
   /// content, so it is excluded from the content comparison).
+  /// Audited: 2026-06-12 11:26 EDT
   bool sameContentAs(CalendarEvent other) =>
       start == other.start && end == other.end && title == other.title;
 
@@ -68,6 +70,7 @@ typedef CalendarDiff = ({
 /// d.added.length;   // events only in `after`
 /// d.changed.first;  // (before: ..., after: ...) for a moved event
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 CalendarDiff diffCalendars(List<CalendarEvent> before, List<CalendarEvent> after) {
   final Map<String, CalendarEvent> beforeById = <String, CalendarEvent>{
     for (final CalendarEvent e in before) e.id: e,

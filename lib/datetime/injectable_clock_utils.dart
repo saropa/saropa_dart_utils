@@ -4,6 +4,7 @@ library;
 /// Abstract clock; implementations provide a deterministic or live "now".
 abstract class InjectableClockUtils {
   /// Current time for this clock.
+  /// Audited: 2026-06-12 11:26 EDT
   DateTime now();
 }
 
@@ -21,6 +22,7 @@ class SystemClock implements InjectableClockUtils {
 /// Fixed clock for tests.
 class FixedClock implements InjectableClockUtils {
   /// Creates a clock whose [now] always returns the fixed [DateTime].
+  /// Audited: 2026-06-12 11:26 EDT
   FixedClock(this._now);
   final DateTime _now;
 
@@ -35,9 +37,11 @@ final _defaultClockHolder = _ClockHolder(SystemClock());
 
 /// Current clock used by code that depends on injectable time.
 /// Tests can set this to a [FixedClock] for deterministic "now".
+/// Audited: 2026-06-12 11:26 EDT
 InjectableClockUtils get defaultClock => _defaultClockHolder.clock;
 
 /// Sets the injectable clock (e.g. [FixedClock] in tests).
+/// Audited: 2026-06-12 11:26 EDT
 set defaultClock(InjectableClockUtils value) => _defaultClockHolder.clock = value;
 
 class _ClockHolder {

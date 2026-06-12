@@ -156,11 +156,13 @@ abstract final class MonthUtils {
   static const List<int> monthNumbers = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   /// Returns the full name of the given [month] (1-12), or `null` if invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getMonthLongName(int month) => monthLongNames[month];
 
   /// Returns the abbreviated name of the given [month] (1-12), or `null` if
   /// [month] is `null` or invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getMonthShortName(int? month) => month == null ? null : monthShortNames[month];
 }
@@ -191,12 +193,14 @@ abstract final class WeekdayUtils {
 
   /// Returns the full name of the given [dayOfWeek] (1=Monday, 7=Sunday), or
   /// `null` if [dayOfWeek] is `null` or invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getDayLongName(int? dayOfWeek) =>
       dayOfWeek == null ? null : dayLongNames[dayOfWeek];
 
   /// Returns the abbreviated name of the given [dayOfWeek] (1=Monday,
   /// 7=Sunday), or `null` if [dayOfWeek] is `null` or invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? getDayShortName(int? dayOfWeek) =>
       dayOfWeek == null ? null : dayShortNames[dayOfWeek];
@@ -211,6 +215,7 @@ abstract final class SerialDateUtils {
   ///
   /// Returns:
   ///   A DateTime object, or null if the string is null, empty, or invalid.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime? serialToDateTime(String? dateWithT) {
     if (dateWithT == null || dateWithT.isEmpty) {

@@ -8,6 +8,7 @@ const String _kLast30Days = 'last 30 days';
 const String _kOlder = 'older';
 
 /// Bucket label for [date] relative to [today]. Returns short label.
+/// Audited: 2026-06-12 11:26 EDT
 String relativeDateBucket(DateTime date, DateTime today) {
   // Compare date-only (drop the time component) so the bucket reflects calendar
   // days, not elapsed 24-hour spans — otherwise "this morning vs last night"

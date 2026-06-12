@@ -3,6 +3,7 @@ import 'package:saropa_dart_utils/datetime/date_time_bounds_extensions.dart';
 /// Business days between two dates (excludes weekends; no holiday support).
 ///
 /// [start] and [end] are date-only (time ignored). Count is exclusive of [end].
+/// Audited: 2026-06-12 11:26 EDT
 int businessDaysBetween(DateTime start, DateTime end) {
   final DateTime s = DateTime(start.year, start.month, start.day);
   final DateTime e = DateTime(end.year, end.month, end.day);
@@ -17,6 +18,7 @@ int businessDaysBetween(DateTime start, DateTime end) {
 }
 
 /// Adds [n] business days to [date] (skips weekends). Negative [n] goes backward.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime addBusinessDays(DateTime date, int n) {
   // Zero offset is a no-op: return the original (with its time-of-day intact)
   // rather than the date-only normalization the loop would otherwise impose.

@@ -12,6 +12,7 @@ extension DateTimeCalendarExtensions on DateTime {
   ///
   /// Returns:
   ///   int: The calculated age.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int calculateAgeFromNow({DateTime? now}) => calculateAgeFromDate(now ?? DateTime.now());
 
@@ -22,6 +23,7 @@ extension DateTimeCalendarExtensions on DateTime {
   ///
   /// Returns:
   ///   int: The calculated age.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int calculateAgeFromDate(DateTime fromDate) {
     int age = fromDate.year - year;
@@ -35,6 +37,7 @@ extension DateTimeCalendarExtensions on DateTime {
   }
 
   /// Returns the most recent Sunday before or on this date.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime get mostRecentSunday => mostRecentWeekday(DateTime.sunday);
 
@@ -45,16 +48,22 @@ extension DateTimeCalendarExtensions on DateTime {
   ///
   /// **Returns:**
   /// The most recent date that falls on the target weekday.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime mostRecentWeekday(int weekdayTarget) =>
       DateTime(year, month, day - (weekday - weekdayTarget) % DateConstants.daysPerWeek);
 
   /// Returns the day of the year (1-366).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get dayOfYear {
-    final DateTime jan1 = DateTime(year);
+    // Use UTC date-only endpoints so the day count is exact. A local-time
+    // `difference(jan1).inDays` truncates the DST-shortened span and reports one
+    // day low for dates after a spring-forward transition.
+    final DateTime jan1 = DateTime.utc(year);
+    final DateTime today = DateTime.utc(year, month, day);
 
-    return difference(jan1).inDays + 1;
+    return today.difference(jan1).inDays + 1;
   }
 
   /// Returns a raw week-of-year value used internally.
@@ -63,19 +72,22 @@ extension DateTimeCalendarExtensions on DateTime {
   /// to the last ISO week of the previous year, or 53 for dates in late
   /// December that belong to week 1 of the next year. Use `weekNumber` for
   /// fully ISO 8601-compliant results.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get weekOfYear =>
       ((dayOfYear - weekday + DateConstants.isoWeekOffset) / DateConstants.daysPerWeek).floor();
 
   /// Returns the number of ISO weeks in the specified year.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int numOfWeeks(int targetYear) {
-    final DateTime dec28 = DateTime(
+    // UTC date-only endpoints so the day index is DST-exact (see [dayOfYear]).
+    final DateTime dec28 = DateTime.utc(
       targetYear,
       DateTime.december,
       DateConstants.isoWeekReferenceDay,
     );
-    final DateTime jan1 = DateTime(targetYear);
+    final DateTime jan1 = DateTime.utc(targetYear);
     final int dayOfDec28 = dec28.difference(jan1).inDays + 1;
 
     return ((dayOfDec28 - dec28.weekday + DateConstants.isoWeekOffset) / DateConstants.daysPerWeek)
@@ -90,6 +102,7 @@ extension DateTimeCalendarExtensions on DateTime {
   ///
   /// Prefer this over `weekOfYear` for any user-facing or standards-compliant
   /// week calculations.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int weekNumber() {
     if (weekOfYear < 1) {
@@ -104,6 +117,7 @@ extension DateTimeCalendarExtensions on DateTime {
   }
 
   /// Converts this DateTime to a serial string format (yyyyMMdd'T'HHmmss).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String get toSerialString {
     final String yearPad = year.toString().padLeft(DateConstants.yearStringWidth, '0');
@@ -117,6 +131,7 @@ extension DateTimeCalendarExtensions on DateTime {
   }
 
   /// Converts this DateTime to a serial day string format (yyyyMMdd).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String get toSerialStringDay {
     final String yearPad = year.toString().padLeft(DateConstants.yearStringWidth, '0');
@@ -135,6 +150,7 @@ extension DateTimeCalendarExtensions on DateTime {
   ///
   /// Always returns a non-null [DateTime]. Returns the original instance if
   /// [offset] is 0.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime getUtcTimeFromLocal(double offset) {
     if (offset == 0) {
@@ -150,6 +166,7 @@ extension DateTimeCalendarExtensions on DateTime {
   /// Sets the time of the current [DateTime] to the specified [TimeOfDay].
   ///
   /// Returns a new [DateTime] with the same date but the given [time].
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime setTime({required TimeOfDay time}) => DateTime(year, month, day, time.hour, time.minute);
 
@@ -157,6 +174,7 @@ extension DateTimeCalendarExtensions on DateTime {
   ///
   /// If [shouldRoundUp] is `true`, the result is rounded up to the next
   /// alignment boundary. Defaults to rounding down.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   DateTime alignDateTime({
     required Duration alignment,

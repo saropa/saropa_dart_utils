@@ -52,6 +52,7 @@ extension DateTimeIntlDisplayExtensions on DateTime {
   /// top-level [formatUtcOffset] with a fixed `Duration` instead. Returns
   /// `null` on any failure so a display string never throws. See
   /// [formatUtcOffset] for the verbose/minute-eliding rules and examples.
+  /// Audited: 2026-06-12 11:26 EDT
   String? getUtcOffset({bool verbose = false}) {
     try {
       return formatUtcOffset(timeZoneOffset, verbose: verbose);
@@ -73,6 +74,7 @@ extension DateTimeIntlDisplayExtensions on DateTime {
   /// ```dart
   /// DateTime(2026, 1, 15, 22, 30).toDateFormat('HH:mm'); // '22:30'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   String toDateFormat(
     String format, {
     String? locale,
@@ -85,8 +87,9 @@ extension DateTimeIntlDisplayExtensions on DateTime {
       return '';
     }
     try {
-      final String suffix =
-          showLogTimeMilliseconds ? '.${millisecond.toString().padLeft(4, '0')}' : '';
+      final String suffix = showLogTimeMilliseconds
+          ? '.${millisecond.toString().padLeft(4, '0')}'
+          : '';
       return DateFormat(format, locale).format(this) + suffix;
       // Invalid pattern / locale must degrade to empty rather than crash a UI.
       // ignore: require_catch_logging -- display contract: never throw, callers get ''

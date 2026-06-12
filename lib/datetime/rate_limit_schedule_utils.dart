@@ -24,6 +24,7 @@ class RateLimitSchedule {
   /// At most [maxPerPeriod] fires per rolling [period], each at least
   /// [cooldown] after the previous. Requires `maxPerPeriod >= 1` and a
   /// positive [period]; [cooldown] defaults to zero.
+  /// Audited: 2026-06-12 11:26 EDT
   RateLimitSchedule({
     required int maxPerPeriod,
     required Duration period,
@@ -51,6 +52,7 @@ class RateLimitSchedule {
   /// // Three requests at the same instant -> third slips to the next window.
   /// s.shape(<DateTime>[t, t, t]); // [t, t, t + 1h]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   List<DateTime> shape(List<DateTime> requested) {
     final List<DateTime> admitted = <DateTime>[];
     for (final DateTime request in requested) {

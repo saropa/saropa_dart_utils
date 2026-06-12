@@ -3,6 +3,7 @@ part of 'date_time_relative_predicate_extensions.dart';
 /// Sub-minute bands: under 45s renders "a moment" / "now"; 45–90s renders the
 /// singular "a minute" / "a min". Returns `null` above 90s so the caller
 /// advances to the minute band.
+/// Audited: 2026-06-12 11:26 EDT
 String? _relativeSubMinuteMessage(num seconds, bool isDescriptive) {
   if (seconds < 45) {
     return isDescriptive ? 'a moment' : relativeNowTime;
@@ -18,6 +19,7 @@ String? _relativeSubMinuteMessage(num seconds, bool isDescriptive) {
 /// Minute band: under 45 minutes renders "N minutes"; 45–100 minutes is the
 /// "about an hour" / "~1h" cusp. Returns `null` at/above 100 minutes so the
 /// caller advances to the hour band.
+/// Audited: 2026-06-12 11:26 EDT
 String? _relativeMinuteMessage(num minutes, bool isDescriptive, bool roundUp) {
   if (minutes < 45) {
     final int display = roundUp ? minutes.round() : minutes.floor();
@@ -38,6 +40,7 @@ String? _relativeMinuteMessage(num minutes, bool isDescriptive, bool roundUp) {
 /// Hour band: under 24 hours renders "N hours"; 24–48 hours is the "a day" /
 /// "~1d" cusp. Returns `null` at/above 48 hours so the caller advances to the
 /// day band.
+/// Audited: 2026-06-12 11:26 EDT
 String? _relativeHourMessage(num hours, bool isDescriptive, bool roundUp) {
   if (hours < 24) {
     final int display = roundUp ? hours.round() : hours.floor();
@@ -59,6 +62,7 @@ String? _relativeHourMessage(num hours, bool isDescriptive, bool roundUp) {
 /// "N months" (rough 30-day month) under 365d, then the "about a year" cusp and
 /// "N years" (days/365.25) as the final fallback for year-level spans that the
 /// calendar-year path declined.
+/// Audited: 2026-06-12 11:26 EDT
 String _relativeDayMessage(num days, bool isDescriptive, bool roundUp) {
   if (days < 30) {
     final int display = roundUp ? days.round() : days.floor();
@@ -90,6 +94,7 @@ String _relativeDayMessage(num days, bool isDescriptive, bool roundUp) {
 /// Year fallback reached only when the calendar-year algorithm declined a
 /// year-level span: uses days/365.25, with a "about a year" cusp under 1.1
 /// years. Kept separate so [_relativeDayMessage] stays within the length limit.
+/// Audited: 2026-06-12 11:26 EDT
 String _relativeFallbackYearMessage(num days, bool isDescriptive, bool roundUp) {
   final num years = days / 365.25;
 

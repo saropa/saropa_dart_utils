@@ -16,6 +16,7 @@ extension DateTimeIntlDateDisplayExtensions on DateTime {
   /// ```dart
   /// DateTime(1945, 1, 15).dateDisplay(locale: 'en_US'); // 'Jan 15, 1945'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   String dateDisplay({
     String monthFormat = 'MMM',
     bool showDayOrdinal = false,
@@ -40,6 +41,7 @@ extension DateTimeIntlDateDisplayExtensions on DateTime {
   /// — the `year > 0` guard suppresses the year for the BCE/placeholder dates
   /// `DateTime(0)` produces, which would otherwise render a misleading "1".
   /// [showWeekday] toggles the leading weekday.
+  /// Audited: 2026-06-12 11:26 EDT
   String? makeDisplayDate({
     bool showYear = true,
     bool showCurrentYear = false,
@@ -65,6 +67,7 @@ extension DateTimeIntlDateDisplayExtensions on DateTime {
   /// Uses the `yMMMMd` skeleton so component order follows the language — a
   /// literal `'d MMMM yyyy'` pattern would lock English order. Returns `''`
   /// (never throws) on an unloaded locale.
+  /// Audited: 2026-06-12 11:26 EDT
   String fullDateDisplay({String? locale}) {
     try {
       return DateFormat.yMMMMd(locale).format(this);
@@ -80,6 +83,7 @@ extension DateTimeIntlDateDisplayExtensions on DateTime {
   /// [ddMMyyFormat] forces the fixed `dd MMM yy` pattern instead of the locale
   /// `yMd` skeleton. Returns `null` on failure (unloaded locale) so callers can
   /// fall back to another format.
+  /// Audited: 2026-06-12 11:26 EDT
   String? formatByLocale({String? locale, bool ddMMyyFormat = false}) {
     try {
       return ddMMyyFormat

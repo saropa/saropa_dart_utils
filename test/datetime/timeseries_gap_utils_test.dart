@@ -107,6 +107,16 @@ void main() {
     test('should return empty for no samples', () {
       expect(fillMissing(<DateTime>[], hourly), isEmpty);
     });
+
+    test('should return the input sorted for a zero/negative interval (no hang)', () {
+      // A non-positive interval cannot advance the grid; the fill loop must NOT
+      // spin forever. The samples come back sorted instead.
+      final List<DateTime> input = <DateTime>[DateTime(2026, 1, 1, 3), DateTime(2026, 1, 1)];
+      expect(
+        fillMissing(input, Duration.zero),
+        equals(<DateTime>[DateTime(2026, 1, 1), DateTime(2026, 1, 1, 3)]),
+      );
+    });
   });
 
   group('forwardFill', () {

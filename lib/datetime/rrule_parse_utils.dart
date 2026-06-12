@@ -20,15 +20,19 @@ import 'package:meta/meta.dart';
 /// frequencies (HOURLY/MINUTELY/SECONDLY) are outside this subset.
 enum RecurFrequency {
   /// Every [RecurrenceRule.interval] days.
+  /// Audited: 2026-06-12 11:26 EDT
   daily('DAILY'),
 
   /// Every [RecurrenceRule.interval] weeks.
+  /// Audited: 2026-06-12 11:26 EDT
   weekly('WEEKLY'),
 
   /// Every [RecurrenceRule.interval] months.
+  /// Audited: 2026-06-12 11:26 EDT
   monthly('MONTHLY'),
 
   /// Every [RecurrenceRule.interval] years.
+  /// Audited: 2026-06-12 11:26 EDT
   yearly('YEARLY');
 
   const RecurFrequency(this.token);
@@ -41,24 +45,31 @@ enum RecurFrequency {
 /// number so the iterator can match without a second lookup table.
 enum RecurWeekday {
   /// Monday (`MO`).
+  /// Audited: 2026-06-12 11:26 EDT
   monday(1, 'MO'),
 
   /// Tuesday (`TU`).
+  /// Audited: 2026-06-12 11:26 EDT
   tuesday(2, 'TU'),
 
   /// Wednesday (`WE`).
+  /// Audited: 2026-06-12 11:26 EDT
   wednesday(3, 'WE'),
 
   /// Thursday (`TH`).
+  /// Audited: 2026-06-12 11:26 EDT
   thursday(4, 'TH'),
 
   /// Friday (`FR`).
+  /// Audited: 2026-06-12 11:26 EDT
   friday(5, 'FR'),
 
   /// Saturday (`SA`).
+  /// Audited: 2026-06-12 11:26 EDT
   saturday(6, 'SA'),
 
   /// Sunday (`SU`).
+  /// Audited: 2026-06-12 11:26 EDT
   sunday(7, 'SU');
 
   const RecurWeekday(this.isoWeekday, this.code);
@@ -75,6 +86,7 @@ enum RecurWeekday {
 @immutable
 class RecurrenceRule {
   /// Creates a rule. Only [frequency] is required.
+  /// Audited: 2026-06-12 11:26 EDT
   const RecurrenceRule({
     required this.frequency,
     this.interval = 1,
@@ -159,6 +171,7 @@ class _RuleParts {
   /// Dispatches one parsed `NAME=VALUE` part to the matching field. Defined on
   /// the holder (mutating `this`, not a parameter) so each parser stays small.
   /// An unknown name throws so an unsupported constraint can't be dropped.
+  /// Audited: 2026-06-12 11:26 EDT
   void apply(String name, String value) {
     // One case per RFC 5545 RRULE part name. Each delegates to a typed parser
     // that validates and throws on malformed input, so a bad value can't reach
@@ -211,6 +224,7 @@ final Map<String, RecurWeekday> _weekdayByCode = <String, RecurWeekday>{
 /// ```dart
 /// parseRrule('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR;COUNT=10');
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 RecurrenceRule parseRrule(String input) {
   final _RuleParts parts = _RuleParts();
   // Drop an optional `RRULE:` content-line prefix so both forms parse.
@@ -308,11 +322,13 @@ int _parseInt(String s, String part) {
 /// fields by group lets [_parseUntil] build the [DateTime] directly — no
 /// substring slicing and no `DateTime.parse` (both of which the analyzer flags
 /// as unbounded/unvalidated on dynamic input).
+/// Audited: 2026-06-12 11:26 EDT
 final RegExp _untilPattern = RegExp(r'^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2}))?Z?$');
 
 /// Parses an RRULE `UNTIL` value into a [DateTime]. A trailing `Z` yields a UTC
 /// instant; otherwise the result is local (a floating UNTIL). A missing time
 /// defaults to midnight.
+/// Audited: 2026-06-12 11:26 EDT
 DateTime _parseUntil(String value) {
   final RegExpMatch? m = _untilPattern.firstMatch(value);
   if (m == null) {

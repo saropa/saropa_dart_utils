@@ -48,6 +48,7 @@ String? _millisPart(int millis, bool isIncludeMilliseconds, bool isShort) {
 /// Formats [Duration] as a short string (e.g. "2h 30m" or "1d 2h").
 ///
 /// [isIncludeSeconds] and [isIncludeMilliseconds] add smaller units when non-zero.
+/// Audited: 2026-06-12 11:26 EDT
 String formatDuration(
   Duration d, {
   bool isShort = true,

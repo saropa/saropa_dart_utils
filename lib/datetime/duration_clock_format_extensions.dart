@@ -45,6 +45,7 @@ extension DurationClockFormatExtensions on Duration {
   /// Duration(minutes: 5, seconds: 30, milliseconds: 50)
   ///     .displayTime(showHours: false); // '05:30.050'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String displayTime({bool showHours = true}) {
     // Hours are unbounded (no mod-24) so timers past a day stay correct.
@@ -88,6 +89,7 @@ extension DurationClockFormatExtensions on Duration {
   /// Duration(hours: 1).formatDuration(shortForm: false); // '1 hour'
   /// Duration.zero.formatDuration(); // 'Instantaneous'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String? formatDuration({bool showLeadingZeros = false, bool shortForm = true}) {
     // Zero has no units to enumerate; sentinel avoids an empty join result.
@@ -95,7 +97,10 @@ extension DurationClockFormatExtensions on Duration {
       return 'Instantaneous';
     }
 
-    final List<String> formatted = _unitParts(showLeadingZeros: showLeadingZeros, shortForm: shortForm);
+    final List<String> formatted = _unitParts(
+      showLeadingZeros: showLeadingZeros,
+      shortForm: shortForm,
+    );
 
     // The list only ever holds non-null strings; the filter drops any empties
     // (inlined replacement for the app's joinNotNullOrEmpty helper).
@@ -113,6 +118,7 @@ extension DurationClockFormatExtensions on Duration {
   /// Duration(hours: 1).reverse().inHours; // -1
   /// Duration(hours: -1).reverse().inHours; // 1
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Duration reverse() => this * -1;
 
@@ -121,8 +127,10 @@ extension DurationClockFormatExtensions on Duration {
   /// Extracted so [formatDuration] stays under the 20-line limit. Uses
   /// [int.remainder] (sign-preserving) rather than `%` so the joined output
   /// matches the source app's behavior for negative inputs.
+  /// Audited: 2026-06-12 11:26 EDT
   List<String> _unitParts({required bool showLeadingZeros, required bool shortForm}) {
     /// Pad to two digits only when the value is single-digit AND padding asked.
+    /// Audited: 2026-06-12 11:26 EDT
     String twoDigits(int n) => n >= 10 || !showLeadingZeros ? '$n' : '0$n';
 
     final int minRemainder = inMinutes.remainder(60);

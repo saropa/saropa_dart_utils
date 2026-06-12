@@ -170,5 +170,14 @@ void main() {
       );
       expect(dates.first.isUtc, isTrue);
     });
+
+    test('should terminate on an impossible rule instead of hanging', () {
+      // FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=30 can never resolve (Feb 30 does not
+      // exist), so the iterator yields nothing. take(1) must return [] rather
+      // than spinning forever on empty periods.
+      final RecurrenceRule rule = parseRrule('FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=30');
+      final List<DateTime> dates = expandRecurrence(rule, DateTime(2026, 1, 1)).take(1).toList();
+      expect(dates, isEmpty);
+    });
   });
 }

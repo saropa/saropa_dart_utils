@@ -33,6 +33,7 @@ extension RelativeTimeUtils on DateTime {
   /// DateTime(2024, 6, 16).isTomorrow(now: now); // true
   /// DateTime(2024, 6, 15).isTomorrow(now: now); // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isTomorrow({DateTime? now}) {
     final DateTime tomorrow = (now ?? DateTime.now()).add(const Duration(days: 1));
@@ -55,6 +56,7 @@ extension RelativeTimeUtils on DateTime {
   /// final now = DateTime(2024, 3, 1);
   /// DateTime(2024, 2, 29).isYesterday(now: now); // true (leap day)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isYesterday({DateTime? now}) {
     final DateTime yesterday = (now ?? DateTime.now()).subtract(const Duration(days: 1));
@@ -79,6 +81,7 @@ extension RelativeTimeUtils on DateTime {
   /// DateTime(2024, 6, 14).isOlderThanToday(now: now);        // true
   /// DateTime(2024, 6, 15, 8).isOlderThanToday(now: now);     // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isOlderThanToday({DateTime? now}) {
     final DateTime resolvedNow = now ?? DateTime.now();
@@ -110,6 +113,7 @@ extension RelativeTimeUtils on DateTime {
   /// DateTime(2024, 6, 13).isOlderThanYesterday(now: now); // true
   /// DateTime(2024, 6, 14).isOlderThanYesterday(now: now); // false (yesterday)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isOlderThanYesterday({DateTime? now}) {
     final DateTime resolvedNow = now ?? DateTime.now();
