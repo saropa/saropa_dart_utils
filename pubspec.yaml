@@ -56,7 +56,7 @@ dev_dependencies:
   # Already resolved transitively via saropa_lints/custom_lint at this version;
   # pinned here as a DIRECT dev_dependency because a tool/ script may not import
   # a transitive-only package (same publish rule that meta/fake_async document).
-  analyzer: ^11.0.0
+  analyzer: ">=11.0.0 <13.0.0"
 
   # Controls virtual time in tests (debounce_utils_test, heartbeat_utils_test).
   # Must be a DIRECT dev_dependency, not transitive (it arrives via flutter_test):
