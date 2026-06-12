@@ -29,6 +29,7 @@ extension Uint8ListExtension on Uint8List {
   /// final List<int> ints = bytes.toIntList(); // [0, 1, 255], growable, independent
   /// ints.add(7); // succeeds — the result is growable
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<int> toIntList() => map((int e) => e).toList();
 }
@@ -62,6 +63,7 @@ extension IntListExtension on List<int> {
   /// ```dart
   /// final Uint8List bytes = <int>[0, 257, -1].toUint8List(); // [0, 1, 255]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Uint8List toUint8List() => Uint8List.fromList(this);
 }

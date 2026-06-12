@@ -7,6 +7,7 @@ abstract final class GestureUtils {
   /// [_swipeSpeedThresholds].
   ///
   /// This method is private and can only be accessed within this class.
+  /// Audited: 2026-06-12 11:26 EDT
   static SwipeSpeed getSwipeSpeed(double speed) {
     if (speed < (_swipeSpeedThresholds[SwipeSpeed.minimal] ?? 0)) {
       return SwipeSpeed.minimal;

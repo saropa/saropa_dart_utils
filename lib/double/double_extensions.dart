@@ -27,6 +27,7 @@ extension DoubleExtensions on double {
   /// 15.0.hasDecimals; // false
   /// 15.00.hasDecimals; // false
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get hasDecimals {
     if (isNaN || isInfinite) {
@@ -52,6 +53,7 @@ extension DoubleExtensions on double {
   /// 0.999.toPercentage(); // '99%' (rounded down)
   /// 0.999.toPercentage(roundDown: false); // '100%'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toPercentage({int decimalPlaces = 0, bool doRoundDown = true}) {
     if (!doRoundDown) {
@@ -89,6 +91,7 @@ extension DoubleExtensions on double {
   /// 15.5.formatDouble(2, showTrailingZeros: false); // '15.5'
   /// 15.05.formatDouble(2, showTrailingZeros: false); // '15.05'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String formatDouble(int decimalPlaces, {bool showTrailingZeros = true}) {
     if (isNaN) {
@@ -124,6 +127,7 @@ extension DoubleExtensions on double {
   /// (-5.0).forceBetween(0.0, 10.0); // 0.0
   /// 15.0.forceBetween(0.0, 10.0); // 10.0
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double forceBetween(double from, double to) {
     if (this < from) {
@@ -150,6 +154,7 @@ extension DoubleExtensions on double {
   /// 3.149.toPrecision(2); // 3.14 (truncated, not rounded)
   /// (-3.149).toPrecision(2); // -3.14
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double toPrecision(int precision) {
     final num multiplier = pow(_base10, precision);
@@ -171,7 +176,10 @@ extension DoubleExtensions on double {
   /// 15.5.formatPrecision(); // '15.50'
   /// 15.123.formatPrecision(); // '15.12'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String formatPrecision({int precision = 2}) =>
-      hasDecimals ? toStringAsFixed(precision) : toStringAsFixed(0);
+      // Clamp precision to the 0..20 range toStringAsFixed accepts; a negative or
+      // >20 value would otherwise throw a RangeError (formatDouble clamps too).
+      hasDecimals ? toStringAsFixed(precision.clamp(0, 20)) : toStringAsFixed(0);
 }

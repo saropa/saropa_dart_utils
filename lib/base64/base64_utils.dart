@@ -35,6 +35,7 @@ abstract final class Base64Utils {
   ///
   /// See also:
   /// - `decompressText` to reverse this operation
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? compressText(String? value) {
     if (value == null || value.isEmpty) {
@@ -79,6 +80,7 @@ abstract final class Base64Utils {
   ///
   /// See also:
   /// - `compressText` to create compressed strings
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? decompressText(String? compressedBase64) {
     if (compressedBase64 == null || compressedBase64.isEmpty) {

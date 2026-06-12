@@ -9,6 +9,7 @@ extension DoubleIterableExtensions on Iterable<double> {
   ///
   /// Returns the smallest element in the list based on the Comparable
   /// implementation.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double? smallestOccurrence() {
     // check if the list is empty before calling reduce
@@ -23,6 +24,7 @@ extension DoubleIterableExtensions on Iterable<double> {
   ///
   /// Returns the biggest element in the list based on the Comparable
   /// implementation.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   double? biggestOccurrence() {
     // check if the list is empty before calling reduce
@@ -38,6 +40,7 @@ extension DoubleIterableExtensions on Iterable<double> {
   /// Returns an [Occurrence] containing the most common value and its
   /// frequency.
   /// If the list is empty, returns null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<double>? mostOccurrences() {
     if (isEmpty) {
@@ -73,6 +76,7 @@ extension DoubleIterableExtensions on Iterable<double> {
   /// Returns an [Occurrence] containing the least common value and its
   /// frequency.
   /// If the list is empty, returns null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<double>? leastOccurrences() {
     if (isEmpty) {
@@ -90,7 +94,7 @@ extension DoubleIterableExtensions on Iterable<double> {
       frequencyMap.update(item, (int value) => value + 1, ifAbsent: () => 1);
     }
 
-    // Find and return the key with the highest value (frequency) in the map.
+    // Find and return the key with the LOWEST value (frequency) in the map.
     final MapEntry<double, int>? leastCommonEntry = frequencyMap.entries.fold(
       null,
       (MapEntry<double, int>? previous, MapEntry<double, int> element) =>

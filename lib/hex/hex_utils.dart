@@ -37,9 +37,10 @@ extension HexExtensions on String {
   /// '1A3F'.hexToInt(); // Returns 6719
   /// '7fffffffffffffff'.hexToInt(); // Returns 9223372036854775807 (max int64)
   /// ''.hexToInt(); // Returns null
-  /// 'invalid-hex'.hexToInt(); // Returns null, prints a warning
-  /// '8000000000000000'.hexToInt(); // Returns null, prints a warning (too large)
+  /// 'invalid-hex'.hexToInt(); // Returns null (invalid)
+  /// '8000000000000000'.hexToInt(); // Returns null (too large for a signed 64-bit int)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int? hexToInt() {
     if (isEmpty) {
@@ -79,6 +80,7 @@ extension HexIntExtensions on int {
   /// 6719.intToHex(); // Returns '1a3f'
   /// 0.intToHex(); // Returns '0'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String intToHex() => toRadixString(_hexRadix);
 }

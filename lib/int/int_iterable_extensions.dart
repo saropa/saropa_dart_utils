@@ -10,6 +10,7 @@ import 'package:saropa_dart_utils/iterable/occurrence.dart';
 extension IntIterableExtensions on Iterable<int> {
   /// Returns an [Occurrence] of the most common value and its frequency,
   /// or `null` if the iterable is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<int>? mostOccurrences() {
     // check if the list is empty before calling reduce
@@ -46,6 +47,7 @@ extension IntIterableExtensions on Iterable<int> {
 
   /// Returns an [Occurrence] of the least common value and its frequency,
   /// or `null` if the iterable is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<int>? leastOccurrences() {
     // check if the list is empty before calling reduce

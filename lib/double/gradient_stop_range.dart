@@ -53,6 +53,7 @@ enum StopRange {
   /// StopRange.easeInOut.stops; // [0.25, 0.75]
   /// StopRange.linear.stops;    // [0, 1]
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<double> get stops => switch (this) {
     StopRange.easeIn => <double>[0, 0.5],

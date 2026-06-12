@@ -67,6 +67,7 @@ abstract final class UuidUtils {
   /// UuidUtils.isUUID('not-a-uuid'); // false
   /// UuidUtils.isUUID('123e4567-e89b-62d3-a456-426614174000'); // false (invalid version 6)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool isUUID(String? uuid) {
     if (uuid == null || uuid.isEmpty) {
@@ -106,6 +107,7 @@ abstract final class UuidUtils {
   ///
   /// UuidUtils.addHyphens('too-short'); // Returns null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? addHyphens(String? uuid) {
     if (uuid == null || uuid.isEmpty) {
@@ -149,6 +151,7 @@ abstract final class UuidUtils {
   /// UuidUtils.removeHyphens('123e4567-e89b-12d3-a456-426614174000');
   /// // Returns '123e4567e89b12d3a456426614174000'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? removeHyphens(String? uuid) {
     if (uuid == null || uuid.isEmpty) {

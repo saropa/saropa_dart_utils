@@ -49,6 +49,7 @@ class FilterValue<T> {
   /// const FilterValue<int>(0).resolve(5);     // 0  (set, even though falsy)
   /// const FilterValue<bool>(null).resolve(true); // null (explicit clear)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   const FilterValue(this.value) : isSet = true;
 
   /// The "no override given" wrapper — `isSet` is `false`, so [resolve] returns
@@ -63,9 +64,8 @@ class FilterValue<T> {
   /// const FilterValue<String>.unset().resolve('keep'); // 'keep'
   /// const FilterValue<String>.unset().value;           // null
   /// ```
-  const FilterValue.unset()
-      : value = null,
-        isSet = false;
+  /// Audited: 2026-06-12 11:26 EDT
+  const FilterValue.unset() : value = null, isSet = false;
 
   /// The override value carried when [isSet] is `true`.
   ///
@@ -94,5 +94,6 @@ class FilterValue<T> {
   /// const FilterValue<int>(9).resolve(5);      // 9    (override)
   /// const FilterValue<int>(null).resolve(5);   // null (explicit clear)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   T? resolve(T? current) => isSet ? value : current;
 }

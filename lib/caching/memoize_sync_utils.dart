@@ -1,4 +1,5 @@
 /// Memoize sync function (by argument equality). Single-value cache. Roadmap #196, #197.
+/// Audited: 2026-06-12 11:26 EDT
 V Function(A) memoize1<A, V>(V Function(A) fn) {
   final Map<A, V> cache = <A, V>{};
   return (A a) => cache.putIfAbsent(a, () => fn(a));
@@ -8,6 +9,7 @@ V Function(A) memoize1<A, V>(V Function(A) fn) {
 ///
 /// A `null` result is cached too: a `computed` flag (not `??=`) gates the call,
 /// so a `null`-returning [compute] still runs only once.
+/// Audited: 2026-06-12 11:26 EDT
 T Function() singleValueCache<T>(T Function() compute) {
   bool computed = false;
   late T cached;

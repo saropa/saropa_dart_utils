@@ -7,6 +7,7 @@ extension IntNullableExtensions on int? {
   ///
   /// Null values are considered less than non-null values. Two null values
   /// are considered equal.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int compareToIntNullable(int? second) {
     final int? self = this;

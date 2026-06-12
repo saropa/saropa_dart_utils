@@ -9,6 +9,7 @@ abstract final class JsonIterablesUtils {
   /// The elements of [iterable] (type [T]) must be directly encodable by
   /// `dart:convert.jsonEncode` (e.g., `num`, `String`, `bool`, `null`,
   /// `List`, or `Map` with encodable keys and values).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String jsonEncode<T>(Iterable<T> iterable) => dc.jsonEncode(iterable.toList());
 }

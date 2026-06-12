@@ -91,6 +91,7 @@ class SwipeProperties {
   /// var swipe = SwipeProperties(SwipeDirection.left, SwipeSpeed.fast,
   ///   SwipeMagnitude.large, SwipeAngle.horizontal);
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   const SwipeProperties({
     required this.direction,
     required this.speed,
@@ -111,6 +112,7 @@ class SwipeProperties {
   final SwipeAngle angle;
 
   /// Meaningful string for debugging and logging (avoids default "Instance of 'Swipe'").
+  /// Audited: 2026-06-12 11:26 EDT
   @override
   String toString() =>
       'SwipeProperties(direction: $direction, speed: $speed, magnitude: $magnitude, angle: $angle)';
@@ -123,6 +125,7 @@ extension SwipePropsExt on DragEndDetails {
   /// Method to get the swipe direction.
   ///
   /// This method returns the direction of the swipe based on the velocity.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   SwipeDirection get swipeDirection {
     // Ref: https://stackoverflow.com/questions/61901468/how-to-detect-left-and-right-swipes-in-flutter
@@ -139,6 +142,7 @@ extension SwipePropsExt on DragEndDetails {
   ///
   /// This method returns the speed of the swipe based on the velocity and
   /// the thresholds defined in swipeThresholds.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   SwipeSpeed get swipeSpeed {
     final double speed = velocity.pixelsPerSecond.distance;
@@ -149,6 +153,7 @@ extension SwipePropsExt on DragEndDetails {
   /// Method to get the swipe magnitude.
   ///
   /// This method returns the magnitude of the swipe based on the velocity.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   SwipeMagnitude get swipeMagnitude {
     final double magnitude = velocity.pixelsPerSecond.distance;
@@ -175,6 +180,7 @@ extension SwipePropsExt on DragEndDetails {
   /// Method to get the swipe angle.
   ///
   /// This method returns the angle of the swipe based on the velocity.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   SwipeAngle get swipeAngle {
     final double velocityX = velocity.pixelsPerSecond.dx;
@@ -195,6 +201,7 @@ extension SwipePropsExt on DragEndDetails {
   ///
   /// This method returns a [SwipeProperties] record that contains the direction
   /// and speed of the swipe.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   SwipeProperties get swipe => SwipeProperties(
     direction: swipeDirection,

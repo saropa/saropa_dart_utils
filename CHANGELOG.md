@@ -45,6 +45,12 @@ Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-sou
 
 - **`pathRelative` now emits leading `..` for up-traversal** ([path_join_utils.dart](lib/url/path_join_utils.dart)) — `pathRelative('a/b/c', 'a/b/d')` returned `'d'` instead of `'../d'`. The function computed the correct climb-out segments but joined them through `pathJoin`, which treats a leading `..` as a pop with nothing above it and discards it. It now joins the already-clean segments directly, so any relative path that must ascend out of `base` is correct (`'a/b/c/d'`→`'a/x'` yields `'../../../x'`, pure ascent yields `'../..'`). Identical paths still yield `''`; `pathJoin`/`pathNormalize` pop semantics are unchanged for their other callers. Pinned by three new up-traversal tests.
 
+- **Project audit pass 7 — caching / int / double / json / bool / base64 + singletons** (~43 files):
+  - `formatPrecision` ([double_extensions.dart](lib/double/double_extensions.dart)) clamps `precision` to 0–20 (the range `toStringAsFixed` accepts) instead of throwing a RangeError on a negative or >20 value.
+  - Doc accuracy: `toBoolJson` ([json_type_utils.dart](lib/json/json_type_utils.dart)) documented as a truthy coercion that returns `false` (not `null`) for unrecognized non-null input — only a `null` argument yields `null` (matching its tested behavior); `int.ordinal` example `114th` (was `101th`); `hexToInt` examples drop the false "prints a warning" claim; `double.leastOccurrences` comment fixed (was a copy-paste of "highest").
+  - The cache implementations (LRU/MRU/TTL/size-limit/write-through), UUID v4 version/variant bits, HTML entity decoding, color packing/WCAG, and base64 round-trips were all audited and verified correct.
+  - 1 new regression test; per-method audit-date stamps across all files.
+
 - **Project audit pass 6 — iterable / map / list / validation / url / object / niche** (97 files):
   - `jwtPayload` ([jwt_structure_utils.dart](lib/validation/jwt_structure_utils.dart)): two fixes — the base64url padding calc appended a spurious `====` block when the payload length was already a multiple of 4 (rejecting otherwise-valid tokens), and the bytes were decoded as raw code units instead of UTF-8 (mojibake for multi-byte claims). Now `(block - len%block) % block` padding and `utf8.decode`.
   - `mapDiff` ([map_diff_utils.dart](lib/map/map_diff_utils.dart)): a genuinely-`null` value (nullable V) is now reported as added/changed/removed instead of being skipped as if absent (key-presence based, not value-null based).

@@ -16,6 +16,7 @@
 /// //   ]
 /// // }
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String prettyPrint(Object? obj, {int indent = 0}) {
   const int spaces = 2;
   final String pad = ' ' * (indent * spaces);
@@ -46,6 +47,7 @@ String prettyPrint(Object? obj, {int indent = 0}) {
 /// ```dart
 /// dumpIterable([1, 2, 3, 4], maxItems: 2); // '[1, 2]... (4 total)'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String dumpIterable(Iterable<dynamic> it, {int maxItems = 10}) {
   final List<dynamic> list = it.toList();
   if (list.length <= maxItems) return list.toString();
@@ -61,6 +63,7 @@ String dumpIterable(Iterable<dynamic> it, {int maxItems = 10}) {
 /// ```dart
 /// assertEqualsWithTolerance(0.1 + 0.2, 0.3, 1e-9); // passes
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 void assertEqualsWithTolerance(double a, double b, double tolerance) {
   if ((a - b).abs() > tolerance) throw AssertionError('Expected $a ≈ $b (tolerance $tolerance)');
 }
@@ -74,6 +77,7 @@ void assertEqualsWithTolerance(double a, double b, double tolerance) {
 /// rangeInt(0, 5);            // [0, 1, 2, 3, 4]
 /// rangeInt(5, 0, step: -2);  // [5, 3, 1]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<int> rangeInt(int start, int end, {int step = 1}) {
   final List<int> out = <int>[];
   for (int i = start; step > 0 ? i < end : i > end; i += step) {
@@ -90,6 +94,7 @@ List<int> rangeInt(int start, int end, {int step = 1}) {
 /// ```dart
 /// rangeDouble(0, 1, 0.5); // [0.0, 0.5]
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<double> rangeDouble(double start, double end, double step) {
   final List<double> out = <double>[];
   for (double x = start; step > 0 ? x < end : x > end; x += step) {
@@ -104,6 +109,7 @@ List<double> rangeDouble(double start, double end, double step) {
 /// ```dart
 /// repeatValue('x', 3); // ['x', 'x', 'x']
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 List<T> repeatValue<T>(T value, int n) => List<T>.filled(n, value);
 
 /// Runs [fn] synchronously and returns the wall-clock [Duration] it took.
@@ -114,6 +120,7 @@ List<T> repeatValue<T>(T value, int n) => List<T>.filled(n, value);
 /// ```dart
 /// final elapsed = timed(() => expensiveWork());
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Duration timed(void Function() fn) {
   final DateTime start = DateTime.now();
   fn();
@@ -127,6 +134,7 @@ Duration timed(void Function() fn) {
 /// ```dart
 /// retryUntil(() => randomBool(), maxAttempts: 5);
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 bool retryUntil(bool Function() predicate, {int maxAttempts = 10}) {
   for (int i = 0; i < maxAttempts; i++) {
     if (predicate()) return true;

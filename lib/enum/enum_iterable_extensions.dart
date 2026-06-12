@@ -11,6 +11,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   /// from a method that works with the base Enum type. This is because
   /// Dart's generics are invariant, which means you can't use a subtype
   /// (like ZodiacSigns) where a base type (like Enum) is expected.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   MapEntry<Enum, int>? mostOccurrences() {
     if (isEmpty) {
@@ -49,6 +50,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   ///
   /// - Returns: The first enum value whose [name] matches the given [name],
   ///  or `null` if no such value is found.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   T? byNameTry(String? name, {bool isCaseSensitive = true}) {
     if (name == null || name.isEmpty) {
@@ -75,6 +77,7 @@ extension EnumIterableExtensions<T extends Enum> on Iterable<T> {
   /// ```
   ///
   /// - Returns: A list of enum values sorted alphabetically by name.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<T> sortedEnumValues() =>
       // Map the list of enum values to a list of their names as strings

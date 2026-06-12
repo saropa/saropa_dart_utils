@@ -17,12 +17,15 @@ library;
 /// `V` to a non-nullable type.
 abstract interface class Cache<K, V> {
   /// Returns the value cached under [key], or null if absent or expired.
+  /// Audited: 2026-06-12 11:26 EDT
   V? get(K key);
 
   /// Stores [value] under [key], applying this cache's eviction policy.
+  /// Audited: 2026-06-12 11:26 EDT
   void set(K key, V value);
 
   /// Removes every entry.
+  /// Audited: 2026-06-12 11:26 EDT
   void clear();
 }
 
@@ -33,11 +36,13 @@ abstract interface class Cache<K, V> {
 /// Concurrent misses for the SAME key share one in-flight load rather than each
 /// invoking [loader] — a thundering-herd guard. A load that throws is NOT
 /// cached and the error propagates to every waiter; the next call retries.
+/// Audited: 2026-06-12 11:26 EDT
 // Expiration is the wrapped Cache's responsibility (pass a TtlCache to get it);
 // this adapter only coordinates loads and intentionally has no TTL of its own.
 // ignore: saropa_lints/require_cache_expiration -- delegated to the wrapped Cache
 class WriteThroughCache<K, V extends Object> {
   /// Wraps [cache], filling misses by awaiting [loader].
+  /// Audited: 2026-06-12 11:26 EDT
   WriteThroughCache(this._cache, this._loader);
 
   final Cache<K, V> _cache;
@@ -47,6 +52,7 @@ class WriteThroughCache<K, V extends Object> {
   /// Returns the cached value for [key]; on a miss, loads it once via the
   /// loader, stores it, and returns it. Simultaneous misses for [key] await the
   /// same load.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<V> getOrLoad(K key) {
     final V? cached = _cache.get(key);
     if (cached != null) return Future<V>.value(cached);

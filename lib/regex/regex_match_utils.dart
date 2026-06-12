@@ -1,4 +1,5 @@
 /// Match all (return all matches with groups). Replace with callback. Named group map. Roadmap #190, #191, #193.
+/// Audited: 2026-06-12 11:26 EDT
 List<RegExpMatch> matchAll(RegExp re, String input) => re.allMatches(input).toList();
 
 /// Replaces every match of [pattern] in [input] with the result of [replace].
@@ -11,6 +12,7 @@ List<RegExpMatch> matchAll(RegExp re, String input) => re.allMatches(input).toLi
 /// ```dart
 /// replaceAllWithCallback('a1b2', RegExp(r'\d'), (m) => '[${m[0]}]'); // 'a[1]b[2]'
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 String replaceAllWithCallback(
   String input,
   RegExp pattern,
@@ -28,6 +30,7 @@ String replaceAllWithCallback(
 /// final m = RegExp(r'(?<y>\d{4})').firstMatch('2026')!;
 /// namedGroupMap(m); // {'y': '2026'}
 /// ```
+/// Audited: 2026-06-12 11:26 EDT
 Map<String, String> namedGroupMap(RegExpMatch match) {
   final Map<String, String> out = <String, String>{};
   for (final String name in match.groupNames) {

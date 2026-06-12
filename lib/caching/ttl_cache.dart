@@ -6,15 +6,18 @@ import 'package:saropa_dart_utils/caching/cache_interface.dart';
 /// behind that interface.
 class TtlCache<K extends Object, V extends Object> implements Cache<K, V> {
   /// Creates a cache whose entries each expire [ttl] after being stored.
+  /// Audited: 2026-06-12 11:26 EDT
   TtlCache(Duration ttl) : _ttl = ttl;
 
   final Duration _ttl;
 
   /// Time-to-live for each entry; expired entries return null from [get].
+  /// Audited: 2026-06-12 11:26 EDT
   Duration get ttl => _ttl;
   final Map<K, (V, DateTime)> _map = <K, (V, DateTime)>{};
 
   /// Returns the value for [key] if not expired, or null.
+  /// Audited: 2026-06-12 11:26 EDT
   V? get(K key) {
     final (V, DateTime)? entry = _map[key];
     if (entry == null) return null;
@@ -26,11 +29,13 @@ class TtlCache<K extends Object, V extends Object> implements Cache<K, V> {
   }
 
   /// Stores [value] under [key] with a fresh expiry [ttl] from now.
+  /// Audited: 2026-06-12 11:26 EDT
   void set(K key, V value) {
     _map[key] = (value, DateTime.now().add(_ttl));
   }
 
   /// Removes all entries.
+  /// Audited: 2026-06-12 11:26 EDT
   void clear() => _map.clear();
 
   @override

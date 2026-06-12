@@ -30,6 +30,7 @@ extension IntExtensions on int {
   /// which is generally more efficient than converting the number to a string
   ///  and getting its length.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int countDigits() {
     // If the number is 0, return 1
@@ -69,6 +70,7 @@ extension IntExtensions on int {
   /// 0.forceBetween(1, 10);  // 1 (clamped to min)
   /// 15.forceBetween(1, 10); // 10 (clamped to max)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int forceBetween(int from, final int to) {
     if (from > to) {

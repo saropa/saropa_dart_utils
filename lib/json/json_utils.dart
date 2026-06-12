@@ -10,6 +10,7 @@ import 'package:saropa_dart_utils/string/string_extensions.dart';
 abstract final class JsonUtils {
   /// Returns a decoded `Map` from the given [jsonString], or `null` if
   /// decoding fails.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static Map<String, dynamic>? jsonDecodeToMap(String? jsonString) {
     if (jsonString == null || jsonString.isEmpty) return null;
@@ -21,6 +22,7 @@ abstract final class JsonUtils {
   }
 
   /// Safely decodes a JSON string, returning null on error.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static dynamic jsonDecodeSafe(String? jsonString) {
     final String? trimmed = jsonString?.trim();
@@ -38,6 +40,7 @@ abstract final class JsonUtils {
   }
 
   /// Checks if the JSON structural content is valid (empty objects/arrays).
+  /// Audited: 2026-06-12 11:26 EDT
   static bool _hasValidJsonContent(
     String trimmed, {
     required bool isObject,
@@ -58,6 +61,7 @@ abstract final class JsonUtils {
   /// If [shouldTestDecode] is `true`, actually attempts to decode to verify.
   /// If [shouldAllowEmpty] is `true`, treats `'{}'` and `'[]'` as valid JSON
   /// (defaults to `false` for backwards compatibility).
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool isJson(
     String? value, {
@@ -98,6 +102,7 @@ abstract final class JsonUtils {
   ///
   /// Correctly handles strings that contain escaped inner quotes, e.g.:
   /// `'"hello \"world\""'` → `'hello "world"'`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? cleanJsonResponse(String? value) {
     if (value == null || value.isEmpty) return null;
@@ -119,6 +124,7 @@ abstract final class JsonUtils {
   /// Returns a decoded `Map` from the JSON string [value], optionally
   /// cleaning the input first when [shouldCleanInput] is `true`, or `null`
   /// if decoding fails.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static Map<String, dynamic>? tryJsonDecode(
     String? value, {
@@ -138,6 +144,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of maps decoded from the JSON string [value], or `null`
   /// if decoding fails.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<Map<String, dynamic>>? tryJsonDecodeListMap(String? value) {
     if (value == null || !isJson(value)) return null;
@@ -164,6 +171,7 @@ abstract final class JsonUtils {
 
   /// Returns a list of strings decoded from the JSON string [value], or
   /// `null` if decoding fails.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<String>? tryJsonDecodeList(String? value) {
     if (value == null || !isJson(value)) return null;

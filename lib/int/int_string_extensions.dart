@@ -34,13 +34,14 @@ extension IntStringExtensions on int {
   ///
   /// ```dart
   /// 101.ordinal(); // 101st
-  /// 114.ordinal(); // 101th
+  /// 114.ordinal(); // 114th
   ///
   /// 999218.ordinal(); // 999218th
   /// ```
   ///
   /// A `double` typed version can use: value.floor()
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String ordinal() {
     // All "teens" (12, 13, 14.. 19) are 'th'

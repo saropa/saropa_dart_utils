@@ -28,6 +28,7 @@ const int _hexSegment5Start = 0;
 const int _hexSegment5End = 20;
 
 /// Generate random UUID v4. Roadmap #228.
+/// Audited: 2026-06-12 11:26 EDT
 String generateUuidV4() {
   // Use the cryptographically secure RNG so generated IDs are not predictable.
   final Random random = Random.secure();

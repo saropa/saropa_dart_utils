@@ -9,6 +9,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// Returns an [Occurrence] containing the most common value and its
   /// frequency.
   /// If the list is empty, returns null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<bool>? mostOccurrences() {
     if (isEmpty) {
@@ -31,6 +32,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// Returns an [Occurrence] containing the least common value and its
   /// frequency.
   /// If the list is empty, returns null.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Occurrence<bool>? leastOccurrences() {
     if (isEmpty) {
@@ -59,6 +61,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// - `true` if at least one element in the iterable is `true`.
   /// - `false` if no elements in the iterable are `true` or the iterable
   ///  is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get anyTrue => any((bool e) => e);
 
@@ -73,6 +76,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   /// - `true` if at least one element in the iterable is `false`.
   /// - `false` if no elements in the iterable are `false` or the iterable is
   ///  empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool get anyFalse => any((bool e) => !e);
 
@@ -84,6 +88,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   ///
   /// Returns:
   /// - The number of `true` values in the iterable.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get countTrue => where((bool e) => e).length;
 
@@ -95,6 +100,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   ///
   /// Returns:
   /// - The number of `false` values in the iterable.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   int get countFalse => where((bool e) => !e).length;
 
@@ -106,6 +112,7 @@ extension BoolIterableExtensions on Iterable<bool> {
   ///
   /// Returns:
   /// - A new list with the boolean values reversed.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<bool> get reverse => map((bool b) => !b).toList();
 }

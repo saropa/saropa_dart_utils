@@ -97,6 +97,7 @@ abstract final class MaterialShadeLevels {
   /// ```dart
   /// MaterialShadeLevels.randomShade(isLightBackground: true, seed: 7); // a 500..900 value
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int? randomShade({bool? isLightBackground, int? seed}) {
     // No band requested: draw from the full ladder.
@@ -151,6 +152,7 @@ extension MaterialShadeName on MaterialShade {
   /// ```dart
   /// MaterialShade.shade500.value; // 500
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   int get value => switch (this) {
     MaterialShade.shade50 => 50,
     MaterialShade.shade100 => 100,
@@ -178,6 +180,7 @@ extension MaterialShadeName on MaterialShade {
   /// MaterialShade.shade100.onShade; // Colors.black
   /// MaterialShade.shade700.onShade; // Colors.white
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   Color get onShade => switch (this) {
     MaterialShade.shade50 ||
     MaterialShade.shade100 ||
@@ -203,6 +206,7 @@ extension MaterialShadeName on MaterialShade {
   /// ```dart
   /// MaterialShade.shade50.displayName; // 'Shade 50'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   String get displayName => 'Shade $value';
 
   /// The UI label annotated at the three band endpoints.
@@ -218,6 +222,7 @@ extension MaterialShadeName on MaterialShade {
   /// MaterialShade.shade500.displayNameAnnotated; // 'Shade 500 (Middle)'
   /// MaterialShade.shade300.displayNameAnnotated; // 'Shade 300'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   String get displayNameAnnotated => switch (this) {
     MaterialShade.shade50 => 'Shade 50 (Lightest)',
     MaterialShade.shade500 => 'Shade 500 (Middle)',

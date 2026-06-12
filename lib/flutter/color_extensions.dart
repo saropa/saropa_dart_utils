@@ -33,6 +33,7 @@ extension ColorStringExtensions on String {
   /// '#80FF0000'.toColor(); // Color(0x80FF0000)
   /// 'GGGGGG'.toColor();   // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Color? toColor() {
     // Empty input is never a color; guard first so the switch below only ever
@@ -91,6 +92,7 @@ extension ColorHexExtension on Color {
   /// Colors.blue.toHex();                    // '#FF2196F3'
   /// Colors.blue.toHex(includeAlpha: false); // '#2196F3'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String toHex({bool includeAlpha = true}) {
     final String red = _channelHex(r);
@@ -111,6 +113,7 @@ extension ColorHexExtension on Color {
   /// Clamps first because a wide-gamut [Color] can report a channel above
   /// `1.0`; an unclamped `(1.2 * 255).round()` would exceed `0xFF` and yield a
   /// 3-character hex string, breaking the fixed output width.
+  /// Audited: 2026-06-12 11:26 EDT
   static String _channelHex(double channel) =>
       (channel.clamp(0.0, 1.0) * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
 }
@@ -137,6 +140,7 @@ extension ColorLightExtensions on Color {
   /// blue.darken(0.3); // a darker blue, same hue
   /// blue.darken(-0.5); // unchanged (out of range)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Color darken(double amount) {
     // No-op short-circuit: zero delta means the caller wants this color back.
@@ -175,6 +179,7 @@ extension ColorLightExtensions on Color {
   /// blue.lighten(0.2); // a lighter blue, same hue
   /// blue.lighten(0);   // unchanged
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Color lighten(double amount) {
     // No-op for zero or negative: nothing to lighten by.
@@ -227,6 +232,7 @@ extension ColorContrastExtensions on Color {
   /// const Color cream = Color.fromRGBO(245, 243, 235, 1);
   /// gold.readableOn(cream); // a darker gold that clears 4.5:1 on cream
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Color readableOn(
     Color background, {
@@ -260,6 +266,7 @@ extension ColorContrastExtensions on Color {
 /// the WCAG relative luminance — there is no need to reimplement the channel
 /// math here. The int-channel version of this formula lives in
 /// `lib/niche/color_utils.dart` as `contrastRatio`.
+/// Audited: 2026-06-12 11:26 EDT
 double _wcagContrast(Color a, Color b) {
   final double la = a.computeLuminance() + 0.05;
   final double lb = b.computeLuminance() + 0.05;

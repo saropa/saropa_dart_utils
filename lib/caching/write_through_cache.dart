@@ -30,6 +30,7 @@ typedef CacheStorer<K, V> = Future<void> Function(K key, V value);
 class WriteThroughStore<K, V> {
   /// Creates a cache backed by [load] (read-through on a miss) and [store]
   /// (called on every [put] before the in-memory entry is updated).
+  /// Audited: 2026-06-12 11:26 EDT
   WriteThroughStore({required CacheLoader<K, V> load, required CacheStorer<K, V> store})
     : _load = load,
       _store = store;
@@ -40,6 +41,7 @@ class WriteThroughStore<K, V> {
 
   /// Returns the cached value, loading and caching it on a miss. A backing
   /// store that returns null is treated as "absent" and is not cached.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<V?> get(K key) async {
     if (_cache.containsKey(key)) return _cache[key];
     final V? loaded = await _load(key);
@@ -49,15 +51,18 @@ class WriteThroughStore<K, V> {
 
   /// Persists [value] to the store, then updates the in-memory entry. The
   /// store write is awaited first so a failed write leaves the cache unchanged.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> put(K key, V value) async {
     await _store(key, value);
     _cache[key] = value;
   }
 
   /// Drops the in-memory entry for [key] without touching the backing store.
+  /// Audited: 2026-06-12 11:26 EDT
   void invalidate(K key) => _cache.remove(key);
 
   /// Number of entries currently held in memory.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _cache.length;
 }
 
@@ -65,6 +70,7 @@ class WriteThroughStore<K, V> {
 class WriteBackStore<K, V> {
   /// Creates a cache backed by [load] (read-through on a miss) and [store]
   /// (called once per dirty key during [flush]).
+  /// Audited: 2026-06-12 11:26 EDT
   WriteBackStore({required CacheLoader<K, V> load, required CacheStorer<K, V> store})
     : _load = load,
       _store = store;
@@ -76,6 +82,7 @@ class WriteBackStore<K, V> {
   final Set<K> _dirty = <K>{};
 
   /// Returns the cached value, loading and caching it on a miss.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<V?> get(K key) async {
     if (_cache.containsKey(key)) return _cache[key];
     final V? loaded = await _load(key);
@@ -85,17 +92,20 @@ class WriteBackStore<K, V> {
 
   /// Updates the in-memory entry and marks it dirty; the store is untouched
   /// until [flush]. Repeated puts to one key collapse into a single later write.
+  /// Audited: 2026-06-12 11:26 EDT
   void put(K key, V value) {
     _cache[key] = value;
     _dirty.add(key);
   }
 
   /// Keys with buffered writes not yet persisted (an unmodifiable snapshot).
+  /// Audited: 2026-06-12 11:26 EDT
   Set<K> get dirtyKeys => Set<K>.unmodifiable(_dirty);
 
   /// Persists every dirty entry to the backing store and clears the dirty set.
   /// A store failure aborts the flush; already-written keys stay clean, the
   /// failing key and any after it remain dirty for the next attempt.
+  /// Audited: 2026-06-12 11:26 EDT
   Future<void> flush() async {
     // Iterate cache entries (typed V, no cast) filtered to the dirty set, and
     // snapshot to a list so a concurrent put during the awaits is not lost.
@@ -110,5 +120,6 @@ class WriteBackStore<K, V> {
   }
 
   /// Number of entries currently held in memory.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _cache.length;
 }

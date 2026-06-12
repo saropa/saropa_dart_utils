@@ -53,6 +53,7 @@ extension DoubleAspectRatioExtensions on double {
   /// (-1.5).toAspectRatio();     // null
   /// double.nan.toAspectRatio(); // null
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   (int, int)? toAspectRatio() {
     // Guard non-finite input first: the whole-number branch below truncates

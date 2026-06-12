@@ -159,6 +159,14 @@ void main() {
         expect((-15.0).formatPrecision(), equals('-15'));
         expect((-15.5).formatPrecision(), equals('-15.50'));
       });
+
+      test('clamps out-of-range precision instead of throwing RangeError', () {
+        // toStringAsFixed only accepts 0..20; a negative or >20 precision must
+        // be clamped, not throw.
+        expect(() => 15.5.formatPrecision(precision: -1), returnsNormally);
+        expect(15.5.formatPrecision(precision: -1), equals('16'));
+        expect(() => 15.5.formatPrecision(precision: 99), returnsNormally);
+      });
     });
   });
 }

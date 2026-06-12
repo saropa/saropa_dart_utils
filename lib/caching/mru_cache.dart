@@ -18,6 +18,7 @@ library;
 class MruCache<K, V> {
   /// Creates a cache holding at most [capacity] entries. Requires
   /// `capacity > 0`.
+  /// Audited: 2026-06-12 11:26 EDT
   MruCache(int capacity)
     : assert(capacity > 0, 'capacity ($capacity) must be > 0'),
       _capacity = capacity;
@@ -30,6 +31,7 @@ class MruCache<K, V> {
   final Map<K, int> _frequency = <K, int>{};
 
   /// Number of entries currently cached.
+  /// Audited: 2026-06-12 11:26 EDT
   int get length => _values.length;
 
   /// Returns the value for [key] (or null), counting the access and marking the
@@ -43,6 +45,7 @@ class MruCache<K, V> {
   /// c.put('c', 3); // full: evicts 'b' (the MRU), keeps 'a'
   /// c.get('a'); // 1
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   V? get(K key) {
     if (!_values.containsKey(key)) return null;
     _touch(key);
@@ -51,6 +54,7 @@ class MruCache<K, V> {
 
   /// Inserts or updates [key] with [value]. When the cache is full and [key] is
   /// new, the most-recently-used entry is evicted to make room.
+  /// Audited: 2026-06-12 11:26 EDT
   void put(K key, V value) {
     if (!_values.containsKey(key) && _values.length >= _capacity) _evictMru();
     _values[key] = value;
@@ -59,9 +63,11 @@ class MruCache<K, V> {
 
   /// Number of times [key] has been accessed (via [get] or [put]) while
   /// resident; `0` if never seen or since evicted.
+  /// Audited: 2026-06-12 11:26 EDT
   int frequencyOf(K key) => _frequency[key] ?? 0;
 
   /// Removes [key] and its frequency, if present.
+  /// Audited: 2026-06-12 11:26 EDT
   void remove(K key) {
     _values.remove(key);
     _recency.remove(key);

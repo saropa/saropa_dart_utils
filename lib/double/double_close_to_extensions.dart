@@ -26,6 +26,7 @@ extension DoubleCloseToExtensions on double {
   /// 1.0.isCloseTo(1.5);         // false
   /// 0.0.isCloseTo(1e-12);       // true (absolute floor)
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool isCloseTo(
     double other, {

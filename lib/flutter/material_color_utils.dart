@@ -97,6 +97,7 @@ abstract final class ColorUtils {
   /// ```dart
   /// ColorUtils.getWhiteContrastColor(42);  // stable for the same input
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   static Color getWhiteContrastColor(int number) {
     // ((n % 100) + 100) % 100 forces a non-negative 0..99 result on every
     // platform. A bare `n % 100` is already non-negative on the Dart VM, but on
@@ -133,17 +134,16 @@ abstract final class ColorUtils {
   /// ```
   // Exhaustive switch over the sealed enum: a future added shade is a compile
   // error, not a silent fall-through to a wrong tone.
-  static Color getColor(MaterialShade shade, final MaterialColor color) =>
-      switch (shade) {
-        MaterialShade.shade50 => color.shade50,
-        MaterialShade.shade100 => color.shade100,
-        MaterialShade.shade200 => color.shade200,
-        MaterialShade.shade300 => color.shade300,
-        MaterialShade.shade400 => color.shade400,
-        MaterialShade.shade500 => color.shade500,
-        MaterialShade.shade600 => color.shade600,
-        MaterialShade.shade700 => color.shade700,
-        MaterialShade.shade800 => color.shade800,
-        MaterialShade.shade900 => color.shade900,
-      };
+  static Color getColor(MaterialShade shade, final MaterialColor color) => switch (shade) {
+    MaterialShade.shade50 => color.shade50,
+    MaterialShade.shade100 => color.shade100,
+    MaterialShade.shade200 => color.shade200,
+    MaterialShade.shade300 => color.shade300,
+    MaterialShade.shade400 => color.shade400,
+    MaterialShade.shade500 => color.shade500,
+    MaterialShade.shade600 => color.shade600,
+    MaterialShade.shade700 => color.shade700,
+    MaterialShade.shade800 => color.shade800,
+    MaterialShade.shade900 => color.shade900,
+  };
 }

@@ -9,6 +9,7 @@ const int _millisecondsPerSecond = 1000;
 abstract final class JsonTypeUtils {
   /// Returns a list of maps extracted from [valueList], or `null` if empty
   /// or `null`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<Map<String, dynamic>>? toListMap(List<Object?>? valueList) {
     if (valueList == null) return null;
@@ -20,6 +21,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns the item count from [json], which may be an iterable or a
   /// [separator]-delimited string.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int countIterableJson(Object? json, {String separator = ','}) {
     if (json == null) return 0;
@@ -33,6 +35,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns a list of strings parsed from [json], splitting on [separator]
   /// if the value is a string, or `null` if conversion is not possible.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<String>? toStringListJson(
     Object? json, {
@@ -61,6 +64,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns a list of integers parsed from [json], or `null` if conversion
   /// is not possible.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<int>? toIntListJson(Object? json) {
     // Same multi-shape acceptance as the string variant: typed list through,
@@ -77,6 +81,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns an integer parsed from [json], or `null` if conversion is not
   /// possible.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int? toIntJson(Object? json) {
     if (json == null) return null;
@@ -88,7 +93,14 @@ abstract final class JsonTypeUtils {
   }
 
   /// Returns a boolean parsed from [json], using [isCaseSensitive] to control
-  /// string comparison, or `null` if conversion is not possible.
+  /// string comparison.
+  ///
+  /// This is a truthy coercion, NOT a strict parse: `null` input returns `null`,
+  /// a `bool` is returned as-is, an `int` is `== 1`, and a `String` is `true`
+  /// only when it equals `'1'` or `'true'` (case per [isCaseSensitive]) —
+  /// every OTHER non-null value (e.g. `'banana'`, `'TRUE'` when case-sensitive,
+  /// `2`) returns `false`, not `null`. Only a `null` argument yields `null`.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static bool? toBoolJson(Object? json, {bool isCaseSensitive = true}) {
     if (json == null) return null;
@@ -101,6 +113,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns a double parsed from [json], or `null` if conversion is not
   /// possible.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static double? toDoubleJson(Object? json) {
     if (json == null) return null;
@@ -110,6 +123,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns a list of doubles parsed from [json], or `null` if conversion
   /// is not possible.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<double>? toDoubleListJson(Object? json) {
     // Same multi-shape acceptance as the int variant: typed list through,
@@ -134,6 +148,7 @@ abstract final class JsonTypeUtils {
   /// Returns a string from [json] with optional transformations controlled
   /// by [shouldTrim], [shouldUppercase], [shouldLowercase], and
   /// [shouldCapitalize], or `null` if the result is empty.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? toStringJson(
     Object? json, {
@@ -158,6 +173,7 @@ abstract final class JsonTypeUtils {
   }
 
   /// Capitalizes the first letter of each word in [input].
+  /// Audited: 2026-06-12 11:26 EDT
   static String _capitalizeWords(String input) => input
       .split(' ')
       .map(
@@ -172,6 +188,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns a [DateTime] parsed from [json], or `null` if conversion is not
   /// possible.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime? toDateTimeJson(Object? json) {
     if (json == null) return null;
@@ -186,6 +203,7 @@ abstract final class JsonTypeUtils {
 
   /// Returns a [DateTime] from the epoch timestamp [json] interpreted at the
   /// given [scale], or `null` if [json] is not a valid integer.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static DateTime? toDateTimeEpochJson(Object? json, JsonEpochScale scale) {
     if (json is! int) return null;
@@ -200,6 +218,7 @@ abstract final class JsonTypeUtils {
   }
 
   /// Returns [value] as a list if it is one, or `null` otherwise.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<Object?>? toListDynamic(Object? value) => value is List ? value : null;
 }

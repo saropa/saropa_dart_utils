@@ -32,6 +32,7 @@ abstract final class IntUtils {
   ///
   /// Both [a] and [b] must be non-negative.
   ///
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static int? findGreatestCommonDenominator(
     int a,

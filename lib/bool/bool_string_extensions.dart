@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 extension BoolStringExtensions on String {
   /// Converts a case-insensitive string of 'true' or 'false' to a boolean.
   /// Returns null if the string is empty or not 'true' or 'false'.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool? toBoolNullable() {
     final String lower = toLowerCase();
@@ -21,6 +22,7 @@ extension BoolStringExtensions on String {
 
   /// Converts a case-insensitive string of 'true' to a boolean.
   /// Returns false if the string is not 'true'.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool toBool() => toLowerCase() == 'true';
 }
@@ -30,6 +32,7 @@ extension BoolStringExtensions on String {
 extension BoolStringNullableExtensions on String? {
   /// Converts a case-insensitive string of 'true' to a boolean.
   /// Returns false if the string is null, empty, or not 'true'.
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   bool toBool() => this?.toLowerCase() == 'true';
 }

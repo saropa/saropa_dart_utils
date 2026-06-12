@@ -54,6 +54,7 @@ abstract final class HtmlUtils {
   /// HtmlUtils.unescape('&#x41;'); // 'A'
   /// HtmlUtils.unescape('Hello&nbsp;World'); // 'Hello\u00A0World'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? unescape(String? htmlText) {
     if (htmlText == null || htmlText.isEmpty) return null;
@@ -65,6 +66,7 @@ abstract final class HtmlUtils {
   }
 
   /// Single-pass scanner that finds each `&` and resolves the entity.
+  /// Audited: 2026-06-12 11:26 EDT
   static String _scanAndDecode(String text) {
     final StringBuffer buffer = StringBuffer();
     int offset = 0;
@@ -90,6 +92,7 @@ abstract final class HtmlUtils {
 
   /// Tries numeric then named entity at [offset]. Writes decoded char
   /// to [buffer] and returns the new offset past the consumed entity.
+  /// Audited: 2026-06-12 11:26 EDT
   static int _resolveEntity(
     String text,
     int offset,
@@ -117,6 +120,7 @@ abstract final class HtmlUtils {
   /// Returns decoded character and length consumed, or null if invalid.
   /// Bounds the semicolon search to [_maxNumericEntityLength] characters
   /// to avoid scanning arbitrarily far on malformed input.
+  /// Audited: 2026-06-12 11:26 EDT
   static ({String char, int consumed})? _tryNumericEntity(
     String text,
     int offset,
@@ -149,6 +153,7 @@ abstract final class HtmlUtils {
 
   /// Returns true if [codePoint] is a valid Unicode scalar value:
   /// in range 1..U+10FFFF and not in the surrogate pair range.
+  /// Audited: 2026-06-12 11:26 EDT
   static bool _isValidScalarValue(int codePoint) {
     if (codePoint <= 0 || codePoint > _maxUnicodeCodePoint) return false;
     // Surrogate codepoints (U+D800–U+DFFF) are not valid scalar values
@@ -159,6 +164,7 @@ abstract final class HtmlUtils {
   ///
   /// Fast path: semicolon-terminated form resolved in a single Map lookup.
   /// Fallback: legacy entities without semicolons, longest match first.
+  /// Audited: 2026-06-12 11:26 EDT
   static ({String value, int consumed})? _tryNamedEntity(
     String text,
     int offset,
@@ -183,6 +189,7 @@ abstract final class HtmlUtils {
   }
 
   /// Tries legacy (no-semicolon) entity forms, longest match first.
+  /// Audited: 2026-06-12 11:26 EDT
   static ({String value, int consumed})? _tryLegacyEntity(
     String text,
     int offset,
@@ -213,6 +220,7 @@ abstract final class HtmlUtils {
   /// HtmlUtils.removeHtmlTags('<div>Hello <b>World</b></div>');
   /// // 'Hello World'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? removeHtmlTags(String? htmlText) {
     if (htmlText == null || htmlText.isEmpty) return null;
@@ -233,6 +241,7 @@ abstract final class HtmlUtils {
   /// HtmlUtils.toPlainText('<p>Hello &amp; World</p>');
   /// // 'Hello & World'
   /// ```
+  /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static String? toPlainText(String? htmlText) {
     final String? stripped = removeHtmlTags(htmlText);
