@@ -48,7 +48,7 @@
 
 - **Source report:** `plans/history/2026.06/2026.06.10/lint_triage_resolved/avoid_misused_test_matchers.md` — original "373 violations across 19 test files," fix incrementally.
 - **Current state (2026-06-12):** down to ~27 lines matching `, (true|false|null))` across `test/` — bulk done. The residual needs filtering: not every `, true)` is an `expect(x, true)` (some are trailing bool args to non-matcher calls). Confirm which are real `expect()` matchers, then replace `true`→`isTrue`, `false`→`isFalse`, `null`→`isNull`.
-- **Status:** mostly resolved; small residual to confirm + clean.
+- **Status:** ✅ VERIFIED COMPLETE 2026-06-12 — no genuine violations remain. `dart run custom_lint` (the plugin that owns `avoid_misused_test_matchers`) reports **zero** occurrences of the rule across `test/`. Line-by-line inspection of all ~27 raw-literal matches confirms every one is a false positive: the `true`/`false`/`null` token sits inside the value expression or a tuple/data literal (e.g. `compareAges(null, null)`, `BetweenResult('a', null)`, `<(String, bool)>[('cat', false)]`), never in the matcher position. No code change required for this item.
 
 ### 5. `saropa_lints` 13.12.3 → 13.12.4+ bump  (maintenance — NEEDS PERMISSION)
 
@@ -193,3 +193,45 @@ under-commented to fix). The audit was run via a throwaway harness under
 after use. Only this plan file records the outcome.
 
 Item 4 remains open; the plan stays active.
+
+---
+
+## Finish Report (2026-06-12) — Item 4: `avoid_misused_test_matchers` residual (verification)
+
+The 2026-06-10 lint triage recorded 373 `avoid_misused_test_matchers` violations
+across 19 test files — `expect()` calls passing a bare `true`/`false`/`null`
+literal in the matcher position instead of `isTrue`/`isFalse`/`isNull` — to be
+cleared incrementally. A raw text scan for `, (true|false|null))` across `test/`
+still returns roughly 27 lines, which left open whether any genuine violation
+survived.
+
+Inspection resolves all of them as false positives of that text scan: in every
+case the `true`/`false`/`null` token sits inside the value expression being
+asserted or inside a tuple/data literal, not in the matcher slot — for example
+`expect(compareAges(null, null), isZero)`, `expect(const BetweenResult('a', null),
+const BetweenResult('a', null))`, and `<(String, bool)>[('cat', false)]`. None is
+an `expect(x, true)`-shaped misuse.
+
+The authoritative confirmation comes from the rule's own engine: `dart run
+custom_lint` (saropa_lints owns `avoid_misused_test_matchers`; `flutter analyze`
+does not run custom_lint plugins, so it cannot see this rule) reports zero
+occurrences across the suite. The 373 original violations were fully cleared by
+intervening work; the residual was entirely a grep artifact. No test change is
+required.
+
+No `lib/`, `test/`, or `CHANGELOG.md` change accompanies this item. Only this
+plan file records the outcome.
+
+---
+
+## Plan status (2026-06-12): all live items closed
+
+Items 1–4 are resolved: items 1 and 2 by code fixes (with tests and CHANGELOG
+entries), items 3 and 4 by verification that intervening work had already closed
+them. Item 5 (`saropa_lints` version bump) is the single item deliberately left
+untouched — a gated dependency change awaiting explicit permission. The two
+"known-accepted" lint diagnostics remain accepted by project rule.
+
+This plan stays ACTIVE in `plans/` solely to track the still-open item 5. Once
+that bump is authorized and applied (or declined), the plan moves to
+`plans/history/`.
