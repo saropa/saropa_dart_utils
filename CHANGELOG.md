@@ -26,8 +26,12 @@ cspell:disable
 
 ## [Unreleased]
 
-Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-source graph search, time-series analytics, calendar/billing helpers, and async cancellation; then a second batch of range-query trees, approximate string search, spatial indexing, async write caches, graph simplification/serialization, and rate-limited scheduling — plus a null-year-tolerant day-count helper.
 [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
+## [1.6.0] - 2026-06-12
+
+Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-source graph search, time-series analytics, calendar/billing helpers, and async cancellation; then a second batch of range-query trees, approximate string search, spatial indexing, async write caches, graph simplification/serialization, and rate-limited scheduling — plus a null-year-tolerant day-count helper. Then a full-project correctness audit of all 476 library files: ~40 algorithm/crash/concurrency bug fixes (incl. a semaphore permit race and two process hangs), ~30 documentation-accuracy corrections, 40 new regression tests, and a per-method audit-date stamp on every method. All fixes preserve existing signatures (backward-compatible).
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.0/CHANGELOG.md)
 
 ### Changed
 
