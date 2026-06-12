@@ -16,6 +16,7 @@ List<(String version, String content)> parseChangelogSections(String changelog) 
     // cluster, so any emoji/non-BMP content earlier in the changelog would
     // misalign the slice and garble the section body. start..end are valid
     // code-unit bounds within `changelog`, so substring cannot throw here.
+    // ignore: avoid_string_substring -- bounds are RegExp match offsets into the same string; in range by construction
     out.add((ver, changelog.substring(start, end).trim()));
   }
   return out;
