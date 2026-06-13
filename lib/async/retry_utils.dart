@@ -25,7 +25,11 @@ Future<T> retryWithBackoff<T>(
       if (attempt >= maxAttempts) rethrow;
       final Duration delay = isExponential
           ? Duration(
-              milliseconds: initialDelay.inMilliseconds * (1 << (attempt - 1)),
+              // Clamp the shift to 30 (matching exponential_backoff_utils /
+              // retry_policy_utils): an unclamped `1 << (attempt-1)` overflows the
+              // web's 32-bit shift at high attempt counts and yields a wrong
+              // (small/negative) delay.
+              milliseconds: initialDelay.inMilliseconds * (1 << (attempt - 1).clamp(0, 30)),
             )
           : Duration(
               milliseconds: initialDelay.inMilliseconds * attempt,

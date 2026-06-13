@@ -51,9 +51,12 @@ Release-tooling hardening plus release-build input validation. The tooling work 
   - `removePrefix` / `removeSuffix` ([string_lower_extensions.dart](lib/string/string_lower_extensions.dart)) fed a code-unit `prefix.length`/`suffix.length` into `substringSafe`, dropping the wrong span when the prefix/suffix or content held astral chars (`'😀ab'.removePrefix('😀')` → `'b'`). Switched to code-unit `substring`, consistent with `startsWith`/`endsWith`.
 - **`AsyncSemaphoreUtils.release()` guards over-release** ([async_semaphore_utils.dart](lib/async/async_semaphore_utils.dart)) — a `release()` with no matching `acquire()` (and no waiter) silently pushed `_available` above `permits`, permanently letting the semaphore admit more than `permits` concurrent holders. It now throws `StateError` instead of corrupting the permit count.
 
+- **`retryWithBackoff` clamps the exponential shift** ([retry_utils.dart](lib/async/retry_utils.dart)) — `1 << (attempt - 1)` was unclamped, so a large `maxAttempts` overflowed the web's 32-bit shift and produced a wrong (small/negative) delay. Now clamped to `<< 30`, matching `exponential_backoff_utils`/`retry_policy_utils`.
+
 ### Changed (docs)
 
 - `withTimeout` ([timeout_policy_utils.dart](lib/async/timeout_policy_utils.dart)) documents that a `null` fallback is read as "no fallback" (rethrow), so a nullable `T` cannot use `null` as the recovery value — use the required-fallback `timeout_fallback_utils` instead.
+- `sanitizeHtml`/`stripHtmlTags` ([html_sanitizer_utils.dart](lib/string/html_sanitizer_utils.dart)) docs corrected: it is an HTML-to-plain-text reducer, NOT an allowlist sanitizer (the old doc claimed "allowlist tags/attributes" it never implemented). Added a caveat that its regex tag-stripping is not a security sanitizer and must not be used to produce HTML for re-insertion.
 
 ### Changed
 

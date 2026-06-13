@@ -1,7 +1,15 @@
-/// HTML sanitizer: allowlist tags/attributes, strip scripts/styles (roadmap #439).
+/// HTML-to-plain-text reducer (roadmap #439).
+///
+/// NOT a security sanitizer and NOT an allowlist: it removes `<script>`/`<style>`
+/// blocks then strips ALL remaining tags to plain text — no tag/attribute is
+/// preserved. Do not use it to produce HTML for re-insertion into a page; the
+/// tag-matching is a regex (`<[^>]+>`) that cannot handle a `>` inside an
+/// attribute value and is not a substitute for a real HTML sanitizer/parser.
+/// Use it only to extract readable text from HTML.
 library;
 
-/// Removes script and style tag contents, then strips all HTML tags.
+/// Removes `<script>`/`<style>` blocks, then strips all remaining tags, leaving
+/// plain text. See the library note: this is text extraction, not sanitization.
 /// Audited: 2026-06-12 11:26 EDT
 String sanitizeHtml(String html) {
   String s = html.replaceAllMapped(
