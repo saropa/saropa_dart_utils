@@ -1,0 +1,49 @@
+# Pre-tag publish gate — standalone on purpose.
+#
+# Runs the SAME `dart pub publish --dry-run` that the tag-triggered publish
+# workflow (publish.yml) enforces, but on every push/PR to main instead of only
+# when a `v*` tag fires. The dry-run runs `dart analyze` internally and exits 65
+# on any WARNING (e.g. a saropa_lints rule newly promoted to WARNING), plus the
+# pub validators. Before this gate existed, such a warning was invisible until a
+# tag triggered publish: each one cost a full tag -> CI -> exit-65 round (v1.6.0
+# took ~6 of them, fixed one warning at a time). A tag now only ever fires
+# against an already-green tree.
+#
+# This lives in its OWN file rather than the `ci` workflow (main.yaml) because
+# that workflow is disabled_manually — its VeryGood reusable jobs (build, pana,
+# spell-check, semantic_pull_request) were turned off, and adding the gate there
+# would have made it inert. A standalone workflow is active by default, so the
+# gate runs regardless of the `ci` workflow's state. Uses the same fresh resolve
+# as publish.yml, so the exact-pinned saropa_lints version that runs here is the
+# one the publish will run.
+name: release_gate
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  release_gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Publish dry run
+        run: dart pub publish --dry-run

@@ -31,7 +31,7 @@ Release-tooling hardening only — no change to any published API or behavior. F
 
 ### Changed
 
-- CI (`main.yaml`): added a `release_gate` job that runs `dart pub publish --dry-run` on every push/PR to main — the same command the tag-triggered `publish.yml` enforces (it runs `dart analyze` internally and exits 65 on any warning). Blocking warnings now surface at PR time, before the irreversible version tag, instead of one-per-tag-round.
+- CI: added a standalone `release_gate` workflow (`.github/workflows/release_gate.yml`) that runs `dart pub publish --dry-run` on every push/PR to main — the same command the tag-triggered `publish.yml` enforces (it runs `dart analyze` internally and exits 65 on any warning). Blocking warnings now surface at PR time, before the irreversible version tag, instead of one-per-tag-round. It is a separate workflow rather than a job in `ci` (`main.yaml`) because that workflow is disabled, which would have made the gate inert.
 - Release script (`scripts/modules/workflow.py`): the local analysis gate now fails on WARNING-severity findings, not just errors. Because `dart pub publish` exits 65 on a single warning, a warning that previously passed this gate still blocked the publish; matching the semantics locally catches it before tagging.
 - `pubspec.yaml`: pinned `saropa_lints` to exact `13.12.7` (was `^13.12.7`). A caret range let CI's fresh resolve pull a newer patch that promoted a rule to WARNING while the older local lock showed nothing — the version drift behind the whack-a-mole.
 
