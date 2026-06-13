@@ -88,3 +88,36 @@ grapheme-vs-code-unit slicing, RNG choice, and doc drift — plus a few bespoke-
 - `dart analyze`: clean.
 - All ~33 fixes ship with regression tests; signatures preserved; `stableHash` VM output unchanged.
 - Review status: COMPLETE.
+
+## Finish Report (2026-06-13)
+
+**Scope:** (A) Dart package source and tests. No VS Code extension, no Flutter UI, no ARB
+localization exists in this package — it is a pure utility library whose strings are API
+identifiers and dartdoc, not user-facing copy.
+
+**Deep review:** changes are confined to the audited utility functions; each fix is local to one
+file (or, for the assert-hardening pass, a consistent static-helper-in-initializer pattern repeated
+across constructors so a precondition throws in release without tripping
+`avoid_exception_in_constructor`). No new shared infrastructure, no cross-module coupling beyond
+two intra-`async` and intra-`map` references. The `stableHash`/`HyperLogLog` 32-bit-limb rewrite is
+the only non-trivial logic addition; it reproduces the exact mod-2^64 arithmetic, so VM output is
+unchanged and only the previously-divergent web path is corrected. Comments explain the failure
+mode each guard prevents.
+
+**Testing validation:** existing tests referencing every changed symbol were grepped and opened.
+Tests that pinned prior (incorrect) behavior were rewritten to pin the corrected behavior, not
+deleted — the release-stripped-assert tests (`AssertionError` → `ArgumentError`/`RangeError` across
+16 files), the `isPathSafe` traversal tests (two pinned the security hole), the `prettyPrint`
+indentation tests (three pinned the shallow output), and a second `hasInvalidUnicode`/
+`removeInvalidUnicode` test file that pinned the old `0xDC07` constant (corrected to U+FFFD). A
+regression test was added for every fix. Final `flutter test`: 8222 passed, 2 skipped, 0 failed
+(real exit code 0). `dart analyze`: clean.
+
+**Backward compatibility:** all public signatures preserved. The only additions are
+`debounceCancelable`, `throttleCancelable`, and the `CancelableCallback` handle. `stableHash`
+digests are unchanged on the VM. The web behavior of `stableHash`/`HyperLogLog` changes (now matches
+the VM) — noted for a minor-version changelog callout.
+
+**Follow-ups (not blocking):** regenerate `CAPABILITIES.md` via `tool/gen_capabilities.dart` to list
+the new cancelable API before release; optional local cleanup of gitignored clutter
+(`custom_lint.log`, `*.bak`, `nul`).
