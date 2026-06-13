@@ -6,20 +6,27 @@
 /// keys, change detection, and deduplication where a stable, repeatable digest
 /// is needed without pulling in a cryptographic hash.
 ///
-/// Platform note (important): the digest is stable per platform but NOT across
-/// the VM/web boundary. The FNV-1a multiply relies on the VM's 64-bit
-/// two's-complement wrap; on the web (dart2js) `int` is a 53-bit double and
-/// bitwise ops truncate to 32 bits, so the same input produces a DIFFERENT
-/// digest on web than on the VM. Do not use it as a shared key between a VM
-/// client and a web client. See
-/// https://dart.dev/resources/language/number-representation.
+/// The digest is identical on every platform, including the web. The 64-bit
+/// FNV-1a is computed with 32-bit limbs (see [_mulMod64]) because a native
+/// `int * prime` relies on the VM's 64-bit two's-complement wrap, which the
+/// web's 53-bit-double `int` model lacks; the limb form reproduces the exact
+/// mod-2^64 arithmetic everywhere. The result also matches the value the older
+/// native implementation produced on the VM, so previously persisted digests
+/// stay valid. See https://dart.dev/resources/language/number-representation.
 library;
 
-/// FNV-1a 64-bit offset basis.
-const int _fnvOffset = 0xcbf29ce484222325;
+// FNV-1a 64-bit offset basis 0xcbf29ce484222325, split into 32-bit halves so
+// the constant itself is exact on the web (the full literal exceeds 2^53 and
+// would round). Hi = bits 32-63, Lo = bits 0-31.
+const int _fnvOffsetHi = 0xcbf29ce4;
+const int _fnvOffsetLo = 0x84222325;
 
-/// FNV-1a 64-bit prime.
-const int _fnvPrime = 0x100000001b3;
+// FNV-1a 64-bit prime 0x100000001b3, split the same way.
+const int _fnvPrimeHi = 0x00000100;
+const int _fnvPrimeLo = 0x000001b3;
+
+/// Mask for one 32-bit limb.
+const int _mask32 = 0xFFFFFFFF;
 
 /// Builds a deterministic canonical string for [value].
 ///
@@ -94,18 +101,54 @@ String _canonicalMap(Map<Object?, Object?> map) {
 /// Audited: 2026-06-12 11:26 EDT
 String stableHash(Object? value) {
   final String text = canonicalString(value);
-  // FNV-1a over UTF-16 code units. Dart VM ints are 64-bit two's-complement and
-  // wrap on overflow, so the multiply naturally stays in 64 bits.
-  int hash = _fnvOffset;
+  // FNV-1a over UTF-16 code units, held as two 32-bit limbs (hi:lo) so the
+  // mod-2^64 multiply is computed identically on the VM and the web. XOR the
+  // datum into the low limb (FNV-1a), then multiply the full 64-bit value by the
+  // prime via _mulMod64. This reproduces the exact result the native
+  // `(hash ^ unit) * prime` produced on the VM.
+  int hi = _fnvOffsetHi;
+  int lo = _fnvOffsetLo;
   for (final int unit in text.codeUnits) {
-    hash = (hash ^ unit) * _fnvPrime;
+    final int xored = (lo ^ unit) & _mask32;
+    final (int nextHi, int nextLo) = _mulMod64(hi, xored, _fnvPrimeHi, _fnvPrimeLo);
+    hi = nextHi;
+    lo = nextLo;
   }
-  // The 64-bit value is often negative as a signed int, and toRadixString would
-  // emit a leading '-'. toUnsigned(64) is a no-op on a VM int (the 1<<64 mask
-  // wraps to -1), so render the two 32-bit halves separately: `>> 32` then mask
-  // gives a positive high word, the low mask a positive low word — a stable,
-  // sign-free 16-digit lowercase hex (per platform; see the platform note).
-  final int high = (hash >> 32) & 0xFFFFFFFF;
-  final int low = hash & 0xFFFFFFFF;
-  return high.toRadixString(16).padLeft(8, '0') + low.toRadixString(16).padLeft(8, '0');
+  // Both limbs are already unsigned 32-bit, so each renders as a sign-free
+  // 8-digit hex word; concatenated they are the stable 16-digit digest.
+  return hi.toRadixString(16).padLeft(8, '0') + lo.toRadixString(16).padLeft(8, '0');
+}
+
+/// 64-bit product `(aHi:aLo) * (bHi:bLo)` reduced mod 2^64, returned as
+/// `(hi, lo)` 32-bit limbs.
+///
+/// `a*b mod 2^64 = (aLo*bLo) + ((aLo*bHi + aHi*bLo) mod 2^32) << 32`. The high
+/// cross terms above bit 63 are discarded by the modulus, so only the low 32
+/// bits of each cross product matter. Every intermediate is kept below 2^53 via
+/// [_mul3232] so the arithmetic is exact under the web's double-backed `int`.
+(int, int) _mulMod64(int aHi, int aLo, int bHi, int bLo) {
+  final (int llHi, int llLo) = _mul3232(aLo, bLo);
+  final int cross = (_mul3232(aLo, bHi).$2 + _mul3232(aHi, bLo).$2) & _mask32;
+  return ((llHi + cross) & _mask32, llLo);
+}
+
+/// 64-bit product of two 32-bit values, returned as `(hi, lo)` 32-bit limbs.
+///
+/// Splits each operand into 16-bit halves so no partial product exceeds 2^32 and
+/// no running sum exceeds ~2^33 — all well under 2^53, hence exact on the web.
+(int, int) _mul3232(int a, int b) {
+  final int aLo = a & 0xFFFF;
+  final int aHi = (a >>> 16) & 0xFFFF;
+  final int bLo = b & 0xFFFF;
+  final int bHi = (b >>> 16) & 0xFFFF;
+  final int ll = aLo * bLo;
+  final int lh = aLo * bHi;
+  final int hl = aHi * bLo;
+  final int hh = aHi * bHi;
+  // Accumulate the 16-bit columns with carries: bits 0-15 from ll, bits 16-31
+  // from ll's high half plus the low halves of the cross terms, the rest into hi.
+  final int carry = (ll >>> 16) + (lh & 0xFFFF) + (hl & 0xFFFF);
+  final int lo = ((ll & 0xFFFF) | ((carry & 0xFFFF) << 16)) & _mask32;
+  final int hi = (hh + (lh >>> 16) + (hl >>> 16) + (carry >>> 16)) & _mask32;
+  return (hi, lo);
 }

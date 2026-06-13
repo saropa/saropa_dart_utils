@@ -51,6 +51,15 @@ void main() {
       expect(stableHash(<Object?>[1, 'two', true]), equals(stableHash(<Object?>[1, 'two', true])));
     });
 
+    // Pinned digests guard the FNV-1a output value. They were verified against a
+    // BigInt mod-2^64 ground truth and match the pre-rewrite native-int result,
+    // so the 32-bit-limb implementation must reproduce them on EVERY platform
+    // (VM and web). A change here means the algorithm or limb math drifted.
+    test('should match pinned digests across platforms', () {
+      expect(stableHash('a'), equals('d4272417d7c77eea'));
+      expect(stableHash(<String, int>{'a': 1, 'b': 2}), equals('a0ebc03bdc71de7b'));
+    });
+
     test('should be unaffected by map key insertion order', () {
       final String first = stableHash(<String, Object?>{'a': 1, 'b': 2});
       final String second = stableHash(<String, Object?>{'b': 2, 'a': 1});
