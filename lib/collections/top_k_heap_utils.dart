@@ -1,4 +1,8 @@
-/// Top-K by key via min-heap — roadmap #459.
+/// Top-K by key, kept in a bounded sorted buffer — roadmap #459.
+///
+/// (Not a binary heap despite the roadmap title: it holds the k best entries in
+/// a list sorted ascending by key and re-sorts on each replacement, which is
+/// O(k log k) per replacement but keeps memory at O(k).)
 library;
 
 import 'package:collection/collection.dart';

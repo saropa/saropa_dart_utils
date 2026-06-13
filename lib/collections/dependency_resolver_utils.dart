@@ -222,10 +222,16 @@ bool _satisfiesCaret(String version, String base) {
     return false;
   }
   final (int major, int minor, int patch) = parsed;
-  final String upper = major > 0
-      ? '${major + 1}.0.0'
-      : minor > 0
-      ? '0.${minor + 1}.0'
-      : '0.0.${patch + 1}';
+  // The caret upper bound is the next version that changes the left-most
+  // non-zero component. Spelled out as a chained conditional rather than a
+  // nested ternary, which the project style rules disallow.
+  final String upper;
+  if (major > 0) {
+    upper = '${major + 1}.0.0';
+  } else if (minor > 0) {
+    upper = '0.${minor + 1}.0';
+  } else {
+    upper = '0.0.${patch + 1}';
+  }
   return compareVersions(version, upper) < 0;
 }

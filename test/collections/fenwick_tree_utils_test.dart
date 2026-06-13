@@ -26,6 +26,11 @@ void main() {
 
         expect(t.length, equals(0));
       });
+
+      test('should reject a negative size in release (regression)', () {
+        // size == -1 previously slipped past List.filled(0) into an unusable tree.
+        expect(() => FenwickTree(-1), throwsA(isA<ArgumentError>()));
+      });
     });
 
     group('fromList', () {

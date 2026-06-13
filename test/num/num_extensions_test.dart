@@ -20,6 +20,11 @@ void main() {
         expect((-100).isNotZeroOrNegative, isFalse);
         expect((-0.001).isNotZeroOrNegative, isFalse);
       });
+
+      test('NaN is not positive (regression)', () {
+        // The old `this != 0 && !isNegative` form wrongly returned true for NaN.
+        expect(double.nan.isNotZeroOrNegative, isFalse);
+      });
     });
 
     group('isZeroOrNegative', () {

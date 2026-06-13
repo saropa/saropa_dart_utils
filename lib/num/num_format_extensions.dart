@@ -18,9 +18,16 @@ extension NumFormatExtensions on num {
     final double x = toDouble();
     if (x == 0) return 0;
     final double magnitude = x.abs();
-    final int e = magnitude >= 1
-        ? math.log(magnitude) ~/ math.ln10
-        : -(math.log(magnitude) / math.ln10).ceil();
+    // Decimal exponent e such that magnitude lies in [10^e, 10^(e+1)). Flooring
+    // the base-10 log mis-sizes the scale at exact powers of ten — the float log
+    // is fuzzy there and can land just under the integer — so nudge e to the
+    // true integer exponent with the pow comparison below.
+    int e = (math.log(magnitude) / math.ln10).floor();
+    if (magnitude >= math.pow(10, e + 1)) {
+      e++;
+    } else if (magnitude < math.pow(10, e)) {
+      e--;
+    }
     final double scale = math.pow(10.0, significantDigits - 1 - e).toDouble();
     return (x * scale).round() / scale;
   }

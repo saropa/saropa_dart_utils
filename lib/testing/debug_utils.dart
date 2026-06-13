@@ -20,20 +20,27 @@ library;
 /// Audited: 2026-06-12 11:26 EDT
 String prettyPrint(Object? obj, {int indent = 0}) {
   const int spaces = 2;
+  // `pad` indents the CLOSING brace/bracket (current level); `childPad` indents
+  // the entries one level deeper. The old code prefixed entries with `pad`, so
+  // every key/item was one level too shallow (top-level keys got no indent at
+  // all, contradicting the documented output).
   final String pad = ' ' * (indent * spaces);
+  final String childPad = ' ' * ((indent + 1) * spaces);
   if (obj == null) return 'null';
   if (obj is Map) {
     if (obj.isEmpty) return '{}';
     final List<String> parts = <String>[];
     for (final MapEntry<dynamic, dynamic> e in obj.entries) {
-      parts.add('$pad${e.key}: ${prettyPrint(e.value, indent: indent + 1)}');
+      parts.add('$childPad${e.key}: ${prettyPrint(e.value, indent: indent + 1)}');
     }
     return '{\n${parts.join('\n')}\n$pad}';
   }
   if (obj is List) {
     if (obj.isEmpty) return '[]';
-    final List<String> parts = obj.map((Object? e) => prettyPrint(e, indent: indent + 1)).toList();
-    return '[\n$pad${parts.join(',\n$pad')}\n$pad]';
+    final List<String> parts = obj
+        .map((Object? e) => '$childPad${prettyPrint(e, indent: indent + 1)}')
+        .toList();
+    return '[\n${parts.join(',\n')}\n$pad]';
   }
   return obj.toString();
 }
@@ -98,8 +105,14 @@ List<int> rangeInt(int start, int end, {int step = 1}) {
 /// Audited: 2026-06-12 11:26 EDT
 List<double> rangeDouble(double start, double end, double step) {
   final List<double> out = <double>[];
-  for (double x = start; step > 0 ? x < end : x > end; x += step) {
-    out.add(x);
+  // A zero step cannot advance — guard before dividing (the old accumulating
+  // loop would spin forever). Compute each element as start + i*step rather than
+  // repeatedly adding, so floating-point error does not drift the endpoint in or
+  // out of the range.
+  if (step == 0) return out;
+  final int n = ((end - start) / step).ceil();
+  for (int i = 0; i < n; i++) {
+    out.add(start + i * step);
   }
   return out;
 }

@@ -20,14 +20,14 @@ void main() {
       expect(prettyPrint(42), '42');
     });
 
-    test('renders a flat map (top-level entries get the zero-width pad)', () {
-      // At indent 0 the pad is empty, so top-level entries have no leading
-      // spaces; nesting deeper adds two spaces per level.
-      expect(prettyPrint(<String, dynamic>{'a': 1}), '{\na: 1\n}');
+    test('renders a flat map with two-space indented entries', () {
+      // Entries are indented one level (2 spaces); the closing brace is at the
+      // current level. (Regression: entries were previously un-indented.)
+      expect(prettyPrint(<String, dynamic>{'a': 1}), '{\n  a: 1\n}');
     });
 
     test('renders a flat list across lines', () {
-      expect(prettyPrint(<dynamic>[1, 2]), '[\n1,\n2\n]');
+      expect(prettyPrint(<dynamic>[1, 2]), '[\n  1,\n  2\n]');
     });
 
     test('renders nested map and list', () {
@@ -36,7 +36,7 @@ void main() {
           'a': 1,
           'b': <dynamic>[2, 3],
         }),
-        '{\na: 1\nb: [\n  2,\n  3\n  ]\n}',
+        '{\n  a: 1\n  b: [\n    2,\n    3\n  ]\n}',
       );
     });
   });
@@ -109,6 +109,14 @@ void main() {
 
     test('descending range with negative step', () {
       expect(rangeDouble(2, 0, -1), <double>[2.0, 1.0]);
+    });
+
+    test('a 0.1 step yields the expected count without float drift (regression)', () {
+      expect(rangeDouble(0, 1, 0.1), hasLength(10));
+    });
+
+    test('a zero step returns empty instead of looping forever (regression)', () {
+      expect(rangeDouble(0, 1, 0), <double>[]);
     });
   });
 

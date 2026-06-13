@@ -12,9 +12,14 @@ extension NumberExtensions on num {
   /// 0.isNotZeroOrNegative; // Returns false
   /// (-3).isNotZeroOrNegative; // Returns false
   /// ```
-  /// Audited: 2026-06-12 11:26 EDT
+  ///
+  /// `NaN` is neither positive nor zero-or-negative, so both this and
+  /// [isZeroOrNegative] return `false` for it (they are strict complements only
+  /// for non-NaN values). The old `this != 0 && !isNegative` form wrongly
+  /// classified `NaN` as positive.
+  /// Audited: 2026-06-13
   @useResult
-  bool get isNotZeroOrNegative => this != 0 && !isNegative;
+  bool get isNotZeroOrNegative => this > 0;
 
   /// Returns `true` if the number is zero or negative.
   ///
@@ -26,9 +31,11 @@ extension NumberExtensions on num {
   /// 0.isZeroOrNegative; // Returns true
   /// (-3).isZeroOrNegative; // Returns true
   /// ```
-  /// Audited: 2026-06-12 11:26 EDT
+  ///
+  /// Returns `false` for `NaN` (see [isNotZeroOrNegative]).
+  /// Audited: 2026-06-13
   @useResult
-  bool get isZeroOrNegative => this == 0 || isNegative;
+  bool get isZeroOrNegative => this <= 0;
 
   /// Returns the number of characters in the string representation of this number.
   ///

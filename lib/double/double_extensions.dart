@@ -49,9 +49,9 @@ extension DoubleExtensions on double {
   /// ```dart
   /// 0.5.toPercentage(); // '50%'
   /// 0.756.toPercentage(decimalPlaces: 1); // '75.6%' (rounded down)
-  /// 0.756.toPercentage(decimalPlaces: 1, roundDown: false); // '75.6%'
+  /// 0.756.toPercentage(decimalPlaces: 1, doRoundDown: false); // '75.6%'
   /// 0.999.toPercentage(); // '99%' (rounded down)
-  /// 0.999.toPercentage(roundDown: false); // '100%'
+  /// 0.999.toPercentage(doRoundDown: false); // '100%'
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   @useResult

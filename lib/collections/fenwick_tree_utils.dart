@@ -18,10 +18,20 @@ class FenwickTree {
   /// Requires `size >= 0`.
   /// Audited: 2026-06-12 11:26 EDT
   FenwickTree(int size)
-    : assert(size >= 0, 'size ($size) must be >= 0'),
-      _size = size,
+    : _size = _validatedSize(size),
       // One extra slot because the tree is 1-based; index 0 stays unused.
       _tree = List<num>.filled(size + 1, 0);
+
+  // Enforced in release (an assert strips): a size of -1 otherwise slips past
+  // the filled-array allocation and builds an unusable tree. A static helper in
+  // the initializer keeps the throw out of the constructor body, which the
+  // avoid_exception_in_constructor lint forbids.
+  static int _validatedSize(int size) {
+    if (size < 0) {
+      throw ArgumentError.value(size, 'size', 'must be >= 0');
+    }
+    return size;
+  }
 
   /// Creates a tree seeded with [values], in `O(n)`.
   /// Audited: 2026-06-12 11:26 EDT
