@@ -52,6 +52,95 @@ void main() {
         <String>['foo', 'Bar', 'baz'],
       );
     });
+
+    // The minLength merging branch (the most complex path in the method) is
+    // exercised below. minLength == 1 leaves the raw capitalization split alone;
+    // only minLength > 1 walks the buffer and fuses adjacent short parts.
+
+    test('minLength 1 does not merge: aB stays split', () {
+      // minLength == 1 skips the merge branch entirely, so the lower-to-upper
+      // boundary in 'aB' survives as two parts.
+      expect('aB'.splitCapitalizedUnicode(minLength: 1), <String>['a', 'B']);
+    });
+
+    test('minLength 2 fuses a one-char part into its neighbor: aB -> [aB]', () {
+      // Split yields ['a', 'B']; 'a' (length 1) is below minLength 2, so it
+      // fuses with the following part into a single 'aB'.
+      expect('aB'.splitCapitalizedUnicode(minLength: 2), <String>['aB']);
+    });
+
+    test('minLength 2 keeps parts when every part already meets the floor', () {
+      // 'abCdEf' splits to ['ab', 'Cd', 'Ef']; all three are length 2, so none
+      // is below the floor and no merging occurs.
+      expect(
+        'abCdEf'.splitCapitalizedUnicode(minLength: 2),
+        <String>['ab', 'Cd', 'Ef'],
+      );
+    });
+
+    test('minLength 2 fuses only the short leading part', () {
+      // 'aBcdEf' splits to ['a', 'Bcd', 'Ef']; only 'a' is below the floor, so
+      // it fuses forward to 'aBcd' and 'Ef' stays separate — a partial merge,
+      // not an all-or-nothing collapse.
+      expect(
+        'aBcdEf'.splitCapitalizedUnicode(minLength: 2),
+        <String>['aBcd', 'Ef'],
+      );
+    });
+
+    test('minLength larger than any part fuses everything into one', () {
+      // With a floor of 100 no part can ever satisfy the threshold, so the whole
+      // capitalization split collapses back into the original string.
+      expect(
+        'aBcD'.splitCapitalizedUnicode(minLength: 100),
+        <String>['aBcD'],
+      );
+    });
+
+    test('Unicode merge: straße/Mit/Österreich at minLength 4', () {
+      // Splits to ['straße', 'Mit', 'Österreich']; 'Mit' (length 3) is below 4,
+      // so it fuses backward into 'straßeMit', while 'Österreich' (length 10)
+      // stands alone. Confirms the merge walks Unicode parts correctly.
+      expect(
+        'straßeMitÖsterreich'.splitCapitalizedUnicode(minLength: 4),
+        <String>['straßeMit', 'Österreich'],
+      );
+    });
+
+    test('splitNumbers splits the digit-to-letter boundary too', () {
+      // The number-aware regex splits BOTH lower-to-digit and digit-to-letter,
+      // so 'Area51TestSite' yields four parts, not three. (The originating app's
+      // copy lacked the digit-to-letter rule and produced '51Test' fused; the
+      // library deliberately separates them.) minLength 1 disables merging.
+      expect(
+        'Area51TestSite'.splitCapitalizedUnicode(
+          splitNumbers: true,
+          minLength: 1,
+        ),
+        <String>['Area', '51', 'Test', 'Site'],
+      );
+    });
+
+    test('splitBySpace runs after merging and is not subject to minLength', () {
+      // '160 / 4A' has no capitalization boundary, so it stays one segment
+      // through the (skipped) merge step; the trailing space split then breaks
+      // it into ['160', '/', '4A']. The single-char '/' survives even though
+      // minLength is 2, because the space split does not re-apply the floor.
+      expect(
+        '160 / 4A'.splitCapitalizedUnicode(splitBySpace: true, minLength: 2),
+        <String>['160', '/', '4A'],
+      );
+    });
+
+    test('splitBySpace yields single-char tokens regardless of minLength', () {
+      // 'A B C D' has no lower-to-upper boundary, so the merge step is a no-op
+      // on the single segment; only the space split fires, producing four
+      // one-char tokens that minLength 3 does not collapse.
+      expect(
+        'A B C D'.splitCapitalizedUnicode(splitBySpace: true, minLength: 3),
+        <String>['A', 'B', 'C', 'D'],
+      );
+    });
   });
 
   group('words', () {

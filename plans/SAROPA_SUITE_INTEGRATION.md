@@ -93,9 +93,39 @@ it can touch the protocol, in priority order:
   ships. The pending `saropa_lints` bump ([PENDING_saropa_lints_bump.md](PENDING_saropa_lints_bump.md))
   is part of keeping that current.
 
-There is deliberately **no** producer/consumer/deep-link/commit-stamp requirement here — those are
-IDE-extension concerns this package has no surface for. Inventing them would be the padding the
-honest-framing note above rejects.
+- **R5 — Migration / "prefer `saropa_dart_utils`" rule pack.** The inverse of R1: where R1 maps a
+  crash rule → the safe helper, R5 detects code in a *consumer* project that hand-rolls something this
+  library already ships, and recommends the library symbol with a quick fix.
+  **Delivery decision (settled):** these ship as a `saropa_dart_utils` **rule pack inside
+  `saropa_lints`**, mirroring its existing per-library packs (GetX/Riverpod/…), NOT as a standalone
+  `custom_lint` plugin and NOT as a new VS Code extension. Rationale: `saropa_lints` is the
+  ecosystem's analyzer plugin; a standalone plugin would force every consumer to run a second lint
+  toolchain, while a pack surfaces in the existing Saropa Lints extension automatically and is gated
+  to merge only when `saropa_dart_utils` is a resolved dependency (`kRulePackDependencyGates`).
+
+  **Hard guardrail (learned 2026-06-13) — a migration rule must never recommend a util that defeats
+  Dart flow analysis.** `String?.isNullOrEmpty` / `isNotNullOrEmpty` are the canonical anti-example:
+  `if (s == null || s.isEmpty)` promotes `s` to non-null in the guarded scope, but
+  `if (s.isNullOrEmpty)` does not — the analyzer cannot see the opaque getter implies `s != null`, so
+  downstream code loses promotion and is pushed toward `!`. That family is **excluded** as a migration
+  target. Every candidate target must be vetted to preserve promotion (and otherwise not degrade the
+  code) *before* a rule is written; the user vets the shortlist because they hold strong opinions on
+  which utils are landmines. Rules must also be **type-aware** (e.g. the differently-named `List` form
+  `isListNullOrEmpty` vs the `String` getters), so detection uses a `staticType` check, never a bare
+  syntactic match. This repo owns the *catalog* (which inline shape maps to which symbol, and which
+  symbols are disqualified); `saropa_lints` hosts the *rule code*. **First concrete rule: TBD** —
+  pending a user-vetted, flow-analysis-safe target.
+
+- **R6 — Pubspec version-upgrade nudge.** When a project depends on an out-of-date `saropa_dart_utils`,
+  prompt to bump it. **Delivery:** rides `saropa_lints`' existing **Package Vibrancy** ("version-gap
+  PR triage" / dependency-health scanning) — no new code path and no new extension. This is the
+  mirror of the suite-discovery nudge the Lints doc already specifies (its R7). Gate once with the
+  existing offered/dismissed pattern so it never nags.
+
+The only NEW artifact either requirement creates is Dart rule code + a dependency-gate entry inside
+`saropa_lints`; everything user-facing reuses the Saropa Lints extension that already exists. There is
+deliberately **no** producer/consumer/deep-link/commit-stamp requirement and **no dedicated VS Code
+extension** for this library — those would be padding the honest-framing note above rejects.
 
 ---
 
@@ -135,14 +165,19 @@ that does not exist.
 
 ## Phasing
 
-1. **R1 — rule-to-remediation mapping + pinning test.** Pure data, zero runtime risk, immediately
-   useful to Lints R3. Do first.
-2. **R3 — remediation coverage audit.** Turns the suite's crash enumeration into a library backlog;
+1. **R5 — migration / "prefer" rule pack in `saropa_lints`.** Blocked on selecting a user-vetted,
+   flow-analysis-safe target (the `isNullOrEmpty` family is disqualified — see R5's guardrail). Once a
+   target is approved, build it type-aware end-to-end — detection + quick fix + dependency gate + test
+   — to prove the pack pattern; remaining inline-shape rules are added against the same scaffold.
+2. **R1 — rule-to-remediation mapping + pinning test.** Pure data, zero runtime risk, immediately
+   useful to Lints R3. Shares the catalog R5 reads from.
+3. **R6 — pubspec version-upgrade nudge** via Package Vibrancy (no new code path).
+4. **R3 — remediation coverage audit.** Turns the suite's crash enumeration into a library backlog;
    feeds ROADMAP.
-3. **R4 — keep the dogfooding gate green** (ongoing; unblock via the pending `saropa_lints` bump).
-4. **R2 — Dart envelope model** — only after a concrete Dart producer is confirmed. May never be
+5. **R4 — keep the dogfooding gate green** (ongoing; unblock via the pending `saropa_lints` bump).
+6. **R2 — Dart envelope model** — only after a concrete Dart producer is confirmed. May never be
    needed.
-5. **Shared infra — adopt `saropa-release-tools`** once it is extracted (Python; consumer only).
+7. **Shared infra — adopt `saropa-release-tools`** once it is extracted (Python; consumer only).
 
 ---
 

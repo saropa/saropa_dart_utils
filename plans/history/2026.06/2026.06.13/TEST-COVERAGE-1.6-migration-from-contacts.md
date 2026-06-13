@@ -1,7 +1,11 @@
 # TEST COVERAGE — 1.6.x migrated-util test cases harvested from Saropa Contacts
 
 **Type:** Test-coverage offering (not a bug)
-**Status:** Open — for maintainer review
+**Status:** Closed — all 7 utilities verified covered (2026-06-13). Six suites
+already met or exceeded the harvested cases; `splitCapitalizedUnicode`'s
+`minLength` merging branch was the one gap and now has 10 tests written against
+the library's actual behavior (some harvested expectations diverged from the app
+copy and were corrected, not pasted verbatim). See the Finish Report below.
 
 ---
 
@@ -287,3 +291,51 @@ group('RelativeTime', () {
 
 - saropa_dart_utils: 1.6.1
 - Source: Saropa Contacts test suite (removed 2026-06-13).
+
+---
+
+## Finish Report (2026-06-13)
+
+### Outcome
+
+A line-by-line diff of the harvested cases against the library's own suite found
+six of the seven utilities already covered at or beyond the offered cases:
+`preventOrphans`, `anyContains`, `removeNullsAndTrimmedEmpty`, `sortMap`,
+`sortNullableStringListInPlace`, and the relative-time predicates each have a
+dedicated suite that matches every harvested assertion and adds further
+Unicode, boundary, and large-input cases.
+
+The lone gap was `splitCapitalizedUnicode`. Its dedicated suite held five basic
+tests, none of which entered the `minLength` merging branch
+([lib/string/string_text_extensions.dart](../lib/string/string_text_extensions.dart),
+lines 75-89) — the method's most complex path, which walks the capitalization
+split and fuses adjacent parts shorter than `minLength`. That branch shipped
+untested.
+
+### Change
+
+Ten cases were added to the `splitCapitalizedUnicode` group in
+[test/string/string_text_extensions_test.dart](../test/string/string_text_extensions_test.dart),
+each pinning behavior verified against the live implementation rather than
+copied from the harvested doc:
+
+- `minLength: 1` is a no-op (merge branch skipped); `aB` stays `['a', 'B']`.
+- `minLength: 2` fuses a one-char part (`aB` → `['aB']`).
+- A part already at the floor stays split (`abCdEf` → `['ab', 'Cd', 'Ef']`).
+- Partial fusion — only the short leading part fuses (`aBcdEf` → `['aBcd', 'Ef']`).
+- A floor larger than any part collapses everything (`aBcD` → `['aBcD']`).
+- Unicode merge (`straßeMitÖsterreich`, `minLength: 4` → `['straßeMit', 'Österreich']`).
+- `splitNumbers` separates the digit-to-letter boundary, so `Area51TestSite`
+  yields four parts `['Area', '51', 'Test', 'Site']`, not the three the source
+  app produced — the library's number-aware regex has a digit→letter rule the
+  app copy lacked. The harvested expectation was corrected, not pasted.
+- `splitBySpace` runs after the merge and is not subject to `minLength`
+  (`160 / 4A` → `['160', '/', '4A']`; `A B C D` → `['A', 'B', 'C', 'D']`).
+
+### Verification
+
+`flutter test test/string/string_text_extensions_test.dart` → 63 passed (was 53).
+`dart analyze test/string/string_text_extensions_test.dart` → No issues found.
+
+No production code changed; the merge branch already behaved correctly, so these
+are characterization tests locking in current behavior, not a fix.
