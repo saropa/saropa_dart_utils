@@ -37,8 +37,18 @@ String formatFileSize(int bytes, {int decimals = 1}) {
     v /= 1024;
     i++;
   }
-  final String fmt = v >= 10 || v == v.truncateToDouble()
-      ? v.truncate().toString()
-      : v.toStringAsFixed(decimals).replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+  String fmt;
+  if (v >= 10 || v == v.truncateToDouble()) {
+    fmt = v.truncate().toString();
+  } else {
+    fmt = v.toStringAsFixed(decimals);
+    // Strip trailing zeros only AFTER a decimal point. With decimals: 0,
+    // toStringAsFixed rounds (9.5 -> "10") and produces no '.', so the bare
+    // `0+$` strip turned "10" into "1" — wrong magnitude. Guarding on '.' keeps
+    // integer-part zeros.
+    if (fmt.contains('.')) {
+      fmt = fmt.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+    }
+  }
   return '$fmt ${units[i]}';
 }

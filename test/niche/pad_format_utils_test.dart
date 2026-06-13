@@ -60,5 +60,11 @@ void main() {
       // 1024 + 256 = 1280 -> 1.25 KB at 2 decimals.
       expect(formatFileSize(1280, decimals: 2), '1.25 KB');
     });
+
+    test('decimals: 0 that rounds up keeps integer-part zeros (regression)', () {
+      // 9728 / 1024 = 9.5 -> toStringAsFixed(0) "10"; the old trailing-zero strip
+      // turned it into "1 KB".
+      expect(formatFileSize(9728, decimals: 0), '10 KB');
+    });
   });
 }

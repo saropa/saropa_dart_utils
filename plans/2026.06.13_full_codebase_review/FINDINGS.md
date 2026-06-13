@@ -119,6 +119,38 @@ timeseries_buffer, multi_index, interval_tree, bk_tree, fenwick.
 - num/double/int (31): gcd/lcm/prime/factorial/lerp/modulo/range/safe-division correct; unit-conversion constants verified (m↔ft, kg↔lb); exceptions above.
 - iterable/list (35): null-sentinel handling correct (lastWhereOrElse/run-length use presence flags), cartesian/flatten materialize one-shot iterables safely, rotate/binary-search/topK bounds correct; only the two doc nits above.
 
+## Phase 2 wave-3 (map, object, validation, url, misc singletons)
+
+### Fixed this round (verified + regression tests)
+| # | File | Sev | Fix |
+|---|------|-----|-----|
+| 20 | validation/path_validator_utils.dart (isPathSafe) | **S1 security** | traversal bypass: escape check now vs root depth, not filesystem root |
+| 21 | url/path_extension_utils.dart (pathExtension/pathWithoutExtension/pathChangeExtension) | S2 | dot search confined to the final segment |
+| 22 | map/map_more_extensions.dart (renameKey/renameKeys) | S2 | rebuild in one pass — no chained-rename data loss, null values kept |
+| 23 | json/json_utils.dart (cleanJsonResponse) | S3 | code-unit substring instead of grapheme substringSafe |
+| 24 | niche/pad_format_utils.dart (formatFileSize) | S3 | trailing-zero strip only after a decimal point |
+| (also) async debounce/throttle | S3 | added debounceCancelable/throttleCancelable (commit) |
+
+### Candidate backlog from wave-3 (verify, then fix)
+| File | Sev | Issue |
+|------|-----|-------|
+| map/map_deep_merge_extensions.dart + object/copy_with_defaults_utils.dart | S3 | deepMerge shares nested map/list values by reference (a key present on only one side is not cloned); mutating the result mutates the input. Deep-copy carried-through values or document. |
+| validation/ip_cidr_utils.dart (parseIpv4) | S3 | accepts sign/whitespace/leading-zero octets (`int.tryParse('+1')`/`' 1'`/`'01'`) — parser-differential risk. Reject octets not matching `^[0-9]{1,3}$`. |
+| url/url_extensions.dart (isImageUri/fileExtension) | S3 | `lastIndexOf('.')` (code unit) fed to grapheme `substringSafe` — wrong extension for astral filenames. |
+| url/url_query_utils.dart (parseQueryString) | S3 | does not decode `+` to space (form-encoding); only round-trips with its own `buildQueryString`. |
+| map/map_extensions.dart (mapToggleValue/AddValue/RemoveValue/ContainsValue) | S4 | `if (value == null) return;` no-ops for a legitimately-null element when V is nullable. |
+| object/pipe_compose_utils.dart (pipe) | S4 | typed `List<R Function(dynamic)>` forces every stage to return R; heterogeneous pipelines can't be expressed. Doc or retype. |
+| testing/debug_utils.dart (prettyPrint, rangeDouble) | S4 | prettyPrint key indentation one level too shallow; rangeDouble accumulates float error (`x += step`). |
+| gesture/gesture_utils.dart (getSwipeSpeed) | S4 | `fast: 2000` threshold dead (all speeds >=1000 are fast). |
+| collections/dependency_resolver (nested ternary #8), top_k_heap doc #9, bin_packing #10, fenwick ctor #11 | S4 | from earlier waves. |
+
+### Verified clean in wave-3 (high level)
+- map (17): deep_equality/diff/flatten/nested/pick-omit/invert/transform all key-presence-correct (null values preserved); only renameKey/Keys (fixed) + deepMerge aliasing + nullable toggles.
+- object (11): cast/coalesce/identity/require/shallow-copy/nullable-more all null-safe; only pipe typing nit.
+- validation (13): jwt/ip-cidr-mask/password/safe-temp/input-shaping/cross-field correct; isPathSafe FIXED; ip parse strictness nit.
+- url (11): path_join (pathRelative fix holds)/canonicalize/build/encode/template(RFC6570)/uri_pattern correct; path_extension FIXED; isImageUri + query `+` nits.
+- misc (~43): base64/caching(all 7)/html-entities/json-types/niche(natural-sort,checksum,color,WCAG)/bool/color/flutter/uuid(secure)/regex/typed_data all correct; only cleanJsonResponse + formatFileSize (fixed) and debug_utils S4 nits.
+
 ## Themes still to verify (Phase 1 remainder)
 
 - **1b asserts:** 40 `assert()` across 22 files — classify precondition (→throw) vs invariant (ok).

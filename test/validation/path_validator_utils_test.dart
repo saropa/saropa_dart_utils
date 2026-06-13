@@ -11,9 +11,22 @@ void main() {
       expect(isPathSafe('../../../etc/passwd', 'root'), isFalse);
     });
 
-    test('dot-dot within a deeper root stays safe', () {
-      // root has 2 levels; climbing one level stays inside.
-      expect(isPathSafe('../x', 'a/b'), isTrue);
+    test('single dot-dot escaping a multi-level root is unsafe (traversal bypass)', () {
+      // The reported bypass: '../secret' from 'home/user' resolves to
+      // 'home/secret', a sibling outside the root. Must be rejected.
+      expect(isPathSafe('../secret', 'home/user'), isFalse);
+    });
+
+    test('dot-dot that climbs above a deeper root is unsafe (regression)', () {
+      // '../x' from root 'a/b' resolves to 'a/x' — a SIBLING of the root, outside
+      // it. The old code measured depth from the filesystem root and wrongly
+      // allowed climbing rootParts.length levels above the supplied root.
+      expect(isPathSafe('../x', 'a/b'), isFalse);
+    });
+
+    test('internal dot-dot that stays within root is safe', () {
+      // 'sub/../x' from 'a/b' is 'a/b/x' — never leaves the root.
+      expect(isPathSafe('sub/../x', 'a/b'), isTrue);
     });
 
     test('current-dir segments ignored', () {
@@ -40,9 +53,9 @@ void main() {
       expect(isPathSafe('', 'root'), isTrue);
     });
 
-    test('single dot-dot back to filesystem root is safe', () {
-      // depth from single-level root reaches 0, not below, so allowed.
-      expect(isPathSafe('..', 'root'), isTrue);
+    test('single dot-dot above the root is unsafe (regression)', () {
+      // '..' from 'root' resolves to the root's parent, outside the root.
+      expect(isPathSafe('..', 'root'), isFalse);
     });
 
     test('two dot-dots from single-level root escapes', () {

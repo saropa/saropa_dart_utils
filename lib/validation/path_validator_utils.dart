@@ -14,15 +14,18 @@ bool isPathSafe(String path, String root) {
       .split('/')
       .where((String s) => s.isNotEmpty && s != '.')
       .toList();
-  // Track nesting depth relative to the filesystem root, starting inside root.
-  // Each normal segment descends; each ".." ascends. The path escapes only if it
-  // climbs above the root itself (depth < 0) — climbing back to or within root is
-  // safe, so the test is the running minimum, not the final depth.
-  int depth = rootParts.length;
+  // Track nesting depth relative to the ROOT directory: start at the root's own
+  // depth and require we never climb above it. The previous check (`depth < 0`)
+  // measured against the FILESYSTEM root, so a path could ascend rootParts.length
+  // levels above the supplied root undetected — e.g. isPathSafe('../secret',
+  // 'home/user') resolved to 'home/secret' (a sibling of the root) yet returned
+  // true. Escaping the root the instant depth drops below rootDepth is correct.
+  final int rootDepth = rootParts.length;
+  int depth = rootDepth;
   for (final String p in parts) {
     if (p == '..') {
       depth--;
-      if (depth < 0) return false;
+      if (depth < rootDepth) return false;
     } else {
       depth++;
     }

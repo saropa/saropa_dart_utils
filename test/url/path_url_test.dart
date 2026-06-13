@@ -13,9 +13,16 @@ void main() {
   });
   group('pathExtension', () {
     test('gets ext', () => expect(pathExtension('file.txt'), 'txt'));
+    test('a dot in a directory name is not an extension (regression)', () {
+      expect(pathExtension('/a.b/file'), '');
+    });
+    test('a dotfile basename has no extension', () => expect(pathExtension('/dir/.gitignore'), ''));
   });
   group('pathWithoutExtension', () {
     test('removes ext', () => expect(pathWithoutExtension('file.txt'), 'file'));
+    test('a dot in a directory name leaves the path unchanged (regression)', () {
+      expect(pathWithoutExtension('/a.b/c'), '/a.b/c');
+    });
   });
   group('parseQueryString', () {
     test('parses', () => expect(parseQueryString('a=1&b=2'), <String, String>{'a': '1', 'b': '2'}));

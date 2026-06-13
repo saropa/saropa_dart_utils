@@ -15,6 +15,11 @@ void main() {
       expect(JsonUtils.cleanJsonResponse(null), isNull);
       expect(JsonUtils.cleanJsonResponse('   '), isNull);
     });
+
+    test('strips outer quotes around astral content (regression)', () {
+      // Grapheme-indexed slicing previously left the closing quote on emoji.
+      expect(JsonUtils.cleanJsonResponse('"\u{1F389}"'), '\u{1F389}');
+    });
   });
 
   group('tryJsonDecodeList', () {

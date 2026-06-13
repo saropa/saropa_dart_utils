@@ -42,31 +42,30 @@ extension MapRenameKey<K, V> on Map<K, V> {
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V> renameKey(K oldKey, K newKey) {
-    final Map<K, V> out = Map<K, V>.from(this);
-    if (out.containsKey(oldKey)) {
-      final v = out.remove(oldKey);
-      if (v != null) out[newKey] = v;
-    }
+    // Rebuild into a fresh map (preserves a genuinely-null value — the old
+    // `if (v != null)` guard dropped entries whose value was null) and re-key
+    // each entry in one pass so there is no remove-then-overwrite hazard.
+    final Map<K, V> out = <K, V>{};
+    forEach((K k, V v) {
+      out[k == oldKey ? newKey : k] = v;
+    });
     return out;
   }
 
-  /// New map with keys renamed according to [oldToNew].
+  /// New map with keys renamed according to [oldToNew]. Keys absent from
+  /// [oldToNew] are kept as-is. If two keys map to the same target, the later
+  /// one in iteration order wins (a genuine collision is inherently lossy).
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   Map<K, V> renameKeys(Map<K, K> oldToNew) {
-    // Rename on a copy so the receiver is left unmodified (the @useResult
-    // contract — callers expect a new map, not a mutation).
-    final Map<K, V> out = Map<K, V>.from(this);
-    for (final MapEntry<K, K> e in oldToNew.entries) {
-      // Only act on keys that are actually present; remove-then-reinsert under
-      // the new key performs the rename. The v != null guard means a key whose
-      // stored value is null is silently dropped rather than re-added — an
-      // accepted caveat for maps that hold null values.
-      if (out.containsKey(e.key)) {
-        final v = out.remove(e.key);
-        if (v != null) out[e.value] = v;
-      }
-    }
+    // Single pass into a fresh map: read the NEW key for each ORIGINAL entry
+    // (`oldToNew[k] ?? k`) and write it once. The previous version mutated the
+    // copy it was iterating, so a chained rename ({'a':'b','b':'c'}) overwrote
+    // 'b' before renaming it and lost data; it also dropped null values.
+    final Map<K, V> out = <K, V>{};
+    forEach((K k, V v) {
+      out[oldToNew[k] ?? k] = v;
+    });
     return out;
   }
 }

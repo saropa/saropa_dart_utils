@@ -112,7 +112,11 @@ abstract final class JsonUtils {
 
     // Detect outer quotes BEFORE unescaping inner ones.
     if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2) {
-      final String inner = trimmed.substringSafe(1, trimmed.length - 1);
+      // Code-unit substring, not the grapheme-indexed substringSafe: the quote
+      // detection and `trimmed.length` are code-unit measures. With substringSafe
+      // a quoted value containing an astral grapheme (e.g. "🎉") clamped the end
+      // index to the grapheme count and left the closing quote in place.
+      final String inner = trimmed.substring(1, trimmed.length - 1);
 
       return inner.replaceAll(r'\"', '"').nullIfEmpty();
     }
