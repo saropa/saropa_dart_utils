@@ -26,6 +26,9 @@ void main() {
   });
   group('parseQueryString', () {
     test('parses', () => expect(parseQueryString('a=1&b=2'), <String, String>{'a': '1', 'b': '2'}));
+    test('decodes + as space (form encoding, regression)', () {
+      expect(parseQueryString('a=hello+world'), <String, String>{'a': 'hello world'});
+    });
   });
   group('isAbsoluteUrl', () {
     test('https', () => expect(isAbsoluteUrl('https://x.com'), isTrue));

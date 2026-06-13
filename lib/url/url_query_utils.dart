@@ -26,7 +26,11 @@ Map<String, String> parseQueryString(String query) {
 /// Audited: 2026-06-12 11:26 EDT
 String _decode(String s) {
   try {
-    return Uri.decodeComponent(s);
+    // Translate '+' to space first (application/x-www-form-urlencoded), which
+    // Uri.decodeComponent does not do. A literal '+' arrives percent-encoded as
+    // %2B (no '+' to replace), so this is safe for buildQueryString round-trips
+    // and adds compatibility with form/browser-produced query strings.
+    return Uri.decodeComponent(s.replaceAll('+', ' '));
     // ignore: saropa_lints/require_catch_logging -- deliberate graceful fallback: a malformed percent-escape in a query string degrades to its literal text (this is the no-throw counterpart to buildQueryString); logging every bad escape would be noise.
   } on FormatException {
     return s;

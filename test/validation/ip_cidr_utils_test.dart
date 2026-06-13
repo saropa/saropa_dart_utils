@@ -15,6 +15,13 @@ void main() {
     test('non-numeric octet returns null', () => expect(parseIpv4('1.2.x.4'), isNull));
     test('negative octet returns null', () => expect(parseIpv4('1.-2.3.4'), isNull));
     test('empty string returns null', () => expect(parseIpv4(''), isNull));
+    test('rejects non-canonical octets (regression)', () {
+      // sign / whitespace / leading-zero forms that int.tryParse accepts but are
+      // not canonical decimal octets (octal-vs-decimal parser differential).
+      expect(parseIpv4('+1.2.3.4'), isNull);
+      expect(parseIpv4(' 1.2.3.4'), isNull);
+      expect(parseIpv4('01.2.3.4'), isNull);
+    });
   });
 
   group('ipInCidr', () {

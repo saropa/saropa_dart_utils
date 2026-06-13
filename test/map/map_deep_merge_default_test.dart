@@ -17,6 +17,19 @@ void main() {
         'nested': <String, dynamic>{'x': 10, 'y': 20},
       });
     });
+
+    test('result does not alias the inputs (regression)', () {
+      final Map<String, dynamic> a = <String, dynamic>{
+        'only': <String, dynamic>{'x': 1},
+        'list': <int>[1, 2],
+      };
+      final Map<String, dynamic> merged = a.deepMerge(<String, dynamic>{'b': 2});
+      // Mutating a nested value carried through from `a` must not touch `a`.
+      (merged['only'] as Map<String, dynamic>)['x'] = 99;
+      (merged['list'] as List<dynamic>).add(3);
+      expect((a['only'] as Map<String, dynamic>)['x'], 1);
+      expect(a['list'] as List<dynamic>, hasLength(2));
+    });
   });
   group('withDefault', () {
     test('returns default for missing key', () {

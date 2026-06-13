@@ -1,5 +1,4 @@
 import 'package:meta/meta.dart';
-import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// HTTPS URI scheme identifier.
 const String _schemeHttps = 'https';
@@ -45,7 +44,10 @@ extension UriExtensions on Uri {
       return false;
     }
 
-    final String extension = filePath.substringSafe(dotIndex).toLowerCase();
+    // Code-unit substring: `dotIndex` comes from `lastIndexOf` (code units), so
+    // the grapheme-indexed substringSafe sliced at the wrong spot for filenames
+    // containing astral characters before the dot.
+    final String extension = filePath.substring(dotIndex).toLowerCase();
 
     return flutterImageExtensions.contains(extension);
   }
@@ -77,7 +79,8 @@ extension UriExtensions on Uri {
       return null;
     }
 
-    return name.substringSafe(dotIndex + 1).toLowerCase();
+    // Code-unit substring to match the code-unit `dotIndex` from lastIndexOf.
+    return name.substring(dotIndex + 1).toLowerCase();
   }
 
   /// Returns true if this URI uses HTTPS scheme.
