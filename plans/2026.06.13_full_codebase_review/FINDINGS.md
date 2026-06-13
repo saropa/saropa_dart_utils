@@ -88,6 +88,37 @@ timeseries_buffer, multi_index, interval_tree, bk_tree, fenwick.
 - async (34 files): mutex/rwlock/circuit-breaker/rate-limiters/streams correct; findings above are the exceptions.
 - string A–M (mostly clean): Levenshtein/TF-IDF/fuzzy/glob/language-detect correct.
 
+## Phase 2 wave-2 (stats, graph, num/double/int, iterable/list)
+
+### Fixed this round (verified + regression tests)
+| # | File | Sev | Fix |
+|---|------|-----|-----|
+| 17 | int/int_string_extensions.dart (ordinal) | S2 | last-two-digit teen test + abs(); `111`→`111th`, `(-21)`→`-21st` |
+| 18 | graph/hierarchy_utils.dart (flattenHierarchy) | S3 | orphan-parent nodes treated as roots instead of dropped |
+| 19 | num/num_locale_utils.dart (formatNumberLocale) | S3 | clamp decimalPlaces to 20 (was RangeError above 20) |
+
+### Candidate backlog from wave-2 (verify, then fix)
+| File | Sev | Issue |
+|------|-----|-------|
+| graph/dijkstra_utils.dart | S2 | no settled set + lazy re-add → a reachable negative-weight CYCLE makes `dist` decrease forever and the node re-adds forever → infinite loop (hang). Also O(2^n) worst case. Fix: add a settled set (true Dijkstra) + document non-negative-weights requirement. |
+| graph/critical_path_utils.dart | S3 | on a cyclic graph the topo order is short, so post-cycle nodes keep `-infinity` silently; should detect (order.length != n) and signal a cycle like topologicalSort does. |
+| graph/connected_components_utils.dart | S3 | follows directed out-edges only; on a directed graph it is neither weak nor strong components. Document the symmetric-adjacency requirement. |
+| graph/graph_simplify_utils.dart | S3 | lollipop (junction attached to a pure degree-2 cycle): the self-returning chain drops the cycle's attachment edges, disconnecting it. |
+| graph/graph_serialize_utils.dart | S4 | `_assemble` sizes by node index only; hand-written input like `'0>5'` yields a list too short for neighbor index 5 (round-trip of serializer output is safe). |
+| num/num_extensions.dart:17 | S3 | `isNotZeroOrNegative`/`isZeroOrNegative` classify `NaN` as positive (NaN != 0 true, !isNegative). Add `!isNaN`. |
+| num/num_format_extensions.dart (roundToSignificantDigits) | S4 | float log at exact powers of ten can pick the wrong decimal exponent (e.g. 0.001). Use `(log/ln10).floor()` uniformly; add tests at 1e±3. |
+| num clamp/round/more (clampToInt, roundToMultiple, clampNonNegative, truncateToDecimals) | S4 | `double.nan`/non-finite input throws UnsupportedError from `round()`/`floor()`; guard or document (feetToString/formatDouble already guard). |
+| double/double_extensions.dart (toPercentage doc) | S4 | dartdoc examples use `roundDown:` but the param is `doRoundDown:` (won't compile). |
+| stats/quantile_summary_utils.dart (median/q1/q3 getters) | S3 | nearest-rank (no interpolation), so `median` of even-length data is non-canonical (`[1,2,3,4]`→2.0 not 2.5). Either interpolate the median getter or document loudly. |
+| list/list_nullable_string_sort_extensions.dart (doc) | S4 | doc claims null and '' "compare equal" and the sort is "stable"; neither is true (null sorts before ''; List.sort is unstable). Behavior fine; reword. |
+| iterable/iterable_list_ops_extensions.dart (interleave doc) | S4 | a trailing element from the longer side follows after the shorter is exhausted; doc implies a hard stop. |
+
+### Verified clean in wave-2 (high level)
+- stats (22): variance/correlation/regression/CUSUM/MAD/CDF/moving-avg all canonical; data_binning + gini fixes confirmed release-safe.
+- graph (21): A*/Floyd-Warshall/MST/topo/PageRank/BFS-DFS/bipartite/reachability/DAG-scheduler/Douglas-Peucker all correct; exceptions above.
+- num/double/int (31): gcd/lcm/prime/factorial/lerp/modulo/range/safe-division correct; unit-conversion constants verified (m↔ft, kg↔lb); exceptions above.
+- iterable/list (35): null-sentinel handling correct (lastWhereOrElse/run-length use presence flags), cartesian/flatten materialize one-shot iterables safely, rotate/binary-search/topK bounds correct; only the two doc nits above.
+
 ## Themes still to verify (Phase 1 remainder)
 
 - **1b asserts:** 40 `assert()` across 22 files — classify precondition (→throw) vs invariant (ok).

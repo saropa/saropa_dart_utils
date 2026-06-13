@@ -60,6 +60,19 @@ void main() {
       );
     });
 
+    test('a node with a dangling parentId is not dropped (regression)', () {
+      // 'b' references a parent that does not exist; it must still appear (as a
+      // root) along with its child, not vanish from the output.
+      final List<(String, int)> result = flattenHierarchy(<HierarchyUtils>[
+        const HierarchyUtils('a'),
+        const HierarchyUtils('b', 'ghost'),
+        const HierarchyUtils('c', 'b'),
+      ]);
+      expect(result, contains(('b', 0)));
+      expect(result, contains(('c', 1)));
+      expect(result, contains(('a', 0)));
+    });
+
     test('empty node list returns empty', () {
       expect(flattenHierarchy(<HierarchyUtils>[]), <(String, int)>[]);
     });

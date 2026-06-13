@@ -1,13 +1,17 @@
 import 'package:meta/meta.dart';
 
-/// Start of the "teen" range (11-19) where ordinal suffix is always 'th'.
+/// Start of the special last-two-digits range (11-13) whose ordinal suffix is
+/// always 'th' — covers 11/12/13 and any number ending in them (111, 1012, 213).
 const int _teenRangeStart = 11;
 
-/// End of the "teen" range (11-19) where ordinal suffix is always 'th'.
-const int _teenRangeEnd = 19;
+/// End of that range: 13. (11th, 12th, 13th, 111th, 213th … are all 'th'.)
+const int _teenRangeEnd = 13;
 
 /// Base 10 modulo for determining the ones place digit.
 const int _base10 = 10;
+
+/// Base 100 modulo for the last-two-digits 'th' test.
+const int _base100 = 100;
 
 /// Ones digit for the 'rd' ordinal suffix (3rd, 23rd, etc.).
 const int _ordinalRdDigit = 3;
@@ -44,14 +48,17 @@ extension IntStringExtensions on int {
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String ordinal() {
-    // All "teens" (12, 13, 14.. 19) are 'th'
-    if (this >= _teenRangeStart && this <= _teenRangeEnd) {
+    // 11th/12th/13th are 'th' — and so is ANY number ending in 11/12/13 (111th,
+    // 1012th, 213th). Test the last TWO digits, not an absolute 11..19 window:
+    // the old window left 111 → '111st'. Use abs() so a negative picks its suffix
+    // from the magnitude ((-21) → '-21st', not the '-21th' that `-21 % 10` gave).
+    final int magnitude = abs();
+    final int lastTwo = magnitude % _base100;
+    if (lastTwo >= _teenRangeStart && lastTwo <= _teenRangeEnd) {
       return '${this}th';
     }
 
-    final int onesPlace = this % _base10;
-
-    return switch (onesPlace) {
+    return switch (magnitude % _base10) {
       1 => '${this}st',
       2 => '${this}nd',
       _ordinalRdDigit => '${this}rd',

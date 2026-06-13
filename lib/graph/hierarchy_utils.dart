@@ -37,8 +37,13 @@ List<(String, int)> flattenHierarchy(List<HierarchyUtils> nodes) {
     }
   }
 
+  final Set<String> ids = parent.keys.toSet();
   for (final root in nodes) {
-    if ((root.parentId ?? '').isEmpty) visit(root.id, 0);
+    final String? p = root.parentId;
+    // Treat a node as a root when it has no parent OR names a parent that does
+    // not exist in the set: otherwise an orphan (dangling parentId) and its whole
+    // subtree are never reached by recursion and silently vanish from the output.
+    if (p == null || p.isEmpty || !ids.contains(p)) visit(root.id, 0);
   }
   return out;
 }

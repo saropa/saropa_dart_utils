@@ -31,6 +31,26 @@ void main() {
       expect(13.ordinal(), equals('13th'));
     });
 
+    test('numbers ending in 11/12/13 are always "th" (regression)', () {
+      // The old absolute 11..19 teen window let 111 become "111st".
+      expect(111.ordinal(), equals('111th'));
+      expect(112.ordinal(), equals('112th'));
+      expect(113.ordinal(), equals('113th'));
+      expect(1011.ordinal(), equals('1011th'));
+    });
+
+    test('hundreds ending in 1/2/3 still take st/nd/rd', () {
+      expect(101.ordinal(), equals('101st'));
+      expect(102.ordinal(), equals('102nd'));
+      expect(103.ordinal(), equals('103rd'));
+    });
+
+    test('negative numbers pick the suffix from their magnitude', () {
+      expect((-1).ordinal(), equals('-1st'));
+      expect((-21).ordinal(), equals('-21st'));
+      expect((-111).ordinal(), equals('-111th'));
+    });
+
     test('returns "21st" when the number is 21', () {
       expect(21.ordinal(), equals('21st'));
     });

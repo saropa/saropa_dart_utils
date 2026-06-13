@@ -53,6 +53,11 @@ void main() {
       expect(formatNumberLocale(1234567, groupSep: ''), '1234567');
     });
 
+    test('decimalPlaces above 20 is clamped, not a RangeError (regression)', () {
+      // toStringAsFixed throws above 20; the helper must clamp like formatDouble.
+      expect(() => formatNumberLocale(1.5, decimalPlaces: 25), returnsNormally);
+    });
+
     test('small value below 1000 is ungrouped', () {
       expect(formatNumberLocale(42), '42');
     });
