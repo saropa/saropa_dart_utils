@@ -986,9 +986,11 @@ void main() {
     test('8. Accented characters', () => expect('café résumé'.hasInvalidUnicode, isFalse));
     test('9. Arabic text', () => expect('مرحبا'.hasInvalidUnicode, isFalse));
     test('10. Japanese text', () => expect('こんにちは'.hasInvalidUnicode, isFalse));
-    test('11. String containing invalid replacement code point (U+DC07)', () {
-      const int invalidRune = 56327;
-      final String withInvalid = 'a${String.fromCharCode(invalidRune)}b';
+    test('11. String containing the U+FFFD replacement character', () {
+      // U+FFFD (65533) is the actual Unicode replacement character; the old
+      // constant 0xDC07 (a lone low surrogate) never matched the documented char.
+      const int replacementChar = 65533;
+      final String withInvalid = 'a${String.fromCharCode(replacementChar)}b';
       expect(withInvalid.hasInvalidUnicode, isTrue);
     });
   });
@@ -1007,15 +1009,15 @@ void main() {
     test('8. Accented characters unchanged', () => expect('café'.removeInvalidUnicode(), 'café'));
     test('9. Arabic unchanged', () => expect('مرحبا'.removeInvalidUnicode(), 'مرحبا'));
     test('10. Japanese unchanged', () => expect('こんにちは'.removeInvalidUnicode(), 'こんにちは'));
-    test('11. Invalid replacement character removed', () {
-      const int invalidRune = 56327;
-      final String withInvalid = 'hello${String.fromCharCode(invalidRune)}world';
+    test('11. Replacement character (U+FFFD) removed', () {
+      const int replacementChar = 65533;
+      final String withInvalid = 'hello${String.fromCharCode(replacementChar)}world';
       expect(withInvalid.removeInvalidUnicode(), 'helloworld');
     });
-    test('12. Multiple invalid chars removed', () {
-      const int invalidRune = 56327;
+    test('12. Multiple replacement characters removed', () {
+      const int replacementChar = 65533;
       final String withInvalid =
-          'a${String.fromCharCode(invalidRune)}b${String.fromCharCode(invalidRune)}c';
+          'a${String.fromCharCode(replacementChar)}b${String.fromCharCode(replacementChar)}c';
       expect(withInvalid.removeInvalidUnicode(), 'abc');
     });
   });
