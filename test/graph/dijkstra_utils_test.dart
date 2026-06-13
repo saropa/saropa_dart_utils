@@ -14,6 +14,18 @@ void main() {
       expect(dijkstraDistances(g, 0), <double>[0, 1, 3, 6]);
     });
 
+    test('terminates on a reachable negative-weight cycle (regression)', () {
+      // Without a settled set this hung forever (dist kept decreasing and the
+      // node re-queued). Dijkstra is non-negative-only, so the result may be
+      // wrong, but it must TERMINATE. 1->2 (-1), 2->1 (-1) is a negative cycle.
+      final WeightedAdjacency g = buildWeightedGraph(<GraphUtils>[
+        const GraphUtils(0, 1, 1),
+        const GraphUtils(1, 2, -1),
+        const GraphUtils(2, 1, -1),
+      ], 3);
+      expect(() => dijkstraDistances(g, 0), returnsNormally);
+    });
+
     test('chooses cheaper of two routes', () {
       // 0->2 direct cost 10; 0->1->2 cost 3
       final WeightedAdjacency g = buildWeightedGraph(<GraphUtils>[
