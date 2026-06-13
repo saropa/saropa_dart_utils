@@ -25,6 +25,8 @@ mismatch · **S4** quality/style/perf. Status: `candidate` → `confirmed` → `
 - `niche/random_string_utils.dart` — honestly documents "not cryptographically secure" + guards `length <= 0`.
 - `random/common_random.dart` — documented seedable convenience.
 - reservoir / stratified / weighted-subset samplers, `skip_list`, `retry_policy` — all take injectable `Random?`.
+- `collections/quickselect_utils.dart` — median-of-three Lomuto, copies input, bounds-checks `k`; correct.
+- `collections/stable_matching_utils.dart` — proposer-optimal Gale-Shapley; validates unknown/duplicate refs, O(1) rank lookups, single-match invariant holds on inversion; correct.
 
 ## Themes still to verify (Phase 1 remainder)
 
