@@ -43,6 +43,13 @@ void main() {
       expect(await sem.run<int>(() async => 11), 11);
     });
 
+    test('release without a matching acquire throws StateError', () {
+      // Guards the permit invariant: over-release would let the semaphore admit
+      // more than `permits` holders.
+      final AsyncSemaphoreUtils sem = AsyncSemaphoreUtils(1);
+      expect(sem.release, throwsA(isA<StateError>()));
+    });
+
     test('run releases the permit even when the callback throws', () async {
       final AsyncSemaphoreUtils sem = AsyncSemaphoreUtils(1);
       await expectLater(

@@ -91,6 +91,12 @@ void main() {
     test('should return unchanged when prefix absent', () {
       expect('example.com'.removePrefix('https://'), 'example.com');
     });
+
+    test('should remove an astral prefix without corrupting the rest', () {
+      // Regression: code-unit prefix.length fed into grapheme-indexed
+      // substringSafe dropped the wrong span for multi-code-unit prefixes.
+      expect('\u{1F600}ab'.removePrefix('\u{1F600}'), 'ab');
+    });
   });
 
   group('removeSuffix', () {
@@ -100,6 +106,12 @@ void main() {
 
     test('should return unchanged when suffix absent', () {
       expect('file'.removeSuffix('.txt'), 'file');
+    });
+
+    test('should remove an ASCII suffix after astral content', () {
+      // Regression: '\u{1F600}b'.removeSuffix('b') left the b in place because a
+      // code-unit length was used as a grapheme index.
+      expect('\u{1F600}b'.removeSuffix('b'), '\u{1F600}');
     });
   });
 

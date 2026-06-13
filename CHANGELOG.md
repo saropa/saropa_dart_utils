@@ -45,6 +45,15 @@ Release-tooling hardening plus release-build input validation. The tooling work 
   - The matching precondition tests now expect `ArgumentError`/`RangeError` instead of `AssertionError`.
 - **`safeTempName` now uses a cryptographically secure RNG** ([safe_temp_name_utils.dart](lib/validation/safe_temp_name_utils.dart)) — was backed by a seedable `Random()`, whose sequence is reproducible, so the generated temp-file names were predictable; an attacker who can guess the name can win a temp-file race or pre-create it. Switched to `Random.secure()`. Also throws `ArgumentError` on a non-positive `length` (was silently returning an empty, always-colliding name).
 - **`Map.getRandomListExcept` accepts an optional `Random`** ([map_extensions.dart](lib/map/map_extensions.dart)) — previously shuffled with a fresh, non-injectable `Random()`, making the result non-reproducible and untestable. Now takes an optional `random` (defaults to `Random()`), matching the injectable-RNG convention used elsewhere in the library. Backward-compatible (new optional parameter).
+- **`hasInvalidUnicode` / `removeInvalidUnicode` now detect the real replacement character** ([string_analysis_extensions.dart](lib/string/string_analysis_extensions.dart)) — the constant was `56327` (0xDC07, a lone low surrogate), not U+FFFD (65533) as the dartdoc said, so an actual `�` was never matched or removed. Fixed to `65533`; both methods now work as documented.
+- **More grapheme-vs-code-unit slicing fixes** (the same class as v1.6.0's `removeLastChar`):
+  - `removeFirstLastChar` and `removeMatchingWrappingBrackets` ([string_manipulation_extensions.dart](lib/string/string_manipulation_extensions.dart)) counted code units but sliced with the grapheme-indexed `substringSafe`, so astral content shifted the result (`'a😀b'.removeFirstLastChar()` returned `'😀b'`; `'(😀)'` kept the trailing bracket). Both now count graphemes, matching `removeLastChars`.
+  - `removePrefix` / `removeSuffix` ([string_lower_extensions.dart](lib/string/string_lower_extensions.dart)) fed a code-unit `prefix.length`/`suffix.length` into `substringSafe`, dropping the wrong span when the prefix/suffix or content held astral chars (`'😀ab'.removePrefix('😀')` → `'b'`). Switched to code-unit `substring`, consistent with `startsWith`/`endsWith`.
+- **`AsyncSemaphoreUtils.release()` guards over-release** ([async_semaphore_utils.dart](lib/async/async_semaphore_utils.dart)) — a `release()` with no matching `acquire()` (and no waiter) silently pushed `_available` above `permits`, permanently letting the semaphore admit more than `permits` concurrent holders. It now throws `StateError` instead of corrupting the permit count.
+
+### Changed (docs)
+
+- `withTimeout` ([timeout_policy_utils.dart](lib/async/timeout_policy_utils.dart)) documents that a `null` fallback is read as "no fallback" (rethrow), so a nullable `T` cannot use `null` as the recovery value — use the required-fallback `timeout_fallback_utils` instead.
 
 ### Changed
 

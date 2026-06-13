@@ -97,8 +97,11 @@ extension StringAnalysisExtensions on String {
     return '';
   }
 
-  /// The Unicode replacement character code point for invalid sequences.
-  static const int _invalidUnicodeReplacementRuneCode = 56327;
+  /// The Unicode replacement character (U+FFFD) code point — the glyph a decoder
+  /// substitutes for bytes it could not decode. Was previously `56327` (0xDC07,
+  /// a lone low surrogate), so `hasInvalidUnicode`/`removeInvalidUnicode` never
+  /// matched an actual replacement character as the dartdoc promised.
+  static const int _invalidUnicodeReplacementRuneCode = 65533;
 
   /// Returns true if this string contains invalid Unicode characters.
   /// Audited: 2026-06-12 11:26 EDT

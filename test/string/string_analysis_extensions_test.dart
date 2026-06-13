@@ -87,6 +87,12 @@ void main() {
     test('should be false for empty string', () {
       expect(''.hasInvalidUnicode, isFalse);
     });
+
+    test('should detect the U+FFFD replacement character', () {
+      // Regression: the constant was 0xDC07 (a lone low surrogate), so an actual
+      // replacement character was never matched.
+      expect('a\u{FFFD}b'.hasInvalidUnicode, isTrue);
+    });
   });
 
   group('removeInvalidUnicode', () {
@@ -96,6 +102,10 @@ void main() {
 
     test('should return empty string unchanged', () {
       expect(''.removeInvalidUnicode(), '');
+    });
+
+    test('should strip U+FFFD replacement characters', () {
+      expect('a\u{FFFD}b\u{FFFD}'.removeInvalidUnicode(), 'ab');
     });
   });
 

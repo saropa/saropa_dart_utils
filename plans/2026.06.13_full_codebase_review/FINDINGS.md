@@ -34,6 +34,60 @@ mismatch · **S4** quality/style/perf. Status: `candidate` → `confirmed` → `
 ### Strategic note (Phase 2 direction)
 The v1.6.0 audit handled canonical algorithms well — every textbook algorithm checked so far (quickselect, Gale-Shapley, knapsack, LIS, reservoir, ES-weighted-sampling) is correct. The surviving bugs were all CROSS-CUTTING (web-int, release-stripped asserts, RNG, doc drift), now fixed in Phase 1. Remaining bug probability concentrates in BESPOKE custom-logic files (parsers, date arithmetic, `*_more`/grab-bag utils), not the algorithm implementations. Phase 2 prioritizes those.
 
+## Phase 2.1 collections — verified clean (exhaustive read)
+
+disjoint_set, kmeans, min_max_heap (Atkinson trickle up/down correct), nway_merge, bin_packing,
+dependency_resolver, top_k_heap, pareto_frontier, greedy_set_cover, trie, difference_array,
+quickselect, stable_matching, knapsack, lis, reservoir_sampling, constrained_subset, bloom_filter,
+rolling_hash, hyperloglog (now web-safe), skip_list, spatial_grid, time_decay, segment_tree,
+timeseries_buffer, multi_index, interval_tree, bk_tree, fenwick.
+
+## Minor S4 notes (style/doc — defer to a synthesis cleanup pass; not bugs)
+
+| # | File | Note |
+|---|------|------|
+| 8 | collections/dependency_resolver_utils.dart:225 | `_satisfiesCaret` uses a **nested ternary**, which the project `dart.md` explicitly bans ("never use"). Analyze-clean but a style-rule violation. Rewrite as `if`/`else`. |
+| 9 | collections/top_k_heap_utils.dart | Doc says "via min-heap" but it's a sorted size-k list (re-sorts on each replace, O(k log k)). Doc/impl mismatch; correct results. |
+| 10 | collections/bin_packing_utils.dart | An item heavier than `capacity` silently opens its own over-capacity bin (no flag). By-design for the heuristic; could document. |
+| 11 | collections/fenwick_tree_utils.dart:21 | The `FenwickTree(int size)` constructor still uses `assert(size >= 0)` (v1.6.0 converted only its methods). `size == -1` passes `List.filled(0)` and builds an unusable tree (`_size = -1`); release strips the assert. Low severity (every op then throws RangeError). Convert to the static-helper throw for consistency in the synthesis pass. |
+
+## Phase 2 wave-1 (subagent-assisted audit of collections-rest, datetime, parsing, async, string)
+
+### Fixed this round (verified against live code, regression tests added)
+| # | File | Sev | Fix |
+|---|------|-----|-----|
+| 12 | string/string_analysis_extensions.dart:101 | S2 | replacement-char constant 56327 (0xDC07 surrogate) → 65533 (U+FFFD); hasInvalidUnicode/removeInvalidUnicode now work as documented |
+| 13 | string/string_manipulation_extensions.dart (removeFirstLastChar, removeMatchingWrappingBrackets) | S2 | count graphemes not code units (matches removeLastChars); astral content no longer mis-sliced |
+| 14 | string/string_lower_extensions.dart (removePrefix, removeSuffix) | S2 | code-unit `substring` instead of grapheme `substringSafe` (consistent with startsWith/endsWith) |
+| 15 | async/async_semaphore_utils.dart:62 | S2 | release() throws StateError on over-release instead of letting `_available` exceed `permits` |
+| 16 | async/timeout_policy_utils.dart | S3 | documented the null-fallback limitation |
+
+### Candidate backlog from wave-1 (verify, then fix in a later batch)
+| File | Sev | Issue |
+|------|-----|-------|
+| async/retry_utils.dart:28 | S3 | exponential delay shift `1 << (attempt-1)` NOT clamped (siblings retry_policy/exponential_backoff clamp to 30/31) → web 32-bit overflow / wrong delay at high attempt counts |
+| async/debounce_utils.dart, throttle_utils.dart | S3 | returned closure exposes no cancel/dispose; pending Timer fires after owner disposed (use-after-dispose) + leaks. Stream variants handle it; these don't |
+| async/idempotent_async_utils.dart:14 | S4 | dedup key with two different generic `T` for same key: `is Future<T>` test fails, runs a second op + evicts early. Same-key-different-type misuse, silent |
+| async/async_mutex_utils.dart:27-30 | S4 | dead try/catch — waiters are never completed with an error, so the catch is unreachable |
+| string/html_sanitizer_utils.dart | S2 | dartdoc claims "allowlist tags/attributes" but there is NO allowlist (strips ALL tags to text); tag regex `<[^>]+>` also mis-parses `>` inside attribute values, corrupting output. Doc fix + caveat that regex tag-stripping is not a security sanitizer |
+| string/acronym_extract_utils.dart:8 | S3 | name-capture group `[A-Za-z\s]+` greedy across newlines/words → over-captures preceding text |
+| string/text_fingerprint_utils.dart | S4 | doc/name say "32-bit" but value never masked to 32 bits; `fingerprintDistance` masks operands, dropping the high 32 bits |
+| string/string_slug_extensions.dart:39 | S4 | dartdoc example output wrong (`'hello-worl'` vs actual `'hello'`) |
+| string/item_similarity_utils.dart (in collections) | S3 | `recommend` doc promises first-seen tie order; `List.sort` is unstable so ties may reorder |
+| string/window_functions_utils.dart:22 | S3 | `rank` dartdoc omits that it ranks DESCENDING (largest = rank 1) |
+| string/ngram_utils.dart:23 | S4 | `wordNgrams('   ', 1)` returns `[['']]` (split of blank → `['']`, not empty) |
+| datetime/month_weekday_utils.dart:65,72 | S3 | `lastWeekdayOfMonth` steps with fixed `Duration` on local DateTime → DST day shifts result (used by last-Sunday-of-Oct/Mar rules — the exact DST months). Should step by calendar fields |
+| datetime/date_time_relative_predicate_predicates.dart:130 | S4 | `isOlderThanYesterday` builds the boundary instant via fixed 24h subtract → off by DST offset on 23h/25h days |
+| datetime/time_rounding_utils.dart:16 | S4 | `roundMinutes` uses `~/` (truncates toward zero) → floor/ceil wrong for negative minutes; domain likely ≥0 but undocumented |
+| parsing/log_line_parser_utils.dart:62 | S4 | duplicate field name → opaque RegExp FormatException instead of a clear "duplicate field" error |
+
+### Verified clean in wave-1 (high level)
+- collections rest (27 files): all algorithm recurrences correct (LCS, agglomerative Lance-Williams, union-find, interval scheduling, combinatorics, histogram half-open bins, sliding-window). Only S3/S4 doc notes (item_similarity tie-order, window_functions rank direction).
+- datetime (57 files): billing/fiscal/business-day half-open ranges, leap-year, ISO-week, Hebrew converter, rrule/recurrence all verified; only the DST-stepping notes above.
+- parsing (36 files): Luhn/ISBN/cron/CSV/JSON-path/expression-evaluator/sql-filter all correct; only loose-by-design IP/size parsing.
+- async (34 files): mutex/rwlock/circuit-breaker/rate-limiters/streams correct; findings above are the exceptions.
+- string A–M (mostly clean): Levenshtein/TF-IDF/fuzzy/glob/language-detect correct.
+
 ## Themes still to verify (Phase 1 remainder)
 
 - **1b asserts:** 40 `assert()` across 22 files — classify precondition (→throw) vs invariant (ok).

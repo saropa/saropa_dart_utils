@@ -59,6 +59,14 @@ class AsyncSemaphoreUtils {
     if (_waiters.isNotEmpty) {
       _waiters.removeAt(0)();
     } else {
+      // Guard the permit invariant: with no waiter and the pool already full,
+      // this release has no matching acquire. Incrementing would push
+      // `_available` above `permits` and let the semaphore admit more than
+      // `permits` concurrent holders forever. Fail loud instead of silently
+      // corrupting the count.
+      if (_available >= permits) {
+        throw StateError('release() called without a matching acquire() (permits: $permits)');
+      }
       _available++;
     }
   }

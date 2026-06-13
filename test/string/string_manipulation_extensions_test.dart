@@ -62,6 +62,12 @@ void main() {
     test('should return unchanged when not wrapped', () {
       expect('content'.removeMatchingWrappingBrackets(), 'content');
     });
+
+    test('should remove brackets around astral content', () {
+      // Regression: code-unit length into grapheme-indexed substringSafe left the
+      // trailing bracket (e.g. '(😀)' -> '😀)').
+      expect('(\u{1F600})'.removeMatchingWrappingBrackets(), '\u{1F600}');
+    });
   });
 
   group('removeWrappingChar', () {
@@ -232,6 +238,12 @@ void main() {
 
     test('removeFirstLastChar should return empty for length < 2', () {
       expect('a'.removeFirstLastChar(), '');
+    });
+
+    test('removeFirstLastChar should count graphemes, not code units', () {
+      // Regression: 'a😀b' has 3 graphemes but 4 code units; the old code-unit
+      // slice returned '😀b' instead of '😀'.
+      expect('a\u{1F600}b'.removeFirstLastChar(), '\u{1F600}');
     });
   });
 

@@ -48,8 +48,14 @@ extension StringManipulationExtensions on String {
   /// Returns a new string with the outer matching bracket pair removed.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  String removeMatchingWrappingBrackets() =>
-      isBracketWrapped() ? substringSafe(1, length - 1) : this;
+  String removeMatchingWrappingBrackets() {
+    if (!isBracketWrapped()) return this;
+    // Slice by grapheme count, not code-unit `length`: `substringSafe` is
+    // grapheme-indexed, so a code-unit length over astral content removed the
+    // wrong span (e.g. '(😀)' kept the trailing bracket).
+    final int graphemeCount = characters.length;
+    return substringSafe(1, graphemeCount - 1);
+  }
 
   /// Returns `true` if this string starts and ends with a matching bracket
   /// pair: parentheses, square brackets, curly braces, or angle brackets.
@@ -222,7 +228,14 @@ extension StringManipulationExtensions on String {
   /// Returns a new string with both the first and last characters removed.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  String removeFirstLastChar() => (length < 2) ? '' : substringSafe(1, length - 1);
+  String removeFirstLastChar() {
+    // Count and slice by grapheme (like removeLastChars above), not code-unit
+    // `length`: feeding a code-unit length into the grapheme-indexed
+    // substringSafe removed the wrong span for astral content
+    // (e.g. 'a😀b'.removeFirstLastChar() returned '😀b' instead of '😀').
+    final int graphemeCount = characters.length;
+    return graphemeCount < 2 ? '' : substringSafe(1, graphemeCount - 1);
+  }
 
   /// Returns a new string with apostrophe variants replaced by a standard
   /// single quote.

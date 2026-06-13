@@ -1,5 +1,4 @@
 import 'package:meta/meta.dart';
-import 'package:saropa_dart_utils/string/string_extensions.dart';
 
 /// Lower priority string: truncate with ellipsis, pad, repeat, isWhitespaceOnly. Roadmap #231-234, 391-395.
 extension StringLowerExtensions on String {
@@ -43,13 +42,18 @@ extension StringLowerExtensions on String {
   /// Removes [prefix] from the start if present; otherwise returns this.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  String removePrefix(String prefix) => startsWith(prefix) ? substringSafe(prefix.length) : this;
+  // Use code-unit `substring`, not the grapheme-indexed `substringSafe`:
+  // `startsWith` and `prefix.length` are code-unit measures, so the slice must
+  // be too. Mixing a code-unit length into a grapheme index dropped the wrong
+  // count when the prefix or content held astral chars (e.g. '😀ab'.removePrefix('😀')).
+  String removePrefix(String prefix) => startsWith(prefix) ? substring(prefix.length) : this;
 
   /// Removes [suffix] from the end if present; otherwise returns this.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   String removeSuffix(String suffix) =>
-      endsWith(suffix) ? substringSafe(0, length - suffix.length) : this;
+      // Code-unit `substring` for the same reason as removePrefix above.
+      endsWith(suffix) ? substring(0, length - suffix.length) : this;
 }
 
 /// Null-safe fallbacks for nullable strings (treat null as empty).
