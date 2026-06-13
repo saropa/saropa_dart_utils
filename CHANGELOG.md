@@ -25,9 +25,9 @@ cspell:disable
 -->
 
 
-## [Unreleased]
+## [1.6.1] - 2026-06-12
 
-Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the seven dangling library doc comments pana reported plus the other eleven plugin findings it counts in the same check. `dart analyze` is now fully clean. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the seven dangling library doc comments pana reported plus the other eleven plugin findings it counts in the same check. `dart analyze` is now fully clean. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.1/CHANGELOG.md)
 
 ### Fixed
 
