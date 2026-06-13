@@ -5,6 +5,14 @@
 /// are sorted), but list order DOES (lists preserve order). Useful for cache
 /// keys, change detection, and deduplication where a stable, repeatable digest
 /// is needed without pulling in a cryptographic hash.
+///
+/// Platform note (important): the digest is stable per platform but NOT across
+/// the VM/web boundary. The FNV-1a multiply relies on the VM's 64-bit
+/// two's-complement wrap; on the web (dart2js) `int` is a 53-bit double and
+/// bitwise ops truncate to 32 bits, so the same input produces a DIFFERENT
+/// digest on web than on the VM. Do not use it as a shared key between a VM
+/// client and a web client. See
+/// https://dart.dev/resources/language/number-representation.
 library;
 
 /// FNV-1a 64-bit offset basis.
@@ -72,10 +80,11 @@ String _canonicalMap(Map<Object?, Object?> map) {
 /// Returns the FNV-1a 64-bit hash of [canonicalString] of [value] as a
 /// lowercase hex string.
 ///
-/// Determinism: equal inputs always yield equal hashes within a run and across
-/// runs. Map key order does NOT change the hash (keys are sorted first); list
-/// order DOES. `null` and the string `"null"` differ because strings are quoted
-/// in the canonical form.
+/// Determinism: on a given platform, equal inputs always yield equal hashes
+/// within a run and across runs. (Across the VM/web boundary the digests differ
+/// — see the library-level platform note.) Map key order does NOT change the
+/// hash (keys are sorted first); list order DOES. `null` and the string
+/// `"null"` differ because strings are quoted in the canonical form.
 ///
 /// Example:
 /// ```dart
@@ -94,8 +103,8 @@ String stableHash(Object? value) {
   // The 64-bit value is often negative as a signed int, and toRadixString would
   // emit a leading '-'. toUnsigned(64) is a no-op on a VM int (the 1<<64 mask
   // wraps to -1), so render the two 32-bit halves separately: `>> 32` then mask
-  // gives a positive high word, the low mask a positive low word — a stable
-  // 16-digit lowercase hex with no sign on any platform.
+  // gives a positive high word, the low mask a positive low word — a stable,
+  // sign-free 16-digit lowercase hex (per platform; see the platform note).
   final int high = (hash >> 32) & 0xFFFFFFFF;
   final int low = hash & 0xFFFFFFFF;
   return high.toRadixString(16).padLeft(8, '0') + low.toRadixString(16).padLeft(8, '0');

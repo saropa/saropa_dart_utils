@@ -21,6 +21,13 @@ const int _kMaxPrecision = 16;
 /// approximate and not stable across runs/isolates. Treat the result as a
 /// statistical estimate, never an exact count.
 ///
+/// VM-only accuracy: the register math uses 64-bit hash mixing and `1 << rank`
+/// with ranks above 30. On the web (dart2js) `int` is a 53-bit double and
+/// bitwise/shift ops truncate to 32 bits, so those operations overflow and the
+/// estimate is unreliable (it collapses toward the linear-counting branch).
+/// Use this sketch on the VM (mobile/desktop/server). See
+/// https://dart.dev/resources/language/number-representation.
+///
 /// Example:
 /// ```dart
 /// final hll = HyperLogLogUtils(precision: 12);
