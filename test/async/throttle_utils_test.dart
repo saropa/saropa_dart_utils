@@ -34,4 +34,18 @@ void main() {
       expect(calls, 2);
     });
   });
+
+  group('throttleCancelable', () {
+    test('cancel() drops the pending trailing call', () async {
+      int calls = 0;
+      // Type inferred (CancelableCallback); no need to import its declaring file.
+      final d = throttleCancelable(() => calls++, const Duration(milliseconds: 40));
+      d(); // leading -> 1
+      d(); // schedules trailing
+      expect(calls, 1);
+      d.cancel(); // owner disposed before the trailing timer fired
+      await Future<void>.delayed(const Duration(milliseconds: 70));
+      expect(calls, 1); // trailing was cancelled
+    });
+  });
 }

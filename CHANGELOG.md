@@ -35,6 +35,10 @@ Release-tooling hardening plus release-build input validation. The tooling work 
 - Release script (`scripts/modules/workflow.py`): the local analysis gate now fails on WARNING-severity findings, not just errors. Because `dart pub publish` exits 65 on a single warning, a warning that previously passed this gate still blocked the publish; matching the semantics locally catches it before tagging.
 - `pubspec.yaml`: pinned `saropa_lints` to exact `13.12.7` (was `^13.12.7`). A caret range let CI's fresh resolve pull a newer patch that promoted a rule to WARNING while the older local lock showed nothing — the version drift behind the whack-a-mole.
 
+### Added
+
+- **`debounceCancelable` / `throttleCancelable`** ([debounce_utils.dart](lib/async/debounce_utils.dart), [throttle_utils.dart](lib/async/throttle_utils.dart)) — variants of `debounce`/`throttle` that return a `CancelableCallback` (a handle you invoke like a function and can also `cancel()`). The plain `debounce`/`throttle` closures expose no cancel, so a pending timer fires even after the owner (e.g. a widget/controller) is disposed — a use-after-dispose and a Timer leak. The cancelable variants let callers drop the pending invocation on teardown. Non-breaking: the existing `debounce`/`throttle` are unchanged; their docs now point to the cancelable variants.
+
 ### Fixed
 
 - **Release-build precondition enforcement (18 files)** — converted silent-failure `assert` preconditions on public-API input to `if`-throw guards (`ArgumentError`, or `RangeError` for index/range args) so they run in every build, extending the v1.6.0 `FenwickTree`/`rolling_correlation` precedent to the rest of the library. Constructors validate through a static helper invoked in the initializer list, which keeps the throw out of the constructor body (so `avoid_exception_in_constructor` stays satisfied) and runs before any field initializer that would divide by the value.
