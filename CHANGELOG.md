@@ -25,6 +25,16 @@ cspell:disable
 -->
 
 
+## [Unreleased]
+
+Release-tooling hardening only — no change to any published API or behavior. Future-proofs the publish flow so a saropa_lints rule newly promoted to WARNING is caught before tagging instead of failing the tag-triggered publish one warning at a time (the v1.6.0 experience). [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
+### Changed
+
+- CI (`main.yaml`): added a `release_gate` job that runs `dart pub publish --dry-run` on every push/PR to main — the same command the tag-triggered `publish.yml` enforces (it runs `dart analyze` internally and exits 65 on any warning). Blocking warnings now surface at PR time, before the irreversible version tag, instead of one-per-tag-round.
+- Release script (`scripts/modules/workflow.py`): the local analysis gate now fails on WARNING-severity findings, not just errors. Because `dart pub publish` exits 65 on a single warning, a warning that previously passed this gate still blocked the publish; matching the semantics locally catches it before tagging.
+- `pubspec.yaml`: pinned `saropa_lints` to exact `13.12.7` (was `^13.12.7`). A caret range let CI's fresh resolve pull a newer patch that promoted a rule to WARNING while the older local lock showed nothing — the version drift behind the whack-a-mole.
+
 ## [1.6.1] - 2026-06-12
 
 Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the seven dangling library doc comments pana reported plus the other eleven plugin findings it counts in the same check. `dart analyze` is now fully clean. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.1/CHANGELOG.md)

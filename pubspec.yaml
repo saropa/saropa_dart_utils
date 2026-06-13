@@ -73,7 +73,16 @@ dev_dependencies:
   # 1,000+ lint rules for Flutter and Dart. Free. Open source.
   # https://pub.dev/packages/saropa_lints/changelog
   # e.g. dart run saropa_lints:init --tier essential
-  saropa_lints: ^13.12.3
+  #
+  # EXACT-pinned (no caret) on purpose. A caret range let CI's fresh resolve
+  # pull a newer patch that promoted a rule to WARNING severity, which then
+  # failed `dart pub publish --dry-run` (exit 65) while the older local lock
+  # showed nothing — the version drift behind the v1.6.0 publish whack-a-mole.
+  # Pinning makes CI and local resolve the identical rule set; bump this line
+  # deliberately to adopt new rules, then run `dart run custom_lint` before
+  # tagging so any new WARNING is seen locally, not at publish time.
+  # ignore: prefer_caret_version_syntax
+  saropa_lints: 13.12.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

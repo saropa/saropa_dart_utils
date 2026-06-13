@@ -240,11 +240,24 @@ def run_analysis(project_dir: Path) -> bool:
         ui.print_error("Analyzer exited with an error (not a lint issue)")
         return False
 
-    ui.print_warning(
-        f"Analysis found {warning_count} warning(s) and "
-        f"{info_count} info(s) (no errors)"
-    )
-    ui.print_success("No errors found — warnings/infos will not block publish")
+    # WARNING-severity findings are publish-blocking: `dart pub publish` runs
+    # `dart analyze` internally and exits 65 on a single warning. The old code
+    # passed warnings through here, so the local gate read green while the
+    # tag-triggered publish failed — the gap behind the v1.6.0 whack-a-mole
+    # (each warning discovered only when a tag fired CI, ~6 rounds). Block on
+    # warnings to match the publish semantics. Infos stay non-blocking, since
+    # the dry-run does not fail on them.
+    if warning_count > 0:
+        print(output)
+        ui.print_error(
+            f"Analysis found {warning_count} warning(s) and "
+            f"{info_count} info(s). Warnings fail `dart pub publish` (exit 65) "
+            "— fix them before publishing."
+        )
+        return False
+
+    ui.print_warning(f"Analysis found {info_count} info(s) (no errors/warnings)")
+    ui.print_success("No errors or warnings found — infos will not block publish")
     return True
 
 

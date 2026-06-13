@@ -28,3 +28,30 @@ jobs:
   pana:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/pana.yml@v1
 
+  # Pre-tag publish gate. Runs the SAME `dart pub publish --dry-run` that the
+  # tag-triggered publish workflow (publish.yml) enforces, but on every push/PR
+  # to main instead of only when a `v*` tag fires. The dry-run runs `dart
+  # analyze` internally and exits 65 on any WARNING (e.g. a saropa_lints rule
+  # newly promoted to WARNING), plus the pub validators. Before this job
+  # existed, such a warning was invisible until a tag triggered publish: each
+  # one cost a full tag -> CI -> exit-65 round (v1.6.0 took ~6 of them, fixed
+  # one warning at a time). A tag now only ever fires against an already-green
+  # tree. Uses the same fresh resolve as publish.yml, so the exact-pinned
+  # saropa_lints version that runs here is the one the publish will run.
+  release_gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Publish dry run
+        run: dart pub publish --dry-run
+

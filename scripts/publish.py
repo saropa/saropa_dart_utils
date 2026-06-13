@@ -467,6 +467,11 @@ def main() -> int:
             "Tests failed. Fix test failures before publishing.", ExitCode.TEST_FAILED
         )
 
+    # run_analysis now fails on WARNING-severity findings, not just errors:
+    # `dart pub publish` runs `dart analyze` internally and exits 65 on a single
+    # warning, so a warning that passed here previously still blocked the
+    # tag-triggered publish (the v1.6.0 whack-a-mole). Matching the semantics
+    # locally catches it before the irreversible tag.
     if not workflow.run_analysis(project_dir):
         ui.exit_with_error(
             "Static analysis failed. Fix issues before publishing.",
