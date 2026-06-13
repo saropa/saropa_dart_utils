@@ -40,7 +40,6 @@ Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the sev
 ### Changed
 
 - `collections/fenwick_tree_utils.dart`: `valueAt` converted to an expression body (`=>`).
-- `analysis_options.yaml`: enabled `dangling_library_doc_comments` so the lint surfaces in the local `dart analyze` CLI (which otherwise does not load the pana-only check).
 
 ## [1.6.0] - 2026-06-12
 
