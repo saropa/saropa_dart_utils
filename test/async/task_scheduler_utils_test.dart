@@ -81,7 +81,7 @@ void main() {
     });
 
     test('should reject a concurrency below 1', () {
-      expect(() => TaskScheduler(concurrency: 0), throwsA(isA<AssertionError>()));
+      expect(() => TaskScheduler(concurrency: 0), throwsA(isA<ArgumentError>()));
     });
   });
 }

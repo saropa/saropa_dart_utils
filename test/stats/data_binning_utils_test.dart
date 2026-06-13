@@ -26,7 +26,7 @@ void main() {
     test('rejects non-positive bin count', () {
       expect(
         () => binByWidth(<num>[1], min: 0, max: 10, bins: 0),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
   });

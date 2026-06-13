@@ -77,7 +77,11 @@ class BkTree {
   /// in no particular order. Requires `maxDistance >= 0`.
   /// Audited: 2026-06-12 11:26 EDT
   List<String> search(String query, int maxDistance) {
-    assert(maxDistance >= 0, 'maxDistance ($maxDistance) must be >= 0');
+    // Enforced in release (an assert strips): a negative maxDistance silently
+    // matches nothing (no edit distance is < 0) instead of signaling bad input.
+    if (maxDistance < 0) {
+      throw ArgumentError.value(maxDistance, 'maxDistance', 'must be >= 0');
+    }
     final List<String> matches = <String>[];
     final _BkNode? root = _root;
     if (root == null) return matches;

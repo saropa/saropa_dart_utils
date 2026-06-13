@@ -4,11 +4,11 @@ import 'package:saropa_dart_utils/collections/time_decay_counter_utils.dart';
 void main() {
   group('TimeDecayCounter constructor', () {
     test('should reject a zero half-life', () {
-      expect(() => TimeDecayCounter(halfLifeMillis: 0), throwsA(isA<AssertionError>()));
+      expect(() => TimeDecayCounter(halfLifeMillis: 0), throwsA(isA<ArgumentError>()));
     });
 
     test('should reject a negative half-life', () {
-      expect(() => TimeDecayCounter(halfLifeMillis: -100), throwsA(isA<AssertionError>()));
+      expect(() => TimeDecayCounter(halfLifeMillis: -100), throwsA(isA<ArgumentError>()));
     });
   });
 

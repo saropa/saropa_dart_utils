@@ -14,11 +14,11 @@ void main() {
     test('should assert on a non-positive limit or window', () {
       expect(
         () => SlidingWindowRateLimiter(limit: 0, window: const Duration(seconds: 1)),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
       expect(
         () => SlidingWindowRateLimiter(limit: 1, window: Duration.zero),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
 

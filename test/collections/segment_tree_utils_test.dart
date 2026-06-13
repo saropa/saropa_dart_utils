@@ -55,13 +55,13 @@ void main() {
       test('should assert on an out-of-range update index', () {
         final SegmentTree t = SegmentTree.sum(<num>[1, 2]);
 
-        expect(() => t.update(2, 1), throwsA(isA<AssertionError>()));
+        expect(() => t.update(2, 1), throwsA(isA<RangeError>()));
       });
 
       test('should assert on an inverted range', () {
         final SegmentTree t = SegmentTree.sum(<num>[1, 2, 3]);
 
-        expect(() => t.query(2, 1), throwsA(isA<AssertionError>()));
+        expect(() => t.query(2, 1), throwsA(isA<RangeError>()));
       });
     });
 

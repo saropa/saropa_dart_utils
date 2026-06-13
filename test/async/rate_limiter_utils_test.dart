@@ -111,7 +111,7 @@ void main() {
       test('should assert on a non-positive rate', () {
         expect(
           () => TokenBucketRateLimiter(tokensPerSecond: 0, capacity: 1),
-          throwsA(isA<AssertionError>()),
+          throwsA(isA<ArgumentError>()),
         );
       });
     });

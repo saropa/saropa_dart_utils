@@ -24,11 +24,21 @@ class ResourcePool<T> {
   /// Audited: 2026-06-12 11:26 EDT
   ResourcePool({
     required ResourceFactory<T> create,
-    required this.maxSize,
+    required int maxSize,
     ResourceDisposer<T>? onDispose,
-  }) : assert(maxSize >= 1, 'maxSize must be >= 1'),
+  }) : maxSize = _validatedMaxSize(maxSize),
        _create = create,
        _onDispose = onDispose;
+
+  // Enforced in release (an assert strips): maxSize < 1 means the pool can never
+  // lend a resource, hanging every acquire. A static helper in the initializer
+  // keeps the throw out of the constructor body (avoid_exception_in_constructor).
+  static int _validatedMaxSize(int maxSize) {
+    if (maxSize < 1) {
+      throw ArgumentError.value(maxSize, 'maxSize', 'must be >= 1');
+    }
+    return maxSize;
+  }
 
   /// Maximum number of resources that may exist (idle + in use) at once.
   final int maxSize;

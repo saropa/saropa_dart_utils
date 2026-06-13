@@ -67,7 +67,12 @@ class SegmentTree {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   void update(int index, num value) {
-    assert(index >= 0 && index < _n, 'index ($index) out of range [0, $_n)');
+    // Enforced in release (an assert strips): a negative index in [-_n, 0) maps
+    // to a valid array slot `index + _n` and would silently update the wrong
+    // leaf, corrupting every ancestor — not a throw.
+    if (index < 0 || index >= _n) {
+      throw RangeError.range(index, 0, _n - 1, 'index');
+    }
     int pos = index + _n;
     _tree[pos] = value;
     // Recompute every ancestor by re-combining its two children.
@@ -86,8 +91,15 @@ class SegmentTree {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   num query(int low, int high) {
-    assert(low >= 0 && low <= high, 'low ($low) must be in 0..high ($high)');
-    assert(high < _n, 'high ($high) out of range [0, $_n)');
+    // Enforced in release: `low > high` silently returns the identity (the walk
+    // loop never runs) rather than signaling bad input; a negative low or
+    // out-of-range high reads the wrong slots or throws far from the cause.
+    if (low < 0 || low > high) {
+      throw RangeError('low ($low) must be in 0..high ($high)');
+    }
+    if (high >= _n) {
+      throw RangeError.range(high, low, _n - 1, 'high');
+    }
     num result = _identity;
     // Walk both boundaries inward, folding in any node that sits fully inside
     // the range (signaled by the boundary index being odd / even respectively).
@@ -106,7 +118,11 @@ class SegmentTree {
   /// Requires `0 <= index < length`.
   /// Audited: 2026-06-12 11:26 EDT
   num valueAt(int index) {
-    assert(index >= 0 && index < _n, 'index ($index) out of range [0, $_n)');
+    // Enforced in release: a negative index in [-_n, 0) reads a valid but wrong
+    // slot (`index + _n`) and returns a silently incorrect value.
+    if (index < 0 || index >= _n) {
+      throw RangeError.range(index, 0, _n - 1, 'index');
+    }
     return _tree[index + _n];
   }
 

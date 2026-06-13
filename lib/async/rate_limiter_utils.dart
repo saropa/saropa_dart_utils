@@ -27,13 +27,26 @@ class TokenBucketRateLimiter {
     required this.capacity,
     // ignore: saropa_lints/prefer_correct_callback_field_name -- injected clock source, not an event callback; an "on" prefix would misname it
     DateTime Function()? now,
-  }) : assert(tokensPerSecond > 0, 'tokensPerSecond must be > 0'),
-       assert(capacity >= 1, 'capacity must be >= 1'),
-       _now = now ?? DateTime.now,
-       _tokens = capacity.toDouble(),
+  }) : _now = now ?? DateTime.now,
+       // Validate while computing the initial token count: enforced in release
+       // (an assert strips), and routed through a static helper in the
+       // initializer so it does not trip avoid_exception_in_constructor. A
+       // non-positive tokensPerSecond divides by zero during refill; capacity < 1
+       // can never satisfy any spend.
+       _tokens = _validatedInitialTokens(tokensPerSecond, capacity),
        // Seed the accrual baseline from the same clock source the bucket reads,
        // so the first refill measures elapsed time from construction.
        _lastRefill = (now ?? DateTime.now)();
+
+  static double _validatedInitialTokens(double tokensPerSecond, int capacity) {
+    if (tokensPerSecond <= 0) {
+      throw ArgumentError.value(tokensPerSecond, 'tokensPerSecond', 'must be > 0');
+    }
+    if (capacity < 1) {
+      throw ArgumentError.value(capacity, 'capacity', 'must be >= 1');
+    }
+    return capacity.toDouble();
+  }
 
   /// Steady-state refill rate (tokens added per second of elapsed time).
   final double tokensPerSecond;

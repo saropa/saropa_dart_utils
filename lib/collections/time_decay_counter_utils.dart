@@ -35,8 +35,18 @@ class TimeDecayCounter {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   TimeDecayCounter({required this.halfLifeMillis})
-    : assert(halfLifeMillis > 0, 'halfLifeMillis must be > 0'),
-      _lambda = ln2 / halfLifeMillis;
+    : _lambda = _validatedLambda(halfLifeMillis);
+
+  // Validates before dividing: a zero/negative half-life would make `_lambda`
+  // Infinity/NaN and poison every later `value(t) = stored * exp(-lambda*dt)`.
+  // The division is in the initializer, so the guard must run before it — an
+  // assert (stripped in release) cannot; a static helper can.
+  static double _validatedLambda(double halfLifeMillis) {
+    if (halfLifeMillis <= 0) {
+      throw ArgumentError.value(halfLifeMillis, 'halfLifeMillis', 'must be > 0');
+    }
+    return ln2 / halfLifeMillis;
+  }
 
   /// Time, in milliseconds, for any contribution to lose half its weight.
   final double halfLifeMillis;

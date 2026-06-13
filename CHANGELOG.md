@@ -27,13 +27,22 @@ cspell:disable
 
 ## [Unreleased]
 
-Release-tooling hardening only — no change to any published API or behavior. Future-proofs the publish flow so a saropa_lints rule newly promoted to WARNING is caught before tagging instead of failing the tag-triggered publish one warning at a time (the v1.6.0 experience). [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+Release-tooling hardening plus release-build input validation. The tooling work future-proofs the publish flow so a saropa_lints rule newly promoted to WARNING is caught before tagging instead of failing the tag-triggered publish one warning at a time (the v1.6.0 experience). The validation work converts `assert`-guarded preconditions on public-API input to `if`-throw guards so they hold in release builds, not just debug — a codebase-review sweep found that the dangerous subset degraded to a silent divide-by-zero, hang, or wrong result in production. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
 
 ### Changed
 
 - CI: added a standalone `release_gate` workflow (`.github/workflows/release_gate.yml`) that runs `dart pub publish --dry-run` on every push/PR to main — the same command the tag-triggered `publish.yml` enforces (it runs `dart analyze` internally and exits 65 on any warning). Blocking warnings now surface at PR time, before the irreversible version tag, instead of one-per-tag-round. It is a separate workflow rather than a job in `ci` (`main.yaml`) because that workflow is disabled, which would have made the gate inert.
 - Release script (`scripts/modules/workflow.py`): the local analysis gate now fails on WARNING-severity findings, not just errors. Because `dart pub publish` exits 65 on a single warning, a warning that previously passed this gate still blocked the publish; matching the semantics locally catches it before tagging.
 - `pubspec.yaml`: pinned `saropa_lints` to exact `13.12.7` (was `^13.12.7`). A caret range let CI's fresh resolve pull a newer patch that promoted a rule to WARNING while the older local lock showed nothing — the version drift behind the whack-a-mole.
+
+### Fixed
+
+- **Release-build precondition enforcement (18 files)** — converted silent-failure `assert` preconditions on public-API input to `if`-throw guards (`ArgumentError`, or `RangeError` for index/range args) so they run in every build, extending the v1.6.0 `FenwickTree`/`rolling_correlation` precedent to the rest of the library. Constructors validate through a static helper invoked in the initializer list, which keeps the throw out of the constructor body (so `avoid_exception_in_constructor` stays satisfied) and runs before any field initializer that would divide by the value.
+  - Divide-by-zero / NaN: `SpatialGrid(cellSize)`, `TimeDecayCounter(halfLifeMillis)`, `TokenBucketRateLimiter(tokensPerSecond, capacity)`, `binByWidth(bins, max > min)`, `RateLimitSchedule(period)`, `SlidingWindowRateLimiter(limit, window)`, `TimeSeriesBuffer(bucketSizeMs, rawCapacity)`.
+  - Hang / deadlock: `TaskScheduler(concurrency)`, `BoundedWorkQueue(maxSize)`, `ResourcePool(maxSize)`.
+  - Silently-wrong result: `LruCache`/`MruCache`/`SizeLimitCache` size bounds; `SegmentTree.update`/`query`/`valueAt` (a negative index maps to a valid slot and corrupts the wrong leaf rather than throwing); `IntervalEntry`/`IntervalTree.queryRange`/`hasOverlap` (`low > high`); `MultiIndexCollection` (empty indexers); `BkTree.search` (negative `maxDistance`); `giniCoefficient` (negative values).
+  - Intentionally unchanged: the `const` constructors `QuietWindow`, `OpenWindow`, `RecurrenceSpec` keep their `assert`s — a `const` constructor cannot throw and dropping `const` would be breaking; `quantileBoundaries`/`binCounts` already degrade gracefully (return `[]` on `bins < 2`).
+  - The matching precondition tests now expect `ArgumentError`/`RangeError` instead of `AssertionError`.
 
 ## [1.6.1] - 2026-06-12
 

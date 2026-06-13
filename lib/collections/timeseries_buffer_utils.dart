@@ -65,10 +65,22 @@ class TimeSeriesBuffer {
   /// [bucketSizeMs] milliseconds wide. Both must be positive.
   /// Audited: 2026-06-12 11:26 EDT
   TimeSeriesBuffer({required int rawCapacity, required int bucketSizeMs})
-    : assert(rawCapacity > 0, 'rawCapacity ($rawCapacity) must be > 0'),
-      assert(bucketSizeMs > 0, 'bucketSizeMs ($bucketSizeMs) must be > 0'),
-      _rawCapacity = rawCapacity,
+    : _rawCapacity = _validatedRawCapacity(rawCapacity, bucketSizeMs),
       _bucketSizeMs = bucketSizeMs;
+
+  // Validate via a static helper in the initializer so the preconditions hold in
+  // release builds (asserts strip) without tripping avoid_exception_in_constructor.
+  // bucketSizeMs is later used as a divisor for bucket keys, so a non-positive
+  // value would divide by zero; rawCapacity <= 0 leaves no room for raw points.
+  static int _validatedRawCapacity(int rawCapacity, int bucketSizeMs) {
+    if (rawCapacity <= 0) {
+      throw ArgumentError.value(rawCapacity, 'rawCapacity', 'must be > 0');
+    }
+    if (bucketSizeMs <= 0) {
+      throw ArgumentError.value(bucketSizeMs, 'bucketSizeMs', 'must be > 0');
+    }
+    return rawCapacity;
+  }
 
   final int _rawCapacity;
   final int _bucketSizeMs;

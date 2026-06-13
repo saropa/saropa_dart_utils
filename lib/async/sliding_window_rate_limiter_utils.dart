@@ -29,9 +29,25 @@ class SlidingWindowRateLimiter {
     required this.window,
     // ignore: saropa_lints/prefer_correct_callback_field_name -- injected clock source, not an event callback
     DateTime Function()? now,
-  }) : assert(limit >= 1, 'limit must be >= 1'),
-       assert(window > Duration.zero, 'window must be positive'),
-       _now = now ?? DateTime.now;
+  }) : _now = _validatedNow(limit, window, now);
+
+  // Validate via a static helper in the initializer so the precondition holds in
+  // release builds (an assert strips) without tripping avoid_exception_in_constructor.
+  // limit < 1 would permit nothing; a non-positive window makes the trailing
+  // interval degenerate.
+  static DateTime Function() _validatedNow(
+    int limit,
+    Duration window,
+    DateTime Function()? now,
+  ) {
+    if (limit < 1) {
+      throw ArgumentError.value(limit, 'limit', 'must be >= 1');
+    }
+    if (window <= Duration.zero) {
+      throw ArgumentError.value(window, 'window', 'must be positive');
+    }
+    return now ?? DateTime.now;
+  }
 
   /// Maximum events permitted within any single trailing [window].
   final int limit;

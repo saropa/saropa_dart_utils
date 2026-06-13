@@ -18,7 +18,17 @@ import 'dart:collection' show ListQueue;
 class BoundedWorkQueue<T> {
   /// Creates a queue holding at most [maxSize] buffered items ([maxSize] ≥ 1).
   /// Audited: 2026-06-12 11:26 EDT
-  BoundedWorkQueue({required this.maxSize}) : assert(maxSize >= 1, 'maxSize must be >= 1');
+  BoundedWorkQueue({required int maxSize}) : maxSize = _validatedMaxSize(maxSize);
+
+  // Enforced in release (an assert strips): maxSize < 1 leaves no buffer slot, so
+  // push/pull deadlock under backpressure. A static helper in the initializer
+  // keeps the throw out of the constructor body (avoid_exception_in_constructor).
+  static int _validatedMaxSize(int maxSize) {
+    if (maxSize < 1) {
+      throw ArgumentError.value(maxSize, 'maxSize', 'must be >= 1');
+    }
+    return maxSize;
+  }
 
   /// Maximum number of items buffered before [push] starts applying backpressure.
   final int maxSize;

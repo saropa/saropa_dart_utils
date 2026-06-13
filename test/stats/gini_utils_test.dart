@@ -39,7 +39,7 @@ void main() {
     test('negative values are rejected', () {
       expect(
         () => giniCoefficient(<num>[1, -2, 3]),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
   });

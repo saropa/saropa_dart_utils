@@ -9,7 +9,18 @@ class LruCache<K extends Object, V extends Object> implements Cache<K, V> {
   /// Creates a cache holding at most [maxSize] entries (must be positive).
   /// When [ttl] is set, entries expire that long after they were stored.
   /// Audited: 2026-06-12 11:26 EDT
-  LruCache(int maxSize, {Duration? ttl}) : _maxSize = maxSize, _ttl = ttl, assert(maxSize > 0);
+  LruCache(int maxSize, {Duration? ttl}) : _maxSize = _validatedMaxSize(maxSize), _ttl = ttl;
+
+  // Enforced in release (an assert strips): a non-positive maxSize breaks the
+  // eviction bound and lets the cache grow without limit. A static helper in the
+  // initializer keeps the throw out of the constructor body, which the
+  // avoid_exception_in_constructor lint forbids.
+  static int _validatedMaxSize(int maxSize) {
+    if (maxSize <= 0) {
+      throw ArgumentError.value(maxSize, 'maxSize', 'must be > 0');
+    }
+    return maxSize;
+  }
 
   final int _maxSize;
   final Duration? _ttl;

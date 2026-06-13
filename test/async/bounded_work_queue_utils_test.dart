@@ -4,7 +4,7 @@ import 'package:saropa_dart_utils/async/bounded_work_queue_utils.dart';
 void main() {
   group('BoundedWorkQueue', () {
     test('should reject a maxSize below 1', () {
-      expect(() => BoundedWorkQueue<int>(maxSize: 0), throwsA(isA<AssertionError>()));
+      expect(() => BoundedWorkQueue<int>(maxSize: 0), throwsA(isA<ArgumentError>()));
     });
 
     test('should buffer up to maxSize without blocking', () async {

@@ -53,14 +53,14 @@ void main() {
       expect(hits, equals(<String>['a', 'b']));
     });
 
-    test('should assert on a non-positive cell size', () {
-      expect(() => SpatialGrid<int>(0), throwsA(isA<AssertionError>()));
+    test('should reject a non-positive cell size', () {
+      expect(() => SpatialGrid<int>(0), throwsA(isA<ArgumentError>()));
     });
 
     test('should assert on a negative radius', () {
       final SpatialGrid<int> g = SpatialGrid<int>(1)..insert(1, 0, 0);
 
-      expect(() => g.queryRadius(0, 0, -1), throwsA(isA<AssertionError>()));
+      expect(() => g.queryRadius(0, 0, -1), throwsA(isA<ArgumentError>()));
     });
 
     test('should match a brute-force scan over a deterministic point cloud', () {

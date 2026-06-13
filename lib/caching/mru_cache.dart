@@ -19,9 +19,17 @@ class MruCache<K, V> {
   /// Creates a cache holding at most [capacity] entries. Requires
   /// `capacity > 0`.
   /// Audited: 2026-06-12 11:26 EDT
-  MruCache(int capacity)
-    : assert(capacity > 0, 'capacity ($capacity) must be > 0'),
-      _capacity = capacity;
+  MruCache(int capacity) : _capacity = _validatedCapacity(capacity);
+
+  // Enforced in release (an assert strips): a non-positive capacity breaks the
+  // eviction bound. A static helper in the initializer keeps the throw out of
+  // the constructor body, which the avoid_exception_in_constructor lint forbids.
+  static int _validatedCapacity(int capacity) {
+    if (capacity <= 0) {
+      throw ArgumentError.value(capacity, 'capacity', 'must be > 0');
+    }
+    return capacity;
+  }
 
   final int _capacity;
   final Map<K, V> _values = <K, V>{};

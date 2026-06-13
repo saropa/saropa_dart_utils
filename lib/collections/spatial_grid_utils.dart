@@ -25,9 +25,20 @@ class SpatialGrid<T> {
   /// Creates a grid whose square cells are [cellSize] units on a side.
   /// Requires `cellSize > 0`.
   /// Audited: 2026-06-12 11:26 EDT
-  SpatialGrid(double cellSize)
-    : assert(cellSize > 0, 'cellSize ($cellSize) must be > 0'),
-      _cellSize = cellSize;
+  SpatialGrid(double cellSize) : _cellSize = _validatedCellSize(cellSize);
+
+  // Validate via a static helper in the initializer (not a constructor body) so
+  // the check survives release builds without an assert. The throw runs during
+  // field init, before any resource is acquired, so no partially-constructed
+  // object can leak and the avoid_exception_in_constructor lint stays satisfied.
+  // `_cell` divides by `_cellSize`, so a zero/negative size would yield
+  // Infinity/NaN cell coordinates and silently corrupt the grid.
+  static double _validatedCellSize(double cellSize) {
+    if (cellSize <= 0) {
+      throw ArgumentError.value(cellSize, 'cellSize', 'must be > 0');
+    }
+    return cellSize;
+  }
 
   final double _cellSize;
   // Keyed by (cellX, cellY); records use value equality so they work as keys.
@@ -61,7 +72,11 @@ class SpatialGrid<T> {
   /// ([x], [y]). Requires `radius >= 0`. Order is unspecified.
   /// Audited: 2026-06-12 11:26 EDT
   List<T> queryRadius(double x, double y, double radius) {
-    assert(radius >= 0, 'radius ($radius) must be >= 0');
+    // Enforced in release: a negative radius would silently match points within
+    // |radius| (r2 squares away the sign) instead of being rejected.
+    if (radius < 0) {
+      throw ArgumentError.value(radius, 'radius', 'must be >= 0');
+    }
     final double r2 = radius * radius;
     // Filter the cell candidates by true distance — a cell overlapping the
     // query box can still hold points outside the circle.

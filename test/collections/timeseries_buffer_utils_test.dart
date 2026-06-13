@@ -62,11 +62,11 @@ void main() {
     test('should assert on non-positive configuration', () {
       expect(
         () => TimeSeriesBuffer(rawCapacity: 0, bucketSizeMs: 1000),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
       expect(
         () => TimeSeriesBuffer(rawCapacity: 1, bucketSizeMs: 0),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
   });

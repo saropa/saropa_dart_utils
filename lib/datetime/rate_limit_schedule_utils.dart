@@ -29,12 +29,26 @@ class RateLimitSchedule {
     required int maxPerPeriod,
     required Duration period,
     Duration cooldown = Duration.zero,
-  }) : assert(maxPerPeriod >= 1, 'maxPerPeriod ($maxPerPeriod) must be >= 1'),
-       assert(period > Duration.zero, 'period ($period) must be positive'),
-       assert(!cooldown.isNegative, 'cooldown ($cooldown) must not be negative'),
-       _maxPerPeriod = maxPerPeriod,
+  }) : _maxPerPeriod = _validatedMaxPerPeriod(maxPerPeriod, period, cooldown),
        _period = period,
        _cooldown = cooldown;
+
+  // Validate via a static helper in the initializer so the preconditions hold in
+  // release builds (asserts strip) without tripping avoid_exception_in_constructor.
+  // A non-positive period would divide the rolling window by zero; a negative
+  // cooldown would let fires run backwards.
+  static int _validatedMaxPerPeriod(int maxPerPeriod, Duration period, Duration cooldown) {
+    if (maxPerPeriod < 1) {
+      throw ArgumentError.value(maxPerPeriod, 'maxPerPeriod', 'must be >= 1');
+    }
+    if (period <= Duration.zero) {
+      throw ArgumentError.value(period, 'period', 'must be positive');
+    }
+    if (cooldown.isNegative) {
+      throw ArgumentError.value(cooldown, 'cooldown', 'must not be negative');
+    }
+    return maxPerPeriod;
+  }
 
   final int _maxPerPeriod;
   final Duration _period;

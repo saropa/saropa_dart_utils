@@ -20,7 +20,17 @@ class TaskScheduler {
   /// Creates a scheduler that runs at most [concurrency] tasks concurrently.
   /// [concurrency] must be at least 1.
   /// Audited: 2026-06-12 11:26 EDT
-  TaskScheduler({required this.concurrency}) : assert(concurrency >= 1, 'concurrency must be >= 1');
+  TaskScheduler({required int concurrency}) : concurrency = _validatedConcurrency(concurrency);
+
+  // Enforced in release (an assert strips): concurrency < 1 means no slot ever
+  // opens, so every scheduled task hangs forever. Validated via a static helper
+  // in the initializer to avoid avoid_exception_in_constructor.
+  static int _validatedConcurrency(int concurrency) {
+    if (concurrency < 1) {
+      throw ArgumentError.value(concurrency, 'concurrency', 'must be >= 1');
+    }
+    return concurrency;
+  }
 
   /// Maximum number of tasks allowed to run at the same time.
   final int concurrency;

@@ -94,11 +94,11 @@ void main() {
     test('should assert on invalid configuration', () {
       expect(
         () => RateLimitSchedule(maxPerPeriod: 0, period: const Duration(minutes: 1)),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
       expect(
         () => RateLimitSchedule(maxPerPeriod: 1, period: Duration.zero),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
       expect(
         () => RateLimitSchedule(
@@ -106,7 +106,7 @@ void main() {
           period: const Duration(minutes: 1),
           cooldown: Duration(minutes: -1),
         ),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
   });

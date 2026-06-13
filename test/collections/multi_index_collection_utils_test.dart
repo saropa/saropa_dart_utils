@@ -20,7 +20,7 @@ void main() {
     test('should require at least one index', () {
       expect(
         () => MultiIndexCollection<_User>(<String, Object Function(_User)>{}),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
 

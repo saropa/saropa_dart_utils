@@ -19,8 +19,15 @@ List<int> binByWidth(
   required num max,
   required int bins,
 }) {
-  assert(bins >= 1, 'binByWidth requires bins >= 1');
-  assert(max > min, 'binByWidth requires max > min');
+  // Enforced in release: `bins < 1` makes the width division `/ bins` divide by
+  // zero (Infinity width → every value floors to bin 0), and `max <= min` makes
+  // the width zero/negative — both silently wrong, not an error. Asserts strip.
+  if (bins < 1) {
+    throw ArgumentError.value(bins, 'bins', 'must be >= 1');
+  }
+  if (max <= min) {
+    throw ArgumentError('binByWidth requires max ($max) > min ($min)');
+  }
   final double width = (max - min) / bins;
   return values.map((num v) => _widthBin(v.toDouble(), min.toDouble(), width, bins)).toList();
 }

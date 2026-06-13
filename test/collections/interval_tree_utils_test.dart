@@ -102,7 +102,7 @@ void main() {
     });
 
     test('should reject an inverted interval entry', () {
-      expect(() => IntervalEntry<String>(10, 5, 'bad'), throwsA(isA<AssertionError>()));
+      expect(() => IntervalEntry<String>(10, 5, 'bad'), throwsA(isA<ArgumentError>()));
     });
   });
 }

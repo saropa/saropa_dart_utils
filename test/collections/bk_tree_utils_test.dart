@@ -47,10 +47,10 @@ void main() {
       expect(BkTree().search('anything', 3), isEmpty);
     });
 
-    test('should assert on a negative max distance', () {
+    test('should reject a negative max distance', () {
       final BkTree t = BkTree()..add('x');
 
-      expect(() => t.search('x', -1), throwsA(isA<AssertionError>()));
+      expect(() => t.search('x', -1), throwsA(isA<ArgumentError>()));
     });
 
     test('should return the same set as a linear scan using the tree metric', () {

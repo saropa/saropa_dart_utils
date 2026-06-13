@@ -22,8 +22,18 @@ class IntervalEntry<T> {
   /// Creates an interval `[low, high]` (inclusive) labeled with [value].
   /// Requires `low <= high`.
   /// Audited: 2026-06-12 11:26 EDT
-  IntervalEntry(this.low, this.high, this.value)
-    : assert(low <= high, 'low ($low) must be <= high ($high)');
+  IntervalEntry(num low, this.high, this.value) : low = _validatedLow(low, high);
+
+  // Enforced in release (an assert strips): low > high makes `contains`/`overlaps`
+  // always false and corrupts the tree's max-high augmentation, silently dropping
+  // matches. A static helper in the initializer keeps the throw out of the
+  // constructor body (avoid_exception_in_constructor).
+  static num _validatedLow(num low, num high) {
+    if (low > high) {
+      throw ArgumentError('low ($low) must be <= high ($high)');
+    }
+    return low;
+  }
 
   /// Inclusive lower bound.
   final num low;
@@ -101,7 +111,11 @@ class IntervalTree<T> {
   /// `low` order. Requires `low <= high`.
   /// Audited: 2026-06-12 11:26 EDT
   List<IntervalEntry<T>> queryRange(num low, num high) {
-    assert(low <= high, 'low ($low) must be <= high ($high)');
+    // Enforced in release (an assert strips): low > high silently returns no
+    // results instead of signaling an inverted query range.
+    if (low > high) {
+      throw ArgumentError('low ($low) must be <= high ($high)');
+    }
     final List<IntervalEntry<T>> results = <IntervalEntry<T>>[];
     _collect(_root, low, high, results);
     return results;
@@ -111,7 +125,11 @@ class IntervalTree<T> {
   /// match, so it is cheaper than checking `queryRange(...).isNotEmpty`.
   /// Audited: 2026-06-12 11:26 EDT
   bool hasOverlap(num low, num high) {
-    assert(low <= high, 'low ($low) must be <= high ($high)');
+    // Enforced in release (an assert strips): low > high silently returns false
+    // instead of signaling an inverted query range.
+    if (low > high) {
+      throw ArgumentError('low ($low) must be <= high ($high)');
+    }
     return _anyOverlap(_root, low, high);
   }
 

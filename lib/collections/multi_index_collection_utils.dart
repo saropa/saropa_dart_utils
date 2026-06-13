@@ -23,11 +23,23 @@ class MultiIndexCollection<T> {
   /// index is required.
   // ignore: saropa_lints/prefer_correct_callback_field_name -- indexers is a map of key extractors, not an event callback
   MultiIndexCollection(Map<String, Object Function(T)> indexers)
-    : assert(indexers.isNotEmpty, 'at least one index is required'),
-      _indexers = Map<String, Object Function(T)>.unmodifiable(indexers),
+    : _indexers = _validatedIndexers(indexers),
       _indexes = <String, Map<Object, List<T>>>{
         for (final String name in indexers.keys) name: <Object, List<T>>{},
       };
+
+  // Enforced in release (an assert strips): with no indexers every query by name
+  // misses, so the collection is silently useless. Validated first in the
+  // initializer (it throws before `_indexes` builds) via a static helper, which
+  // keeps the throw out of the constructor body (avoid_exception_in_constructor).
+  static Map<String, Object Function(S)> _validatedIndexers<S>(
+    Map<String, Object Function(S)> indexers,
+  ) {
+    if (indexers.isEmpty) {
+      throw ArgumentError.value(indexers, 'indexers', 'at least one index is required');
+    }
+    return Map<String, Object Function(S)>.unmodifiable(indexers);
+  }
 
   final Map<String, Object Function(T)> _indexers;
   final Map<String, Map<Object, List<T>>> _indexes;

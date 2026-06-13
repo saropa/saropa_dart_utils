@@ -79,8 +79,8 @@ void main() {
       expect(c.length, equals(0));
     });
 
-    test('should assert on a non-positive capacity', () {
-      expect(() => MruCache<String, int>(0), throwsA(isA<AssertionError>()));
+    test('should reject a non-positive capacity', () {
+      expect(() => MruCache<String, int>(0), throwsA(isA<ArgumentError>()));
     });
   });
 }

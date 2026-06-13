@@ -153,7 +153,7 @@ void main() {
     test('should reject a maxSize below 1', () {
       expect(
         () => ResourcePool<int>(create: () async => 1, maxSize: 0),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
   });

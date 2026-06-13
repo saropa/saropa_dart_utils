@@ -29,10 +29,11 @@ double giniCoefficient(List<num> values) {
   // Empty input has no distribution; NaN signals "undefined" per house convention.
   if (values.isEmpty) return double.nan;
   // A negative share is undefined for inequality and breaks the [0,1] range.
-  assert(
-    values.every((num v) => v >= 0),
-    'giniCoefficient requires non-negative values',
-  );
+  // Enforced in release (an assert strips): a negative value would silently
+  // produce an out-of-range coefficient instead of signaling bad input.
+  if (values.any((num v) => v < 0)) {
+    throw ArgumentError.value(values, 'values', 'must all be non-negative');
+  }
   final List<double> sorted = values.map((num v) => v.toDouble()).toList()..sort();
   final int n = sorted.length;
   double total = 0;
