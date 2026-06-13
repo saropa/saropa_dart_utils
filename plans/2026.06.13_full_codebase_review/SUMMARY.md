@@ -82,3 +82,9 @@ grapheme-vs-code-unit slicing, RNG choice, and doc drift — plus a few bespoke-
 - `dart analyze`: clean. Full `flutter test`: green (synthesis gate). Every fix has a regression test.
 - Backward compatibility: all signatures preserved; the only additions are the two cancelable
   functions + `CancelableCallback`. `stableHash` VM output is unchanged (web now matches it).
+
+## Final certification (2026-06-13)
+- `flutter test` (full suite): **8222 passed, 2 skipped, 0 failed** (real exit code 0).
+- `dart analyze`: clean.
+- All ~33 fixes ship with regression tests; signatures preserved; `stableHash` VM output unchanged.
+- Review status: COMPLETE.
