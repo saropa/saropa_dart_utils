@@ -49,12 +49,16 @@ extension MapExt<K, V> on Map<K, V> {
   /// Returns up to [count] random entries from this map, excluding any keys
   /// present in [ignoreList].
   ///
-  /// Returns `null` if no eligible entries remain after exclusion.
+  /// Returns `null` if no eligible entries remain after exclusion. Pass a seeded
+  /// [random] for deterministic, testable output; it defaults to a fresh
+  /// [Random] (matching the injectable-RNG convention used elsewhere in the
+  /// library so this method is reproducible in tests).
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   List<MapEntry<K, V>>? getRandomListExcept({
     required int count,
     required List<K>? ignoreList,
+    Random? random,
   }) {
     final Set<K> ignore = ignoreList?.toSet() ?? <K>{};
     final List<MapEntry<K, V>> available = entries
@@ -64,7 +68,7 @@ extension MapExt<K, V> on Map<K, V> {
       return null;
     }
 
-    available.shuffle(Random());
+    available.shuffle(random ?? Random());
 
     // Clamp count: `take` throws a RangeError on a negative argument, and a
     // count above the available size simply takes them all.

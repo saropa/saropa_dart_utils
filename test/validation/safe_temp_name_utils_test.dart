@@ -7,7 +7,10 @@ void main() {
 
     test('respects requested length', () => expect(safeTempName(length: 5), hasLength(5)));
 
-    test('zero length yields empty string', () => expect(safeTempName(length: 0), ''));
+    test(
+      'non-positive length throws ArgumentError',
+      () => expect(() => safeTempName(length: 0), throwsArgumentError),
+    );
 
     test('contains only alphanumeric characters', () {
       expect(RegExp(r'^[a-zA-Z0-9]+$').hasMatch(safeTempName(length: 32)), isTrue);

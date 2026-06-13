@@ -28,8 +28,6 @@ extension HexExtensions on String {
   /// - The string contains non-hexadecimal characters
   /// - The value exceeds the maximum signed 64-bit integer (0x7FFFFFFFFFFFFFFF)
   ///
-  /// Prints a warning to the debug console if the input is invalid or too large.
-  ///
   /// Example:
   /// ```dart
   /// 'FF'.hexToInt(); // Returns 255

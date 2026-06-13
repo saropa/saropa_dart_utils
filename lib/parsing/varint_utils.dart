@@ -1,4 +1,10 @@
 /// Varint encoding/decoding (Protobuf-style) — roadmap #635.
+///
+/// Platform note: values beyond 32 bits round-trip correctly only on the Dart
+/// VM. On the web (dart2js/dartdevc) `int` is a 53-bit double and the shift
+/// operators these functions use truncate operands to 32 bits, so encoding or
+/// decoding a value above ~2^32 does not reproduce the original. See
+/// https://dart.dev/resources/language/number-representation.
 library;
 
 /// Decodes one varint from [bytes] at [start]. Returns (value, nextIndex).
