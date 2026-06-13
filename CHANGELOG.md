@@ -43,6 +43,12 @@ Release-tooling hardening plus release-build input validation. The tooling work 
   - Silently-wrong result: `LruCache`/`MruCache`/`SizeLimitCache` size bounds; `SegmentTree.update`/`query`/`valueAt` (a negative index maps to a valid slot and corrupts the wrong leaf rather than throwing); `IntervalEntry`/`IntervalTree.queryRange`/`hasOverlap` (`low > high`); `MultiIndexCollection` (empty indexers); `BkTree.search` (negative `maxDistance`); `giniCoefficient` (negative values).
   - Intentionally unchanged: the `const` constructors `QuietWindow`, `OpenWindow`, `RecurrenceSpec` keep their `assert`s — a `const` constructor cannot throw and dropping `const` would be breaking; `quantileBoundaries`/`binCounts` already degrade gracefully (return `[]` on `bins < 2`).
   - The matching precondition tests now expect `ArgumentError`/`RangeError` instead of `AssertionError`.
+- **`safeTempName` now uses a cryptographically secure RNG** ([safe_temp_name_utils.dart](lib/validation/safe_temp_name_utils.dart)) — was backed by a seedable `Random()`, whose sequence is reproducible, so the generated temp-file names were predictable; an attacker who can guess the name can win a temp-file race or pre-create it. Switched to `Random.secure()`. Also throws `ArgumentError` on a non-positive `length` (was silently returning an empty, always-colliding name).
+- **`Map.getRandomListExcept` accepts an optional `Random`** ([map_extensions.dart](lib/map/map_extensions.dart)) — previously shuffled with a fresh, non-injectable `Random()`, making the result non-reproducible and untestable. Now takes an optional `random` (defaults to `Random()`), matching the injectable-RNG convention used elsewhere in the library. Backward-compatible (new optional parameter).
+
+### Changed
+
+- Doc accuracy: `hexToInt` ([hex_utils.dart](lib/hex/hex_utils.dart)) no longer claims it "Prints a warning to the debug console" — it returns `null` and prints nothing (the v1.6.0 cleanup fixed only the example, not the prose). `varint` ([varint_utils.dart](lib/parsing/varint_utils.dart)) now documents that values beyond 32 bits round-trip only on the Dart VM — on web, `int` is a 53-bit double and the shift operators truncate to 32 bits.
 
 ## [1.6.1] - 2026-06-12
 
