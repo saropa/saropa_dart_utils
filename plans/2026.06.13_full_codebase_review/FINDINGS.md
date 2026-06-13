@@ -29,6 +29,7 @@ mismatch · **S4** quality/style/perf. Status: `candidate` → `confirmed` → `
 - `collections/stable_matching_utils.dart` — proposer-optimal Gale-Shapley; validates unknown/duplicate refs, O(1) rank lookups, single-match invariant holds on inversion; correct.
 - `collections/knapsack_utils.dart` — standard 0/1 DP table + correct backward reconstruction; correct.
 - `collections/lis_utils.dart` — O(n²) DP, strict-increasing, prev-chain reconstruction terminates correctly; correct.
+- `parsing/semver_utils.dart` — correct §11 precedence (pre-release < release, numeric-below-alphanumeric, longer pre-release ranks higher); lenient parse (allows leading zeros) but that's documented. Correct.
 
 ### Strategic note (Phase 2 direction)
 The v1.6.0 audit handled canonical algorithms well — every textbook algorithm checked so far (quickselect, Gale-Shapley, knapsack, LIS, reservoir, ES-weighted-sampling) is correct. The surviving bugs were all CROSS-CUTTING (web-int, release-stripped asserts, RNG, doc drift), now fixed in Phase 1. Remaining bug probability concentrates in BESPOKE custom-logic files (parsers, date arithmetic, `*_more`/grab-bag utils), not the algorithm implementations. Phase 2 prioritizes those.
