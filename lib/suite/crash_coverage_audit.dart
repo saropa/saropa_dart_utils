@@ -73,7 +73,8 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
     description: 'Bad state: No element — .first/.last/.single on an empty iterable.',
     symbol: 'singleOrNull',
     source: 'list/list_lower_extensions.dart',
-    note: 'singleOrNull (and lastOrNull/firstWhereOrElse/nullIfEmpty) return a '
+    note:
+        'singleOrNull (and lastOrNull/firstWhereOrElse/nullIfEmpty) return a '
         'value or null instead of throwing on the empty/no-element case.',
   ),
   CrashFamilyCoverage(
@@ -82,14 +83,16 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
     description: 'RangeError (index) — list[i] past the end or negative.',
     symbol: 'getOrNull',
     source: 'list/list_lower_extensions.dart',
-    note: 'getOrNull(index) bounds-checks and returns null for an out-of-range '
+    note:
+        'getOrNull(index) bounds-checks and returns null for an out-of-range '
         'index instead of throwing.',
   ),
   CrashFamilyCoverage(
     familyId: 'null-check-operator',
     status: CrashCoverageStatus.notApplicable,
     description: 'Null check operator used on a null value — the ! operator on null.',
-    note: 'Avoiding ! is a usage discipline, not a single primitive; the '
+    note:
+        'Avoiding ! is a usage discipline, not a single primitive; the '
         'library\'s nullable-returning accessors support writing ?? / null '
         'checks instead, but no symbol "remediates" a bang.',
   ),
@@ -97,7 +100,8 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
     familyId: 'late-init',
     status: CrashCoverageStatus.notApplicable,
     description: 'LateInitializationError — a late field read before assignment.',
-    note: 'A language feature; no utility can prevent a late field being read '
+    note:
+        'A language feature; no utility can prevent a late field being read '
         'early.',
   ),
   CrashFamilyCoverage(
@@ -107,7 +111,8 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
         'Concurrent modification during iteration — mutating a collection inside its own loop.',
     symbol: 'forEachSnapshot',
     source: 'list/list_mutate_during_iteration_extensions.dart',
-    note: 'forEachSnapshot walks a point-in-time copy of the list, so the body '
+    note:
+        'forEachSnapshot walks a point-in-time copy of the list, so the body '
         'may add to or remove from the original without throwing '
         'ConcurrentModificationError.',
   ),
@@ -117,7 +122,8 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
     description: "type 'X' is not a subtype of type 'Y' — a failed cast.",
     symbol: 'castOrNull',
     source: 'object/cast_utils.dart',
-    note: 'castOrNull<T>(value) returns null when the value is not a T instead of '
+    note:
+        'castOrNull<T>(value) returns null when the value is not a T instead of '
         'throwing on a bad cast (tryCast on a nullable receiver is the extension '
         'form).',
   ),
@@ -128,21 +134,24 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
         'FormatException — parsing malformed input (int.parse, jsonDecode, DateTime.parse).',
     symbol: 'toIntNullable',
     source: 'string/string_number_extensions.dart',
-    note: 'toIntNullable (with parseBool, toDoubleNullable, parseIsoWeekString) '
+    note:
+        'toIntNullable (with parseBool, toDoubleNullable, parseIsoWeekString) '
         'returns null on unparseable input instead of throwing.',
   ),
   CrashFamilyCoverage(
     familyId: 'no-such-method',
     status: CrashCoverageStatus.notApplicable,
     description: 'NoSuchMethodError — a method/getter called on null or a wrong type.',
-    note: 'A dynamic-dispatch fault; the nullable accessors reduce the null '
+    note:
+        'A dynamic-dispatch fault; the nullable accessors reduce the null '
         'sources, but no primitive remediates the error itself.',
   ),
   CrashFamilyCoverage(
     familyId: 'assertion-failed',
     status: CrashCoverageStatus.notApplicable,
     description: 'Failed assertion — an assert(...) tripped in debug.',
-    note: 'Asserts encode caller invariants; preventing a trip is a caller '
+    note:
+        'Asserts encode caller invariants; preventing a trip is a caller '
         'concern, not a utility.',
   ),
   CrashFamilyCoverage(
@@ -161,7 +170,8 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
     familyId: 'anr',
     status: CrashCoverageStatus.notApplicable,
     description: 'Application Not Responding — main-thread block past the ANR threshold.',
-    note: 'A threading/scheduling fault; the async throttling utils help latency '
+    note:
+        'A threading/scheduling fault; the async throttling utils help latency '
         'but do not prevent an ANR as a crash class.',
   ),
 ];

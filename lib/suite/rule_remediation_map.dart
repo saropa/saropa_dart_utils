@@ -55,7 +55,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'sumBy',
     source: 'iterable/iterable_sum_by_extensions.dart',
     crashClass: 'StateError — reduce() on an empty collection',
-    note: 'sumBy folds from a zero accumulator, so an empty collection returns '
+    note:
+        'sumBy folds from a zero accumulator, so an empty collection returns '
         '0 instead of throwing.',
   ),
 
@@ -66,7 +67,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'firstWhereOrElse',
     source: 'iterable/iterable_first_last_extensions.dart',
     crashClass: 'StateError — first/single after where() with no match',
-    note: 'firstWhereOrElse returns orElse when no element matches, removing the '
+    note:
+        'firstWhereOrElse returns orElse when no element matches, removing the '
         'no-match throw.',
   ),
   RuleRemediation(
@@ -81,7 +83,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'firstWhereOrElse',
     source: 'iterable/iterable_first_last_extensions.dart',
     crashClass: 'StateError — .first on an empty geocoding result list',
-    note: 'A geocode lookup can return zero placemarks; firstWhereOrElse yields '
+    note:
+        'A geocode lookup can return zero placemarks; firstWhereOrElse yields '
         'a default rather than throwing on the empty result.',
   ),
 
@@ -92,7 +95,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'singleOrNull',
     source: 'list/list_lower_extensions.dart',
     crashClass: 'StateError — .single on a list whose length is not exactly 1',
-    note: 'singleOrNull returns null when the list is empty or has more than one '
+    note:
+        'singleOrNull returns null when the list is empty or has more than one '
         'element, so the caller handles the null branch instead of crashing.',
   ),
 
@@ -103,7 +107,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'nullIfEmpty',
     source: 'list/list_extensions.dart',
     crashClass: 'RangeError/StateError — indexing an empty picker result list',
-    note: 'nullIfEmpty collapses an empty list to null so a `?.` guard forces the '
+    note:
+        'nullIfEmpty collapses an empty list to null so a `?.` guard forces the '
         'empty case to be handled before any element access.',
   ),
 
@@ -114,7 +119,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'whereNotNull',
     source: 'iterable/iterable_map_not_null_extensions.dart',
     crashClass: 'Null-deref — operating on a collection that still contains null',
-    note: 'whereNotNull yields a non-nullable element type, removing the null '
+    note:
+        'whereNotNull yields a non-nullable element type, removing the null '
         'elements rather than dereferencing them downstream.',
   ),
 
@@ -125,7 +131,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'toIntNullable',
     source: 'string/string_number_extensions.dart',
     crashClass: 'FormatException — parse() on non-numeric dynamic input',
-    note: 'toIntNullable returns null for unparseable input, so the failure is a '
+    note:
+        'toIntNullable returns null for unparseable input, so the failure is a '
         'value to handle rather than a thrown exception.',
   ),
 
@@ -136,7 +143,8 @@ const List<RuleRemediation> kRuleRemediations = <RuleRemediation>[
     symbol: 'isPathSafe',
     source: 'validation/path_validator_utils.dart',
     crashClass: 'Path traversal — a path with ../ segments escaping its root',
-    note: 'isPathSafe returns false when the normalized path climbs above root, '
+    note:
+        'isPathSafe returns false when the normalized path climbs above root, '
         'so traversal is rejected before the path reaches the filesystem.',
   ),
 ];

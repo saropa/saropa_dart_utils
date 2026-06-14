@@ -367,8 +367,9 @@ void main() {
       // .transform() delegates to bind(); call bind() directly to prove the
       // StreamTransformerBase contract holds without the transform() sugar.
       test('binds a source stream and maps each event in order', () async {
-        final ComputeStreamTransformer<int, int> transformer =
-            ComputeStreamTransformer<int, int>(computeFunction: _double);
+        final ComputeStreamTransformer<int, int> transformer = ComputeStreamTransformer<int, int>(
+          computeFunction: _double,
+        );
 
         final List<int> result = await transformer
             .bind(Stream<int>.fromIterable(<int>[1, 2, 3]))
@@ -380,8 +381,7 @@ void main() {
       // onError recovery must engage through bind() too, not only via
       // transform(), since bind() is where the asyncMap/catch logic lives.
       test('binds and applies onError recovery to a failing event', () async {
-        final ComputeStreamTransformer<int, int> transformer =
-            ComputeStreamTransformer<int, int>(
+        final ComputeStreamTransformer<int, int> transformer = ComputeStreamTransformer<int, int>(
           computeFunction: _throwOnZero,
           onError: (Object error, StackTrace stack) => -1,
         );

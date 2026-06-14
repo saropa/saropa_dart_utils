@@ -18,8 +18,7 @@ void main() {
     // reduce throws on empty; sumBy returns 0.
     'sumBy': () => <int>[].sumBy((int e) => e) == 0,
     // firstWhere throws with no match; firstWhereOrElse returns the default.
-    'firstWhereOrElse': () =>
-        <int>[].firstWhereOrElse((int e) => true, -1) == -1,
+    'firstWhereOrElse': () => <int>[].firstWhereOrElse((int e) => true, -1) == -1,
     // single throws on length != 1; singleOrNull returns null.
     'singleOrNull': () => <int>[].singleOrNull == null,
     // empty result must be handled before access; nullIfEmpty collapses to null.
@@ -34,13 +33,15 @@ void main() {
 
   group('kRuleRemediations', () {
     test('every mapped symbol has a probe and every probe is mapped', () {
-      final Set<String> mappedSymbols =
-          kRuleRemediations.map((RuleRemediation r) => r.symbol).toSet();
+      final Set<String> mappedSymbols = kRuleRemediations
+          .map((RuleRemediation r) => r.symbol)
+          .toSet();
 
       expect(
         mappedSymbols,
         equals(probes.keys.toSet()),
-        reason: 'Mapping and probe set drifted. Add a probe for any new symbol '
+        reason:
+            'Mapping and probe set drifted. Add a probe for any new symbol '
             '(and remove the probe for any symbol no longer mapped).',
       );
     });
@@ -52,15 +53,15 @@ void main() {
         expect(
           probe.value(),
           isTrue,
-          reason: 'Probe for ${probe.key} did not return its expected safe '
+          reason:
+              'Probe for ${probe.key} did not return its expected safe '
               'value — the symbol changed behavior.',
         );
       }
     });
 
     test('rule ids are unique and all fields are non-empty', () {
-      final List<String> ruleIds =
-          kRuleRemediations.map((RuleRemediation r) => r.ruleId).toList();
+      final List<String> ruleIds = kRuleRemediations.map((RuleRemediation r) => r.ruleId).toList();
 
       expect(
         ruleIds.toSet().length,

@@ -145,8 +145,7 @@ void main() {
       expect(out.any((s) => s.message.contains('flatten')), isTrue);
     });
     test('snippet and line set from matched line', () {
-      const String code =
-          'void foo() {\n  final c = x[0].toUpperCase() + x.substring(1);\n}\n';
+      const String code = 'void foo() {\n  final c = x[0].toUpperCase() + x.substring(1);\n}\n';
       final List<Suggestion> out = scanContent(code, 'f.dart');
       expect(out, isNotEmpty);
       expect(out.first.line, 2);
@@ -391,8 +390,7 @@ void main() {
       expect(scanContent('   \n\t\n', 'p.dart'), isEmpty);
     });
     test('a line with two distinct patterns yields two suggestions', () {
-      const String code =
-          "final a = name ?? ''; final b = items.sublist(items.length - 1);";
+      const String code = "final a = name ?? ''; final b = items.sublist(items.length - 1);";
       final List<Suggestion> out = scanContent(code, 'm.dart');
       expect(out.any((s) => s.message.contains('orEmpty')), isTrue);
       expect(out.any((s) => s.message.contains('takeLast')), isTrue);

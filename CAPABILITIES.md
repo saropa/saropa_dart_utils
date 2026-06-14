@@ -1,8 +1,8 @@
 # Capabilities Index
 
-**Release 1.6.0** · Generated 2026-06-12
+**Release 1.6.2** · Generated 2026-06-14
 
-A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **2593 public symbols** across **473 files**.
+A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **2622 public symbols** across **476 files**.
 
 Each file is independently importable for minimal bundle size (`import 'package:saropa_dart_utils/<path>';`), or import the barrel `package:saropa_dart_utils/saropa_dart_utils.dart` for everything.
 
@@ -12,7 +12,7 @@ Each file is independently importable for minimal bundle size (`import 'package:
 
 ## Categories
 
-- [Async](#async) — 171 symbols
+- [Async](#async) — 177 symbols
 - [Base64](#base64) — 7 symbols
 - [Bool](#bool) — 15 symbols
 - [Caching](#caching) — 54 symbols
@@ -30,7 +30,7 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [Integer](#integer) — 12 symbols
 - [Iterable](#iterable) — 99 symbols
 - [JSON](#json) — 27 symbols
-- [List](#list) — 76 symbols
+- [List](#list) — 78 symbols
 - [Map](#map) — 93 symbols
 - [Niche](#niche) — 45 symbols
 - [Number](#number) — 88 symbols
@@ -40,6 +40,7 @@ Each file is independently importable for minimal bundle size (`import 'package:
 - [Regex](#regex) — 6 symbols
 - [Stats](#stats) — 76 symbols
 - [String](#string) — 563 symbols
+- [Suite](#suite) — 21 symbols
 - [Testing](#testing) — 8 symbols
 - [Typed_data](#typed_data) — 4 symbols
 - [URL & Path](#url--path) — 58 symbols
@@ -228,6 +229,11 @@ Stream transformer that runs each event through Flutter's `compute()` (a one-sho
 |--------|------|-------------|
 | `VoidCallback` | typedef | Callback with no arguments. |
 | `debounce` | function | Debounce (time) — invokes [fn] after [delay] of no further calls. |
+| `CancelableCallback` | class | A scheduled callback that is invoked like a function and can also be cancelled. |
+| `CancelableCallback` | constructor | Wraps the [_schedule] (invoke) and [_cancel] (drop-pending) actions. |
+| `call` | method | Schedules the wrapped action per the debounce/throttle policy. |
+| `cancel` | method | Cancels any pending invocation. |
+| `debounceCancelable` | function | Like [debounce], but returns a [CancelableCallback] so a pending invocation can be dropped via [CancelableCallback.cancel] — call it on dispose so [fn] never... |
 
 ### `async/delay_utils.dart`
 
@@ -488,6 +494,7 @@ Priority task scheduler with a concurrency limit.
 |--------|------|-------------|
 | `VoidCallback` | typedef | Callback with no arguments. |
 | `throttle` | function | Throttle (time) — max one call per interval. |
+| `throttleCancelable` | function | Like [throttle], but returns a [CancelableCallback] so a pending trailing invocation can be dropped via [CancelableCallback.cancel] — call it on dispose so [... |
 
 ### `async/timeout_fallback_utils.dart`
 
@@ -505,7 +512,7 @@ Async timeout with fallback.
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `withTimeout` | function | Runs [fn] with [timeout]; on timeout returns [fallback] or rethrows. |
+| `withTimeout` | function | Runs [fn] with [timeout]; on timeout returns [fallback], or rethrows the [TimeoutException] when no fallback was supplied. |
 
 ---
 
@@ -534,11 +541,13 @@ IO-based gzip implementation using `dart:io`.
 
 ### `base64/gzip_codec_stub.dart`
 
+Stub gzip implementation for platforms without `dart:io` (e.g., web).
+
 `import 'package:saropa_dart_utils/base64/gzip_codec_stub.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `gzipEncode` | function | Stub gzip implementation for platforms without `dart:io` (e.g., web). |
+| `gzipEncode` | function | Gzip-encodes the given bytes. |
 | `gzipDecode` | function | Gzip-decodes the given bytes. |
 
 ---
@@ -1590,7 +1599,7 @@ Time-series buffer that keeps recent raw points and down-samples old ones.
 
 ### `collections/top_k_heap_utils.dart`
 
-Top-K by key via min-heap.
+Top-K by key, kept in a bounded sorted buffer.
 
 `import 'package:saropa_dart_utils/collections/top_k_heap_utils.dart';`
 
@@ -3432,6 +3441,17 @@ Tree utilities (LCA, depth, subtree size).
 | `IterableToListExtension` on `Iterable<T>` | extension | Convert iterable to list. |
 | `toListFrom` | method | New list containing all elements. |
 
+### `list/list_mutate_during_iteration_extensions.dart`
+
+Safe mutation-during-iteration for lists.
+
+`import 'package:saropa_dart_utils/list/list_mutate_during_iteration_extensions.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `ListMutateDuringIterationExtensions` on `List<T>` | extension | Iterating a list while mutating it from the loop body. |
+| `forEachSnapshot` | method | Runs [action] for each element of a point-in-time snapshot of this list, so [action] may safely add to or remove from this list during iteration. |
+
 ### `list/list_nullable_extensions.dart`
 
 `import 'package:saropa_dart_utils/list/list_nullable_extensions.dart';`
@@ -4191,21 +4211,25 @@ Locale-aware number formatting via `intl`'s CLDR data — an opt-in module that 
 
 ### `object/pipe_compose_utils.dart`
 
+Pipe (chain unary functions).
+
 `import 'package:saropa_dart_utils/object/pipe_compose_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `pipe` | function | Pipe (chain unary functions). |
+| `pipe` | function | Builds a function that threads its input left-to-right through [fns], passing each result to the next. |
 | `compose` | function | Returns the mathematical composition `f(g(x))`: applies [g] first, then [f]. |
 | `once` | function | Returns a callable that runs [block] only on its first invocation and is a no-op thereafter. |
 
 ### `object/pipe_utils.dart`
 
+Also/let style (pipe value through function).
+
 `import 'package:saropa_dart_utils/object/pipe_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `also` | function | Also/let style (pipe value through function). |
+| `also` | function | Runs [fn] for its side effects on [value] and returns [value] unchanged. |
 | `let` | function | Applies [fn] to [value] and returns its result. |
 
 ### `object/require_utils.dart`
@@ -4218,11 +4242,13 @@ Locale-aware number formatting via `intl`'s CLDR data — an opt-in module that 
 
 ### `object/shallow_copy_utils.dart`
 
+Shallow copy list/map.
+
 `import 'package:saropa_dart_utils/object/shallow_copy_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `shallowCopyList` | function | Shallow copy list/map. |
+| `shallowCopyList` | function | Returns a new list with the same elements as [source]. |
 | `shallowCopyMap` | function | Returns a new map with the same entries as [source]. |
 
 ---
@@ -5136,13 +5162,13 @@ Simple glob matching (**/*.dart style).
 
 ### `string/html_sanitizer_utils.dart`
 
-HTML sanitizer: allowlist tags/attributes, strip scripts/styles ().
+HTML-to-plain-text reducer ().
 
 `import 'package:saropa_dart_utils/string/html_sanitizer_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `sanitizeHtml` | function | Removes script and style tag contents, then strips all HTML tags. |
+| `sanitizeHtml` | function | Removes `<script>`/`<style>` blocks, then strips all remaining tags, leaving plain text. |
 | `stripHtmlTags` | function | Strips all HTML tags and returns plain text (no attributes or script content). |
 
 ### `string/human_name_parser_utils.dart`
@@ -5702,7 +5728,7 @@ Spelling-tolerant key lookup (canonical → variants).
 |--------|------|-------------|
 | `StringNullableExtensions` on `String?` | extension | A set of utility methods for working with strings. |
 | `isNullOrEmpty` | getter | Extension method to check if a [String] is null or empty. |
-| `isNotNullOrEmpty` | getter | IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool Return true if the string is not null and not empty Audited: 2026-06-12 11:26 EDT |
+| `isNotNullOrEmpty` | getter | IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool Return true if the string is not null and not empty *Deprecated — same null-pro... |
 
 ### `string/string_number_extensions.dart`
 
@@ -6183,15 +6209,60 @@ URL/link extractor with context ().
 
 ---
 
+## Suite
+
+### `suite/crash_coverage_audit.dart`
+
+Saropa Suite — remediation coverage audit (Suite Integration plan, R3).
+
+`import 'package:saropa_dart_utils/suite/crash_coverage_audit.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `CrashCoverageStatus` | enum | Whether this package can remediate a crash family, and how. |
+| `covered` | enum value | An owned safe primitive removes this crash family. |
+| `gap` | enum value | The suite observes this family and a primitive could remove it, but none exists here yet — a library backlog input. |
+| `notApplicable` | enum value | No pure-Dart utility can prevent this family (language feature, runtime or resource fault). |
+| `CrashFamilyCoverage` | class | One row: a suite crash family and this package's coverage of it. |
+| `CrashFamilyCoverage` | constructor |  |
+| `familyId` | field | Stable crash-family id from Log Capture's `CRASH_SIGNATURE_IDS`. |
+| `status` | field | This package's coverage verdict for [familyId]. |
+| `description` | field | The runtime failure [familyId] names. |
+| `note` | field | Why the [status] holds — for [CrashCoverageStatus.covered], how [symbol] removes the crash; for the others, why no symbol applies. |
+| `symbol` | field | The owned remediation symbol. |
+| `source` | field | The library file (relative to `lib/`) declaring [symbol]. |
+| `kCrashCoverageAudit` | field | The audit. |
+
+### `suite/rule_remediation_map.dart`
+
+Saropa Suite — rule-to-remediation mapping (Suite Integration plan, R1).
+
+`import 'package:saropa_dart_utils/suite/rule_remediation_map.dart';`
+
+| Symbol | Kind | Description |
+|--------|------|-------------|
+| `RuleRemediation` | class | One join row: a crash-prevention rule and the safe primitive that fixes it. |
+| `RuleRemediation` | constructor |  |
+| `ruleId` | field | The `saropa_lints` rule id (e.g. `avoid_unsafe_reduce`). |
+| `symbol` | field | The `saropa_dart_utils` public symbol that remediates it. |
+| `source` | field | The library file (relative to `lib/`) that declares [symbol]. |
+| `crashClass` | field | The runtime failure [ruleId] flags — the thing [symbol] prevents. |
+| `note` | field | Why [symbol] removes [crashClass] — the property the manual code lacks. |
+| `kRuleRemediations` | field | The mapping table. |
+
+---
+
 ## Testing
 
 ### `testing/debug_utils.dart`
+
+Testing/Debug: pretty-print, dump iterable, assert equals with tolerance, range, repeat, timed.
 
 `import 'package:saropa_dart_utils/testing/debug_utils.dart';`
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `prettyPrint` | function | Testing/Debug: pretty-print, dump iterable, assert equals with tolerance, range, repeat, timed. |
+| `prettyPrint` | function | Recursively renders [obj] as an indented, human-readable string for debugging. |
 | `dumpIterable` | function | Renders [it] as a string, truncating to the first [maxItems] elements and appending the total count when the iterable is longer. |
 | `assertEqualsWithTolerance` | function | Throws an [AssertionError] when [a] and [b] differ by more than [tolerance]. |
 | `rangeInt` | function | Returns integers from [start] (inclusive) toward [end] (exclusive) in increments of [step]. |
@@ -6517,7 +6588,7 @@ Safe temp-file naming (randomized, collision-resistant).
 
 | Symbol | Kind | Description |
 |--------|------|-------------|
-| `safeTempName` | function | Returns a short random string suitable for temp file names (alphanumeric). |
+| `safeTempName` | function | Returns a short, unpredictable alphanumeric string suitable for temp file names. |
 
 ### `validation/typed_positive_utils.dart`
 

@@ -118,8 +118,8 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'\.(isNullOrEmpty|isNotNullOrEmpty|isNullOrZero)\b'),
     'Deprecated getter: prefer the explicit check (e.g. '
-        'x == null || x.isEmpty) which preserves Dart null promotion in the '
-        'guarded scope.',
+    'x == null || x.isEmpty) which preserves Dart null promotion in the '
+    'guarded scope.',
   ),
 
   // --- String ---
@@ -132,7 +132,7 @@ final List<PatternDetector> _detectors = <PatternDetector>[
       r'(?:\+|\}\$\{)\s*\1\.substring\(\s*1\s*\)',
     ),
     'Consider: string.capitalize() from string_case_extensions '
-        '(safe on empty strings; the manual form throws on "").',
+    '(safe on empty strings; the manual form throws on "").',
   ),
   PatternDetector(
     RegExp(r'\.substring\s*\(\s*0\s*,[^)]+\)\s*\+\s*[\x27\x22]\.\.\.[\x27\x22]'),
@@ -153,12 +153,12 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'(\w+)\.substring\s*\(\s*0\s*,\s*\1\.indexOf\('),
     'Consider: string.getEverythingBefore(find) from '
-        'string_manipulation_extensions.',
+    'string_manipulation_extensions.',
   ),
   PatternDetector(
     RegExp(r'(\w+)\.substring\s*\(\s*\1\.indexOf\([^)]*\)\s*\+'),
     'Consider: string.getEverythingAfter(find) from '
-        'string_manipulation_extensions.',
+    'string_manipulation_extensions.',
   ),
   PatternDetector(
     RegExp(
@@ -192,7 +192,7 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'(\w+)\.sublist\(\s*\1\.length\s*-'),
     'Consider: iterable.takeLast(n) from iterable_more_extensions '
-        '(clamps; the manual sublist throws when n exceeds length).',
+    '(clamps; the manual sublist throws when n exceeds length).',
   ),
   PatternDetector(
     RegExp(r'(\w+)\.sublist\(\s*0\s*,\s*\1\.length\s*-\s*1\s*\)'),
@@ -275,7 +275,7 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'DateTime\(\s*(\w+)\.year\s*,\s*\1\.month\s*\+'),
     'Consider: dateTime.addMonths(n) from date_time_arithmetic_extensions '
-        '(the manual DateTime(y, month + n, d) overflows day-of-month).',
+    '(the manual DateTime(y, month + n, d) overflows day-of-month).',
   ),
   PatternDetector(
     RegExp(r'DateTime\(\s*(\w+)\.year\s*\+'),
@@ -284,7 +284,7 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'%\s*4\s*==\s*0\s*&&[^|&]*%\s*100\s*!=\s*0'),
     'Consider: dateTime.isLeapYear() from date_time_extensions '
-        '(the manual %4/%100/%400 rule is a classic off-by-one source).',
+    '(the manual %4/%100/%400 rule is a classic off-by-one source).',
   ),
   PatternDetector(
     RegExp(
@@ -310,7 +310,7 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'\.reduce\(\s*\(?(\w+),\s*(\w+)\)?\s*=>\s*\1\s*\+\s*\2\s*\)'),
     'Consider: iterable.sumBy(selector) from iterable_sum_by_extensions '
-        '(reduce throws on an empty collection; sumBy does not).',
+    '(reduce throws on an empty collection; sumBy does not).',
   ),
   PatternDetector(
     RegExp(r'\.map\(\s*\(?(\w+),\s*(\w+)\)?\s*=>\s*MapEntry\(\s*\2\s*,\s*\1\s*\)'),
@@ -325,7 +325,7 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   PatternDetector(
     RegExp(r'(\w+)\s*==\s*0\s*\?\s*0\s*:\s*\w+\s*/\s*\1'),
     'Consider: num.percentageOf(total) from num_more_extensions '
-        '(guards division by zero).',
+    '(guards division by zero).',
   ),
   PatternDetector(
     RegExp(r'(\w+)\s*\+\s*\(\s*(\w+)\s*-\s*\1\s*\)\s*\*\s*\w+'),

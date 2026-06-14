@@ -50,7 +50,10 @@ void main() {
     test('behaves like debounce when not cancelled', () {
       fakeAsync((FakeAsync async) {
         int calls = 0;
-        final CancelableCallback d = debounceCancelable(() => calls++, const Duration(milliseconds: 50));
+        final CancelableCallback d = debounceCancelable(
+          () => calls++,
+          const Duration(milliseconds: 50),
+        );
         d();
         async.elapse(const Duration(milliseconds: 50));
         expect(calls, 1);
@@ -60,7 +63,10 @@ void main() {
     test('cancel() drops a pending invocation so fn never fires', () {
       fakeAsync((FakeAsync async) {
         int calls = 0;
-        final CancelableCallback d = debounceCancelable(() => calls++, const Duration(milliseconds: 50));
+        final CancelableCallback d = debounceCancelable(
+          () => calls++,
+          const Duration(milliseconds: 50),
+        );
         d();
         async.elapse(const Duration(milliseconds: 20));
         d.cancel(); // owner disposed before the timer elapsed

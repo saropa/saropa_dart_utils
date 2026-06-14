@@ -34,8 +34,7 @@ class TimeDecayCounter {
   /// final c = TimeDecayCounter(halfLifeMillis: 500);
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
-  TimeDecayCounter({required this.halfLifeMillis})
-    : _lambda = _validatedLambda(halfLifeMillis);
+  TimeDecayCounter({required this.halfLifeMillis}) : _lambda = _validatedLambda(halfLifeMillis);
 
   // Validates before dividing: a zero/negative half-life would make `_lambda`
   // Infinity/NaN and poison every later `value(t) = stored * exp(-lambda*dt)`.

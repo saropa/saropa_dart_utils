@@ -60,7 +60,8 @@ void main() {
       expect(
         auditFamilies,
         equals(suiteCrashFamilies),
-        reason: 'Audit drifted from Log Capture CRASH_SIGNATURE_IDS. Triage any '
+        reason:
+            'Audit drifted from Log Capture CRASH_SIGNATURE_IDS. Triage any '
             'newly-added family (covered / gap / notApplicable) or drop a '
             'removed one.',
       );
@@ -106,7 +107,8 @@ void main() {
         expect(
           probe.value(),
           isTrue,
-          reason: 'Probe for ${probe.key} did not return its safe value — the '
+          reason:
+              'Probe for ${probe.key} did not return its safe value — the '
               'symbol changed behavior.',
         );
       }
