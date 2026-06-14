@@ -567,9 +567,30 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
                 continue
             doc_lines = []
             is_override = False
+            # >0 while the walk is still unwinding a multi-line annotation or
+            # parameter list opened on a lower line (e.g. a `@Deprecated( ... )`
+            # whose message is split across several string-literal lines). Those
+            # interior lines neither start with `@` nor end with a bracket, so
+            # without depth tracking the walk hit the `else: break` below and
+            # falsely reported the dartdoc above the annotation as missing —
+            # which is exactly what happened to the deprecated `isNullOrEmpty` /
+            # `isNotNullOrEmpty` getters (multi-line `@Deprecated` message).
+            ann_paren_depth = 0
             i = start_line - 2
             while i >= 0 and i < len(lines_arr):
-                l = lines_arr[i].strip()
+                raw = lines_arr[i]
+                l = raw.strip()
+                # Count only structural parens (string/comment contents removed)
+                # so a `(` inside a doc message does not unbalance the depth.
+                bare = _strip_strings(_strip_line_comment(raw))
+                # Inside an unfinished annotation/arg list: skip every line until
+                # its opening `@Name(` / `(` brings the depth back to zero.
+                if ann_paren_depth > 0:
+                    ann_paren_depth += bare.count(")") - bare.count("(")
+                    if ann_paren_depth < 0:
+                        ann_paren_depth = 0
+                    i -= 1
+                    continue
                 if l.startswith("///"):
                     doc_lines.append(l)
                     i -= 1
@@ -583,14 +604,17 @@ def audit_doc_headers(lib_root: Path) -> tuple[list[str], list[str]]:
                     if l.startswith("@override"):
                         is_override = True
                     i -= 1
-                # Skip a multi-line signature continuation: when a declaration's
-                # return type / parameter list spans several lines, the lines
-                # just above the `(` line end with `)`, `>`, or `,` and are not
-                # the doc. WHY: e.g. a record-returning function whose tuple type
-                # sits on its own line above the name — without this the walk
-                # stopped there and falsely reported the (present) dartdoc above
-                # it as missing.
+                # Skip a multi-line signature continuation OR the closing line of
+                # a multi-line annotation: when a declaration's return type /
+                # parameter list spans several lines, or a `@Deprecated( ... )`
+                # message is split over multiple lines, the line just above ends
+                # with `)`, `>`, or `,`. Track paren depth so any interior lines
+                # above are skipped until the opener is reached.
+                # WHY: e.g. a record-returning function whose tuple type sits on
+                # its own line above the name — without this the walk stopped
+                # there and falsely reported the (present) dartdoc above as missing.
                 elif l.endswith((")", ">", ",")):
+                    ann_paren_depth += bare.count(")") - bare.count("(")
                     i -= 1
                 else:
                     break

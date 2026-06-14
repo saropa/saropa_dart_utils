@@ -78,6 +78,9 @@ SimplifiedGraph simplifyDegree2Chains(Adjacency graph) {
 // Builds a deduplicated neighbor set per node, dropping self-loops.
 List<Set<int>> _neighborSets(Adjacency graph) => <Set<int>>[
   for (int i = 0; i < graph.length; i++)
+    // The Set (not List) and the self-loop drop are both load-bearing for the
+    // degree-2 test: a duplicated neighbor or a self-loop would inflate the
+    // degree and misclassify a pass-through bead as a junction.
     <int>{
       for (final int j in graph[i])
         if (j != i) j,
@@ -93,6 +96,8 @@ void _preserveCycles(
   Set<(int, int)> edges,
 ) {
   for (final int n in removed) {
+    // Skip beads already walked into a contracted junction edge; re-adding
+    // their raw edges here would duplicate a connection already represented.
     if (consumed.contains(n)) continue;
     for (final int nb in neighbors[n]) {
       edges.add(n < nb ? (n, nb) : (nb, n));

@@ -38,6 +38,8 @@ class RateLimitSchedule {
   // A non-positive period would divide the rolling window by zero; a negative
   // cooldown would let fires run backwards.
   static int _validatedMaxPerPeriod(int maxPerPeriod, Duration period, Duration cooldown) {
+    // A quota below 1 would admit nothing, leaving the limiter permanently
+    // closed; reject it up front rather than silently starving every caller.
     if (maxPerPeriod < 1) {
       throw ArgumentError.value(maxPerPeriod, 'maxPerPeriod', 'must be >= 1');
     }

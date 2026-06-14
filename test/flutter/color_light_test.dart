@@ -127,10 +127,11 @@ void main() {
 
       // The three lightening-by-the-same-amount cases re-create one HSL baseline,
       // but tests below seed different inputs, so this is per-group arrange, not a
-      // hoistable shared fixture. A known false positive fixed upstream in
-      // saropa_lints 13.12.4 (raises the duplicate threshold when a file-level
-      // setUp already exists); the project pins 13.12.3, so that fix has not
-      // arrived. Keep explicit per the project's clarity-over-DRY testing rule.
+      // hoistable shared fixture. Kept explicit per the project's clarity-over-DRY
+      // testing rule (.claude/rules/testing.md): hoisting these per-test locals to
+      // the file-level setUp would force unrelated tests to share state. The rule
+      // still flags it under saropa_lints 13.12.7 (the bump the old plan expected
+      // to silence this did not), so the suppression stays.
       // ignore: prefer_setup_teardown
       test('should lighten a color by the given amount', () {
         final HSLColor lightened = HSLColor.fromColor(opaqueBlue.lighten(0.2));

@@ -363,6 +363,37 @@ void main() {
       });
     });
 
+    group('bind() invoked directly', () {
+      // .transform() delegates to bind(); call bind() directly to prove the
+      // StreamTransformerBase contract holds without the transform() sugar.
+      test('binds a source stream and maps each event in order', () async {
+        final ComputeStreamTransformer<int, int> transformer =
+            ComputeStreamTransformer<int, int>(computeFunction: _double);
+
+        final List<int> result = await transformer
+            .bind(Stream<int>.fromIterable(<int>[1, 2, 3]))
+            .toList();
+
+        expect(result, orderedEquals(<int>[2, 4, 6]));
+      });
+
+      // onError recovery must engage through bind() too, not only via
+      // transform(), since bind() is where the asyncMap/catch logic lives.
+      test('binds and applies onError recovery to a failing event', () async {
+        final ComputeStreamTransformer<int, int> transformer =
+            ComputeStreamTransformer<int, int>(
+          computeFunction: _throwOnZero,
+          onError: (Object error, StackTrace stack) => -1,
+        );
+
+        final List<int> result = await transformer
+            .bind(Stream<int>.fromIterable(<int>[1, 0, 3]))
+            .toList();
+
+        expect(result, orderedEquals(<int>[2, -1, 6]));
+      });
+    });
+
     group('lifecycle', () {
       // Cancelling mid-flight must not emit after cancel and must not raise an
       // unhandled error — the in-flight compute result is simply discarded.

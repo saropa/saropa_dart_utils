@@ -529,3 +529,6 @@ export 'validation/safe_parse_utils.dart';
 export 'validation/typed_positive_utils.dart';
 export 'validation/ip_cidr_utils.dart';
 export 'validation/jwt_structure_utils.dart';
+
+// Saropa Suite integration (rule-to-remediation mapping, R1)
+export 'suite/rule_remediation_map.dart';

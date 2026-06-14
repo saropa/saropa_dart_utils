@@ -55,6 +55,8 @@ Adjacency parseAdjacency(String text) {
 // non-integer or negative index/neighbor.
 (int, List<int>) _parseRecord(String part) {
   final int arrow = part.indexOf('>');
+  // No '>' separator means an isolated node: just its index, no out-edges. The
+  // empty neighbor list keeps the node present so isolated nodes round-trip.
   if (arrow < 0) return (_parseIndex(part), <int>[]);
   final int node = _parseIndex(part.substring(0, arrow));
   final List<int> neighbors = <int>[
@@ -79,6 +81,8 @@ Adjacency _assemble(List<(int, List<int>)> records) {
     if (r.$1 > maxIndex) maxIndex = r.$1;
   }
   final Adjacency graph = List<List<int>>.generate(maxIndex + 1, (_) => <int>[]);
+  // Assign by index rather than append: records may arrive out of order, and a
+  // repeated index is last-wins — matching serialize emitting one entry/node.
   for (final (int, List<int>) r in records) {
     graph[r.$1] = r.$2;
   }
