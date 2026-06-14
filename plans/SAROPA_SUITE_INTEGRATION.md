@@ -245,6 +245,62 @@ that does not exist.
 - Sibling: `saropa_lints` — `D:\src\saropa_lints\plans\SAROPA_SUITE_INTEGRATION.md`
   (R3 crash-to-rule attribution is this doc's direct counterpart)
 - Sibling: `saropa-log-capture` — `D:\src\saropa-log-capture\plans\105_plan-saropa-suite-integration.md`
-- Internal: [PENDING_saropa_lints_bump.md](PENDING_saropa_lints_bump.md) (keeps the dogfooding gate
-  current), [ROADMAP_TO_700.md](ROADMAP_TO_700.md) (where R3's backlog inputs land),
-  `CODE_INDEX.md` (the capability index the rule-to-remediation mapping is checked against).
+- Internal: the dogfooding-gate bump premise was closed with a negative result —
+  [history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md](history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md)
+  (was `PENDING_saropa_lints_bump.md`). `CODE_INDEX.md` is the live capability index that both the
+  rule-to-remediation mapping (R1) and the crash-coverage audit (R3) are checked against, and where
+  R3's backlog inputs are recorded (there is no `ROADMAP_TO_700.md`).
+
+---
+
+## Finish Report (2026-06-14)
+
+This pass implemented the library's owned half of the Suite Integration plan and closed both of its
+open questions against the siblings' shipped state. Four artifacts landed.
+
+**R1 — rule-to-remediation mapping.** `kRuleRemediations` in `lib/suite/rule_remediation_map.dart`
+(exported) joins a `saropa_lints` crash rule id to the owned safe primitive that removes the failure it
+flags (nine rows over `sumBy`, `firstWhereOrElse`, `singleOrNull`, `nullIfEmpty`, `whereNotNull`,
+`toIntNullable`, `isPathSafe`). Only primitives this package actually owns are mapped — `firstOrNull` /
+`elementAtOrNull` belong to `package:collection`, not here, so they are deliberately excluded rather
+than credited to this library.
+
+**R3 — crash-family coverage audit.** `kCrashCoverageAudit` in `lib/suite/crash_coverage_audit.dart`
+(exported) covers all 12 stable crash families the suite recognizes at runtime (Log Capture's
+`CRASH_SIGNATURE_IDS`). Each family is `covered` (an owned symbol), `gap` (observed, no primitive yet),
+or `notApplicable` (a language/runtime/resource fault no utility can prevent). The single gap the audit
+surfaced — `concurrent-modification` — was then closed.
+
+**Gap closure — `forEachSnapshot`.** `lib/list/list_mutate_during_iteration_extensions.dart` (exported)
+walks a point-in-time `List.of(this)` snapshot so the loop body may add to or remove from the original
+without `ConcurrentModificationError`. Its dartdoc documents the snapshot semantics (added elements are
+not visited this pass; a removed element is still visited if present at snapshot time) and points pure
+conditional removal at the built-in `removeWhere`. The audit's `concurrent-modification` entry flipped
+to `covered`; the audit now has zero open gaps.
+
+**R6 — version-upgrade nudge.** Filed as a feature request in `saropa_lints`
+(`bugs/feature_package_vibrancy_saropa_dart_utils_version_nudge.md`) because Package Vibrancy owns the
+extension and the `pubspec.yaml` scan; this package has no IDE surface. Grounded against the real
+subsystem before filing (a "behind latest" comparator in `providers/sdk-diagnostics.ts` and a curated
+`data/known_issues.json` registry, neither of which tracks `saropa_dart_utils` yet).
+
+**Open questions, both resolved from the sibling changelogs.** No Dart envelope producer exists (every
+producer/consumer is a TypeScript extension reading/writing `.saropa/diagnostics/*.json`), so R2 is
+dropped from scope. The rule→symbol ownership proposal is confirmed: the siblings built the
+crash→rule half, leaving rule→util-symbol to this repo (R1), joined on `ruleId`.
+
+**Verification.** Three new test files (`test/suite/rule_remediation_map_test.dart`,
+`test/suite/crash_coverage_audit_test.dart`,
+`test/list/list_mutate_during_iteration_extensions_test.dart`) pass (24 cases total across the suite +
+list tests); `test/barrel_exports_test.dart` re-run green to confirm the three new barrel exports
+introduce no method-name ambiguity. `dart analyze` reports no issues on every changed file. The pinning
+tests exercise each mapped/covered symbol in compiled code, so a rename or dropped export in `lib/`
+breaks the build, and pin the crash-family-id set to the suite contract so a new upstream family fails
+the test until triaged.
+
+**Status of the plan.** R1, R3, R5 are built; R6 is filed (owned by `saropa_lints`); R2 is closed;
+both open questions are resolved. The plan stays active for the remaining items, all external or
+continuous: R4 (keep the dogfooding gate green — ongoing, re-test the seven kept suppressions when a
+future `saropa_lints` release claims the fixes), the R5 in-editor rule-pack port (future, lives in
+`saropa_lints`, blocked on a vetted flow-analysis-safe target), and shared-infra adoption of
+`saropa-release-tools` (blocked on that tooling being extracted).
