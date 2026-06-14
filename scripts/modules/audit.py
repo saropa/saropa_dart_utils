@@ -228,9 +228,49 @@ def _is_decl_tail(tail: str) -> bool:
     )
 
 
+def _collection_depth_before_lines(lines: list[str]) -> list[int]:
+    """For each line, the net `(` + `[` nesting opened on PRIOR lines.
+
+    WHY: a multi-line `const List<T> k = <T>[ ... ]` (or any collection / call
+    literal split across lines) holds constructor CALLS as its elements, e.g.
+        const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
+          CrashFamilyCoverage(            <- a list element, NOT a declaration
+            ...
+          ),
+        ];
+    A line-leading `CrashFamilyCoverage(` whose param list does not close on its
+    own line otherwise satisfies `_parse_decl` (which accepts unclosed multi-line
+    signatures), so the element was misreported as an undocumented / uncommented
+    method. Suppressing any declaration that begins while `(`/`[` depth is still
+    open removes those false positives. `{` is deliberately NOT counted: a class
+    or function body opens a brace that stays open across all its members, and
+    counting it would suppress the real members inside. Strings and `//` comments
+    are stripped first so brackets within them do not skew the depth.
+    """
+    depths: list[int] = []
+    depth = 0
+    for line in lines:
+        depths.append(depth)
+        bare = _strip_strings(_strip_line_comment(line))
+        depth += bare.count("(") + bare.count("[")
+        depth -= bare.count(")") + bare.count("]")
+        # Clamp: an over-close (more `)`/`]` than seen opens, e.g. a body line
+        # closing a brace-and-paren run) must not drive depth negative and then
+        # mask a genuinely-open literal further down.
+        if depth < 0:
+            depth = 0
+    return depths
+
+
 def _iter_decls(text: str):
     """Yield `(name, param_count, line_1based)` for each declaration in `text`."""
-    for i, line in enumerate(text.splitlines(), 1):
+    lines = text.splitlines()
+    depths = _collection_depth_before_lines(lines)
+    for i, line in enumerate(lines, 1):
+        # A declaration that starts inside an open collection / call literal is a
+        # constructor call used as an element/argument, not a real declaration.
+        if depths[i - 1] > 0:
+            continue
         parsed = _parse_decl(line)
         if parsed is not None:
             yield parsed[0], parsed[1], i
@@ -475,9 +515,16 @@ def _method_ranges(content: str) -> list[tuple[int, int, str]]:
     """Return list of (decl_line_1based, end_line_1based, member_name) for members."""
     ranges: list[tuple[int, int, str]] = []
     lines = content.splitlines()
+    depths = _collection_depth_before_lines(lines)
     i = 0
     while i < len(lines):
         line = lines[i]
+        # Skip lines inside an open collection / call literal: their `Name(`
+        # entries are constructor calls (list elements / arguments), not
+        # declarations — same false-positive guard as `_iter_decls`.
+        if depths[i] > 0:
+            i += 1
+            continue
         # Use the same declaration parser as `_find_public_members` so the
         # method-range list is consistent with the member list (no call-site noise).
         parsed = _parse_decl(line)
