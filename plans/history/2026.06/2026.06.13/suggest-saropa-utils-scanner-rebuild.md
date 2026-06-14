@@ -51,13 +51,28 @@ A header comment records why the `isNullOrX` family is excluded as a target.
 
 ### Test changes
 
-`test/tool/suggest_saropa_utils_test.dart` — the `scanContent` group dropped
-assertions that pinned the removed `isNullOrEmpty` and phantom `orZero`
-detectors, and gained cases asserting the correct long-form guard is NOT flagged,
-that use of a deprecated getter IS flagged, and that the `capitalize` and
-`takeLast` patterns are detected. `test/string/string_nullable_extensions_test.dart`
-gained a file-level `deprecated_member_use_from_same_package` suppression because
-it deliberately exercises the deprecated getter.
+`test/tool/suggest_saropa_utils_test.dart` — coverage expanded from ~17 to 98
+cases: one positive test per detector (canonical hand-rolled snippet → expected
+util), real-world variant cases (capitalize via string interpolation and via
+`substring(0, 1)`, extra-whitespace `sublist`, `this`-receiver `lastOrNull`,
+parenless leap-year), false-positive guards (correct long-form guards,
+already-using-the-util, literal-bound `sublist`, `where` without `.length`,
+unguarded division, `any` without negation, non-empty `replaceAll`), and scanner
+edge cases (empty/whitespace input, multi-hit lines, 1-based line numbers). Two
+small assertion helpers (`expectSuggests` / `expectNoSuggestion`) keep each case a
+single readable line without hiding test identity in a loop.
+
+The expansion surfaced a real defect: the `countWhere` detector's regex
+`\.where\s*\([^)]*\)\.length` stopped at the first `)`, so a lambda predicate
+(`.where((e) => …).length`) never matched — the detector silently covered only
+tear-off predicates. Fixed to allow one level of nested parens. Separately, the
+`capitalize` detector was broadened to also match the string-interpolation
+(`"${x[0].toUpperCase()}${x.substring(1)}"`) and `substring(0, 1)` forms, which
+a check of common Dart idioms showed are as widespread as the index form.
+
+`test/string/string_nullable_extensions_test.dart` gained a file-level
+`deprecated_member_use_from_same_package` suppression because it deliberately
+exercises the deprecated getters.
 
 ### Documentation
 

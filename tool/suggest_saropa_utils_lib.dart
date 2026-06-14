@@ -123,8 +123,14 @@ final List<PatternDetector> _detectors = <PatternDetector>[
   ),
 
   // --- String ---
+  // Covers the three common hand-rolled capitalize forms: index `x[0]`, the
+  // `x.substring(0, 1)` head, joined by either `+` concatenation or `}${`
+  // string interpolation.
   PatternDetector(
-    RegExp(r'(\w+)\[0\]\.toUpperCase\(\)\s*\+\s*\1\.substring\(\s*1\s*\)'),
+    RegExp(
+      r'(\w+)(?:\[0\]|\.substring\(\s*0\s*,\s*1\s*\))\.toUpperCase\(\)\s*'
+      r'(?:\+|\}\$\{)\s*\1\.substring\(\s*1\s*\)',
+    ),
     'Consider: string.capitalize() from string_case_extensions '
         '(safe on empty strings; the manual form throws on "").',
   ),
@@ -201,7 +207,9 @@ final List<PatternDetector> _detectors = <PatternDetector>[
     'Consider: iterable.whereNotNull() from iterable_map_not_null_extensions.',
   ),
   PatternDetector(
-    RegExp(r'\.where\s*\([^)]*\)\.length\b'),
+    // Allow one level of nested parens so a lambda predicate `(e) => …` is
+    // matched, not cut off at the first `)`.
+    RegExp(r'\.where\s*\((?:[^()]|\([^()]*\))*\)\.length\b'),
     'Consider: iterable.countWhere(predicate) from iterable_extensions.',
   ),
   PatternDetector(

@@ -162,4 +162,267 @@ void main() {
       expect(out.every((s) => s.path == 's.dart' && s.line >= 1), isTrue);
     });
   });
+
+  // One positive test per detector: the canonical hand-rolled snippet must
+  // produce a suggestion naming the matching util. These pin that every shipped
+  // detector actually fires on the form it claims to recognize.
+  group('detector coverage — every detector fires on its canonical pattern', () {
+    test('deprecated isNullOrEmpty use', () {
+      expectSuggests('if (s.isNullOrEmpty) return;', 'Deprecated getter');
+    });
+    test('deprecated isNotNullOrEmpty use', () {
+      expectSuggests('if (s.isNotNullOrEmpty) {}', 'Deprecated getter');
+    });
+    test('deprecated isNullOrZero use', () {
+      expectSuggests('if (n.isNullOrZero) {}', 'Deprecated getter');
+    });
+    test('capitalize (index + concat)', () {
+      expectSuggests('name[0].toUpperCase() + name.substring(1)', 'capitalize');
+    });
+    test('truncateWithEllipsis', () {
+      expectSuggests("text.substring(0, 10) + '...'", 'truncateWithEllipsis');
+    });
+    test('containsIgnoreCase', () {
+      expectSuggests('a.toLowerCase().contains(b.toLowerCase())', 'containsIgnoreCase');
+    });
+    test('ensurePrefix', () {
+      expectSuggests('path.startsWith(sep) ? path : sep + path', 'ensurePrefix');
+    });
+    test('ensureSuffix', () {
+      expectSuggests('path.endsWith(sep) ? path : path + sep', 'ensureSuffix');
+    });
+    test('getEverythingBefore', () {
+      expectSuggests("url.substring(0, url.indexOf('?'))", 'getEverythingBefore');
+    });
+    test('getEverythingAfter', () {
+      expectSuggests("url.substring(url.indexOf('?') + 1)", 'getEverythingAfter');
+    });
+    test('compressSpaces', () {
+      expectSuggests(r"text.replaceAll(RegExp(r'\s+'), ' ')", 'compressSpaces');
+    });
+    test('firstWord', () {
+      expectSuggests("sentence.split(' ').first", 'firstWord');
+    });
+    test('countOccurrences', () {
+      expectSuggests("text.split(',').length - 1", 'countOccurrences');
+    });
+    test('orEmpty (string)', () {
+      expectSuggests("final x = name ?? '';", 'orEmpty');
+    });
+    test('orEmpty (list)', () {
+      expectSuggests('final x = items ?? [];', 'orEmpty');
+    });
+    test('orEmpty (map)', () {
+      expectSuggests('final x = lookup ?? {};', 'orEmpty');
+    });
+    test('addNotNull', () {
+      expectSuggests('if (value != null) list.add(value);', 'addNotNull');
+    });
+    test('takeLast', () {
+      expectSuggests('items.sublist(items.length - 3)', 'takeLast');
+    });
+    test('dropLast', () {
+      expectSuggests('items.sublist(0, items.length - 1)', 'dropLast');
+    });
+    test('lastOrNull', () {
+      expectSuggests('items.isNotEmpty ? items.last : null', 'lastOrNull');
+    });
+    test('whereNotNull', () {
+      expectSuggests('items.where((e) => e != null)', 'whereNotNull');
+    });
+    test('countWhere', () {
+      expectSuggests('items.where((e) => e > 3).length', 'countWhere');
+    });
+    test('containsAny', () {
+      expectSuggests('other.any((e) => items.contains(e))', 'containsAny');
+    });
+    test('endsWithAny', () {
+      expectSuggests('suffixes.any((s) => name.endsWith(s))', 'endsWithAny');
+    });
+    test('nullIfEmpty', () {
+      expectSuggests('items.isEmpty ? null : items', 'nullIfEmpty');
+    });
+    test('clampNonNegative', () {
+      expectSuggests('n < 0 ? 0 : n', 'clampNonNegative');
+    });
+    test('removeAll', () {
+      expectSuggests("text.replaceAll('-', '')", 'removeAll');
+    });
+    test('wordCount', () {
+      expectSuggests("sentence.split(' ').length", 'wordCount');
+    });
+    test('isNumeric', () {
+      expectSuggests('double.tryParse(s) != null', 'isNumeric');
+    });
+    test('isPalindrome', () {
+      expectSuggests("s == s.split('').reversed.join()", 'isPalindrome');
+    });
+    test('isSameDay', () {
+      expectSuggests(
+        'a.year == b.year && a.month == b.month && a.day == b.day',
+        'isSameDay',
+      );
+    });
+    test('startOfDay', () {
+      expectSuggests('DateTime(d.year, d.month, d.day)', 'startOfDay');
+    });
+    test('endOfDay', () {
+      expectSuggests('DateTime(d.year, d.month, d.day, 23, 59, 59)', 'endOfDay');
+    });
+    test('addDays', () {
+      expectSuggests('now.add(Duration(days: 1))', 'addDays');
+    });
+    test('addHours', () {
+      expectSuggests('now.add(Duration(hours: 2))', 'addHours');
+    });
+    test('addMinutes', () {
+      expectSuggests('now.add(Duration(minutes: 30))', 'addMinutes');
+    });
+    test('addMonths', () {
+      expectSuggests('DateTime(d.year, d.month + 1, d.day)', 'addMonths');
+    });
+    test('addYears', () {
+      expectSuggests('DateTime(d.year + 1, d.month, d.day)', 'addYears');
+    });
+    test('isLeapYear', () {
+      expectSuggests('y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)', 'isLeapYear');
+    });
+    test('isWeekend', () {
+      expectSuggests(
+        'd.weekday == DateTime.saturday || d.weekday == DateTime.sunday',
+        'isWeekend',
+      );
+    });
+    test('flatten', () {
+      expectSuggests('lists.expand((e) => e).toList()', 'flatten');
+    });
+    test('none', () {
+      expectSuggests('!items.any((e) => e.active)', 'none');
+    });
+    test('containsAll', () {
+      expectSuggests('other.every((e) => items.contains(e))', 'containsAll');
+    });
+    test('sumBy', () {
+      expectSuggests('nums.reduce((a, b) => a + b)', 'sumBy');
+    });
+    test('invert', () {
+      expectSuggests('lookup.map((k, v) => MapEntry(v, k))', 'invert');
+    });
+    test('percentageOf', () {
+      expectSuggests('total == 0 ? 0 : value / total', 'percentageOf');
+    });
+    test('lerp', () {
+      expectSuggests('a + (b - a) * t', 'lerp');
+    });
+    test('isInteger', () {
+      expectSuggests('x == x.roundToDouble()', 'isInteger');
+    });
+  });
+
+  // Real-world formatting variants harvested from common Dart/Flutter idioms
+  // (string interpolation, the substring(0,1) head, extra whitespace). The
+  // scanner must still recognize these, not only the textbook spacing.
+  group('real-world variants', () {
+    test('capitalize via string interpolation', () {
+      expectSuggests(r'"${name[0].toUpperCase()}${name.substring(1)}"', 'capitalize');
+    });
+    test('capitalize via substring(0, 1) head', () {
+      expectSuggests(
+        'name.substring(0, 1).toUpperCase() + name.substring(1)',
+        'capitalize',
+      );
+    });
+    test('takeLast with extra whitespace', () {
+      expectSuggests('items.sublist( items.length  -  2 )', 'takeLast');
+    });
+    test('lastOrNull with this receiver', () {
+      expectSuggests('this.isNotEmpty ? this.last : null', 'lastOrNull');
+    });
+    test('isLeapYear without parentheses', () {
+      expectSuggests('y % 4 == 0 && y % 100 != 0 || y % 400 == 0', 'isLeapYear');
+    });
+  });
+
+  // False-positive guards: code that is already correct, already uses the util,
+  // or merely resembles a pattern must NOT be flagged. Over-triggering is the
+  // primary risk of a regex scanner, so each detector with a near-miss is pinned.
+  group('false-positive guards', () {
+    test('the correct long-form null+empty guard is not flagged', () {
+      expectNoSuggestion('if (s == null || s.isEmpty) return;', 'Consider');
+    });
+    test('the correct not-null-and-not-empty guard is not flagged', () {
+      expectNoSuggestion('if (s != null && s.isNotEmpty) {}', 'Consider');
+    });
+    test('already using capitalize() is not re-flagged', () {
+      expectNoSuggestion('name.capitalize()', 'Consider: string.capitalize');
+    });
+    test('sublist with literal bounds is not takeLast/dropLast', () {
+      expectNoSuggestion('items.sublist(1, 3)', 'takeLast');
+      expectNoSuggestion('items.sublist(1, 3)', 'dropLast');
+    });
+    test('where without .length is not countWhere', () {
+      expectNoSuggestion('items.where((e) => e.active)', 'countWhere');
+    });
+    test('unguarded division is not percentageOf', () {
+      expectNoSuggestion('final r = value / total;', 'percentageOf');
+    });
+    test('DateTime with an hour but not 23:59 is not startOfDay/endOfDay', () {
+      expectNoSuggestion('DateTime(d.year, d.month, d.day, 12)', 'startOfDay');
+      expectNoSuggestion('DateTime(d.year, d.month, d.day, 12)', 'endOfDay');
+    });
+    test('split(space).length is wordCount, not countOccurrences', () {
+      expectNoSuggestion("words.split(' ').length", 'countOccurrences');
+    });
+    test('any without negation is not none', () {
+      expectNoSuggestion('items.any((e) => e.active)', 'none(predicate)');
+    });
+    test('plain replaceAll with non-empty replacement is not removeAll', () {
+      expectNoSuggestion("text.replaceAll('a', 'b')", 'removeAll');
+    });
+  });
+
+  // Edge cases: empty input, whitespace-only lines, multi-hit lines, and the
+  // documented in-string-literal matching behavior.
+  group('scanner edge cases', () {
+    test('empty content yields nothing', () {
+      expect(scanContent('', 'p.dart'), isEmpty);
+    });
+    test('whitespace-only content yields nothing', () {
+      expect(scanContent('   \n\t\n', 'p.dart'), isEmpty);
+    });
+    test('a line with two distinct patterns yields two suggestions', () {
+      const String code =
+          "final a = name ?? ''; final b = items.sublist(items.length - 1);";
+      final List<Suggestion> out = scanContent(code, 'm.dart');
+      expect(out.any((s) => s.message.contains('orEmpty')), isTrue);
+      expect(out.any((s) => s.message.contains('takeLast')), isTrue);
+    });
+    test('line numbers are 1-based and correct on a later line', () {
+      const String code = 'a;\nb;\nfinal x = name ?? [];\n';
+      final List<Suggestion> out = scanContent(code, 'n.dart');
+      expect(out.first.line, 3);
+    });
+  });
+}
+
+/// Asserts that scanning [code] produces at least one suggestion whose message
+/// contains [utilSubstring]. Keeps each detector test a single readable line.
+void expectSuggests(String code, String utilSubstring) {
+  final List<Suggestion> out = scanContent('$code\n', 'x.dart');
+  expect(
+    out.any((Suggestion s) => s.message.contains(utilSubstring)),
+    isTrue,
+    reason: 'expected a suggestion containing "$utilSubstring" for: $code',
+  );
+}
+
+/// Asserts that scanning [code] produces NO suggestion whose message contains
+/// [utilSubstring] — the false-positive guard.
+void expectNoSuggestion(String code, String utilSubstring) {
+  final List<Suggestion> out = scanContent('$code\n', 'x.dart');
+  expect(
+    out.any((Suggestion s) => s.message.contains(utilSubstring)),
+    isFalse,
+    reason: 'did not expect "$utilSubstring" for: $code',
+  );
 }
