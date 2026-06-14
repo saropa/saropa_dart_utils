@@ -150,8 +150,10 @@ it can touch the protocol, in priority order:
 - **R6 — Pubspec version-upgrade nudge. DEFERRED — filed, owned by `saropa_lints`.** When a project
   depends on an out-of-date `saropa_dart_utils`, prompt to bump it. The nudge needs an extension and a
   `pubspec.yaml` scanner, neither of which this package has, so there is nothing to build here — it
-  rides `saropa_lints`' Package Vibrancy and was filed there as a feature request. **Moved to its own
-  deferred doc:** [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md).
+  rides `saropa_lints`' Package Vibrancy. **Filed report:**
+  `saropa_lints/bugs/feature_package_vibrancy_saropa_dart_utils_version_nudge.md` (Status: Open,
+  committed `5d1d3f54`). **Tracked locally in its own deferred doc:**
+  [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md).
 
 The only NEW artifact either requirement creates is Dart rule code + a dependency-gate entry inside
 `saropa_lints`; everything user-facing reuses the Saropa Lints extension that already exists. There is
