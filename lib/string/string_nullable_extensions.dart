@@ -45,7 +45,28 @@ extension StringNullableExtensions on String? {
 
   /// IMPORTANT: do not call ?.isNotNullOrEmpty as it will chain to null not a bool
   /// Return true if the string is not null and not empty
+  ///
+  /// **Deprecated — same null-promotion defeat as [isNullOrEmpty].** Dart's flow
+  /// analysis cannot see this opaque getter implies `this != null`, so after
+  /// `if (text.isNotNullOrEmpty) { … }` the variable stays nullable (`String?`)
+  /// inside the block and callers are pushed toward `!`. The long form the
+  /// analyzer DOES understand promotes the variable to non-null:
+  ///
+  /// ```dart
+  /// // Preferred — `text` is promoted to non-null `String` inside the block:
+  /// if (text != null && text.isNotEmpty) {
+  ///   text.length; // no `!` needed
+  /// }
+  /// ```
+  ///
+  /// Kept for source compatibility; prefer the long form in new code.
   /// Audited: 2026-06-12 11:26 EDT
+  @Deprecated(
+    'Cool shorthand, but it hides the null check from Dart flow analysis: '
+    'code inside `if (x.isNotNullOrEmpty)` does not promote `x` to non-null, '
+    'pushing callers toward `!`. Prefer the long form `x != null && x.isNotEmpty`, '
+    'which the analyzer understands and which promotes `x`.',
+  )
   @useResult
   bool get isNotNullOrEmpty => this?.isNotEmpty ?? false;
 }

@@ -14,26 +14,31 @@ boolean getters on a nullable receiver that defeat Dart's null promotion. The
 
 ### What changed and why
 
-**`lib/string/string_nullable_extensions.dart` — `isNullOrEmpty` deprecated.**
-After `if (x.isNullOrEmpty) return;`, Dart flow analysis cannot tell the opaque
-getter implies `x != null`, so `x` stays nullable in the guarded scope and
-callers are pushed toward `!`. The explicit `x == null || x.isEmpty` promotes `x`
-to non-null and is preferred. A `@Deprecated` annotation carries that reasoning
-to every call site; the dartdoc gains a worked before/after example. The getter
-is retained for source compatibility. Its sibling `isNotNullOrEmpty` shares the
-defect but was left in place pending a separate decision.
+**`lib/string/string_nullable_extensions.dart` — `isNullOrEmpty` and
+`isNotNullOrEmpty` deprecated.** After `if (x.isNullOrEmpty) return;` (or inside
+`if (x.isNotNullOrEmpty) { … }`), Dart flow analysis cannot tell the opaque getter
+implies `x != null`, so `x` stays nullable in the guarded scope and callers are
+pushed toward `!`. The explicit `x == null || x.isEmpty` and
+`x != null && x.isNotEmpty` promote `x` to non-null and are preferred. A
+`@Deprecated` annotation carries that reasoning to every call site; each dartdoc
+gains a worked before/after example. Both getters are retained for source
+compatibility.
 
 **`tool/suggest_saropa_utils_lib.dart` — detector list rebuilt.** The detector
-list was replaced with 23 entries, each audited against three gates: the named
+list was replaced with 45 entries, each audited against three gates: the named
 utility exists in `lib/`, recommending it does not degrade the code (no
 `isNullOrX`-getter-on-nullable target), and the regex is specific enough to avoid
-broad false positives (same-variable backreferences where applicable). New
-detectors cover `capitalize`, `truncateWithEllipsis`, `containsIgnoreCase`,
+broad false positives (same-variable backreferences where applicable). Detectors
+cover string helpers (`capitalize`, `truncateWithEllipsis`, `containsIgnoreCase`,
 `ensurePrefix`/`ensureSuffix`, `getEverythingBefore`/`getEverythingAfter`,
-`compressSpaces`, `firstWord`, `countOccurrences`, `orEmpty` (String and
-List/Map), `addNotNull`, `takeLast`, `dropLast`, `lastOrNull`, `whereNotNull`,
-`countWhere`, `containsAny`, `endsWithAny`, `nullIfEmpty`, and `clampNonNegative`.
-A reverse detector flags *use* of the deprecated `isNullOrEmpty` /
+`compressSpaces`, `firstWord`, `countOccurrences`, `removeAll`, `wordCount`,
+`isNumeric`, `isPalindrome`, `orEmpty`), collection helpers (`addNotNull`,
+`takeLast`, `dropLast`, `lastOrNull`, `whereNotNull`, `countWhere`, `containsAny`,
+`containsAll`, `endsWithAny`, `nullIfEmpty`, `flatten`, `none`, `sumBy`, `invert`),
+DateTime helpers (`isSameDay`, `startOfDay`/`endOfDay`,
+`addDays`/`addHours`/`addMinutes`/`addMonths`/`addYears`, `isLeapYear`,
+`isWeekend`), and numeric helpers (`clampNonNegative`, `percentageOf`, `lerp`,
+`isInteger`). A reverse detector flags *use* of the deprecated `isNullOrEmpty` /
 `isNotNullOrEmpty` / `isNullOrZero` getters and points back at the explicit form.
 A header comment records why the `isNullOrX` family is excluded as a target.
 
@@ -67,7 +72,7 @@ mechanism.
 ### Scope and outstanding
 
 Migration detection lives in the CLI scanner only; it is not surfaced as
-in-editor diagnostics. `isNotNullOrEmpty` is not yet deprecated. Reaching exactly
-25 detectors was not pursued because the additional candidates would have
-required fuzzy regexes prone to false positives — 23 verified detectors were
-shipped instead.
+in-editor diagnostics. The detector regexes were unit-tested on synthetic
+snippets; their false-positive rate against a large real codebase is unmeasured.
+Further detectors are possible but would trade into fuzzier patterns; 45 verified
+detectors are shipped.

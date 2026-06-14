@@ -217,9 +217,114 @@ final List<PatternDetector> _detectors = <PatternDetector>[
     'Consider: list.nullIfEmpty() from list_extensions.',
   ),
 
+  PatternDetector(
+    RegExp(r'\.replaceAll\(\s*[^,]+,\s*[\x27\x22][\x27\x22]\s*\)'),
+    'Consider: string.removeAll(pattern) from string_manipulation_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.split\(\s*[\x27\x22] [\x27\x22]\s*\)\.length\b(?!\s*-)'),
+    'Consider: string.wordCount() from string_words_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'double\.tryParse\([^)]+\)\s*!=\s*null'),
+    'Consider: string.isNumeric() from string_number_extensions.',
+  ),
+  PatternDetector(
+    RegExp(
+      r'(\w+)\s*==\s*\1\.split\(\s*[\x27\x22][\x27\x22]\s*\)\.reversed\.join\(',
+    ),
+    'Consider: string.isPalindrome() from string_more_extensions.',
+  ),
+
+  // --- DateTime ---
+  PatternDetector(
+    RegExp(
+      r'(\w+)\.year\s*==\s*(\w+)\.year\s*&&\s*\1\.month\s*==\s*\2\.month\s*&&'
+      r'\s*\1\.day\s*==\s*\2\.day',
+    ),
+    'Consider: dateTime.isSameDay(other) from date_time_more_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'DateTime\(\s*(\w+)\.year\s*,\s*\1\.month\s*,\s*\1\.day\s*\)'),
+    'Consider: dateTime.startOfDay from date_time_bounds_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'DateTime\(\s*(\w+)\.year\s*,\s*\1\.month\s*,\s*\1\.day\s*,\s*23\s*,\s*59'),
+    'Consider: dateTime.endOfDay from date_time_bounds_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.add\(\s*Duration\(\s*days:'),
+    'Consider: dateTime.addDays(n) from date_time_arithmetic_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.add\(\s*Duration\(\s*hours:'),
+    'Consider: dateTime.addHours(n) from date_time_arithmetic_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.add\(\s*Duration\(\s*minutes:'),
+    'Consider: dateTime.addMinutes(n) from date_time_arithmetic_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'DateTime\(\s*(\w+)\.year\s*,\s*\1\.month\s*\+'),
+    'Consider: dateTime.addMonths(n) from date_time_arithmetic_extensions '
+        '(the manual DateTime(y, month + n, d) overflows day-of-month).',
+  ),
+  PatternDetector(
+    RegExp(r'DateTime\(\s*(\w+)\.year\s*\+'),
+    'Consider: dateTime.addYears(n) from date_time_arithmetic_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'%\s*4\s*==\s*0\s*&&[^|&]*%\s*100\s*!=\s*0'),
+    'Consider: dateTime.isLeapYear() from date_time_extensions '
+        '(the manual %4/%100/%400 rule is a classic off-by-one source).',
+  ),
+  PatternDetector(
+    RegExp(
+      r'\.weekday\s*==\s*DateTime\.saturday\s*\|\|\s*\w+\.weekday\s*==\s*'
+      r'DateTime\.sunday',
+    ),
+    'Consider: isWeekend(date) from business_calendar_utils.',
+  ),
+
+  // --- Iterable / Map ---
+  PatternDetector(
+    RegExp(r'\.expand\(\s*\(?(\w+)\)?\s*=>\s*\1\s*\)'),
+    'Consider: iterable.flatten() from iterable_flatten_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'!\s*\w+\.any\s*\('),
+    'Consider: iterable.none(predicate) from iterable_none_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.every\s*\(\s*\(?(\w+)\)?\s*=>\s*\w+\.contains\s*\(\s*\1\s*\)'),
+    'Consider: iterable.containsAll(other) from iterable_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.reduce\(\s*\(?(\w+),\s*(\w+)\)?\s*=>\s*\1\s*\+\s*\2\s*\)'),
+    'Consider: iterable.sumBy(selector) from iterable_sum_by_extensions '
+        '(reduce throws on an empty collection; sumBy does not).',
+  ),
+  PatternDetector(
+    RegExp(r'\.map\(\s*\(?(\w+),\s*(\w+)\)?\s*=>\s*MapEntry\(\s*\2\s*,\s*\1\s*\)'),
+    'Consider: map.invert() from map_invert_extensions.',
+  ),
+
   // --- num / int ---
   PatternDetector(
     RegExp(r'(\w+)\s*<\s*0\s*\?\s*0\s*:\s*\1\b'),
     'Consider: num.clampNonNegative() from num_more_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\s*==\s*0\s*\?\s*0\s*:\s*\w+\s*/\s*\1'),
+    'Consider: num.percentageOf(total) from num_more_extensions '
+        '(guards division by zero).',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\s*\+\s*\(\s*(\w+)\s*-\s*\1\s*\)\s*\*\s*\w+'),
+    'Consider: lerp(a, b, t) from num_lerp_utils.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\s*==\s*\1\.roundToDouble\(\)'),
+    'Consider: num.isInteger from num_more_extensions.',
   ),
 ];

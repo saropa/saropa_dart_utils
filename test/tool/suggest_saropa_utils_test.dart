@@ -123,6 +123,27 @@ void main() {
       final List<Suggestion> out = scanContent(code, 'c.dart');
       expect(out.any((s) => s.message.contains('takeLast')), isTrue);
     });
+    test('isSameDay manual y/m/d comparison detected', () {
+      const String code =
+          'final same = a.year == b.year && a.month == b.month && a.day == b.day;\n';
+      final List<Suggestion> out = scanContent(code, 'd.dart');
+      expect(out.any((s) => s.message.contains('isSameDay')), isTrue);
+    });
+    test('addDays manual Duration detected', () {
+      const String code = 'final t = now.add(Duration(days: 3));\n';
+      final List<Suggestion> out = scanContent(code, 'e.dart');
+      expect(out.any((s) => s.message.contains('addDays')), isTrue);
+    });
+    test('isLeapYear manual rule detected', () {
+      const String code = 'final leap = y % 4 == 0 && y % 100 != 0 || y % 400 == 0;\n';
+      final List<Suggestion> out = scanContent(code, 'g.dart');
+      expect(out.any((s) => s.message.contains('isLeapYear')), isTrue);
+    });
+    test('flatten manual expand detected', () {
+      const String code = 'final all = lists.expand((e) => e).toList();\n';
+      final List<Suggestion> out = scanContent(code, 'h.dart');
+      expect(out.any((s) => s.message.contains('flatten')), isTrue);
+    });
     test('snippet and line set from matched line', () {
       const String code =
           'void foo() {\n  final c = x[0].toUpperCase() + x.substring(1);\n}\n';
