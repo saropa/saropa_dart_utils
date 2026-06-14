@@ -1,6 +1,6 @@
 # Capabilities Index
 
-**Release 1.6.2** · Generated 2026-06-14
+**Release 1.6.3** · Generated 2026-06-14
 
 A complete, per-symbol catalog of every public utility in `saropa_dart_utils` — for teams evaluating or adopting the library. Covers **2622 public symbols** across **476 files**.
 

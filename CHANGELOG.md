@@ -36,9 +36,9 @@ cspell:disable
 
 ---
 
-## [Unreleased]
+## [1.6.3]
 
-Audit-tooling fix only — no library changes. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+Audit-tooling fix only — no library changes. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.3/CHANGELOG.md)
 
 <details><summary>Maintenance</summary>
 
