@@ -532,3 +532,5 @@ export 'validation/jwt_structure_utils.dart';
 
 // Saropa Suite integration (rule-to-remediation mapping, R1)
 export 'suite/rule_remediation_map.dart';
+// Saropa Suite integration (crash-family remediation coverage audit, R3)
+export 'suite/crash_coverage_audit.dart';

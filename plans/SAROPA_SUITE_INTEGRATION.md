@@ -95,12 +95,20 @@ it can touch the protocol, in priority order:
   this library's, so they are deliberately not mapped here.
 - **R2 — Dart envelope model** (above) — **CLOSED, not needed.** No Dart producer exists (Question 1,
   resolved 2026-06-14); do not build.
-- **R3 — Remediation coverage audit.** For each crash family the suite enumerates (Lints R3's
-  mapping table, Log Capture's parsed crash classes), assert a corresponding safe helper exists here
-  with an edge-case test. A family with no helper is a **library backlog input** — the mirror of
-  Lints' "observed in production, no static rule yet." Surface it in `CODE_INDEX.md` /
-  [ROADMAP_TO_700.md](ROADMAP_TO_700.md) as "crash class observed by the suite, no safe primitive
-  yet."
+- **R3 — Remediation coverage audit. BUILT 2026-06-14.** Shipped as `kCrashCoverageAudit` in
+  [lib/suite/crash_coverage_audit.dart](../lib/suite/crash_coverage_audit.dart) (exported), with the
+  pinning test at [test/suite/crash_coverage_audit_test.dart](../test/suite/crash_coverage_audit_test.dart).
+  Audits all 12 stable crash families the suite recognizes (Log Capture's `CRASH_SIGNATURE_IDS` in
+  `src/modules/diagnostics/crash-signature.ts` — the authoritative source for "crash classes the suite
+  parses"). Each family is `covered` (4: `state-error-no-element`→`singleOrNull`,
+  `range-error-index`→`getOrNull`, `type-error-cast`→`castOrNull`, `format-exception`→`toIntNullable`),
+  a `gap` (1: `concurrent-modification` — no owned safe-mutate-during-iteration primitive), or
+  `notApplicable` (7: language/runtime/resource faults a utility can't prevent — `null-check-operator`,
+  `late-init`, `no-such-method`, `assertion-failed`, `stack-overflow`, `out-of-memory`, `anr`). The
+  test pins the family-id set to the suite contract (a new upstream family fails until triaged) and
+  exercises every covered symbol in compiled code. The one gap is the **library backlog input** —
+  surfaced in [CODE_INDEX.md](../CODE_INDEX.md) under the Saropa Suite section. (`ROADMAP_TO_700.md`
+  does not exist; CODE_INDEX is the live capability index, so the backlog note lands there.)
 - **R4 — Dogfooding gate stays green.** Keep `dart run custom_lint` clean under the dev-dependency on
   `saropa_lints` so this package remains a credible reference implementation of the rules the suite
   ships. The pending `saropa_lints` bump ([PENDING_saropa_lints_bump.md](PENDING_saropa_lints_bump.md))
@@ -133,11 +141,18 @@ it can touch the protocol, in priority order:
   suggested non-compiling code. Every detector must be vetted against the real API *and* the promotion
   test before it ships.
 
-- **R6 — Pubspec version-upgrade nudge.** When a project depends on an out-of-date `saropa_dart_utils`,
-  prompt to bump it. **Delivery:** rides `saropa_lints`' existing **Package Vibrancy** ("version-gap
-  PR triage" / dependency-health scanning) — no new code path and no new extension. This is the
-  mirror of the suite-discovery nudge the Lints doc already specifies (its R7). Gate once with the
-  existing offered/dismissed pattern so it never nags.
+- **R6 — Pubspec version-upgrade nudge. FILED with saropa_lints 2026-06-14.** When a project depends
+  on an out-of-date `saropa_dart_utils`, prompt to bump it. **Delivery:** rides `saropa_lints`'
+  existing **Package Vibrancy** ("version-gap PR triage" / dependency-health scanning) — no new code
+  path and no new extension. This is the mirror of the suite-discovery nudge the Lints doc already
+  specifies (its R7). Gate once with the existing offered/dismissed pattern so it never nags. The work
+  lives in `saropa_lints` (it owns the extension and the `pubspec.yaml` scan), so it is requested
+  there as a feature, not built here:
+  `D:\src\saropa_lints\bugs\feature_package_vibrancy_saropa_dart_utils_version_nudge.md`. Verified
+  while filing: Package Vibrancy is a real subsystem (`extension/src/vibrancy/`) with a "behind latest"
+  comparator (`providers/sdk-diagnostics.ts`, currently SDK/Flutter-scoped) and a curated package
+  registry (`data/known_issues.json`, end-of-life-oriented); `saropa_dart_utils` is in neither yet, so
+  the request is "apply the existing version-gap nudge to the suite's own packages," gated once.
 
 The only NEW artifact either requirement creates is Dart rule code + a dependency-gate entry inside
 `saropa_lints`; everything user-facing reuses the Saropa Lints extension that already exists. There is
@@ -189,9 +204,13 @@ that does not exist.
 2. **R1 — rule-to-remediation mapping + pinning test. DONE 2026-06-14.** Pure data, zero runtime risk,
    immediately useful to Lints R3. `kRuleRemediations` in `lib/suite/rule_remediation_map.dart` +
    pinning test in `test/suite/rule_remediation_map_test.dart` (analyze clean, 4/4 tests pass).
-3. **R6 — pubspec version-upgrade nudge** via Package Vibrancy (no new code path).
-4. **R3 — remediation coverage audit.** Turns the suite's crash enumeration into a library backlog;
-   feeds ROADMAP.
+3. **R6 — pubspec version-upgrade nudge** via Package Vibrancy (no new code path). **FILED 2026-06-14**
+   as a feature request in `saropa_lints` (`bugs/feature_package_vibrancy_saropa_dart_utils_version_nudge.md`);
+   the work is owned there, not here.
+4. **R3 — remediation coverage audit. DONE 2026-06-14.** `kCrashCoverageAudit` in
+   `lib/suite/crash_coverage_audit.dart` + pinning test (analyze clean, 6/6 tests pass). Turns the
+   suite's 12-family crash enumeration into a library backlog; the one gap
+   (`concurrent-modification`) is surfaced in `CODE_INDEX.md`.
 5. **R4 — keep the dogfooding gate green** (ongoing; unblock via the pending `saropa_lints` bump).
 6. **R2 — Dart envelope model** — **CLOSED 2026-06-14, not needed.** The envelope is produced and
    consumed entirely by the TypeScript extensions; no Dart producer exists. Re-open only if one is
