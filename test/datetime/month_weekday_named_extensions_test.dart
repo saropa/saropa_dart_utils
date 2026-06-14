@@ -95,12 +95,54 @@ void main() {
         // September 2024: first Saturday Sep 7, third is Sep 21.
         expect(DayInMonthCalculations.thirdSaturday(2024, 9), DateTime(2024, 9, 21));
       });
+
+      test('firstThursday should return the correct date', () {
+        // March 2024: first Thursday is Mar 7.
+        expect(DayInMonthCalculations.firstThursday(2024, 3), DateTime(2024, 3, 7));
+        expect(DayInMonthCalculations.firstThursday(2024, 3).weekday, DateTime.thursday);
+      });
+
+      test('firstFriday should return the correct date', () {
+        // November 2024: first Friday is Nov 1.
+        expect(DayInMonthCalculations.firstFriday(2024, 11), DateTime(2024, 11));
+        expect(DayInMonthCalculations.firstFriday(2024, 11).weekday, DateTime.friday);
+      });
+
+      test('firstSaturday should return the correct date', () {
+        // June 2024: first Saturday is Jun 1.
+        expect(DayInMonthCalculations.firstSaturday(2024, 6), DateTime(2024, 6));
+        expect(DayInMonthCalculations.firstSaturday(2024, 6).weekday, DateTime.saturday);
+      });
+
+      test('secondFriday should return the correct date', () {
+        // August 2024: first Friday Aug 2, second is Aug 9.
+        expect(DayInMonthCalculations.secondFriday(2024, 8), DateTime(2024, 8, 9));
+        expect(DayInMonthCalculations.secondFriday(2024, 8).weekday, DateTime.friday);
+      });
+
+      test('secondSaturday should return the correct date', () {
+        // August 2024: first Saturday Aug 3, second is Aug 10.
+        expect(DayInMonthCalculations.secondSaturday(2024, 8), DateTime(2024, 8, 10));
+        expect(DayInMonthCalculations.secondSaturday(2024, 8).weekday, DateTime.saturday);
+      });
     });
 
     group('named last-weekday wrappers — sample cases', () {
       test('lastMonday should return the correct date', () {
         // January 2024 last Monday is Jan 29.
         expect(DayInMonthCalculations.lastMonday(2024, 1), DateTime(2024, 1, 29));
+      });
+
+      test('lastFriday should return the correct date', () {
+        // February 2024 last Friday is Feb 23.
+        expect(DayInMonthCalculations.lastFriday(2024, 2), DateTime(2024, 2, 23));
+        expect(DayInMonthCalculations.lastFriday(2024, 2).weekday, DateTime.friday);
+      });
+
+      test('lastSaturday should return the correct date', () {
+        // February 2024 last Saturday is Feb 24.
+        expect(DayInMonthCalculations.lastSaturday(2024, 2), DateTime(2024, 2, 24));
+        expect(DayInMonthCalculations.lastSaturday(2024, 2).weekday, DateTime.saturday);
       });
     });
 

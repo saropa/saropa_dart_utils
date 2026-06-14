@@ -28,9 +28,9 @@ String formatNumberLocale(
   // separators into the integer part only.
   final String raw = decimalPlaces <= 0
       ? value.round().toString()
-      // Clamp to 20: toStringAsFixed throws a RangeError above 20 digits. Without
-      // this, formatNumberLocale(x, decimalPlaces: 25) crashed (formatDouble in
-      // double_extensions already clamps the same way).
+      // Clamp to 20: toStringAsFixed throws a RangeError above 20 fraction
+      // digits, so an oversized decimalPlaces would crash instead of formatting.
+      // formatDouble in double_extensions clamps to the same ceiling.
       : value.toStringAsFixed(decimalPlaces.clamp(1, 20));
   if (groupSep.isEmpty) return raw;
   final List<String> parts = raw.split('.');

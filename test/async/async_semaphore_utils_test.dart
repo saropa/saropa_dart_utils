@@ -38,6 +38,11 @@ void main() {
       expect(maxActive, 2);
     });
 
+    // Each test constructs its own semaphore with a permit count that IS the
+    // scenario under test (1 to serialize, 2 to bound concurrency, etc.), so a
+    // shared setUp() would force a single count most-but-not-all tests want and
+    // hide the parameter each case is exercising.
+    // ignore: prefer_setup_teardown
     test('run returns the callback result', () async {
       final AsyncSemaphoreUtils sem = AsyncSemaphoreUtils(1);
       expect(await sem.run<int>(() async => 11), 11);
