@@ -252,6 +252,7 @@ export 'list/list_of_list_extensions.dart';
 export 'list/make_list_extensions.dart';
 export 'list/unique_list_extensions.dart';
 export 'list/list_lower_extensions.dart';
+export 'list/list_mutate_during_iteration_extensions.dart';
 export 'list/list_default_empty_extensions.dart';
 export 'list/list_shuffle_seeded_extensions.dart';
 export 'list/list_top_k_extensions.dart';

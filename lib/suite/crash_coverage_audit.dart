@@ -102,13 +102,14 @@ const List<CrashFamilyCoverage> kCrashCoverageAudit = <CrashFamilyCoverage>[
   ),
   CrashFamilyCoverage(
     familyId: 'concurrent-modification',
-    status: CrashCoverageStatus.gap,
+    status: CrashCoverageStatus.covered,
     description:
         'Concurrent modification during iteration — mutating a collection inside its own loop.',
-    note: 'No owned primitive captures the safe pattern (snapshot-then-mutate, '
-        'or a guarded remove-during-iteration). Dart\'s removeWhere covers the '
-        'common case, but a dedicated helper would make the safe form obvious. '
-        'Library backlog input.',
+    symbol: 'forEachSnapshot',
+    source: 'list/list_mutate_during_iteration_extensions.dart',
+    note: 'forEachSnapshot walks a point-in-time copy of the list, so the body '
+        'may add to or remove from the original without throwing '
+        'ConcurrentModificationError.',
   ),
   CrashFamilyCoverage(
     familyId: 'type-error-cast',

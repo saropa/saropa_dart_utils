@@ -102,13 +102,17 @@ it can touch the protocol, in priority order:
   `src/modules/diagnostics/crash-signature.ts` — the authoritative source for "crash classes the suite
   parses"). Each family is `covered` (4: `state-error-no-element`→`singleOrNull`,
   `range-error-index`→`getOrNull`, `type-error-cast`→`castOrNull`, `format-exception`→`toIntNullable`),
-  a `gap` (1: `concurrent-modification` — no owned safe-mutate-during-iteration primitive), or
   `notApplicable` (7: language/runtime/resource faults a utility can't prevent — `null-check-operator`,
   `late-init`, `no-such-method`, `assertion-failed`, `stack-overflow`, `out-of-memory`, `anr`). The
   test pins the family-id set to the suite contract (a new upstream family fails until triaged) and
-  exercises every covered symbol in compiled code. The one gap is the **library backlog input** —
-  surfaced in [CODE_INDEX.md](../CODE_INDEX.md) under the Saropa Suite section. (`ROADMAP_TO_700.md`
-  does not exist; CODE_INDEX is the live capability index, so the backlog note lands there.)
+  exercises every covered symbol in compiled code. **Gap closed 2026-06-14:** the audit's one backlog
+  input, `concurrent-modification`, was remediated by a new owned primitive `forEachSnapshot`
+  ([lib/list/list_mutate_during_iteration_extensions.dart](../lib/list/list_mutate_during_iteration_extensions.dart),
+  edge-case test alongside) — it walks a point-in-time snapshot so the loop body may add/remove from
+  the original without `ConcurrentModificationError`. The audit now has **zero open gaps**; every suite
+  family is `covered` or `notApplicable`, and the test pins the open-gap set to empty so a future
+  regression or a new uncovered upstream family is caught. (`ROADMAP_TO_700.md` does not exist;
+  [CODE_INDEX.md](../CODE_INDEX.md) is the live capability index, so suite coverage is recorded there.)
 - **R4 — Dogfooding gate stays green.** Keep `dart run custom_lint` clean under the dev-dependency on
   `saropa_lints` so this package remains a credible reference implementation of the rules the suite
   ships. The pending `saropa_lints` bump ([PENDING_saropa_lints_bump.md](PENDING_saropa_lints_bump.md))

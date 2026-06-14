@@ -41,6 +41,14 @@ void main() {
     'getOrNull': () => <int>[].getOrNull(5) == null,
     'castOrNull': () => castOrNull<int>('not an int') == null,
     'toIntNullable': () => 'not a number'.toIntNullable() == null,
+    // Removing inside the body must not throw; result proves the safe walk ran.
+    'forEachSnapshot': () {
+      final List<int> q = <int>[1, 2, 3, 4];
+      q.forEachSnapshot((int n) {
+        if (n.isEven) q.remove(n);
+      });
+      return q.length == 2 && q.first == 1 && q.last == 3;
+    },
   };
 
   group('kCrashCoverageAudit', () {
@@ -104,16 +112,17 @@ void main() {
       }
     });
 
-    test('the documented gap is still exactly concurrent-modification', () {
-      // Pins the current backlog so a newly-introduced gap (a coverage
-      // regression) or a closed gap (a primitive that should flip to covered) is
-      // noticed rather than passing silently.
+    test('there are no open coverage gaps', () {
+      // The concurrent-modification gap was closed by forEachSnapshot (R3
+      // follow-up). Pinned at zero so a newly-introduced gap (a coverage
+      // regression, or a new suite family with no primitive) is noticed rather
+      // than passing silently.
       final Set<String> gaps = kCrashCoverageAudit
           .where((CrashFamilyCoverage c) => c.status == CrashCoverageStatus.gap)
           .map((CrashFamilyCoverage c) => c.familyId)
           .toSet();
 
-      expect(gaps, equals(<String>{'concurrent-modification'}));
+      expect(gaps, isEmpty);
     });
   });
 }
