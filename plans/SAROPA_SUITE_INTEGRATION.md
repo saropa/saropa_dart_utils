@@ -93,28 +93,32 @@ it can touch the protocol, in priority order:
   ships. The pending `saropa_lints` bump ([PENDING_saropa_lints_bump.md](PENDING_saropa_lints_bump.md))
   is part of keeping that current.
 
-- **R5 — Migration / "prefer `saropa_dart_utils`" rule pack.** The inverse of R1: where R1 maps a
+- **R5 — Migration / "prefer `saropa_dart_utils`" detection.** The inverse of R1: where R1 maps a
   crash rule → the safe helper, R5 detects code in a *consumer* project that hand-rolls something this
-  library already ships, and recommends the library symbol with a quick fix.
-  **Delivery decision (settled):** these ship as a `saropa_dart_utils` **rule pack inside
-  `saropa_lints`**, mirroring its existing per-library packs (GetX/Riverpod/…), NOT as a standalone
-  `custom_lint` plugin and NOT as a new VS Code extension. Rationale: `saropa_lints` is the
-  ecosystem's analyzer plugin; a standalone plugin would force every consumer to run a second lint
-  toolchain, while a pack surfaces in the existing Saropa Lints extension automatically and is gated
-  to merge only when `saropa_dart_utils` is a resolved dependency (`kRulePackDependencyGates`).
+  library already ships, and recommends the library symbol.
+  **Delivery (what actually exists, 2026-06-13):** this lives in **`tool/suggest_saropa_utils.dart`**
+  — a regex scanner (core logic in `tool/suggest_saropa_utils_lib.dart`, unit-tested) that walks a
+  project's source and emits `Consider: <util> from <source>` suggestions. It was rebuilt this date to
+  23 detectors, each audited against the real `lib/` API for a target that exists and is
+  flow-analysis-safe. **It is a CLI tool, not an in-editor experience** — it does not surface as
+  IDE quick fixes today.
+  **Possible future enhancement (NOT built):** porting these patterns to a type-aware
+  `saropa_dart_utils` rule pack inside `saropa_lints` (mirroring its per-library packs, gated on the
+  resolved dependency via `kRulePackDependencyGates`) would give in-editor diagnostics + quick fixes
+  without forcing a second lint toolchain on consumers. That is the natural next step if the CLI tool
+  proves its value; it is not the current home.
 
-  **Hard guardrail (learned 2026-06-13) — a migration rule must never recommend a util that defeats
-  Dart flow analysis.** `String?.isNullOrEmpty` / `isNotNullOrEmpty` are the canonical anti-example:
-  `if (s == null || s.isEmpty)` promotes `s` to non-null in the guarded scope, but
-  `if (s.isNullOrEmpty)` does not — the analyzer cannot see the opaque getter implies `s != null`, so
-  downstream code loses promotion and is pushed toward `!`. That family is **excluded** as a migration
-  target. Every candidate target must be vetted to preserve promotion (and otherwise not degrade the
-  code) *before* a rule is written; the user vets the shortlist because they hold strong opinions on
-  which utils are landmines. Rules must also be **type-aware** (e.g. the differently-named `List` form
-  `isListNullOrEmpty` vs the `String` getters), so detection uses a `staticType` check, never a bare
-  syntactic match. This repo owns the *catalog* (which inline shape maps to which symbol, and which
-  symbols are disqualified); `saropa_lints` hosts the *rule code*. **First concrete rule: TBD** —
-  pending a user-vetted, flow-analysis-safe target.
+  **Hard guardrail (learned 2026-06-13) — a migration suggestion must never recommend a util that
+  defeats Dart flow analysis.** `String?.isNullOrEmpty` / `isNotNullOrEmpty` (and the equivalent
+  `num?.isNullOrZero`) are the canonical anti-example: `if (s == null || s.isEmpty)` promotes `s` to
+  non-null in the guarded scope, but `if (s.isNullOrEmpty)` does not — the analyzer cannot see the
+  opaque getter implies `s != null`, so downstream code loses promotion and is pushed toward `!`. That
+  whole `isNullOrX`-getter family is **excluded** as a suggestion target; the scanner instead carries a
+  reverse detector that flags *use* of those getters. `isNullOrEmpty` itself is now `@Deprecated` in
+  `lib/` (see [[isnullorempty-kills-null-promotion]]). The earlier rebuild also removed detectors that
+  named utils which do not exist at all (`orZero`, `orNow`, `toIntOr`, `notNullOrEmpty`) — they
+  suggested non-compiling code. Every detector must be vetted against the real API *and* the promotion
+  test before it ships.
 
 - **R6 — Pubspec version-upgrade nudge.** When a project depends on an out-of-date `saropa_dart_utils`,
   prompt to bump it. **Delivery:** rides `saropa_lints`' existing **Package Vibrancy** ("version-gap

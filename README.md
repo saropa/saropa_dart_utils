@@ -313,7 +313,7 @@ String itemCount = "item".pluralize(cart.length);  // "1 item" or "5 items"
 
 ## Finding opportunities in your project
 
-A CLI tool scans Dart files and suggests places where `saropa_dart_utils` can replace boilerplate (e.g. `x == null || x.isEmpty` → `x.isNullOrEmpty`, `s ?? ''` → `s.orEmpty()`). Run from this repo:
+A CLI tool scans Dart files and suggests places where `saropa_dart_utils` can replace boilerplate (e.g. `name[0].toUpperCase() + name.substring(1)` → `name.capitalize()`, `items.sublist(items.length - n)` → `items.takeLast(n)`, `s ?? ''` → `s.orEmpty()`). Every suggestion is audited against the real API and checked not to degrade your code — it will not push you toward getters like `isNullOrEmpty` that defeat Dart's null promotion. Run from this repo:
 
 ```bash
 # With path: non-interactive, report to stdout (e.g. for CI)

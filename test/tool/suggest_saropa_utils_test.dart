@@ -93,11 +93,18 @@ void main() {
     test('empty content returns no suggestions', () {
       expect(scanContent('', 'p.dart'), isEmpty);
     });
-    test('isNullOrEmpty pattern detected', () {
-      const String code = "if (s == null || s.isEmpty) return;\n";
+    test('the correct long-form null+empty guard is NOT flagged', () {
+      // `s == null || s.isEmpty` is the form that preserves null promotion, so
+      // the tool must not push it toward the deprecated `isNullOrEmpty` getter.
+      const String code = 'if (s == null || s.isEmpty) return;\n';
+      final List<Suggestion> out = scanContent(code, 'test.dart');
+      expect(out.any((s) => s.message.contains('Consider')), isFalse);
+    });
+    test('use of a deprecated null-promotion-defeating getter is flagged', () {
+      const String code = 'if (s.isNullOrEmpty) return;\n';
       final List<Suggestion> out = scanContent(code, 'test.dart');
       expect(out, isNotEmpty);
-      expect(out.any((s) => s.message.contains('isNullOrEmpty')), isTrue);
+      expect(out.any((s) => s.message.contains('Deprecated getter')), isTrue);
       expect(out.first.path, 'test.dart');
       expect(out.first.line, 1);
     });
@@ -106,25 +113,31 @@ void main() {
       final List<Suggestion> out = scanContent(code, 'a.dart');
       expect(out.any((s) => s.message.contains('orEmpty')), isTrue);
     });
-    test('orZero pattern', () {
-      const String code = 'int n = value ?? 0;\n';
+    test('capitalize manual pattern detected', () {
+      const String code = 'final c = name[0].toUpperCase() + name.substring(1);\n';
       final List<Suggestion> out = scanContent(code, 'b.dart');
-      expect(out.any((s) => s.message.contains('orZero')), isTrue);
+      expect(out.any((s) => s.message.contains('capitalize')), isTrue);
+    });
+    test('takeLast manual sublist pattern detected', () {
+      const String code = 'final tail = items.sublist(items.length - n);\n';
+      final List<Suggestion> out = scanContent(code, 'c.dart');
+      expect(out.any((s) => s.message.contains('takeLast')), isTrue);
     });
     test('snippet and line set from matched line', () {
-      const String code = 'void foo() {\n  if (x == null || x.isEmpty) {}\n}\n';
+      const String code =
+          'void foo() {\n  final c = x[0].toUpperCase() + x.substring(1);\n}\n';
       final List<Suggestion> out = scanContent(code, 'f.dart');
       expect(out, isNotEmpty);
       expect(out.first.line, 2);
       expect(out.first.snippet, isNotEmpty);
-      expect(out.first.message, contains('isNullOrEmpty'));
+      expect(out.first.message, contains('capitalize'));
     });
-    test('no false match in string literal', () {
-      const String code = "final t = \"x == null || x.isEmpty\";\n";
-      // Our regex matches in string literals too (no semantic awareness). So we may get a hit.
-      // This test documents current behavior: we do match inside strings.
+    test('matches inside string literals (documented limitation)', () {
+      // The scanner is regex-based with no semantic awareness, so a pattern
+      // appearing inside a string literal still matches. This test pins that
+      // known behavior rather than asserting it is fixed.
+      const String code = "final t = 'items.sublist(items.length - n)';\n";
       final List<Suggestion> out = scanContent(code, 's.dart');
-      // Either we match (current) or we don't if we improve. Just ensure no crash.
       expect(out.every((s) => s.path == 's.dart' && s.line >= 1), isTrue);
     });
   });

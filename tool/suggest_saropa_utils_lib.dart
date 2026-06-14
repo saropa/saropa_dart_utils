@@ -106,53 +106,120 @@ String _lineAt(List<String> lines, int lineNum) {
 
 List<PatternDetector> get detectors => _detectors;
 
+// Every detector below was audited against the real `lib/` public API
+// (2026-06-13): the named util EXISTS, and recommending it does NOT degrade the
+// code. Excluded on purpose: any `isNullOrX`-style boolean getter on a nullable
+// receiver (`isNullOrEmpty`, `isNotNullOrEmpty`, `isNullOrZero`). They read
+// tidily but hide the null test from Dart flow analysis, so the receiver is not
+// promoted to non-null after the guard and callers are pushed toward `!`. The
+// first detector flags their USE and steers back to the explicit form instead.
 final List<PatternDetector> _detectors = <PatternDetector>[
+  // --- Steer OFF the deprecated null-promotion-defeating getters ---
   PatternDetector(
-    RegExp(r'(\w+)\s*==\s*null\s*\|\|\s*\1\.isEmpty\b'),
-    'Consider: variable.isNullOrEmpty (String? / List? / Map?)',
+    RegExp(r'\.(isNullOrEmpty|isNotNullOrEmpty|isNullOrZero)\b'),
+    'Deprecated getter: prefer the explicit check (e.g. '
+        'x == null || x.isEmpty) which preserves Dart null promotion in the '
+        'guarded scope.',
   ),
+
+  // --- String ---
   PatternDetector(
-    RegExp(r'(\w+)\s*!=\s*null\s*&&\s*\1\.isNotEmpty\b'),
-    'Consider: variable.notNullOrEmpty (String?)',
-  ),
-  PatternDetector(
-    RegExp(r'(\w+)\?\.isEmpty\s*\?\?\s*true\b'),
-    'Consider: variable.isNullOrEmpty (String?)',
-  ),
-  PatternDetector(
-    RegExp(r'(\w+)\s*\?\?\s*[\x27\x22]{2}\s*[\);,]'),
-    'Consider: variable.orEmpty() for String?',
-  ),
-  PatternDetector(
-    RegExp(r'(\w+)\s*\?\?\s*\[\]\s*[\);,]'),
-    'Consider: variable.orEmpty() for List? / Map?',
-  ),
-  PatternDetector(
-    RegExp(r'(\w+)\s*\?\?\s*0\s*[\);,]'),
-    'Consider: variable.orZero() for int?',
-  ),
-  PatternDetector(
-    RegExp(r'\.toLowerCase\(\)\.contains\s*\([^)]*\.toLowerCase\(\)'),
-    'Consider: containsIgnoreCase() from string_search_extensions',
-  ),
-  PatternDetector(
-    RegExp(r'int\.tryParse\s*\([^)]+\)\s*\?\?'),
-    'Consider: string.toIntOr(default) from int_string_extensions',
+    RegExp(r'(\w+)\[0\]\.toUpperCase\(\)\s*\+\s*\1\.substring\(\s*1\s*\)'),
+    'Consider: string.capitalize() from string_case_extensions '
+        '(safe on empty strings; the manual form throws on "").',
   ),
   PatternDetector(
     RegExp(r'\.substring\s*\(\s*0\s*,[^)]+\)\s*\+\s*[\x27\x22]\.\.\.[\x27\x22]'),
-    'Consider: string.truncateWithEllipsis(n)',
+    'Consider: string.truncateWithEllipsis(n) from string_extensions.',
   ),
   PatternDetector(
-    RegExp(r'if\s*\(\s*\w+\s*!=\s*null\s*\)\s*[^;]*\.add\s*\('),
-    'Consider: list.addNotNull(value)',
+    RegExp(r'\.toLowerCase\(\)\.contains\s*\([^)]*\.toLowerCase\(\)'),
+    'Consider: string.containsIgnoreCase(other) from string_analysis_extensions.',
   ),
   PatternDetector(
-    RegExp(r'(\w+)\s*==\s*null\s*\|\|\s*\1\s*==\s*0\b'),
-    'Consider: variable.isNullOrZero() for int?',
+    RegExp(r'(\w+)\.startsWith\(\s*(\w+)\s*\)\s*\?\s*\1\s*:\s*\2\s*\+\s*\1'),
+    'Consider: string.ensurePrefix(prefix) from string_lower_extensions.',
   ),
   PatternDetector(
-    RegExp(r'\?\?\s*DateTime\.now\(\)'),
-    'Consider: dateTime.orNow() for DateTime? default to now',
+    RegExp(r'(\w+)\.endsWith\(\s*(\w+)\s*\)\s*\?\s*\1\s*:\s*\1\s*\+\s*\2'),
+    'Consider: string.ensureSuffix(suffix) from string_lower_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\.substring\s*\(\s*0\s*,\s*\1\.indexOf\('),
+    'Consider: string.getEverythingBefore(find) from '
+        'string_manipulation_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\.substring\s*\(\s*\1\.indexOf\([^)]*\)\s*\+'),
+    'Consider: string.getEverythingAfter(find) from '
+        'string_manipulation_extensions.',
+  ),
+  PatternDetector(
+    RegExp(
+      r'\.replaceAll\(\s*RegExp\(\s*r?[\x27\x22]\\s\+[\x27\x22]\s*\)\s*,\s*'
+      r'[\x27\x22] [\x27\x22]',
+    ),
+    'Consider: string.compressSpaces() from string_text_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.split\(\s*[\x27\x22] [\x27\x22]\s*\)\.first\b'),
+    'Consider: string.firstWord() from string_text_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.split\([^)]*\)\.length\s*-\s*1\b'),
+    'Consider: string.countOccurrences(substring) from string_more_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\s*\?\?\s*[\x27\x22]{2}\s*[\);,]'),
+    'Consider: string.orEmpty() from string_lower_extensions.',
+  ),
+
+  // --- List / Iterable ---
+  PatternDetector(
+    RegExp(r'\?\?\s*(?:<[^>]*>\s*)?[\[\{]\s*[\]\}]\s*[\);,]'),
+    'Consider: list/map.orEmpty() from list_default_empty_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'if\s*\(\s*(\w+)\s*!=\s*null\s*\)\s*\w+\.add\s*\(\s*\1\s*\)'),
+    'Consider: list.addNotNull(value) from list_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\.sublist\(\s*\1\.length\s*-'),
+    'Consider: iterable.takeLast(n) from iterable_more_extensions '
+        '(clamps; the manual sublist throws when n exceeds length).',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\.sublist\(\s*0\s*,\s*\1\.length\s*-\s*1\s*\)'),
+    'Consider: iterable.dropLast(n) from iterable_more_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\.isNotEmpty\s*\?\s*\1\.last\s*:\s*null'),
+    'Consider: list.lastOrNull from list_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.where\s*\(\s*\(?(\w+)\)?\s*=>\s*\1\s*!=\s*null\s*\)'),
+    'Consider: iterable.whereNotNull() from iterable_map_not_null_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.where\s*\([^)]*\)\.length\b'),
+    'Consider: iterable.countWhere(predicate) from iterable_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.any\s*\(\s*\(?(\w+)\)?\s*=>\s*\w+\.contains\s*\(\s*\1\s*\)'),
+    'Consider: list.containsAny(other) from list_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'\.any\s*\(\s*\(?(\w+)\)?\s*=>\s*\w+\.endsWith\s*\(\s*\1\s*\)'),
+    'Consider: string.endsWithAny(suffixes) from string_analysis_extensions.',
+  ),
+  PatternDetector(
+    RegExp(r'(\w+)\.isEmpty\s*\?\s*null\s*:\s*\1\b'),
+    'Consider: list.nullIfEmpty() from list_extensions.',
+  ),
+
+  // --- num / int ---
+  PatternDetector(
+    RegExp(r'(\w+)\s*<\s*0\s*\?\s*0\s*:\s*\1\b'),
+    'Consider: num.clampNonNegative() from num_more_extensions.',
   ),
 ];
