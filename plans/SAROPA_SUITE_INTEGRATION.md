@@ -1,5 +1,12 @@
 # Saropa Suite Integration — Dart Utils side
 
+> **Status: Closed — reference guide, not an active plan (2026-06-14).** R1 (rule→remediation map) and
+> R3 (crash-coverage audit, zero gaps) are built and pinned by tests; R2 is closed (no Dart producer);
+> R5 ships as a CLI. The only future *build*, the R5 in-editor rule-pack port, lives in `saropa_lints`
+> and is blocked on a vetted flow-analysis-safe target. The split-out R4 (dogfooding gate) and R6
+> (version nudge) have their own files, also closed as reference. Retained in place because the sibling
+> repos reference it by absolute path.
+
 **Created:** 2026-06-13
 **Question answered:** How does `saropa_dart_utils` fit a suite whose other three members diagnose a
 running Flutter app — when this package is a pure Dart library that never observes the app at all.

@@ -1,6 +1,8 @@
 # Deferred: R6 — pubspec version-upgrade nudge for `saropa_dart_utils`
 
-**Status: Deferred — filed, owned by `saropa_lints`.**
+**Status: Closed here — reference note, not an active plan (2026-06-14).** Nothing to build in this
+repo; the work is owned by `saropa_lints` (filed feature request). Retained as the pointer to that
+owning request, not as a backlog item.
 **Origin:** [SAROPA_SUITE_INTEGRATION.md](../SAROPA_SUITE_INTEGRATION.md), requirement R6.
 **Deferred 2026-06-14.**
 

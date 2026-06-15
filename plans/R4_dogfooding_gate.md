@@ -1,6 +1,9 @@
 # R4 — Keep the dogfooding gate green
 
-**Status: Active — ongoing maintenance.**
+**Status: Closed — standing reference note, not an active plan (2026-06-14).** The dogfooding gate is
+green; keeping it green is a continuous per-change obligation, not tracked work. The deferred
+suppression re-test fires only on the next `saropa_lints` release. Retained as the reference for that
+re-test, not as a backlog item.
 **Origin:** [SAROPA_SUITE_INTEGRATION.md](SAROPA_SUITE_INTEGRATION.md), requirement R4.
 **Split out 2026-06-14.**
 
