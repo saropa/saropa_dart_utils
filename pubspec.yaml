@@ -82,7 +82,7 @@ dev_dependencies:
   # deliberately to adopt new rules, then run `dart run custom_lint` before
   # tagging so any new WARNING is seen locally, not at publish time.
   # ignore: prefer_caret_version_syntax
-  saropa_lints: ^13.12.7
+  saropa_lints: ">=13.12.7 <15.0.0"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
