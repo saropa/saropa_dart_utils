@@ -89,48 +89,71 @@ extension StringWrapExtensions on String {
     return chars.take(maxGraphemes).string;
   }
 
-  /// Replaces a breaking space with a non-breaking space (`\u{00A0}`) wherever a
-  /// line wrap at that space would strand a token shorter than [minWrapChars] on
-  /// its own line.
+  /// Replaces the FINAL breaking space in this string with a non-breaking space
+  /// (`\u{00A0}`) when that wrap point would strand a short token — either the
+  /// last word or the one before it — on its own line.
   ///
-  /// Prevents an "orphan" — a lone `…`, `I`, `(5)`, or `the` — at the end or
-  /// middle of a wrapped heading. The rule is symmetric and position-agnostic:
-  /// a space is fused when EITHER adjacent token is shorter than [minWrapChars],
-  /// because an orphan is unwanted whether it is left behind or pulled forward.
-  /// This beats the common "last-space + short-tail" heuristic.
+  /// Prevents an "orphan" — a lone `…`, `I`, `(5)`, or `the` — stranded at the
+  /// END of a wrapped heading, which is the only place Flutter stable actually
+  /// wraps text (there is no hyphenation; see upstream Flutter issue 18443).
+  /// Only the last space in the string is ever a candidate: every earlier space
+  /// is left as an ordinary breaking space, because a middle word going short
+  /// is not an orphan — only the trailing one is.
   ///
-  /// Splitting is on a single ASCII space (`' '`) only — tabs, newlines, and
-  /// existing non-breaking spaces are NOT split. As a result, a run of two or
-  /// more spaces and any leading/trailing space yields an empty edge token
-  /// (length 0, always below the minimum) whose adjoining space therefore fuses.
-  /// [minWrapChars] `<= 0` fuses nothing (no token can be shorter than 0); a
-  /// value larger than the longest token fuses everything.
+  /// The candidate gap fuses when EITHER of the last two tokens (the one
+  /// before the final space, or the one after it) is shorter than
+  /// [minWrapChars]. [minWrapChars] `<= 0` fuses nothing (no token can be
+  /// shorter than 0).
   ///
   /// Token length is measured in UTF-16 code units, not graphemes, so a short
-  /// run of wide emoji or combining marks may still count as "short". Idempotent:
-  /// once fused, a short token is absorbed into a longer non-breaking-joined
-  /// token, so re-applying changes nothing.
+  /// run of wide emoji or combining marks may still count as "short".
+  /// Idempotent: if the final gap is already a non-breaking space, the string
+  /// is returned unchanged.
   ///
   /// Example:
   /// ```dart
+  /// 'Marked as Out of Date'.preventOrphans();
+  /// // 'Marked as Out of\u{00A0}Date' — only the final gap ("of Date") fuses.
   /// 'Results (5)'.preventOrphans();     // 'Results\u{00A0}(5)'
   /// 'Importing Demo'.preventOrphans();  // 'Importing Demo'  (both long)
   /// ```
-  /// Audited: 2026-06-12 11:26 EDT
+  /// Audited: 2026-09-26
   @useResult
   String preventOrphans({int minWrapChars = 4}) {
     if (length < 2) return this;
-    final List<String> parts = split(_kSpace);
-    if (parts.length < 2) return this;
-    final StringBuffer buf = StringBuffer(parts.first);
-    for (int i = 1; i < parts.length; i++) {
-      // Fuse when EITHER adjacent token fails the minimum (symmetric: an orphan
-      // is bad whether it is left behind or pulled forward).
-      final bool fuse = parts[i - 1].length < minWrapChars || parts[i].length < minWrapChars;
-      buf
-        ..write(fuse ? _kNonBreakingSpace : _kSpace)
-        ..write(parts[i]);
+
+    // Only the final space/gap in the string is ever a fuse candidate; scan
+    // from the end so every earlier gap is left untouched.
+    int lastGap = -1;
+    for (int i = length - 1; i >= 0; i--) {
+      final String char = this[i];
+      if (char == _kSpace || char == _kNonBreakingSpace) {
+        lastGap = i;
+        break;
+      }
     }
-    return buf.toString();
+    if (lastGap < 0) return this;
+    // Idempotent: the final gap was already fused by a previous call.
+    if (this[lastGap] == _kNonBreakingSpace) return this;
+
+    // Walk back to the gap before that one (if any) to bound the token that
+    // precedes the final space; everything before it is left untouched.
+    int prevGap = -1;
+    for (int i = lastGap - 1; i >= 0; i--) {
+      final String char = this[i];
+      if (char == _kSpace || char == _kNonBreakingSpace) {
+        prevGap = i;
+        break;
+      }
+    }
+
+    final String tokenBefore = substring(prevGap + 1, lastGap);
+    final String tokenAfter = substring(lastGap + 1);
+    // Fuse when EITHER of the last two tokens fails the minimum (symmetric: an
+    // orphan is bad whether it is the last word or the one before it).
+    final bool fuse = tokenBefore.length < minWrapChars || tokenAfter.length < minWrapChars;
+    if (!fuse) return this;
+
+    return replaceRange(lastGap, lastGap + 1, _kNonBreakingSpace);
   }
 }
