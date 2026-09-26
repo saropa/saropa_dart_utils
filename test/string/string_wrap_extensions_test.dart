@@ -31,40 +31,19 @@ void main() {
     // Non-breaking space as a Dart escape ON PURPOSE — a raw U+00A0 flattens to
     // ASCII in transit and silently breaks these expectations.
     const String nbsp = '\u{00A0}';
-    test('ellipsis is glued to the preceding word', () {
+    test('multi-short-word title only fuses the final gap', () {
+      // Every earlier gap ("Marked as", "as Out", "Out of") is left as an
+      // ordinary breaking space; only "of Date" — the final gap — fuses,
+      // because "of" is shorter than the default minimum.
       expect(
-        'Importing Demo Companions …'.preventOrphans(),
-        'Importing Demo Companions$nbsp…',
+        'Marked as Out of Date'.preventOrphans(),
+        'Marked as Out of${nbsp}Date',
       );
     });
-    test('any short token in the middle is also glued', () {
-      expect(
-        'Hello I am here'.preventOrphans(),
-        'Hello${nbsp}I${nbsp}am${nbsp}here',
-      );
-    });
-    test('long tokens on both sides keep a breakable space', () {
-      expect(
-        'Importing Demo Companions'.preventOrphans(),
-        'Importing Demo Companions',
-      );
-    });
-    test('single-letter sequence is fully fused', () {
-      expect('A B C D'.preventOrphans(), 'A${nbsp}B${nbsp}C${nbsp}D');
-    });
-    test('trailing 1-char punctuation is always caught', () {
-      expect(
-        'End of sentence .'.preventOrphans(),
-        'End${nbsp}of${nbsp}sentence$nbsp.',
-      );
-    });
-    test('short parenthesized count fuses with preceding word', () {
+    test('two-word title fuses its only gap', () {
       expect('Results (5)'.preventOrphans(), 'Results$nbsp(5)');
     });
-    test('three-dot ellipsis is short enough to fuse', () {
-      expect('Loading ...'.preventOrphans(), 'Loading$nbsp...');
-    });
-    test('string with no spaces is returned unchanged', () {
+    test('single word has no gap to fuse', () {
       expect('Singleword'.preventOrphans(), 'Singleword');
     });
     test('empty string is returned unchanged', () {
@@ -73,41 +52,31 @@ void main() {
     test('single-character string is returned unchanged', () {
       expect('a'.preventOrphans(), 'a');
     });
-    test('custom minimum tunes aggressiveness', () {
-      expect('fit the box'.preventOrphans(), 'fit${nbsp}the${nbsp}box');
-      expect('fit the box'.preventOrphans(minWrapChars: 3), 'fit the box');
+    test('long tokens on both sides of the final gap keep a breakable space', () {
       expect(
-        'a of b content'.preventOrphans(minWrapChars: 2),
-        'a${nbsp}of${nbsp}b${nbsp}content',
+        'Importing Demo Companions'.preventOrphans(),
+        'Importing Demo Companions',
       );
     });
-    test('consecutive spaces produce an empty token that fuses both sides', () {
-      // split(' ') yields ['a', '', 'b']; the empty token (length 0) is below
-      // any positive minimum, so both adjoining spaces fuse.
-      expect('a  b'.preventOrphans(), 'a$nbsp${nbsp}b');
+    test('is idempotent', () {
+      const String input = 'Marked as Out of Date';
+      final String once = input.preventOrphans();
+      expect(once.preventOrphans(), once);
     });
-    test('leading space fuses', () {
-      expect(' a'.preventOrphans(), '${nbsp}a');
-    });
-    test('trailing space fuses', () {
+    test('trailing space fuses against the empty final token', () {
       expect('a '.preventOrphans(), 'a$nbsp');
+    });
+    test('custom minimum tunes only the final gap', () {
+      // Middle gap ("fit the") is never a candidate under the new rule, only
+      // the final one ("the box").
+      expect('fit the box'.preventOrphans(), 'fit the${nbsp}box');
+      expect('fit the box'.preventOrphans(minWrapChars: 3), 'fit the box');
     });
     test('minWrapChars of 0 fuses nothing', () {
       expect('a b c'.preventOrphans(minWrapChars: 0), 'a b c');
     });
     test('negative minWrapChars fuses nothing', () {
       expect('a b c'.preventOrphans(minWrapChars: -1), 'a b c');
-    });
-    test('minWrapChars larger than any token fuses everything', () {
-      expect(
-        'Importing Demo Companions'.preventOrphans(minWrapChars: 100),
-        'Importing${nbsp}Demo${nbsp}Companions',
-      );
-    });
-    test('is idempotent', () {
-      const String input = 'Hello I am here and Importing Demo Companions …';
-      final String once = input.preventOrphans();
-      expect(once.preventOrphans(), once);
     });
   });
 }

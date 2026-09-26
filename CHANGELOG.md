@@ -36,6 +36,16 @@ cspell:disable
 
 ---
 
+## [Unreleased]
+
+Titles with several short words can wrap again. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
+### Fixed
+
+- Fix: `preventOrphans()` now only fuses the final wrap gap instead of every space, so multi-word titles with several short words can still wrap onto more than one line.
+
+---
+
 ## [1.6.3]
 
 Audit-tooling fix only — no library changes. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.3/CHANGELOG.md)
