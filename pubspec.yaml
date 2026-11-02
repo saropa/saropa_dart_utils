@@ -56,7 +56,7 @@ dev_dependencies:
   # Already resolved transitively via saropa_lints/custom_lint at this version;
   # pinned here as a DIRECT dev_dependency because a tool/ script may not import
   # a transitive-only package (same publish rule that meta/fake_async document).
-  analyzer: ">=11.0.0 <13.0.0"
+  analyzer: ">=11.0.0 <15.0.0"
 
   # Controls virtual time in tests (debounce_utils_test, heartbeat_utils_test).
   # Must be a DIRECT dev_dependency, not transitive (it arrives via flutter_test):
@@ -82,7 +82,7 @@ dev_dependencies:
   # deliberately to adopt new rules, then run `dart run custom_lint` before
   # tagging so any new WARNING is seen locally, not at publish time.
   # ignore: prefer_caret_version_syntax
-  saropa_lints: ">=13.12.7 <17.0.0"
+  saropa_lints: ">=13.12.7 <18.0.0"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
