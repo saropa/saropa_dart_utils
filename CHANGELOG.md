@@ -70,6 +70,8 @@ The library now uses the material_ui package instead of flutter/material, so dat
 
 </details>
 
+---
+
 ## [1.6.3]
 
 Audit-tooling fix only — no library changes. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.3/CHANGELOG.md)
