@@ -151,6 +151,8 @@ abstract final class JsonUtils {
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<Map<String, dynamic>>? tryJsonDecodeListMap(String? value) {
+    // Analyzer false positive: the result is used in this condition.
+    // ignore: unused_result
     if (value == null || !isJson(value)) return null;
 
     try {
@@ -178,6 +180,8 @@ abstract final class JsonUtils {
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
   static List<String>? tryJsonDecodeList(String? value) {
+    // Analyzer false positive: the result is used in this condition.
+    // ignore: unused_result
     if (value == null || !isJson(value)) return null;
 
     try {

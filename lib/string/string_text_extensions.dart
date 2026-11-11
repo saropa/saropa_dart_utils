@@ -329,6 +329,8 @@ extension StringTextExtensions on String {
         // Vowel + y just adds s ("days"); consonant + y switches y to "ies"
         // ("city" -> "cities"). length > 2 guards against 2-letter words like
         // "by" where there's no consonant to inspect before the y.
+        // Analyzer false positive: the result is used in this condition.
+        // ignore: unused_result
         if (length > 2 && this[length - 2].isVowel()) {
           return '${this}s';
         }
@@ -383,6 +385,8 @@ extension StringTextExtensions on String {
     }
 
     String cropped = collapsed.substringSafe(0, cropLength + 1);
+    // Analyzer false positive: the result is used in this condition.
+    // ignore: unused_result
     while (cropped.isNotEmpty && !cropped.endsWithAny(StringExtensions.commonWordEndings)) {
       cropped = cropped.substringSafe(0, cropped.length - 1);
     }

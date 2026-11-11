@@ -360,6 +360,8 @@ abstract final class DateTimeUtils {
 
     const List<int> daysInMonth = <int>[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+    // Analyzer false positive: the result is used in this condition.
+    // ignore: unused_result
     if (month == 2 && isLeapYear(year: year)) {
       return DateConstants.daysInFebLeapYear;
     }
@@ -412,6 +414,8 @@ abstract final class DateTimeUtils {
     // year is known. An unknown year cannot resolve leap-ness, so it falls
     // back to the always-safe 28 (the minimum February length).
     if (month == 2) {
+      // Analyzer false positive: the result is used in this condition.
+      // ignore: unused_result
       if (year != null && isLeapYear(year: year)) {
         return DateConstants.daysInFebLeapYear;
       }
