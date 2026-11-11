@@ -36,6 +36,18 @@ cspell:disable
 
 ---
 
+## [Unreleased]
+
+No changes for package users. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
+
+<details><summary>Maintenance</summary>
+
+- CI: `VeryGoodOpenSource/very_good_workflows` `semantic_pull_request`, `spell_check`, `dart_package` and `pana` workflows: `@v1` -> `@v2` in `.github/workflows/main.yaml`
+
+</details>
+
+---
+
 ## [2.0.0]
 
 The library now uses the material_ui package instead of flutter/material, so date range, time of day and color extensions accept material_ui types. [log](https://github.com/saropa/saropa_dart_utils/blob/v2.0.0/CHANGELOG.md)
