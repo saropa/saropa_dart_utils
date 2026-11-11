@@ -36,6 +36,40 @@ cspell:disable
 
 ---
 
+## [2.0.0]
+
+The library now uses the material_ui package instead of flutter/material, so date range, time of day and color extensions accept material_ui types. [log](https://github.com/saropa/saropa_dart_utils/blob/v2.0.0/CHANGELOG.md)
+
+### Added
+
+- `String.preventOrphansLastGap({int minWrapChars = 4})`: fuses only the last gap with a non-breaking space when the last word or the one before it is shorter than `minWrapChars`; `preventOrphans` is unchanged
+
+### Changed
+
+- Imports `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`; `DateTimeRange`, `TimeOfDay`, `Color` and `MaterialColor` extensions now use the material_ui types
+- Minimum Flutter is now 3.47.0 and minimum Dart is now 3.13.0
+
+### Breaking
+
+- Extensions no longer accept the types from `package:flutter/material.dart`; they take the material_ui types
+- Minimum Flutter 3.47.0 / Dart 3.13.0
+
+### Migration
+
+- Replace `package:flutter/material.dart` imports with `package:material_ui/material_ui.dart` and add `material_ui: ^1.11.0` to your dependencies
+- Upgrade to Flutter 3.47.0+ / Dart 3.13.0+
+- Apps still on `package:flutter/material.dart` should stay on 1.6.x
+
+<details><summary>Maintenance</summary>
+
+- `material_ui`: added `^1.11.0`
+- `environment.sdk`: `>=3.9.0 <4.0.0` -> `>=3.13.0 <4.0.0`; `environment.flutter`: `>=3.41.4` -> `>=3.47.0`
+- `analyzer` (dev): `>=11.0.0 <13.0.0` -> `^14.7.0`
+- `saropa_lints` (dev): `>=13.12.7 <17.0.0` -> `^17.1.0`
+- Removed invalid `final` modifier on second parameters in 7 signatures (rejected by Dart 3.13+)
+
+</details>
+
 ## [1.6.3]
 
 Audit-tooling fix only — no library changes. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.3/CHANGELOG.md)
