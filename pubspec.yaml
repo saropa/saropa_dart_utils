@@ -17,7 +17,7 @@ environment:
   flutter: ">=3.47.0" # run: flutter upgrade
 
 dependencies:
-  # Material widgets and types (replaces package:flutter/material.dart as of Flutter 3.50).
+  # Material widgets and types (replaces package:flutter/material.dart deprecated after Flutter 3.47).
   # https://pub.dev/packages/material_ui/changelog
   material_ui: ^1.11.0
 

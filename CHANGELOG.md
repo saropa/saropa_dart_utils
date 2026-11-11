@@ -66,7 +66,7 @@ The library now uses the material_ui package instead of flutter/material, so dat
 - `environment.sdk`: `>=3.9.0 <4.0.0` -> `>=3.13.0 <4.0.0`; `environment.flutter`: `>=3.41.4` -> `>=3.47.0`
 - `analyzer` (dev): `>=11.0.0 <13.0.0` -> `^14.7.0`
 - `saropa_lints` (dev): `>=13.12.7 <17.0.0` -> `^17.1.0`
-- Removed invalid `final` modifier on second parameters in 7 signatures (rejected by Dart 3.13+)
+- Removed invalid `final` modifier on 7 parameters (rejected by the Dart 3.14 toolchain)
 
 </details>
 
