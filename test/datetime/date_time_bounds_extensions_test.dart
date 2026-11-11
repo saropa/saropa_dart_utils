@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show DateTimeRange;
+import 'package:material_ui/material_ui.dart' show DateTimeRange;
 import 'package:flutter_test/flutter_test.dart';
 // isAnnualDateInRange is the documented consumer of toAnnualDate's year-0
 // output; imported so the round-trip contract can be tested end to end.

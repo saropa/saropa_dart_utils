@@ -192,10 +192,11 @@ extension StringTextExtensions on String {
   /// Returns a new string with each line trimmed and empty lines removed.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  String trimLines() => split(StringExtensions.newLine)
-      .map((String line) => line.trim())
-      .where((String line) => line.isNotEmpty)
-      .join(StringExtensions.newLine);
+  String trimLines() =>
+      split(StringExtensions.newLine)
+          .map((String line) => line.trim())
+          .where((String line) => line.isNotEmpty)
+          .join(StringExtensions.newLine);
 
   /// Returns a new string with [insertText] prepended to every line.
   ///

@@ -11,7 +11,7 @@
 /// fixed number of days). Anything malformed throws a [FormatException].
 library;
 
-import 'package:flutter/material.dart' show DateTimeRange;
+import 'package:material_ui/material_ui.dart' show DateTimeRange;
 
 /// ISO 8601 duration: years/months/days (weeks folded into days) applied as
 /// calendar units, plus a sub-day [time] portion (hours/minutes/seconds, which

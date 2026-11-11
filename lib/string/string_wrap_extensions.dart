@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:characters/characters.dart';
 import 'package:meta/meta.dart';
 
@@ -132,5 +134,35 @@ extension StringWrapExtensions on String {
         ..write(parts[i]);
     }
     return buf.toString();
+  }
+
+  /// Fuses ONLY the last gap of this string with a non-breaking space
+  /// (`\u{00A0}`) when the last word or the word before it is shorter than
+  /// [minWrapChars]; otherwise returns the string unchanged.
+  ///
+  /// The last gap is the final plain space or existing `\u{00A0}`. Every other
+  /// gap is never touched, and an existing `\u{00A0}` elsewhere (for example the
+  /// French `vous ?`) is kept. A string with no gap is returned unchanged.
+  /// [minWrapChars] `<= 0` fuses nothing. Token length is measured in UTF-16
+  /// code units. Idempotent: the fused output is returned unchanged.
+  ///
+  /// Example:
+  /// ```dart
+  /// 'Marked as Out of Date'.preventOrphansLastGap();
+  /// // 'Marked as Out of\u{00A0}Date'  (only "of Date" fuses)
+  /// 'Importing Demo Companions'.preventOrphansLastGap();
+  /// // 'Importing Demo Companions'  (last two words are long)
+  /// ```
+  @useResult
+  String preventOrphansLastGap({int minWrapChars = 4}) {
+    final int lastGap = max(lastIndexOf(_kSpace), lastIndexOf(_kNonBreakingSpace));
+    if (lastGap < 0) return this;
+    final int prevGap = lastGap == 0
+        ? -1
+        : max(lastIndexOf(_kSpace, lastGap - 1), lastIndexOf(_kNonBreakingSpace, lastGap - 1));
+    final int lastLen = length - lastGap - 1;
+    final int beforeLen = lastGap - prevGap - 1;
+    if (lastLen >= minWrapChars && beforeLen >= minWrapChars) return this;
+    return replaceRange(lastGap, lastGap + 1, _kNonBreakingSpace);
   }
 }

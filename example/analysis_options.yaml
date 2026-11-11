@@ -2,4 +2,10 @@
 # Inherits from the parent project's flattened analysis options.
 # https://dart.dev/guides/language/analysis-options
 
+analyzer:
+  exclude:
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: ../analysis_options.yaml

@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:meta/meta.dart';
 
 /// Closing bracket with trailing comma for list display in

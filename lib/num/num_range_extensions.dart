@@ -5,13 +5,13 @@ extension NumRangeExtensions on num {
   /// Returns true if the number is between [min] and [max] inclusive.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  bool isInRange(num min, final num max) => this >= min && this <= max;
+  bool isInRange(num min, num max) => this >= min && this <= max;
 
   /// Returns the [min] if the number is less than [min], [max] if greater
   /// than [max], or the number itself otherwise.
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  num forceInRange(num min, final num max) => this < min ? min : (this > max ? max : this);
+  num forceInRange(num min, num max) => this < min ? min : (this > max ? max : this);
 
   /// Returns `true` if this number is NOT between [from] and [to] inclusive.
   ///
@@ -21,7 +21,7 @@ extension NumRangeExtensions on num {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  bool isNotBetween(num from, final num to) => !isBetween(from, to);
+  bool isNotBetween(num from, num to) => !isBetween(from, to);
 
   /// Returns `true` if this number is between [from] and [to] inclusive.
   ///
@@ -31,5 +31,5 @@ extension NumRangeExtensions on num {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  bool isBetween(num from, final num to) => from <= this && to >= this;
+  bool isBetween(num from, num to) => from <= this && to >= this;
 }

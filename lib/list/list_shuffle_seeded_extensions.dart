@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:meta/meta.dart';
 
 /// Shuffle with seed (reproducible).

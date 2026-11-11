@@ -4,7 +4,7 @@
 // APIs side by side never have to mentally re-case. Lowercasing here would break
 // that visual correspondence and any data previously persisted by `.name`.
 // ignore_for_file: constant_identifier_names
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A named palette of the Material "700-ish" dark color swatches.
 ///
@@ -95,7 +95,7 @@ enum DarkColors {
 /// This is a data table, not math — it complements the color math already in
 /// `lib/niche/color_utils.dart` (`hexToRgb`, `contrastRatio`, …) by supplying a
 /// ready-made set of legible-on-light constants rather than computing colors.
-/// Kept in its own file because it pulls in `package:flutter/material.dart` for
+/// Kept in its own file because it pulls in `package:material_ui/material_ui.dart` for
 /// `Color`, and the sibling `color_utils.dart` is pure Dart that must stay free
 /// of any Flutter dependency.
 abstract final class DarkColorsUtils {
