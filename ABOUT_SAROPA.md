@@ -80,9 +80,8 @@ _Production-hardened tools for VS Code, Dart, and Flutter._
 
 ### Dart & Flutter Packages
 
-| Package                                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| :------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[saropa_dart_utils](https://pub.dev/packages/saropa_dart_utils)**       | **The "Swiss Army" Library.** 280+ production-hardened extension methods for Strings, Dates, Lists, async, and HTTP. Includes single-pass HTML5 entity decoding (278 named entities), a unified async-action typedef, double-complete-safe barriers, and zero `dart:io` dependency — safe to use in pure-Dart and web contexts.                                                                                              |
+- **[saropa_dart_utils](https://pub.dev/packages/saropa_dart_utils)**
+  - _The "Swiss Army" Library:_ 280+ production-hardened extension methods for Strings, Dates, Lists, async, and HTTP. Includes single-pass HTML5 entity decoding (278 named entities), a unified async-action typedef, double-complete-safe barriers, and zero `dart:io` dependency — safe to use in pure-Dart and web contexts.
 
 ### VS Code Extensions
 
