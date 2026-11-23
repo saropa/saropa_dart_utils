@@ -51,7 +51,7 @@ the library symbol that fixes it.*
 
 This package is also the suite's **dogfooding proving ground**: it dev-depends on `saropa_lints`
 (`13.12.7`, [pubspec.yaml](../../pubspec.yaml)) and runs the rules over its own source — tracked as its
-own plan, [R4_dogfooding_gate.md](../R4_dogfooding_gate.md). Every crash class the suite claims to prevent
+own plan, [R4_dogfooding_gate.md](R4_dogfooding_gate.md). Every crash class the suite claims to prevent
 should have a safe helper here with a passing edge-case test — emptiness, Unicode, extreme numbers, the
 cases `.claude/rules/testing.md` mandates.
 
@@ -126,7 +126,7 @@ it can touch the protocol, in priority order:
 - **R4 — Dogfooding gate stays green.** Keep `dart run custom_lint` clean under the dev-dependency on
   `saropa_lints` so this package remains a credible reference implementation of the rules the suite
   ships. **Split out to its own active plan** (ongoing maintenance, with a deferred re-test of the
-  seven kept suppressions on the next `saropa_lints` release): [R4_dogfooding_gate.md](../R4_dogfooding_gate.md).
+  seven kept suppressions on the next `saropa_lints` release): [R4_dogfooding_gate.md](R4_dogfooding_gate.md).
 
 - **R5 — Migration / "prefer `saropa_dart_utils`" detection.** The inverse of R1: where R1 maps a
   crash rule → the safe helper, R5 detects code in a *consumer* project that hand-rolls something this
@@ -221,7 +221,7 @@ that does not exist.
    suite's 12-family crash enumeration into a library backlog; the one gap
    (`concurrent-modification`) was closed by `forEachSnapshot` — zero open gaps.
 5. **R4 — keep the dogfooding gate green.** **Split out 2026-06-14** to its own active plan
-   [R4_dogfooding_gate.md](../R4_dogfooding_gate.md) (ongoing maintenance + deferred suppression re-test).
+   [R4_dogfooding_gate.md](R4_dogfooding_gate.md) (ongoing maintenance + deferred suppression re-test).
 6. **R2 — Dart envelope model** — **CLOSED 2026-06-14, not needed.** The envelope is produced and
    consumed entirely by the TypeScript extensions; no Dart producer exists. Re-open only if one is
    introduced.
@@ -251,7 +251,7 @@ that does not exist.
 - Sibling: `saropa_lints` — `D:\src\saropa_lints\plans\SAROPA_SUITE_INTEGRATION.md`
   (R3 crash-to-rule attribution is this doc's direct counterpart)
 - Sibling: `saropa-log-capture` — `D:\src\saropa-log-capture\plans\105_plan-saropa-suite-integration.md`
-- Internal: [R4_dogfooding_gate.md](../R4_dogfooding_gate.md) (the split-out dogfooding-gate plan);
+- Internal: [R4_dogfooding_gate.md](R4_dogfooding_gate.md) (the split-out dogfooding-gate plan);
   [deferred/R6_pubspec_version_upgrade_nudge.md](../deferred/R6_pubspec_version_upgrade_nudge.md) (the
   deferred version-nudge); the dogfooding-gate bump premise closed with a negative result at
   [history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md](../history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md)
@@ -307,7 +307,7 @@ the test until triaged.
 
 **Status of the plan.** R1, R3, R5 are built; R2 is closed; both open questions are resolved. Two
 requirements were split into their own docs on 2026-06-14 so this plan tracks only the suite-protocol
-work: R4 (dogfooding gate) → [R4_dogfooding_gate.md](../R4_dogfooding_gate.md), and R6 (version nudge,
+work: R4 (dogfooding gate) → [R4_dogfooding_gate.md](R4_dogfooding_gate.md), and R6 (version nudge,
 filed and owned by `saropa_lints`) → [deferred/R6_pubspec_version_upgrade_nudge.md](../deferred/R6_pubspec_version_upgrade_nudge.md).
 The plan is closed as a reference guide. Two items remain open outside this repo's control: the R5
 in-editor rule-pack port (lives in `saropa_lints`, blocked on a vetted flow-analysis-safe target) and

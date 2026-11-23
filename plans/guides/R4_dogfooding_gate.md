@@ -4,7 +4,7 @@
 green; keeping it green is a continuous per-change obligation, not tracked work. The deferred
 suppression re-test fires only on the next `saropa_lints` release. Retained as the reference for that
 re-test, not as a backlog item.
-**Origin:** [SAROPA_SUITE_INTEGRATION.md](guides/SAROPA_SUITE_INTEGRATION.md), requirement R4.
+**Origin:** [SAROPA_SUITE_INTEGRATION.md](SAROPA_SUITE_INTEGRATION.md), requirement R4.
 **Split out 2026-06-14.**
 
 ## Goal
@@ -24,7 +24,7 @@ is a continuous obligation, not a one-time task: every change keeps the gate gre
   suppressions be removed. Tested empirically by the remove-and-observe method on
   2026-06-14: all seven re-fired, so they were restored. The bump premise was closed
   with a negative result —
-  [history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md](history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md).
+  [history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md](../history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md).
 
 The seven kept suppressions:
 - `prefer_correct_callback_field_name` (reports as `{v5}`) — 4 sites:
