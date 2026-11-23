@@ -336,6 +336,7 @@ extension StringCaseExtensions on String {
     return words()
         // Analyzer false positive: the result is used in this condition.
         // ignore: unused_result
+        // ignore: unused_result
         ?.where((String word) => word.isNotEmpty && word[0].isAllLetterUpperCase)
         .toList()
         .nullIfEmpty();
@@ -438,6 +439,7 @@ extension StringCaseExtensions on String {
   @useResult
   List<String>? unCapitalizedWords() => words()
       // Analyzer false positive: the result is used in this condition.
+      // ignore: unused_result
       // ignore: unused_result
       ?.where((String word) => word.isNotEmpty && word[0].isAllLetterLowerCase)
       .toList()

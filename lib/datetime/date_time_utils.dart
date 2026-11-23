@@ -362,6 +362,7 @@ abstract final class DateTimeUtils {
 
     // Analyzer false positive: the result is used in this condition.
     // ignore: unused_result
+    // ignore: unused_result
     if (month == 2 && isLeapYear(year: year)) {
       return DateConstants.daysInFebLeapYear;
     }
@@ -415,6 +416,7 @@ abstract final class DateTimeUtils {
     // back to the always-safe 28 (the minimum February length).
     if (month == 2) {
       // Analyzer false positive: the result is used in this condition.
+      // ignore: unused_result
       // ignore: unused_result
       if (year != null && isLeapYear(year: year)) {
         return DateConstants.daysInFebLeapYear;

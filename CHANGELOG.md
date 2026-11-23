@@ -38,14 +38,6 @@ cspell:disable
 
 ## [Unreleased]
 
-No changes for package users. [log](https://github.com/saropa/saropa_dart_utils/blob/main/CHANGELOG.md)
-
-<details><summary>Maintenance</summary>
-
-- CI: `VeryGoodOpenSource/very_good_workflows` `semantic_pull_request`, `spell_check`, `dart_package` and `pana` workflows: `@v1` -> `@v2` in `.github/workflows/main.yaml`
-
-</details>
-
 ---
 
 ## [2.0.0]
@@ -55,6 +47,7 @@ The library now uses the material_ui package instead of flutter/material, so dat
 ### Added
 
 - `String.preventOrphansLastGap({int minWrapChars = 4})`: fuses only the last gap with a non-breaking space when the last word or the one before it is shorter than `minWrapChars`; `preventOrphans` is unchanged
+- `StreamDebounceUtils`: stream-based debounce transformer for event streams
 
 ### Changed
 
@@ -72,6 +65,11 @@ The library now uses the material_ui package instead of flutter/material, so dat
 - Upgrade to Flutter 3.47.0+ / Dart 3.13.0+
 - Apps still on `package:flutter/material.dart` should stay on 1.6.x
 
+### Fixed
+
+- Suppressed 10 `unused_result` analyzer false positives where `@useResult`-annotated members are correctly consumed in compound boolean expressions (`&&`/`||`) but the Dart analyzer does not track usage through boolean operators
+- Updated VS Code `dart.analysisExcludedFolders` to include all folders listed in `analysis_options.yaml` excludes (`.dart_tool`, `.github`, `.vscode`, `assets`, `build`, `example`, `scripts`, `tool`) plus `coverage` and `doc`
+
 <details><summary>Maintenance</summary>
 
 - `material_ui`: added `^1.11.0`
@@ -79,6 +77,7 @@ The library now uses the material_ui package instead of flutter/material, so dat
 - `analyzer` (dev): `>=11.0.0 <13.0.0` -> `^14.7.0`
 - `saropa_lints` (dev): `>=13.12.7 <17.0.0` -> `^17.1.0`
 - Removed invalid `final` modifier on 7 parameters (rejected by the Dart 3.14 toolchain)
+- Filed `unused_result` and `deprecated_member_use` transitive false positives to `saropa_lints/bugs/`
 
 </details>
 
@@ -88,13 +87,12 @@ The library now uses the material_ui package instead of flutter/material, so dat
 
 Audit-tooling fix only — no library changes. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.3/CHANGELOG.md)
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Tooling**
 
 - Declaration parser in the publish audit ([scripts/modules/audit.py](scripts/modules/audit.py)) no longer misreads `const`-list **elements** as declarations. A multi-line constructor call used as a list element (e.g. `CrashFamilyCoverage(` inside `<CrashFamilyCoverage>[ … ]`) opens a paren list that does not close on its own line, which the parser accepted as an undocumented declaration — falsely flagging the first entry of `kCrashCoverageAudit` and `kRuleRemediations` under both "missing doc header" and "sparse code comments". Both `_iter_decls` and `_method_ranges` now skip any line that begins while `(`/`[` nesting is still open (a `<T>[ … ]` literal or a split argument list); `{` is excluded so class/function bodies do not suppress the real members inside them.
 
-</details>
 
 ---
 
@@ -154,7 +152,7 @@ Release-tooling hardening plus release-build input validation. The tooling work 
 - **`prettyPrint` indents entries correctly** ([debug_utils.dart](lib/testing/debug_utils.dart)) — keys/items were prefixed with the parent level's pad, so they were one level too shallow (top-level entries had no indent). Entries are now indented one level deeper than the closing brace.
 - **`rangeDouble` avoids float drift and a zero-step infinite loop** ([debug_utils.dart](lib/testing/debug_utils.dart)) — computed `x += step` (accumulating error, so a `0.1` step could drop/add the endpoint) and would loop forever for `step == 0`. Now guards `step == 0` and computes each element as `start + i*step`.
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Tooling**
 
@@ -188,11 +186,10 @@ Release-tooling hardening plus release-build input validation. The tooling work 
   - `formatNumberLocale` ([num_locale_utils.dart](lib/num/num_locale_utils.dart)) — reworded the `decimalPlaces`-clamp comment so it no longer reads as commented-out code (it contained a `name(args)` call form that tripped `prefer_no_commented_out_code`). No behavior change.
   - `AsyncSemaphoreUtils` tests ([async_semaphore_utils_test.dart](test/async/async_semaphore_utils_test.dart)) — suppressed `prefer_setup_teardown` with a rationale comment: each test constructs its semaphore with the permit count that IS the scenario under test (1 to serialize, 2 to bound concurrency), so a shared `setUp()` would hide the parameter each case exercises.
 
-</details>
 
 ---
 
-## [1.6.1]
+## [1.6.1] - 2026-06-12
 
 Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the seven dangling library doc comments pana reported plus the other eleven plugin findings it counts in the same check. `dart analyze` is now fully clean. [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.1/CHANGELOG.md)
 
@@ -201,7 +198,7 @@ Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the sev
 - `stats/rolling_correlation_utils.dart`: replaced two release-stripped `assert`s with `if`-throw guards (now `ArgumentError`) so equal-length and `window >= 2` preconditions are enforced in release builds, not just debug.
 - `collections/skip_list_utils.dart`: replaced a `!` null-assertion in `add` with an explicit invariant guard that throws `StateError`, and switched three `[0]` reads to `firstOrNull` (added the `package:collection` import) so neither the unsafe-collection nor null-assertion lint fires.
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Lint**
 
@@ -216,16 +213,15 @@ Clears every pub.dev "Pass static analysis" point deduction (was 40/50): the sev
 
 - `collections/fenwick_tree_utils.dart`: `valueAt` converted to an expression body (`=>`).
 
-</details>
 
 ---
 
-## [1.6.0]
+## [1.6.0] - 2026-06-12
 
 Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-source graph search, time-series analytics, calendar/billing helpers, and async cancellation; then a second batch of range-query trees, approximate string search, spatial indexing, async write caches, graph simplification/serialization, and rate-limited scheduling — plus a null-year-tolerant day-count helper. Then a full-project correctness audit of all 476 library files: ~40 algorithm/crash/concurrency bug fixes (incl. a semaphore permit race and two process hangs), ~30 documentation-accuracy corrections, 40 new regression tests, and a per-method audit-date stamp on every method. All fixes preserve existing signatures (backward-compatible).
 [log](https://github.com/saropa/saropa_dart_utils/blob/v1.6.0/CHANGELOG.md)
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Lint, docs, and tooling**
 
@@ -243,7 +239,6 @@ Adds 35 advanced utilities from the roadmap — order-statistic trees, multi-sou
 - Removed the duplicated per-member `/// Hex range:` doc comments from **`UnicodeClassType`** ([unicode_class_type.dart](lib/string/unicode_class_type.dart)), bringing the file under the 200-line limit (346 → 147). The inclusive code-point ranges already live once in `unicodeClassRanges` ([unicode_class_blocks.dart](lib/string/unicode_class_blocks.dart)) — the single source `findUnicodeClassType` actually reads — so the enum docs were a drift risk. The enum header now points auditors to that table. No enum members changed (105, same order); no behavior change.
 - Cleared the open `saropa_lints` analysis-server diagnostics across eight files, all behavior-preserving (analyze + affected suites green): **`ColorUtils.getColor`** ([material_color_utils.dart](lib/flutter/material_color_utils.dart)) now reads the non-nullable `MaterialColor.shadeNNN` getters instead of `color[NNN]!`, removing all ten `avoid_null_assertion` hits and the null-assertion caveat from its dartdoc; three `if/else` value-returns in **`HebrewDateConverter`** ([hebrew_date_converter.dart](lib/datetime/hebrew_date_converter.dart)) collapse to single (non-nested) conditional expressions; the `twoDigits` helper comment in **`DurationClockFormatExtensions`** ([duration_clock_format_extensions.dart](lib/datetime/duration_clock_format_extensions.dart)) becomes a `///` doc comment; four prose WHY-comments that `prefer_no_commented_out_code` misread as code (they led with `toInt()` / `sublist(...)` / `?.` / a bare `// Tens.`/`// Units.` label) were reworded, not deleted, in [hebrew_date_converter.dart](lib/datetime/hebrew_date_converter.dart), [double_aspect_ratio_extensions.dart](lib/double/double_aspect_ratio_extensions.dart), [list_string_extensions.dart](lib/list/list_string_extensions.dart), and [text_direction_parse_utils.dart](lib/string/text_direction_parse_utils.dart). Two adjacent diagnostics were deliberately left as-is because resolving them conflicts with this project's own `.claude/rules`: collapsing the remaining `month==6` branch would force a nested ternary (banned by `dart.md`), and further `setUp` extraction in the lighten suite would force unrelated tests to share state (against `testing.md`'s "Clarity Over DRY").
 
-</details>
 
 ### Fixed
 
@@ -400,7 +395,7 @@ Roadmap batch 2 — 10 more advanced, tree-shakeable utilities (each its own fil
 - **`ColorUtils`** ([flutter/material_color_utils.dart](lib/flutter/material_color_utils.dart)) — three Flutter Material palette helpers with no app-domain knowledge (from [SPEC-color-material.md](plans/SPEC-color-material.md)). `materialColors` is the canonical ordered, duplicate-free, immutable `const` list of the 19 primary `MaterialColor` swatches (`Colors.red`…`Colors.blueGrey`) for indexing a fixed palette (charts, avatars, tags, deterministic per-index colors). `getWhiteContrastColor(int)` maps ANY int — negatives, values past 99, and `int` min/max — deterministically to one of 100 fully-opaque colors biased to contrast against white, normalizing via `((n % 100) + 100) % 100` so the `0`–`9` palette indices stay in range on the VM and on web (JS-double ints) alike, then alpha-blending a tens-digit primary over a ones-digit secondary; every result is alpha `1.0` and clears a measured WCAG contrast floor against white (lightest blend ≈ `1.22`). `getColor(MaterialShade, MaterialColor)` is a typed, exhaustive-switch swatch accessor replacing the stringly `color[500]!`. Reuses the shared `MaterialShade` from `lib/color/material_shade.dart` rather than redefining it. Flutter-typed (needs `Color`/`MaterialColor`); no external packages.
 - **`HebrewDateConverter`** ([datetime/hebrew_date_converter.dart](lib/datetime/hebrew_date_converter.dart)) — net-new Gregorian→Hebrew (Jewish) lunisolar calendar converter and formatter (from [SPEC-datetime-hebrew-converter.md](plans/SPEC-datetime-hebrew-converter.md)), the library's first non-Gregorian calendar system. Implements the fixed arithmetic Hebrew calendar from "Calendrical Calculations" (Reingold & Dershowitz) via a Julian-Day-Number bridge: deterministic, offline, no `intl`, no I/O. `fromGregorian(DateTime)` returns a plain `({int year, int month, int day})` record (Hebrew year 57xx, month 1–13 in display order, day 1–30); `isHebrewLeapYear` / `monthsInHebrewYear` (12 or 13) / `daysInHebrewYear` (353–355 regular, 383–385 leap) / `daysInHebrewMonth` (29 or 30, with variable-length Cheshvan/Kislev and the four Rosh-Hashanah postponement rules) expose the calendar arithmetic. `getMonthName(month, year, {useHebrew})` resolves the leap-year Adar I / Adar II split (and plain Adar in a regular year) in English transliteration or Hebrew script; `formatDayHebrew` / `formatYearHebrew` render gematria numerals (with the 15→ט״ו / 16→ט״ז substitutions that avoid spelling a divine name, and the thousands digit elided for years); `format` / `formatDayMonth` compose the full strings (`'1 Tishrei 5785'` or `'א׳ תִּשְׁרֵי תשפ״ה'`). Civil-date mapping by design: only the input's year/month/day are read — time-of-day, UTC/local flag, and sunset are ignored, so an evening `DateTime` is NOT advanced to the next Hebrew day. `abstract final` namespace, all static; pure Dart, only `package:meta` (`@useResult`).
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Tests**
 
@@ -416,11 +411,10 @@ Roadmap batch 2 — 10 more advanced, tree-shakeable utilities (each its own fil
 - Full coverage for the **`List<String>` / `List<String?>` string helpers** ([list_string_extensions_test.dart](test/list/list_string_extensions_test.dart)) implementing every sample case and every bulletproofing gap from [SPEC-string-list-helpers.md](plans/SPEC-string-list-helpers.md): `joinWithFinal` empty/single/two/three-item connectors, no-Oxford-comma, custom/empty/multi-char separators, blank-entry-survives divergence, separator-bearing element not re-split, 10k-element no-stack join, and non-mutation; `anyContains` case-sensitive/insensitive substring matching, null/empty `check`, empty list, whole-element and over-long `check`, accented-Unicode insensitive match, zero-width-space needle, and 10k-element short-circuit; `removeTrimmedEmpty` all-blank->null, trim-survivors, `trim:false` keeps whitespace-only/drops only literal empty, single empty/space, the non-breaking-space-dropped vs zero-width-space-survives boundary, and non-mutation; `removeNullsAndTrimmedEmpty` the ported all-null/null-removal/trim cases plus single-null, mixed-null, `trim:false` survivor, and non-mutation; `firstNotEqualTo` null-value, empty list, differing element, all-equal, case-sensitivity, empty-string value, and single-equal->null; and `toLowerCase`/`toUpperCase` element-wise mapping, nullable null-dropping, empty/all-null lists, German eszett length change, invariant-culture (not Turkish) casing, accented round-trip, emoji round-trip, and non-mutation.
 - Lint-cleanup refactors with no coverage change: the **`unicodeClassRanges` one-entry-per-enum assertion** ([unicode_class_utils_test.dart](test/string/unicode_class_utils_test.dart)) uses `hasLength(1)` instead of `.length` compared to the literal `1` (clearer failure output, satisfies `avoid_misused_test_matchers`); the lighten suite's **`ColorLightExtensions`** ([color_light_test.dart](test/flutter/color_light_test.dart)) hoists the shared `original` baseline into a `setUp` so each test recomputes it without leaking state.
 
-</details>
 
 ---
 
-## [1.5.1]
+## [1.5.1] - 2026-06-11
 
 Exact length (meters ↔ feet) and weight (kilograms ↔ pounds) unit conversions with full-precision factors, plus English string formatters that handle the 12-inch carry boundary, negative values, and non-finite input.
 [log](https://github.com/saropa/saropa_dart_utils/blob/v1.5.1/CHANGELOG.md)
@@ -430,7 +424,7 @@ Exact length (meters ↔ feet) and weight (kilograms ↔ pounds) unit conversion
 - `LengthConversionUtils` / `WeightConversionUtils` in `lib/num/unit_conversion_utils.dart`: dependency-free `convert*` primitives (NaN/infinity propagate) and `*ToString` formatters. `feetToString` carries rounded inches into feet so it never renders "12 inches", signs negative heights, and falls back safely on NaN/∞.
 - **`String.preventOrphans({int minWrapChars = 4})`** ([string_wrap_extensions.dart](lib/string/string_wrap_extensions.dart)) — typography helper that swaps a breaking space for a non-breaking space (U+00A0) wherever a wrap there would strand a token shorter than `minWrapChars` (a lone `…`, `I`, `(5)`, `the`). Symmetric rule (fuses when EITHER adjacent token is short, anywhere in the line), idempotent, pure-Dart with no dependencies. Splits on a single ASCII space only; code-unit length, not grapheme width.
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Documentation**
 
@@ -440,7 +434,6 @@ Exact length (meters ↔ feet) and weight (kilograms ↔ pounds) unit conversion
 
 - Filled the migrated-util coverage gaps harvested from Saropa Contacts ([TEST-COVERAGE-migrated-utils-from-contacts.md](plans/history/2026.06/2026.06.11/TEST-COVERAGE-migrated-utils-from-contacts.md)): added a `weekOfYear` group (previously untested — only `weekNumber`/`numOfWeeks` were covered) including the documented week-0 boundary; precomposed- and decomposed-accent cases for `String.removeLastChars` (the decomposed case documents that it actually trims by grapheme cluster via `substringSafe`, not by code unit); four/five-element Oxford-comma cases for `List<String>.joinDisplayList`; and `debounceAfterFirst` late-consumer regression + upstream-cancel-on-consumer-cancel cases for `StreamDebounceExtensions`. `MonthUtils`/`WeekdayUtils` were already fully covered, and the harvested nullable-element `joinDisplayList` cases do not apply (the extension is on `List<String>`).
 
-</details>
 
 ---
 
@@ -482,7 +475,7 @@ Small ergonomic utilities pulled from the Saropa Contacts adoption review — tr
 - **`retryWithPolicy` gains `retryIf`** ([retry_policy_utils.dart](lib/async/retry_policy_utils.dart)) — a `bool Function(Object error)? retryIf` predicate so only transient failures are retried; returning `false` rethrows immediately without consuming the remaining attempts, the delay, or firing `onRetry` (which already existed). `retryWithJitter` is intentionally untouched. ENH-008 (part 2).
 - **`partialRatio` / `tokenSortRatio` / `tokenSetRatio`** ([fuzzy_search_utils.dart](lib/string/fuzzy_search_utils.dart)) — fuzzywuzzy-style standalone string-similarity scores in `[0, 1]`, so a consumer doing single-best-match selection with its own threshold can compute these directly and drop the external `fuzzywuzzy` dependency. (The per-result `score` on `fuzzySearch` was already public — this adds the missing ratio *variants*.) `partialRatio` slides a window for the best substring alignment (`'New York'` vs `'New York City'` → 1.0); `tokenSortRatio` sorts tokens first for order-insensitivity; `tokenSetRatio` compares the shared token core against each side's remainder (forgiving of extra words). All case-insensitive, reusing `LevenshteinUtils.ratio`. ENH-008 (part 3).
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Tests**
 
@@ -492,7 +485,6 @@ Small ergonomic utilities pulled from the Saropa Contacts adoption review — tr
 
 - **Publish audit: credit value-class constructors by field reads** ([audit.py](scripts/modules/audit.py)) — the "untested public methods" check matched the constructor's name token in `test/`, so a result/data class only ever built inside library code and returned (e.g. `CsvRowError`, produced by `parseCsv`) was flagged untested even when every field was asserted off the returned instance. The check now credits a constructor as covered when all its declared `final` instance fields are referenced in tests, and still flags the real gap when a field is never read. Internal tooling only — not shipped to package consumers.
 
-</details>
 
 ---
 
@@ -524,7 +516,7 @@ Eleven more utilities from the Roadmap-to-700 set — INI/.env config parsing, R
 - **`expandUriTemplate`** ([url_template_utils.dart](lib/url/url_template_utils.dart)) — expand RFC 6570 URI templates against a variable map, the way an API client builds a request URL from `/users/{id}{?fields*}`. Covers Levels 1–3 plus the prefix (`{var:3}`) and explode (`{list*}`) modifiers: simple `{var}` and multiple `{a,b}`, reserved `{+var}` / fragment `{#var}` (keep reserved chars), and the `. / ; ? &` operators with their separators and `name=` formatting for the named ones. Values may be string/number/bool/`List`; an undefined variable contributes nothing; percent-encoding is UTF-8 and RFC 3986-correct. Complements `UriPattern` (#630, which matches paths) — this builds them. Roadmap #629.
 - **`LogLineParser`** ([log_line_parser_utils.dart](lib/parsing/log_line_parser_utils.dart)) — parse log lines against a format template with `{field}` placeholders, extracting each field into a `Map<String, String>`. Literal text between placeholders (spaces, brackets, quotes) delimits the fields, so the common access-log shapes parse without a bespoke regex. Presets `LogLineParser.apacheCommon()` / `apacheCombined()` / `nginxCombined()` cover the standard formats; a custom format is just a template string, and a field can carry an explicit regex (`{status:\d+}`) when the default lazy match would over-match. `parse(line)` returns the field map or null on a non-match; `fields` lists the names in order. Roadmap #631.
 
-<details><summary>Maintenance</summary>
+### Internal
 
 **Changed**
 
@@ -539,13 +531,108 @@ Eleven more utilities from the Roadmap-to-700 set — INI/.env config parsing, R
 - **`CAPABILITIES.md` no longer leaks internal `roadmap #NNN` markers (docs/tooling only).** Internal backlog references in dartdoc (`Async barrier: wait for N events — roadmap #676.`) were emitted verbatim to the customer-facing catalog. `firstSentence` now strips them after the sentence cut, with no dangling period (164 leaked references → 0).
 - **`CAPABILITIES.md` no longer promotes a member's dartdoc to the file purpose (docs/tooling only).** When a file had no library-level doc, `filePurpose` used the first member's `///` (e.g. a field doc on `html/html_entity_data.dart`) as the whole file's purpose. It now suppresses a leading block whose offset matches the first declaration's doc comment, so only a genuine library/floating note is used. Regression tests: [test/tool/gen_capabilities_test.dart](test/tool/gen_capabilities_test.dart).
 
-</details>
 
 ---
 
-## HISTORY
+## [1.3.0]
 
-**Older versions**: Entries for **all earlier versions** live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
+Ten new utilities from the Roadmap-to-700 set: a forgiving JSON-to-model reader, a CSV writer, a path-template matcher, stream zip/combine operators, multi-key grouping, a swappable cache interface with a write-through loader, date-format presets, ICU plural/select message lite, timing wrappers, and a JSON pretty-printer.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.3.0/CHANGELOG.md)
+
+### Added
+
+- **`JsonModelReader`** ([json_model_mapper_utils.dart](lib/parsing/json_model_mapper_utils.dart)) — reads typed fields (`requireString`/`requireInt`/`requireBool`/`requireDouble`/`requireList`/`optionalString`/`child`) from decoded JSON, accumulating a `ValidationErrors` list instead of throwing on the first bad field. Distinguishes missing (`code: 'missing'`) from wrong-type (`code: 'type'`), widens `int`→`double`, and reports nested failures with dotted paths (`address.city`) on a shared collection. Roadmap #637.
+- **`writeCsvLine` / `writeCsv`** ([csv_writer_utils.dart](lib/parsing/csv_writer_utils.dart)) — the inverse of `parseCsvLine`: encode rows to CSV with RFC 4180 auto-quoting (a field is quoted only when it contains the delimiter, a quote, CR, or LF; embedded quotes are doubled). Configurable `delimiter` (TSV via `\t`), `eol` (CRLF default), and `forceQuote`. Round-trips with `parseCsvLine`. Roadmap #622.
+- **`UriPattern`** ([uri_pattern_utils.dart](lib/url/uri_pattern_utils.dart)) — compile a path template (`/users/{id}/posts/{slug}`) and `match()` concrete paths to extract named segment params, or null on no match. Supports a typed `{id:int}` constraint (matches only integer segments) and ignores leading/trailing slashes. Segment-based, no regex. Roadmap #630.
+- **`zipStreams` / `combineLatestStreams`** ([stream_combine_utils.dart](lib/async/stream_combine_utils.dart)) — `zipStreams` pairs two streams by index (lock-step, drops the unpaired tail); `combineLatestStreams` emits the combination of the latest values whenever either source emits, once both have produced a value. Both forward errors, complete when their sources do, and cancel sources on cancel. `combineLatest` subscribes lazily on listen. Roadmap #661.
+- **`groupByKeys` / `aggregateByKeys` / `MultiKey`** ([multi_key_group_utils.dart](lib/collections/multi_key_group_utils.dart)) — group an iterable by several key selectors at once into value-equal `MultiKey` buckets (a raw `List` can't be a map key), then optionally reduce each bucket with an aggregator (count/sum/avg per `(country, year)`). Preserves first-seen order. Roadmap #477.
+- **`Cache<K, V>` interface + `WriteThroughCache`** ([cache_interface.dart](lib/caching/cache_interface.dart)) — a common `get`/`set`/`clear` contract now implemented by `LruCache`, `TtlCache`, and `SizeLimitCache`, so call sites can depend on "a cache" and swap the eviction policy freely. `WriteThroughCache` wraps any `Cache` with an async loader: a miss loads once and stores (read-through), concurrent misses for the same key share one in-flight load (thundering-herd guard), and a failed load is not cached so the next call retries. Roadmap #523.
+- **`formatDateShort` / `formatDateMedium` / `formatDateLong` + `DateFormatNames`** ([date_format_preset_utils.dart](lib/datetime/date_format_preset_utils.dart)) — dashboard date presets without the `intl` dependency: short is ISO `2026-06-10` (locale-independent, sorts lexically), medium is `Jun 10, 2026`, long is `Wednesday, June 10, 2026`. Month/weekday names are injected via `DateFormatNames` (English default) so the presets render in any language while the layout stays fixed. Roadmap #615.
+- **`icuPlural` / `icuSelect`** ([icu_message_utils.dart](lib/string/icu_message_utils.dart)) — ICU MessageFormat lite: `icuPlural(count, {zero, one, other})` picks a plural form (English cardinal rules) and substitutes `#` with the count; `icuSelect(value, cases, {other})` picks a gendered/category form. No parser, no `intl`. Unlike `String.pluralize` (appends an `s`), these choose among caller-supplied, locale-routable forms. Roadmap #414.
+- **`observeAsync` / `observeSync`** ([observability_utils.dart](lib/async/observability_utils.dart)) — wrap an operation to measure its wall-clock duration and report the outcome through optional `onSuccess(elapsed, result)` / `onError(elapsed, error, stackTrace)` hooks (logging, metrics, tracing), returning the result unchanged or rethrowing the original error. Transparent: timing only, never swallows a failure. Roadmap #680.
+- **`prettyPrintJson`** ([json_pretty_print_utils.dart](lib/parsing/json_pretty_print_utils.dart)) — render decoded JSON as an indented string with a configurable `indent` width (`0` for compact single-line) and optional recursive `sortKeys` (via `canonicalizeJson`) for stable, diff-friendly output. Roadmap #436.
+- **`tokenize` + `TokenRule` / `Token`** ([tokenizer_pipeline_utils.dart](lib/string/tokenizer_pipeline_utils.dart)) — a reusable lexer core: walk input taking the first ordered `TokenRule` that matches as a prefix, emitting `Token(type, value, start)` or skipping (`shouldSkip` rules like whitespace/comments). Rule order resolves ambiguity deterministically; an unmatched position throws `FormatException` with the offset; zero-width matches are rejected so the cursor always advances. Roadmap #434.
+- **`diffSequences` / `diffWords` / `diffSentences` + `SeqDiffOp` / `SeqDiffKind`** ([text_diff_structured_utils.dart](lib/string/text_diff_structured_utils.dart)) — LCS-based structured diff returning an ordered `equal`/`insert`/`delete` edit script (not a rendered string) so a UI can color or animate changes. `diffWords`/`diffSentences` reuse the existing `tokenizeWords`/`tokenizeSentences` splitters; the generic `diffSequences<T>` engine works on any list. Roadmap #415.
+- **`empiricalCdf` / `cdfAt` / `cumulativeHistogram` + `CdfPoint`** ([cdf_utils.dart](lib/stats/cdf_utils.dart)) — the cumulative view of numeric samples: `empiricalCdf` returns one `CdfPoint(value, p)` per distinct value (p = fraction ≤ value), `cdfAt` evaluates the CDF at a point, and `cumulativeHistogram` is the running total of the existing `histogramFixed`. Complements the bin-counting histogram utils. Roadmap #574.
+- **`validateJsonSchema` + `FieldSchema` / `JsonType`** ([json_schema_utils.dart](lib/parsing/json_schema_utils.dart)) — declare a JSON object as a `field → FieldSchema` map and validate it in one pass, collecting a `ValidationErrors` list: required presence (`missing`), type match (`type`), and `allowed`-set/enum membership (`enum`). A non-map input yields a single object-level type error. Companion to `JsonModelReader`. Roadmap #636.
+- **`groupedStats` + `NumericStats`** ([grouped_stats_utils.dart](lib/stats/grouped_stats_utils.dart)) — group an iterable by a key and compute the common numeric bundle (count, sum, min, max, mean) per group in a single pass, no custom reducer. Every returned group has `count ≥ 1` (no divide-by-zero in `mean`). The "totals and averages per category" report in one call. Roadmap #571.
+
+### Internal
+
+**Changed**
+
+- **Lint cleanup across `lib/` (no API or behavior change).** Resolved 68 of the live saropa_lints violations a full insanity-tier scan surfaced: added explicit type arguments to 46 empty collection literals (`<int>[]`, `<Map<String, Object?>>[]`, etc.) so they match the codebase's double-explicit convention; reused an already-assigned local in `deepMerge` instead of re-reading `MapEntry.value`; and extended the existing documented `// ignore` directives on the diagnostic `debugPrint` sites in `JsonUtils`, `Base64Utils`, and `async_more_utils` to also cover the sibling `avoid_debug_print` / `avoid_stack_trace_in_production` rules. Reworded two prose design-notes so they no longer trip `prefer_no_commented_out_code`, and suppressed the Flutter-app-lifecycle rules (`avoid_work_in_paused_state`, `require_workmanager_for_background`) on `HeartbeatUtils` with a reason, since they do not apply to a pure-Dart timer primitive. The remaining `prefer_list_first` hits are string-index false positives (`String` has no `.first`) and were left unchanged.
+- **Publish-audit accuracy + coverage (no API or behavior change).** Rebuilt the `scripts/modules/audit.py` declaration matcher and test-discovery so the publish audit stops reporting false positives: doc-header findings 94→0, recursion findings 29→0 (the check was removed — every hit was legitimate recursion), and per-method "0 tests" false positives eliminated via a global tested-identifier scan (methods tested in combined files like `duration_format_parse_test.dart` are now credited). Wrote tests for the 29 genuinely-untested public methods (new `*_untested_test.dart` / feature test files under `test/`). Added explanatory WHY-comments to 61 of 92 under-commented function bodies across `lib/` (algorithm intent: k-way merge, A\*, Dijkstra, Floyd–Warshall, knapsack, LIS, Rabin-Karp, kmeans, trial-division primes, LCS, bin-packing, inverted index, and more); 31 remain as tracked documentation debt.
+- **Closed the remaining 31 under-commented bodies + fixed the last audit warning (no API or behavior change).** Added WHY-comments to the final 31 function bodies the audit still flagged (`prefixFrequencyTable`, `maxWeightIntervals`, `rank`, `addBusinessDays`, `_buildDurationParts`, `roundMinutes`, `lowestCommonAncestor`, `diff`, `takeEveryNth`/`skipEveryNth`, `allEqual`, `renameKeys`, `upsert`, `getNested`, `abbreviateName`, `decodeVarint`, `linearRegression`, `simpleMovingAverage`, `outlierIndicesByMAD`, `stratifiedSampleIndices`, `didYouMean`, `stripSubstring`, `wrapAtChars`, `allIndicesOf`, `textFingerprint`, `cosineSimilarity`, `tokenizeSentences`, `pathRelative`, `validateOneOfRequired`, `parseIpv4`, `jwtPayload`) — documenting the invariants and failure modes the names alone can't carry (window-sort precondition, MAD-zero divide guard, varint overflow bail-out, base64url padding restore, and so on), with the big-O prose phrased to avoid `prefer_no_commented_out_code` false positives. Corrected the lone live analyzer warning by prefixing the `WriteThroughCache` suppression with the plugin namespace (`// ignore: saropa_lints/require_cache_expiration`) so it is actually honored — expiration is delegated to the wrapped `Cache`. `dart analyze` is now clean across `lib/`.
+
+
+---
+
+## [1.2.0] - 2026-06-10
+
+A handful of everyday helpers: skip nulls while mapping, a readable `none()` check, sum or average by a selector, middle-eliding for long strings and paths, and float comparison that shrugs off rounding error. The published download is slimmer, too.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.2.0/CHANGELOG.md)
+
+### Added
+
+- **`Iterable.none(predicate)`** ([iterable_none_extensions.dart](lib/iterable/iterable_none_extensions.dart)) — the boolean complement of `any`; returns `true` when no element matches (and `true` for an empty iterable, matching `every`). Reads as intent and removes the easy-to-misplace `!any(...)`.
+- **`Iterable.mapNotNull(selector)` / `Iterable<T?>.whereNotNull()`** ([iterable_map_not_null_extensions.dart](lib/iterable/iterable_map_not_null_extensions.dart)) — map-and-drop-nulls in a single lazy pass, recovering the non-nullable result type without a separate `whereType`/`cast`.
+- **`Iterable.sumBy(selector)` / `Iterable.averageBy(selector)`** ([iterable_sum_by_extensions.dart](lib/iterable/iterable_sum_by_extensions.dart)) — numeric sum/mean over a selector, so reductions work on any element type. `sumBy` returns `0` for empty; `averageBy` returns `null` for empty (no silent `NaN`).
+- **`String.truncateMiddle(maxLength, {ellipsis})`** ([string_truncate_middle_extensions.dart](lib/string/string_truncate_middle_extensions.dart)) — elides the middle while keeping both ends visible (paths, hashes, IDs). Grapheme-cluster safe, so emoji are never split; degrades to a leading cut when the budget is too small.
+- **`double.isCloseTo(other, {relativeTolerance, absoluteTolerance})`** ([double_close_to_extensions.dart](lib/double/double_close_to_extensions.dart)) — tolerance-based float comparison (`(0.1 + 0.2).isCloseTo(0.3)` is `true`). Combines an absolute floor (meaningful near zero) with a relative tolerance (scales to large magnitudes); `NaN` is never close, same-sign infinities are.
+- **`nthSmallest` / `nthLargest`** ([quickselect_utils.dart](lib/collections/quickselect_utils.dart)) — k-th order statistic via quickselect (median-of-three pivot), O(n) average without a full sort; returns `null` for an out-of-range k and never mutates the input.
+- **`Iterable.stableSortBy` / `stableSort`** ([iterable_stable_sort_extensions.dart](lib/iterable/iterable_stable_sort_extensions.dart)) — stable sort that preserves the input order of equal elements, unlike Dart's `List.sort` (which is not guaranteed stable) — needed for correct multi-pass sorting.
+- **`longestCommonSubsequence` / `longestCommonSubsequenceLength`** ([lcs_sequence_utils.dart](lib/collections/lcs_sequence_utils.dart)) — LCS of two lists (order-preserving, gaps allowed), distinct from the existing contiguous LCS-substring; the length variant uses O(min) space.
+- **`deepFreeze`** ([deep_freeze_utils.dart](lib/map/deep_freeze_utils.dart)) — recursively unmodifiable copy of a map/list/set tree; any mutation at any depth throws `UnsupportedError`. A copy, so later edits to the original do not show through.
+- **`getByJsonPath`** ([json_path_utils.dart](lib/parsing/json_path_utils.dart)) — read a value from decoded JSON by a simple `$.a.b[0]` path; returns `null` for any missing/out-of-range segment. Deliberately not full JSONPath (no wildcards/filters/recursive descent).
+- **`CronSchedule.tryParse` + `nextRunAfter`** ([cron_utils.dart](lib/parsing/cron_utils.dart)) — parse a 5-field cron expression (`*`, lists, ranges, steps) and compute the next run after a given time, with Vixie-cron OR semantics for the two day fields; returns `null` for malformed expressions and for impossible schedules (no match within four years).
+- **`parseAcceptLanguage`** ([accept_language_utils.dart](lib/parsing/accept_language_utils.dart)) — parse an `Accept-Language` header into `LanguageRange`s ordered by quality (stable on ties); drops `q=0`, skips malformed entries.
+- **`parseRangeHeader`** ([range_header_utils.dart](lib/parsing/range_header_utils.dart)) — parse an HTTP `Range` header (`bytes=` unit) into `ByteRange`s, supporting explicit, open-ended, suffix, and multi-range forms; `null` on unsupported unit or any malformed range.
+- **`canonicalizeUrl`** ([url_canonicalize_utils.dart](lib/url/url_canonicalize_utils.dart)) — canonical URL form for dedupe/cache keys: lower-cased scheme/host, default port dropped, query parameters (and repeated values) sorted, optional fragment removal.
+- **`debounceStream`** ([stream_debounce_utils.dart](lib/async/stream_debounce_utils.dart)) — re-emits stream values only after a quiet gap (latest-wins per burst); flushes the trailing pending value on close and forwards errors immediately.
+
+- **`CAPABILITIES.md` — a complete per-symbol index of every public utility** (1,391 symbols across 352 files), grouped by category with one-line descriptions and per-file import paths, for teams evaluating or adopting the library. Covers every documented public member — methods, getters, functions, constructors, **fields, enum values, setters**, typedefs, classes, and extensions (verified: zero undocumented public members repo-wide). Generated by `tool/gen_capabilities.py` from the documented public API; linked from the README's "What's Included" section.
+
+### Fixed
+
+- **First 1.2.0 publish attempt was rejected by pub.dev validation (exit 65), so the tag/release existed but pub.dev served nothing.** Two artifacts — `.favorites.json` (VS Code Favorites extension state) and `coverage/lcov.info` (generated by `flutter test --coverage`) — were tracked in git while also matching `.gitignore` rules. `dart pub publish --dry-run` emits a warning for "checked-in files ignored by a `.gitignore`" and exits 65, which the publish workflow treats as a hard failure (the `.pubignore` tarball trim does not clear this warning — it is about git tracking state, not package contents). Both files are now untracked (kept on disk); the dry run passes and 1.2.0 reached pub.dev. No `lib/` changes.
+- **16 implemented utilities were unreachable via the barrel import.** Extensions and helpers that only had direct file imports — `cartesian`, `diff`, `firstWhereOrElse`, `flattenDeep`, `groupByTransform`, `mapIndexed`, `minBy`/`maxBy`, `consecutivePairs` (and the rest of `iterable_more`), `allPairs`, `sortByThenBy`, `splitAt`, `symmetricDifference`, `shuffleWithSeed`, `topK`, `race`/`allSettled`/`retryTimes`, and `GestureUtils` — are now exported from `package:saropa_dart_utils/saropa_dart_utils.dart`, honoring the README's "one import" promise. A new `test/barrel_exports_test.dart` imports only the barrel and exercises each, so the reachability (and absence of any method-name ambiguity) is regression-guarded. The internal `html_entity_data.dart` data table stays unexported by design.
+
+### Internal
+
+**Changed**
+
+- **Publish audit (`scripts/modules/audit.py`) rebuilt for accuracy — ~600 noisy findings reduced to ~220 genuine ones.** The audit's findings were dominated by artifacts of its regex declaration matcher and test-file mapping, not real defects. Changes:
+  - **Declaration matcher replaced** with a balanced-delimiter parser. The old regex both MISSED real generic functions (`Future<T> raceFirst<T>(... Function() ...)` never matched, so it was invisible to every check) and mis-captured type names from generic bounds / constructor calls / string literals (`nWayMerge<T extends Comparable<…>>(` was reported as `Comparable`; `= Completer<T>()` as `Completer`; `'TrieUtils()'` inside a string as `TrieUtils`). The parser finds the real name (the identifier before the parameter `(`, after an optional balanced `<…>`), strips string literals, and rejects names in expression/call/list-element position by the preceding character and the post-`)` tail.
+  - **Test discovery made global.** The per-parameter check mapped each lib file to a single `<name>_test.dart`, but this repo groups several lib files under one combined test (e.g. `duration_format_utils.dart` → `duration_format_parse_test.dart`), so well-tested methods reported 0 tests. It now counts references across all of `test/`. Also fixed a `break` that credited only the first member per test block, zeroing the rest.
+  - **Per-parameter check redefined** to "untested public methods (with parameters)". Per-parameter-variation coverage is unmeasurable by name matching, so the old "N+1 test blocks" floor was an arbitrary proxy; the measurable, meaningful signal is whether a method is referenced by ANY test.
+  - **Non-public declarations skipped** for doc/test/param checks (private members, `ClassName._()` constructors, members of private types like `class _Node`); **nested local closures** excluded via a containment filter; **`@override`** members excluded from the doc check (they inherit docs); the **doc-walk** now skips multi-line signature continuations.
+  - **"Possible recursion" check removed** — every hit was legitimate recursion (tries, graph traversal, deep transforms) and a regex cannot do base-case analysis; the genuine empty-catch smell is kept.
+  - **Inline-comment density** no longer counts plain `final`/`var` declarations (policy: "well-named identifiers cover WHAT; comment WHY on branches/loops").
+  - Net on this repo: missing-doc-headers 94→1 (the 1 is a local closure under a multi-line signature), recursion 29→0, untested-public-methods now 29 (all verified genuinely untested), sparse-comments 190 (genuine inline-comment debt). The remaining findings are real, not noise.
+- **`publish.py` now regenerates `CAPABILITIES.md` automatically during release** (step 4, after the remote-sync check and before formatting), so the per-symbol index can never ship stale — the release commit stages it via `git add -A`. Non-fatal if the generator errors.
+- **`ROADMAP_TO_400.md` reached 400/400 and was archived to `plans/history/2026.06/2026.06.10/`.** All originally-outstanding items are implemented; `ROADMAP_TO_700.md` remains the active forward roadmap.
+- **README now carries a quality-standard banner** stating the bar every utility meets — world-class lint-clean code, detailed dartdoc on every public member, and comprehensive unit-test coverage.
+- **Hardened today's new utilities to that bar.** Documented the `LanguageRange` and `ByteRange` constructors, resolved trailing-comma lints in `deep_freeze_utils.dart`, and reworded two comments that tripped the commented-out-code heuristic. All 15 new files pass `dart analyze` (including `saropa_lints` and `public_member_api_docs`) with zero issues.
+- **Trimmed the published pub.dev tarball via `.pubignore`.** Repo-internal directories that no consumer needs — `test/`, `plans/` (130 files), `tool/`, `bugs/`, `reports/`, `scripts/`, and the `coverage/` artifact — are now excluded from the package. `lib/`, `example/`, `assets/`, and the standard README/CHANGELOG/LICENSE/pubspec files remain. Takes effect on the next release; does not alter the already-published 1.1.6.
+- **Every release in `CHANGELOG.md` and `CHANGELOG_HISTORY.md` now carries a plain-language opening line followed immediately by a `[log]` link to that version's tagged changelog** (`https://github.com/saropa/saropa_dart_utils/blob/vX.Y.Z/CHANGELOG.md`; `[Unreleased]` points at `main`). The maintenance-note template URL was corrected from the `saropa-log-capture` repo to `saropa_dart_utils`.
+- **`publish.py` (v2.8) now enforces the release-intro/log-link convention before publishing.** A new pre-check requires the release section to open with a plain-language intro line and pins its `[log]` link to the proposed version's tag (rewriting the `[Unreleased]` template's `main` reference to `vX.Y.Z` automatically). A missing intro prompts retry / ignore / abort, defaulting to retry so the operator can add it in an editor and re-check without restarting the run. New `version_changelog` helpers `has_release_intro` and `update_log_link` carry the logic.
+
+
+---
+
+## [1.1.6]
+
+A republish fix: 1.1.5's exact content reaches pub.dev now that a missing test dependency is declared. No library changes.
+[log](https://github.com/saropa/saropa_dart_utils/blob/v1.1.6/CHANGELOG.md)
+
+### Fixed
+
+- **Release fix: `dart pub publish` failed validation (exit 65), so 1.1.5 never reached pub.dev.** `test/async/debounce_utils_test.dart` and `test/async/heartbeat_utils_test.dart` import `package:fake_async/fake_async.dart`, but `fake_async` was only available transitively (via `flutter_test`) and was not declared in `pubspec.yaml`. pub.dev rejects publishing a package whose sources import an undeclared library. Added `fake_async: ^1.3.3` to `dev_dependencies` (matching the version `flutter_test` resolves). No `lib/` changes — this republishes the 1.1.5 content under 1.1.6.
+
+---
+
+**Older versions**: Entries for **1.1.5 and earlier** live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
 
 ---
 

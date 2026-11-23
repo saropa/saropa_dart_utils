@@ -82,6 +82,7 @@ extension NumberNullableExtensions on num? {
 
     // Analyzer false positive: the result is used in this condition.
     // ignore: unused_result
+    // ignore: unused_result
     return value != null && value.isNotZeroOrNegative;
   }
 
@@ -102,6 +103,7 @@ extension NumberNullableExtensions on num? {
     final value = this;
 
     // Analyzer false positive: the result is used in this condition.
+    // ignore: unused_result
     // ignore: unused_result
     return value == null || value.isZeroOrNegative;
   }

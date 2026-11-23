@@ -139,4 +139,17 @@ extension StreamDebounceExtensions<T> on Stream<T> {
   /// Audited: 2026-06-12 11:26 EDT
   Stream<T> debounceAfterFirst(Duration duration) =>
       _debounce(this, duration, emitFirstImmediately: true);
+
+  /// Emits the FIRST value immediately, debounces the rest by [duration], AND
+  /// suppresses consecutive equal values via [distinct].
+  ///
+  /// The right shape for a Drift `.watch()` → `asyncExpand(query)` pipeline:
+  /// the initial render is instant, bulk writes coalesce, and if the re-query
+  /// returns the same data as the previous emission the StreamBuilder skips
+  /// the rebuild entirely. Pass [equals] for a custom equality (e.g. comparing
+  /// row-ID fingerprints when the model has no operator==); otherwise `==`.
+  Stream<T> debounceAfterFirstDistinct(
+    Duration duration, {
+    bool Function(T previous, T next)? equals,
+  }) => _debounce(this, duration, emitFirstImmediately: true).distinct(equals);
 }

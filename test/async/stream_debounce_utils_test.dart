@@ -260,5 +260,70 @@ void main() {
         });
       });
     });
+
+    group('debounceAfterFirstDistinct', () {
+      test('emits first immediately, debounces burst, drops equal survivors', () {
+        fakeAsync((FakeAsync async) {
+          final StreamController<int> source = StreamController<int>();
+          final List<int> results = <int>[];
+          source.stream
+              .debounceAfterFirstDistinct(const Duration(milliseconds: 50))
+              .listen(results.add);
+
+          // First value emitted immediately
+          source.add(10);
+          async.flushMicrotasks();
+          expect(results, <int>[10]);
+
+          // Burst that settles to the same value -> suppressed by distinct
+          source
+            ..add(20)
+            ..add(10); // settles to 10 (same as last emitted)
+          async.elapse(const Duration(milliseconds: 60));
+          expect(results, <int>[10]); // no new emission
+
+          // Burst that settles to a different value -> emitted
+          source
+            ..add(30)
+            ..add(40);
+          async.elapse(const Duration(milliseconds: 60));
+          expect(results, <int>[10, 40]);
+
+          source.close();
+          async.flushMicrotasks();
+        });
+      });
+
+      test('honors a custom equals', () {
+        fakeAsync((FakeAsync async) {
+          final StreamController<String> source = StreamController<String>();
+          final List<String> results = <String>[];
+          // Case-insensitive: 'Hello' and 'hello' are equal
+          source.stream
+              .debounceAfterFirstDistinct(
+                const Duration(milliseconds: 30),
+                equals: (String a, String b) => a.toLowerCase() == b.toLowerCase(),
+              )
+              .listen(results.add);
+
+          source.add('Hello');
+          async.flushMicrotasks();
+          expect(results, <String>['Hello']);
+
+          // 'hello' is case-equal to 'Hello' -> suppressed
+          source.add('hello');
+          async.elapse(const Duration(milliseconds: 40));
+          expect(results, <String>['Hello']);
+
+          // 'World' is different -> emitted
+          source.add('World');
+          async.elapse(const Duration(milliseconds: 40));
+          expect(results, <String>['Hello', 'World']);
+
+          source.close();
+          async.flushMicrotasks();
+        });
+      });
+    });
   });
 }

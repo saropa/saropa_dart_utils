@@ -17,9 +17,6 @@ environment:
   flutter: ">=3.47.0" # run: flutter upgrade
 
 dependencies:
-  # Material widgets and types (replaces package:flutter/material.dart deprecated after Flutter 3.47).
-  # https://pub.dev/packages/material_ui/changelog
-  material_ui: ^1.11.0
 
   # Provides grapheme (user-perceived character) cluster support for Dart strings.
   # https://pub.dev/packages/characters/changelog
@@ -43,6 +40,10 @@ dependencies:
   # https://pub.dev/packages/jiffy/changelog
   jiffy: ^6.4.5
 
+  # Material widgets and types (replaces package:flutter/material.dart deprecated after Flutter 3.47).
+  # https://pub.dev/packages/material_ui/changelog
+  material_ui: ^1.11.0
+  
   # Annotations (@visibleForTesting, @immutable, ...) imported across lib/.
   # Must be a DIRECT dependency, not transitive: pub.dev rejects publishing a
   # package that imports a library it only depends on transitively. Leaving meta
@@ -86,7 +87,7 @@ dev_dependencies:
   # deliberately to adopt new rules, then run `dart run custom_lint` before
   # tagging so any new WARNING is seen locally, not at publish time.
   # ignore: prefer_caret_version_syntax
-  saropa_lints: ^17.1.0
+  saropa_lints: ^17.7.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
