@@ -1,7 +1,7 @@
 // Only the [DateTimeRange] type is needed here. Importing the whole material
 // library would pull a heavy UI surface into a pure date-math file, so the
 // `show` clause keeps the dependency narrow (mirrors iso_interval_parse_utils.dart).
-import 'package:flutter/material.dart' show DateTimeRange;
+import 'package:material_ui/material_ui.dart' show DateTimeRange;
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/datetime/date_constants.dart';
 import 'package:saropa_dart_utils/datetime/date_time_utils.dart';

@@ -16,7 +16,7 @@ extension ListOfListExtension<T> on List<List<T>> {
     // use the fold method to iterate over each List<int> in myList
     // and add its length to a running total. The initial value
     // for the total is 0.
-    return fold(0, (int sum, final List<T> list) => sum + list.length);
+    return fold(0, (int sum, List<T> list) => sum + list.length);
   }
 
   /// Getting the length of [toFlattenedList]

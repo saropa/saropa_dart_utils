@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:meta/meta.dart';
 
 /// Multiplier to convert decimal to percentage (0.5 * 100 = 50%).

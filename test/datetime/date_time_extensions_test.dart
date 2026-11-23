@@ -1,5 +1,5 @@
 // ignore_for_file: saropa_lints/prefer_setup_teardown -- per-test arrange kept explicit for readability; a shared setUp would hide each test's inputs
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:saropa_dart_utils/datetime/date_time_extensions.dart';

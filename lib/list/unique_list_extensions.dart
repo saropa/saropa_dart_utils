@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:meta/meta.dart';
 
 /// Extracts a key of type [E] from an element of type [T].

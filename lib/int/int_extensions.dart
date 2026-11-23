@@ -72,7 +72,7 @@ extension IntExtensions on int {
   /// ```
   /// Audited: 2026-06-12 11:26 EDT
   @useResult
-  int forceBetween(int from, final int to) {
+  int forceBetween(int from, int to) {
     if (from > to) {
       return this;
     }

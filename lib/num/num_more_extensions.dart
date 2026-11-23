@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:meta/meta.dart';
 
 /// Number More: clamp non-negative, isInteger, round half up, truncate decimals, percentage, degrees/radians, etc. Roadmap #311-325.

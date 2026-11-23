@@ -7,6 +7,7 @@ export 'string_manipulation_extensions.dart';
 // its canonical home so importers of this file keep reaching it unchanged.
 export 'string_regex_extensions.dart';
 export 'string_text_extensions.dart';
+
 import 'package:meta/meta.dart';
 
 /// Extensions for presentation, like adding quotes, truncating text,

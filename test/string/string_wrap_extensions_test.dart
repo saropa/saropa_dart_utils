@@ -110,4 +110,39 @@ void main() {
       expect(once.preventOrphans(), once);
     });
   });
+  group('preventOrphansLastGap', () {
+    const String nbsp = '\u{00A0}';
+    test('short last word fuses only the last gap', () {
+      expect('Marked as Out of Date'.preventOrphansLastGap(), 'Marked as Out of${nbsp}Date');
+    });
+    test('short word before the last fuses the last gap', () {
+      expect('Importing of Companions'.preventOrphansLastGap(), 'Importing of${nbsp}Companions');
+    });
+    test('both long returns unchanged', () {
+      expect('Importing Demo Companions'.preventOrphansLastGap(), 'Importing Demo Companions');
+    });
+    test('earlier gaps never change', () {
+      expect('a b c d e'.preventOrphansLastGap(), 'a b c d${nbsp}e');
+    });
+    test('existing nbsp elsewhere is kept', () {
+      expect(
+        'Comment allez${nbsp}vous ?'.preventOrphansLastGap(),
+        'Comment allez${nbsp}vous${nbsp}?',
+      );
+    });
+    test('existing nbsp as last gap counts as the gap', () {
+      expect('Long words${nbsp}ok'.preventOrphansLastGap(), 'Long words${nbsp}ok');
+    });
+    test('idempotent', () {
+      final String once = 'Marked as Out of Date'.preventOrphansLastGap();
+      expect(once.preventOrphansLastGap(), once);
+    });
+    test('no gap unchanged', () {
+      expect('Single'.preventOrphansLastGap(), 'Single');
+      expect(''.preventOrphansLastGap(), '');
+    });
+    test('minWrapChars 0 fuses nothing', () {
+      expect('a b'.preventOrphansLastGap(minWrapChars: 0), 'a b');
+    });
+  });
 }

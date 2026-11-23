@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:meta/meta.dart';
 import 'package:saropa_dart_utils/iterable/occurrence.dart';
 

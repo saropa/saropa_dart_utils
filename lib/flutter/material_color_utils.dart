@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 // MaterialShade lives in lib/color/material_shade.dart (shared shade-ladder
 // model); reuse it rather than redefining the enum here.
@@ -134,7 +134,7 @@ abstract final class ColorUtils {
   /// ```
   // Exhaustive switch over the sealed enum: a future added shade is a compile
   // error, not a silent fall-through to a wrong tone.
-  static Color getColor(MaterialShade shade, final MaterialColor color) => switch (shade) {
+  static Color getColor(MaterialShade shade, MaterialColor color) => switch (shade) {
     MaterialShade.shade50 => color.shade50,
     MaterialShade.shade100 => color.shade100,
     MaterialShade.shade200 => color.shade200,
