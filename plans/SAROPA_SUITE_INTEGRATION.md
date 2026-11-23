@@ -13,7 +13,7 @@ running Flutter app — when this package is a pure Dart library that never obse
 
 This is the **Saropa Dart Utils** half-step of a four-repo plan. The three diagnostic siblings:
 
-- **Drift Advisor** — `D:\src\saropa_drift_advisor\plans\67-saropa-suite-integration.md`
+- **Drift Advisor** — `D:\src\saropa_drift_advisor\plans\history\2026.07\2026.07.16\67-saropa-suite-integration.md`
   (repo `saropa/saropa_drift_advisor`). **Owns the canonical shared protocol** (the Saropa Diagnostic
   Envelope); this doc references it rather than restating the schema.
 - **Saropa Lints** — `D:\src\saropa_lints\plans\SAROPA_SUITE_INTEGRATION.md`
@@ -107,8 +107,9 @@ it can touch the protocol, in priority order:
   pinning test at [test/suite/crash_coverage_audit_test.dart](../test/suite/crash_coverage_audit_test.dart).
   Audits all 12 stable crash families the suite recognizes (Log Capture's `CRASH_SIGNATURE_IDS` in
   `src/modules/diagnostics/crash-signature.ts` — the authoritative source for "crash classes the suite
-  parses"). Each family is `covered` (4: `state-error-no-element`→`singleOrNull`,
-  `range-error-index`→`getOrNull`, `type-error-cast`→`castOrNull`, `format-exception`→`toIntNullable`),
+  parses"). Each family is `covered` (5: `state-error-no-element`→`singleOrNull`,
+  `range-error-index`→`getOrNull`, `type-error-cast`→`castOrNull`, `format-exception`→`toIntNullable`,
+  `concurrent-modification`→`forEachSnapshot`),
   `notApplicable` (7: language/runtime/resource faults a utility can't prevent — `null-check-operator`,
   `late-init`, `no-such-method`, `assertion-failed`, `stack-overflow`, `out-of-memory`, `anr`). The
   test pins the family-id set to the suite contract (a new upstream family fails until triaged) and
@@ -218,7 +219,7 @@ that does not exist.
 4. **R3 — remediation coverage audit. DONE 2026-06-14.** `kCrashCoverageAudit` in
    `lib/suite/crash_coverage_audit.dart` + pinning test (analyze clean, 6/6 tests pass). Turns the
    suite's 12-family crash enumeration into a library backlog; the one gap
-   (`concurrent-modification`) is surfaced in `CODE_INDEX.md`.
+   (`concurrent-modification`) was closed by `forEachSnapshot` — zero open gaps.
 5. **R4 — keep the dogfooding gate green.** **Split out 2026-06-14** to its own active plan
    [R4_dogfooding_gate.md](R4_dogfooding_gate.md) (ongoing maintenance + deferred suppression re-test).
 6. **R2 — Dart envelope model** — **CLOSED 2026-06-14, not needed.** The envelope is produced and
@@ -246,7 +247,7 @@ that does not exist.
 ## Related plans
 
 - Sibling (canonical protocol + Drift Health loop): `saropa_drift_advisor` —
-  `D:\src\saropa_drift_advisor\plans\67-saropa-suite-integration.md`
+  `D:\src\saropa_drift_advisor\plans\history\2026.07\2026.07.16\67-saropa-suite-integration.md`
 - Sibling: `saropa_lints` — `D:\src\saropa_lints\plans\SAROPA_SUITE_INTEGRATION.md`
   (R3 crash-to-rule attribution is this doc's direct counterpart)
 - Sibling: `saropa-log-capture` — `D:\src\saropa-log-capture\plans\105_plan-saropa-suite-integration.md`
@@ -308,6 +309,6 @@ the test until triaged.
 requirements were split into their own docs on 2026-06-14 so this plan tracks only the suite-protocol
 work: R4 (dogfooding gate) → [R4_dogfooding_gate.md](R4_dogfooding_gate.md), and R6 (version nudge,
 filed and owned by `saropa_lints`) → [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md).
-The plan stays active for the remaining suite items: the R5 in-editor rule-pack port (future, lives in
-`saropa_lints`, blocked on a vetted flow-analysis-safe target) and shared-infra adoption of
-`saropa-release-tools` (blocked on that tooling being extracted).
+The plan is closed as a reference guide. Two items remain open outside this repo's control: the R5
+in-editor rule-pack port (lives in `saropa_lints`, blocked on a vetted flow-analysis-safe target) and
+shared-infra adoption of `saropa-release-tools` (blocked on that tooling being extracted).
