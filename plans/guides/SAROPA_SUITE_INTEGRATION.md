@@ -4,8 +4,8 @@
 > R3 (crash-coverage audit, zero gaps) are built and pinned by tests; R2 is closed (no Dart producer);
 > R5 ships as a CLI. The only future *build*, the R5 in-editor rule-pack port, lives in `saropa_lints`
 > and is blocked on a vetted flow-analysis-safe target. The split-out R4 (dogfooding gate) and R6
-> (version nudge) have their own files, also closed as reference. Retained in place because the sibling
-> repos reference it by absolute path.
+> (version nudge) have their own files, also closed as reference. Moved to `plans/guides/` on 2026-11-23
+> (reference guides live there); sibling repos still reference the old `plans/` path.
 
 **Created:** 2026-06-13
 **Question answered:** How does `saropa_dart_utils` fit a suite whose other three members diagnose a
@@ -50,8 +50,8 @@ validation extensions across `lib/iterable`, `lib/list`, `lib/collections`, `lib
 the library symbol that fixes it.*
 
 This package is also the suite's **dogfooding proving ground**: it dev-depends on `saropa_lints`
-(`13.12.7`, [pubspec.yaml](../pubspec.yaml)) and runs the rules over its own source — tracked as its
-own plan, [R4_dogfooding_gate.md](R4_dogfooding_gate.md). Every crash class the suite claims to prevent
+(`13.12.7`, [pubspec.yaml](../../pubspec.yaml)) and runs the rules over its own source — tracked as its
+own plan, [R4_dogfooding_gate.md](../R4_dogfooding_gate.md). Every crash class the suite claims to prevent
 should have a safe helper here with a passing edge-case test — emptiness, Unicode, extreme numbers, the
 cases `.claude/rules/testing.md` mandates.
 
@@ -88,9 +88,9 @@ it can touch the protocol, in priority order:
 ## Dart Utils requirements (what this package builds)
 
 - **R1 — Rule-to-remediation mapping** (above) — **BUILT 2026-06-14.** Shipped as `kRuleRemediations`
-  in [lib/suite/rule_remediation_map.dart](../lib/suite/rule_remediation_map.dart) (exported from the
+  in [lib/suite/rule_remediation_map.dart](../../lib/suite/rule_remediation_map.dart) (exported from the
   package barrel), with the pinning test at
-  [test/suite/rule_remediation_map_test.dart](../test/suite/rule_remediation_map_test.dart). Each row
+  [test/suite/rule_remediation_map_test.dart](../../test/suite/rule_remediation_map_test.dart). Each row
   joins a `saropa_lints` crash rule id to the owned safe primitive that removes the failure
   (`avoid_unsafe_reduce`→`sumBy`, `avoid_unsafe_where_methods`/`prefer_where_or_null`/`geocoding_unchecked_first`→`firstWhereOrElse`,
   `avoid_unsafe_collection_methods`→`singleOrNull`, `image_picker_multi_result_unchecked_empty`→`nullIfEmpty`,
@@ -103,8 +103,8 @@ it can touch the protocol, in priority order:
 - **R2 — Dart envelope model** (above) — **CLOSED, not needed.** No Dart producer exists (Question 1,
   resolved 2026-06-14); do not build.
 - **R3 — Remediation coverage audit. BUILT 2026-06-14.** Shipped as `kCrashCoverageAudit` in
-  [lib/suite/crash_coverage_audit.dart](../lib/suite/crash_coverage_audit.dart) (exported), with the
-  pinning test at [test/suite/crash_coverage_audit_test.dart](../test/suite/crash_coverage_audit_test.dart).
+  [lib/suite/crash_coverage_audit.dart](../../lib/suite/crash_coverage_audit.dart) (exported), with the
+  pinning test at [test/suite/crash_coverage_audit_test.dart](../../test/suite/crash_coverage_audit_test.dart).
   Audits all 12 stable crash families the suite recognizes (Log Capture's `CRASH_SIGNATURE_IDS` in
   `src/modules/diagnostics/crash-signature.ts` — the authoritative source for "crash classes the suite
   parses"). Each family is `covered` (5: `state-error-no-element`→`singleOrNull`,
@@ -115,18 +115,18 @@ it can touch the protocol, in priority order:
   test pins the family-id set to the suite contract (a new upstream family fails until triaged) and
   exercises every covered symbol in compiled code. **Gap closed 2026-06-14:** the audit's one backlog
   input, `concurrent-modification`, was remediated by a new owned primitive `forEachSnapshot`
-  ([lib/list/list_mutate_during_iteration_extensions.dart](../lib/list/list_mutate_during_iteration_extensions.dart),
+  ([lib/list/list_mutate_during_iteration_extensions.dart](../../lib/list/list_mutate_during_iteration_extensions.dart),
   edge-case test alongside) — it walks a point-in-time snapshot so the loop body may add/remove from
   the original without `ConcurrentModificationError`. The audit now has **zero open gaps**; every suite
   family is `covered` or `notApplicable`, and the test pins the open-gap set to empty so a future
   regression or a new uncovered upstream family is caught. Suite coverage is recorded in
-  [CODE_INDEX.md](../CODE_INDEX.md) (the live capability index); any future uncovered crash family that
-  warrants a new primitive becomes a row in [ROADMAP_TO_700.md](ROADMAP_TO_700.md), the unbuilt-utility
+  [CODE_INDEX.md](../../CODE_INDEX.md) (the live capability index); any future uncovered crash family that
+  warrants a new primitive becomes a row in [ROADMAP_TO_700.md](../ROADMAP_TO_700.md), the unbuilt-utility
   backlog.
 - **R4 — Dogfooding gate stays green.** Keep `dart run custom_lint` clean under the dev-dependency on
   `saropa_lints` so this package remains a credible reference implementation of the rules the suite
   ships. **Split out to its own active plan** (ongoing maintenance, with a deferred re-test of the
-  seven kept suppressions on the next `saropa_lints` release): [R4_dogfooding_gate.md](R4_dogfooding_gate.md).
+  seven kept suppressions on the next `saropa_lints` release): [R4_dogfooding_gate.md](../R4_dogfooding_gate.md).
 
 - **R5 — Migration / "prefer `saropa_dart_utils`" detection.** The inverse of R1: where R1 maps a
   crash rule → the safe helper, R5 detects code in a *consumer* project that hand-rolls something this
@@ -161,7 +161,7 @@ it can touch the protocol, in priority order:
   rides `saropa_lints`' Package Vibrancy. **Filed report:**
   `saropa_lints/bugs/feature_package_vibrancy_saropa_dart_utils_version_nudge.md` (Status: Open,
   committed `5d1d3f54`). **Tracked locally in its own deferred doc:**
-  [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md).
+  [deferred/R6_pubspec_version_upgrade_nudge.md](../deferred/R6_pubspec_version_upgrade_nudge.md).
 
 The only NEW artifact either requirement creates is Dart rule code + a dependency-gate entry inside
 `saropa_lints`; everything user-facing reuses the Saropa Lints extension that already exists. There is
@@ -215,13 +215,13 @@ that does not exist.
    pinning test in `test/suite/rule_remediation_map_test.dart` (analyze clean, 4/4 tests pass).
 3. **R6 — pubspec version-upgrade nudge** via Package Vibrancy. **DEFERRED 2026-06-14** — filed as a
    feature request in `saropa_lints`, owned there; tracked in
-   [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md).
+   [deferred/R6_pubspec_version_upgrade_nudge.md](../deferred/R6_pubspec_version_upgrade_nudge.md).
 4. **R3 — remediation coverage audit. DONE 2026-06-14.** `kCrashCoverageAudit` in
    `lib/suite/crash_coverage_audit.dart` + pinning test (analyze clean, 6/6 tests pass). Turns the
    suite's 12-family crash enumeration into a library backlog; the one gap
    (`concurrent-modification`) was closed by `forEachSnapshot` — zero open gaps.
 5. **R4 — keep the dogfooding gate green.** **Split out 2026-06-14** to its own active plan
-   [R4_dogfooding_gate.md](R4_dogfooding_gate.md) (ongoing maintenance + deferred suppression re-test).
+   [R4_dogfooding_gate.md](../R4_dogfooding_gate.md) (ongoing maintenance + deferred suppression re-test).
 6. **R2 — Dart envelope model** — **CLOSED 2026-06-14, not needed.** The envelope is produced and
    consumed entirely by the TypeScript extensions; no Dart producer exists. Re-open only if one is
    introduced.
@@ -251,11 +251,11 @@ that does not exist.
 - Sibling: `saropa_lints` — `D:\src\saropa_lints\plans\SAROPA_SUITE_INTEGRATION.md`
   (R3 crash-to-rule attribution is this doc's direct counterpart)
 - Sibling: `saropa-log-capture` — `D:\src\saropa-log-capture\plans\105_plan-saropa-suite-integration.md`
-- Internal: [R4_dogfooding_gate.md](R4_dogfooding_gate.md) (the split-out dogfooding-gate plan);
-  [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md) (the
+- Internal: [R4_dogfooding_gate.md](../R4_dogfooding_gate.md) (the split-out dogfooding-gate plan);
+  [deferred/R6_pubspec_version_upgrade_nudge.md](../deferred/R6_pubspec_version_upgrade_nudge.md) (the
   deferred version-nudge); the dogfooding-gate bump premise closed with a negative result at
-  [history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md](history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md)
-  (was `PENDING_saropa_lints_bump.md`); [ROADMAP_TO_700.md](ROADMAP_TO_700.md) (the unbuilt-utility
+  [history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md](../history/2026.06/2026.06.14/saropa_lints_bump_premise_disproven.md)
+  (was `PENDING_saropa_lints_bump.md`); [ROADMAP_TO_700.md](../ROADMAP_TO_700.md) (the unbuilt-utility
   backlog); `CODE_INDEX.md` (the live capability index R1 and R3 are checked against).
 
 ---
@@ -307,8 +307,8 @@ the test until triaged.
 
 **Status of the plan.** R1, R3, R5 are built; R2 is closed; both open questions are resolved. Two
 requirements were split into their own docs on 2026-06-14 so this plan tracks only the suite-protocol
-work: R4 (dogfooding gate) → [R4_dogfooding_gate.md](R4_dogfooding_gate.md), and R6 (version nudge,
-filed and owned by `saropa_lints`) → [deferred/R6_pubspec_version_upgrade_nudge.md](deferred/R6_pubspec_version_upgrade_nudge.md).
+work: R4 (dogfooding gate) → [R4_dogfooding_gate.md](../R4_dogfooding_gate.md), and R6 (version nudge,
+filed and owned by `saropa_lints`) → [deferred/R6_pubspec_version_upgrade_nudge.md](../deferred/R6_pubspec_version_upgrade_nudge.md).
 The plan is closed as a reference guide. Two items remain open outside this repo's control: the R5
 in-editor rule-pack port (lives in `saropa_lints`, blocked on a vetted flow-analysis-safe target) and
 shared-infra adoption of `saropa-release-tools` (blocked on that tooling being extracted).

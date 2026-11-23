@@ -7,7 +7,7 @@
 ///
 /// Ownership (settled 2026-06-14 against the sibling changelogs): `saropa_lints`
 /// owns rule -> crash-signature, this package owns rule -> util-symbol, and the
-/// two join on `ruleId`. See plans/SAROPA_SUITE_INTEGRATION.md.
+/// two join on `ruleId`. See plans/guides/SAROPA_SUITE_INTEGRATION.md.
 ///
 /// Every [symbol] here is a real public export of this package, pinned by
 /// test/suite/rule_remediation_map_test.dart: that test exercises each symbol

@@ -4,7 +4,7 @@
 green; keeping it green is a continuous per-change obligation, not tracked work. The deferred
 suppression re-test fires only on the next `saropa_lints` release. Retained as the reference for that
 re-test, not as a backlog item.
-**Origin:** [SAROPA_SUITE_INTEGRATION.md](SAROPA_SUITE_INTEGRATION.md), requirement R4.
+**Origin:** [SAROPA_SUITE_INTEGRATION.md](guides/SAROPA_SUITE_INTEGRATION.md), requirement R4.
 **Split out 2026-06-14.**
 
 ## Goal
