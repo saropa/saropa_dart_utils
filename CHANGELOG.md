@@ -537,9 +537,9 @@ Eleven more utilities from the Roadmap-to-700 set — INI/.env config parsing, R
 
 ---
 
-## Historical Arcvhive
+## Historical Archive
 
-Entries for olver versions live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
+Entries for older versions live in [CHANGELOG_HISTORY.md](./CHANGELOG_HISTORY.md).
 
 ---
 
